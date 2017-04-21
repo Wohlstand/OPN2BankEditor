@@ -81,18 +81,18 @@ void BankEditor::loadSettings()
 {
     QApplication::setOrganizationName(COMPANY);
     QApplication::setOrganizationDomain(PGE_URL);
-    QApplication::setApplicationName("OPL FM Banks Editor");
+    QApplication::setApplicationName("OPN2 FM Banks Editor");
     QSettings setup;
-    ui->deepTremolo->setChecked(setup.value("deep-tremolo", false).toBool());
-    ui->deepVibrato->setChecked(setup.value("deep-vibrato", false).toBool());
+    ui->lfoEnable->setChecked(setup.value("lfo-enabled", false).toBool());
+    ui->lfoFrequency->setCurrentIndex(setup.value("lfo-frequency", 0).toInt());
     m_recentPath = setup.value("recent-path").toString();
 }
 
 void BankEditor::saveSettings()
 {
     QSettings setup;
-    setup.setValue("deep-tremolo", ui->deepTremolo->isChecked());
-    setup.setValue("deep-vibrato", ui->deepVibrato->isChecked());
+    setup.setValue("lfo-enabled", ui->lfoEnable->isChecked());
+    setup.setValue("lfo-frequency", ui->lfoFrequency->currentIndex());
     setup.setValue("recent-path", m_recentPath);
 }
 
@@ -413,7 +413,7 @@ void BankEditor::on_actionAbout_triggered()
 {
     QMessageBox::about(this,
                        tr("About bank editor"),
-                       tr("FM Bank Editor for Yamaha OPLN2 chip, Version %1\n\n"
+                       tr("FM Bank Editor for Yamaha OPN2 chip, Version %1\n\n"
                           "(c) 2017, Vitaly Novichkov \"Wohlstand\"\n"
                           "\n"
                           "Licensed under GNU GPLv3\n\n"

@@ -32,7 +32,7 @@
 #define NUM_OF_CHANNELS         23
 #define MAX_OPLGEN_BUFFER_SIZE  4096
 
-struct OPL_Operator
+struct OPN_Operator
 {
     //! Operator properties
     uint32_t    modulator_E862, carrier_E862;
@@ -44,7 +44,7 @@ struct OPL_Operator
     int8_t      finetune;
 };
 
-struct OPL_PatchSetup
+struct OPN_PatchSetup
 {
     enum
     {
@@ -53,7 +53,7 @@ struct OPL_PatchSetup
         Flag_NoSound    = 0x02
     };
     //! Operators prepared for sending to OPL chip emulator
-    OPL_Operator OPS[2];
+    OPN_Operator OPS[2];
     //! Single note (for percussion instruments)
     uint8_t     tone;
     //! Extra patch flags
@@ -101,8 +101,10 @@ class Generator : public QIODevice
 
         void changePatch(FmBank::Instrument &instrument, bool isDrum = false);
         void changeNote(int32_t newnote);
-        void changeDeepTremolo(bool enabled);
-        void changeDeepVibrato(bool enabled);
+
+        void changeLFO(bool enabled);
+        void changeLFOfreq(int freq);
+
         void changeAdLibPercussion(bool enabled);
     signals:
         void debugInfo(QString);
@@ -110,12 +112,16 @@ class Generator : public QIODevice
     private:
         void WriteReg(uint16_t address, uint8_t byte);
         int32_t     note;
+        uint8_t     lfo_enable = 0x00;
+        uint8_t     lfo_freq   = 0x00;
+        uint8_t     lfo_reg    = 0x00;
+
         uint8_t     DeepTremoloMode;
         uint8_t     DeepVibratoMode;
         uint8_t     AdLibPercussionMode;
         uint8_t     testDrum;
         _opl3_chip  chip;
-        OPL_PatchSetup m_patch;
+        OPN_PatchSetup m_patch;
 
         Ym2612_Emu  chip2;
 

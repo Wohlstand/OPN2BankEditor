@@ -70,9 +70,13 @@ void BankEditor::initAudio()
     //Note to test
     connect(ui->noteToTest, static_cast<void(QSpinBox::*)(int)>(&QSpinBox::valueChanged), m_generator, &Generator::changeNote);
     m_generator->changeNote(ui->noteToTest->value());
+
     //Deep tremolo and vibrato
-    connect(ui->deepVibrato,  SIGNAL(toggled(bool)), m_generator,  SLOT(changeDeepVibrato(bool)));
-    connect(ui->deepTremolo,  SIGNAL(toggled(bool)), m_generator,  SLOT(changeDeepTremolo(bool)));
+    connect(ui->lfoEnable,      &QCheckBox::toggled,
+            m_generator,        &Generator::changeLFO);
+    connect(ui->lfoFrequency,   static_cast<void(QComboBox::*)(int)>(&QComboBox::currentIndexChanged),
+            m_generator,        &Generator::changeLFOfreq);
+
     //Generator's debug info
     connect(m_generator, SIGNAL(debugInfo(QString)), ui->debugBox, SLOT(setText(QString)));
     //Key pressed on piano bar

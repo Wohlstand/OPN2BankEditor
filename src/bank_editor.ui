@@ -1934,18 +1934,18 @@ Available from 0 to 127</string>
     <property name="geometry">
      <rect>
       <x>840</x>
-      <y>50</y>
+      <y>20</y>
       <width>121</width>
-      <height>61</height>
+      <height>81</height>
      </rect>
     </property>
     <property name="title">
-     <string>Global OPL3 flags</string>
+     <string>Global OPN2 flags</string>
     </property>
     <property name="alignment">
      <set>Qt::AlignCenter</set>
     </property>
-    <widget class="QCheckBox" name="deepTremolo">
+    <widget class="QCheckBox" name="lfoEnable">
      <property name="geometry">
       <rect>
        <x>10</x>
@@ -1960,32 +1960,64 @@ Available from 0 to 127</string>
       </font>
      </property>
      <property name="toolTip">
-      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Tremolo (Amplitude Vibrato) Depth.&lt;br/&gt;&lt;/span&gt;&lt;span style=&quot; text-decoration: underline;&quot;&gt;Ucheched&lt;/span&gt; = 1.0dB,&lt;br/&gt;&lt;span style=&quot; text-decoration: underline;&quot;&gt;Checked&lt;/span&gt; = 4.8dB.&lt;/p&gt;&lt;p&gt;(Effect taking for instruments where tremolo flag is used)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;The LFO (Low frequency Oscillator)&lt;/span&gt; is used to distort the FM sound's amplitude and phase.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
      </property>
      <property name="text">
-      <string>Deep Tremolo</string>
+      <string>Enable LFO</string>
      </property>
     </widget>
-    <widget class="QCheckBox" name="deepVibrato">
+    <widget class="QComboBox" name="lfoFrequency">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>40</y>
+       <y>50</y>
        <width>101</width>
-       <height>22</height>
+       <height>25</height>
       </rect>
      </property>
-     <property name="font">
-      <font>
-       <pointsize>8</pointsize>
-      </font>
-     </property>
-     <property name="toolTip">
-      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Frequency Vibrato Depth.&lt;br/&gt;&lt;/span&gt;&lt;span style=&quot; text-decoration: underline;&quot;&gt;Uchecked&lt;/span&gt; = 7 cents,&lt;br/&gt;&lt;span style=&quot; text-decoration: underline;&quot;&gt;Checked&lt;/span&gt; = 14 cents.&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;A &amp;quot;cent&amp;quot; is 1/100 of a semi-tone.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;(Effect taking for instruments where vibrato flag is used)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-     </property>
-     <property name="text">
-      <string>Deep Vibrato</string>
-     </property>
+     <item>
+      <property name="text">
+       <string>3.98 Hz</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>5.56 Hz</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>6.02 Hz</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>6.37 Hz</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>6.88 Hz</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>9.63 Hz</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>48.1 Hz</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>72.2 Hz</string>
+      </property>
+     </item>
     </widget>
    </widget>
    <widget class="QLabel" name="debugBox">
@@ -1994,7 +2026,7 @@ Available from 0 to 127</string>
       <x>840</x>
       <y>0</y>
       <width>111</width>
-      <height>51</height>
+      <height>21</height>
      </rect>
     </property>
     <property name="font">
@@ -2009,7 +2041,6 @@ Available from 0 to 127</string>
     </property>
     <property name="text">
      <string notr="true">Channels:
-2-op: --, Ps-4op: --
 4-op: --</string>
     </property>
     <property name="alignment">
@@ -2279,12 +2310,12 @@ of second voice</string>
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>752</x>
-     <y>406</y>
+     <x>839</x>
+     <y>405</y>
     </hint>
     <hint type="destinationlabel">
-     <x>532</x>
-     <y>437</y>
+     <x>476</x>
+     <y>441</y>
     </hint>
    </hints>
   </connection>
@@ -2295,8 +2326,8 @@ of second voice</string>
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>780</x>
-     <y>406</y>
+     <x>839</x>
+     <y>405</y>
     </hint>
     <hint type="destinationlabel">
      <x>347</x>
@@ -2311,12 +2342,12 @@ of second voice</string>
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>780</x>
-     <y>406</y>
+     <x>839</x>
+     <y>405</y>
     </hint>
     <hint type="destinationlabel">
      <x>413</x>
-     <y>676</y>
+     <y>670</y>
     </hint>
    </hints>
   </connection>
@@ -2327,12 +2358,12 @@ of second voice</string>
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>780</x>
-     <y>406</y>
+     <x>839</x>
+     <y>405</y>
     </hint>
     <hint type="destinationlabel">
-     <x>780</x>
-     <y>676</y>
+     <x>840</x>
+     <y>670</y>
     </hint>
    </hints>
   </connection>
@@ -2343,12 +2374,12 @@ of second voice</string>
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>780</x>
-     <y>406</y>
+     <x>839</x>
+     <y>405</y>
     </hint>
     <hint type="destinationlabel">
-     <x>240</x>
-     <y>437</y>
+     <x>241</x>
+     <y>441</y>
     </hint>
    </hints>
   </connection>
@@ -2359,12 +2390,12 @@ of second voice</string>
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>637</x>
-     <y>394</y>
+     <x>839</x>
+     <y>405</y>
     </hint>
     <hint type="destinationlabel">
-     <x>612</x>
-     <y>426</y>
+     <x>839</x>
+     <y>439</y>
     </hint>
    </hints>
   </connection>
@@ -2379,8 +2410,8 @@ of second voice</string>
      <y>431</y>
     </hint>
     <hint type="destinationlabel">
-     <x>827</x>
-     <y>577</y>
+     <x>850</x>
+     <y>612</y>
     </hint>
    </hints>
   </connection>
@@ -2395,8 +2426,8 @@ of second voice</string>
      <y>432</y>
     </hint>
     <hint type="destinationlabel">
-     <x>842</x>
-     <y>557</y>
+     <x>850</x>
+     <y>582</y>
     </hint>
    </hints>
   </connection>
@@ -2411,8 +2442,8 @@ of second voice</string>
      <y>429</y>
     </hint>
     <hint type="destinationlabel">
-     <x>829</x>
-     <y>657</y>
+     <x>617</x>
+     <y>423</y>
     </hint>
    </hints>
   </connection>
@@ -2427,8 +2458,24 @@ of second voice</string>
      <y>432</y>
     </hint>
     <hint type="destinationlabel">
-     <x>806</x>
-     <y>641</y>
+     <x>555</x>
+     <y>441</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>lfoEnable</sender>
+   <signal>clicked(bool)</signal>
+   <receiver>lfoFrequency</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>885</x>
+     <y>73</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>899</x>
+     <y>103</y>
     </hint>
    </hints>
   </connection>

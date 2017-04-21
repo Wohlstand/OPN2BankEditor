@@ -94,7 +94,7 @@ Generator::Generator(uint32_t sampleRate,
             { 0x10490A0, 0x1045531, 0x52, 0x80, 0x6, +12 },
         },
         0,
-        OPL_PatchSetup::Flag_Pseudo4op,
+        OPN_PatchSetup::Flag_Pseudo4op,
         -0.125000 // Fine tuning
     };
     m_regBD = 0;
@@ -131,62 +131,127 @@ Generator::Generator(uint32_t sampleRate,
     WriteReg(0x0BD, m_regBD = (DeepTremoloMode * 0x80
                                + DeepVibratoMode * 0x40
                                + AdLibPercussionMode * 0x20));
-    switch4op(true);
-    Silence();
+
 
     /*
         Dummy Yamaha OPN2 data which plays a single note
     */
 
+    //Init chip
     chip2.set_rate(sampleRate, 6350400.0);
-    chip2.write0(0x22, 0x0 );
-    chip2.write0(0x27, 0x0 );
-    chip2.write0(0x28, 0x0 );
-    chip2.write0(0x28, 0x1 );
-    chip2.write0(0x28, 0x2 );
-    chip2.write0(0x28, 0x4 );
-    chip2.write0(0x28, 0x5 );
-    chip2.write0(0x28, 0x6 );
-    chip2.write0(0x2B, 0x0 );
-    chip2.write0(0x30, 0x71);
-    chip2.write0(0x34, 0x0D);
-    chip2.write0(0x38, 0x33);
-    chip2.write0(0x3C, 0x01);
+    chip2.write0(0x22, 0x0 );   //LFO off
+    chip2.write0(0x27, 0x0 );   //Channel 3 mode normal
 
-    chip2.write0(0x40, 0x23);//Total Level
-    chip2.write0(0x44, 0x2D);
-    chip2.write0(0x48, 0x26);
-    chip2.write0(0x4C, 0x00);
+    //Shut up all channels
+    chip2.write0(0x28, 0x0 );   //Note Off 0 channel
+    chip2.write0(0x28, 0x1 );   //Note Off 1 channel
+    chip2.write0(0x28, 0x2 );   //Note Off 2 channel
+    chip2.write0(0x28, 0x4 );   //Note Off 3 channel
+    chip2.write0(0x28, 0x5 );   //Note Off 4 channel
+    chip2.write0(0x28, 0x6 );   //Note Off 5 channel
 
-    chip2.write0(0x50, 0x5F);//RS/AR
-    chip2.write0(0x54, 0x99);
-    chip2.write0(0x58, 0x5F);
-    chip2.write0(0x5C, 0x94);
+    //Disable DAC
+    chip2.write0(0x2B, 0x0 );   //DAC off
 
-    chip2.write0(0x60, 0x5 );
-    chip2.write0(0x64, 0x5 );
-    chip2.write0(0x68, 0x5 );
-    chip2.write0(0x6C, 0x7 );
-    chip2.write0(0x70, 0x2 );
-    chip2.write0(0x74, 0x2 );
-    chip2.write0(0x78, 0x2 );
-    chip2.write0(0x7C, 0x2 );
-    chip2.write0(0x80, 0x11);
-    chip2.write0(0x84, 0x11);
-    chip2.write0(0x88, 0x11);
-    chip2.write0(0x8C, 0xA6);
-    chip2.write0(0x90, 0x0 );
-    chip2.write0(0x94, 0x0 );
-    chip2.write0(0x98, 0x0 );
-    chip2.write0(0x9C, 0x0 );
-    chip2.write0(0xB0, 0x32);
-    chip2.write0(0xB4, 0xC0);
-    chip2.write0(0x28, 0x00);
 
-    chip2.write0(0xA4, 0x68);
-    chip2.write0(0xA0, 0xFF);
+    for(char ch = 0; ch < 6; ch++)
+    {
+        if(ch <= 2)
+        {
+            chip2.write0(0x30 + ch, 0x71);   //Detune/Frequency Multiple operator 1
+            chip2.write0(0x34 + ch, 0x0D);   //Detune/Frequency Multiple operator 2
+            chip2.write0(0x38 + ch, 0x33);   //Detune/Frequency Multiple operator 3
+            chip2.write0(0x3C + ch, 0x01);   //Detune/Frequency Multiple operator 4
 
-    chip2.write0(0x28, 0xF0);
+            chip2.write0(0x40 + ch, 0x23);   //Total Level operator 1
+            chip2.write0(0x44 + ch, 0x2D);   //Total Level operator 2
+            chip2.write0(0x48 + ch, 0x26);   //Total Level operator 3
+            chip2.write0(0x4C + ch, 0x00);   //Total Level operator 4
+
+            chip2.write0(0x50 + ch, 0x5F);   //RS/AR operator 1
+            chip2.write0(0x54 + ch, 0x99);   //RS/AR operator 2
+            chip2.write0(0x58 + ch, 0x5F);   //RS/AR operator 3
+            chip2.write0(0x5C + ch, 0x94);   //RS/AR operator 4
+
+            chip2.write0(0x60 + ch, 0x5 );   //AM/D1R operator 1
+            chip2.write0(0x64 + ch, 0x5 );   //AM/D1R operator 2
+            chip2.write0(0x68 + ch, 0x5 );   //AM/D1R operator 3
+            chip2.write0(0x6C + ch, 0x7 );   //AM/D1R operator 4
+
+            chip2.write0(0x70 + ch, 0x2 );   //D2R operator 1
+            chip2.write0(0x74 + ch, 0x2 );   //D2R operator 2
+            chip2.write0(0x78 + ch, 0x2 );   //D2R operator 3
+            chip2.write0(0x7C + ch, 0x2 );   //D2R operator 4
+
+            chip2.write0(0x80 + ch, 0x11);   //D1L/RR Operator 1
+            chip2.write0(0x84 + ch, 0x11);   //D1L/RR Operator 2
+            chip2.write0(0x88 + ch, 0x11);   //D1L/RR Operator 3
+            chip2.write0(0x8C + ch, 0xA6);   //D1L/RR Operator 4
+
+            chip2.write0(0x90 + ch, 0x0 );   //Proprietary shit
+            chip2.write0(0x94 + ch, 0x0 );   //Proprietary shit
+            chip2.write0(0x98 + ch, 0x0 );   //Proprietary shit
+            chip2.write0(0x9C + ch, 0x0 );   //Proprietary shit
+
+            chip2.write0(0xB0 + ch, 0x32);   //Feedback/Algorithm
+
+            chip2.write0(0xB4 + ch, 0xC0);   //Panorame (toggle on both speakers)
+
+            chip2.write0(0x28 + ch, 0x00);   //Key off Channel 0
+
+            chip2.write0(0xA4 + ch, 0x68);   //Set frequency and octave
+            chip2.write0(0xA0 + ch, 0xFF);
+        } else {
+            chip2.write1(0x30 + ch%3, 0x71);   //Detune/Frequency Multiple operator 1
+            chip2.write1(0x34 + ch%3, 0x0D);   //Detune/Frequency Multiple operator 2
+            chip2.write1(0x38 + ch%3, 0x33);   //Detune/Frequency Multiple operator 3
+            chip2.write1(0x3C + ch%3, 0x01);   //Detune/Frequency Multiple operator 4
+
+            chip2.write1(0x40 + ch%3, 0x23);   //Total Level operator 1
+            chip2.write1(0x44 + ch%3, 0x2D);   //Total Level operator 2
+            chip2.write1(0x48 + ch%3, 0x26);   //Total Level operator 3
+            chip2.write1(0x4C + ch%3, 0x00);   //Total Level operator 4
+
+            chip2.write1(0x50 + ch%3, 0x5F);   //RS/AR operator 1
+            chip2.write1(0x54 + ch%3, 0x99);   //RS/AR operator 2
+            chip2.write1(0x58 + ch%3, 0x5F);   //RS/AR operator 3
+            chip2.write1(0x5C + ch%3, 0x94);   //RS/AR operator 4
+
+            chip2.write1(0x60 + ch%3, 0x5 );   //AM/D1R operator 1
+            chip2.write1(0x64 + ch%3, 0x5 );   //AM/D1R operator 2
+            chip2.write1(0x68 + ch%3, 0x5 );   //AM/D1R operator 3
+            chip2.write1(0x6C + ch%3, 0x7 );   //AM/D1R operator 4
+
+            chip2.write1(0x70 + ch%3, 0x2 );   //D2R operator 1
+            chip2.write1(0x74 + ch%3, 0x2 );   //D2R operator 2
+            chip2.write1(0x78 + ch%3, 0x2 );   //D2R operator 3
+            chip2.write1(0x7C + ch%3, 0x2 );   //D2R operator 4
+
+            chip2.write1(0x80 + ch%3, 0x11);   //D1L/RR Operator 1
+            chip2.write1(0x84 + ch%3, 0x11);   //D1L/RR Operator 2
+            chip2.write1(0x88 + ch%3, 0x11);   //D1L/RR Operator 3
+            chip2.write1(0x8C + ch%3, 0xA6);   //D1L/RR Operator 4
+
+            chip2.write1(0x90 + ch%3, 0x0 );   //Proprietary shit
+            chip2.write1(0x94 + ch%3, 0x0 );   //Proprietary shit
+            chip2.write1(0x98 + ch%3, 0x0 );   //Proprietary shit
+            chip2.write1(0x9C + ch%3, 0x0 );   //Proprietary shit
+
+            chip2.write1(0xB0 + ch%3, 0x32);   //Feedback/Algorithm
+
+            chip2.write1(0xB4 + ch%3, 0xC0);   //Panorame (toggle on both speakers)
+
+            chip2.write1(0x28 + ch%3, 0x00);   //Key off Channel 0
+
+            chip2.write1(0xA4 + ch%3, 0x68);   //Set frequency and octave
+            chip2.write1(0xA0 + ch%3, 0xFF);
+        }
+    }
+    // OPN END
+
+    switch4op(true);
+    Silence();
+
 }
 
 Generator::~Generator()
@@ -199,22 +264,22 @@ void Generator::WriteReg(uint16_t address, uint8_t byte)
 
 void Generator::NoteOff(uint32_t c)
 {
-    uint8_t cc = static_cast<uint8_t>(c % 23);
-
-    if(cc >= 18)
-    {
-        m_regBD &= ~(0x10 >> (cc - 18));
-        WriteReg(0xBD, m_regBD);
-        return;
-    }
-
-    WriteReg(0xB0 + Channels[cc], m_pit[c] & 0xDF);
+    uint8_t cc = static_cast<uint8_t>(c % 6);
+    chip2.write0(0x28, (c <= 2) ? cc : cc + 1);
+//    if(cc >= 18)
+//    {
+//        m_regBD &= ~(0x10 >> (cc - 18));
+//        WriteReg(0xBD, m_regBD);
+//        return;
+//    }
+    //WriteReg(0xB0 + Channels[cc], m_pit[c] & 0xDF);
 }
 
 void Generator::NoteOn(uint32_t c, double hertz) // Hertz range: 0..131071
 {
-    uint16_t cc = c % 23;
-    uint16_t x = 0x2000;
+    uint8_t  cc = c % 6;
+    //uint16_t x = 0x2000;
+    uint16_t x2 = 0x0000;
 
     if(hertz < 0 || hertz > 131071) // Avoid infinite loop
         return;
@@ -222,24 +287,36 @@ void Generator::NoteOn(uint32_t c, double hertz) // Hertz range: 0..131071
     while(hertz >= 1023.5)
     {
         hertz /= 2.0;    // Calculate octave
-        x += 0x400;
+        //x  += 0x400;
+        x2 += 0x800;
+    }
+    //x  += static_cast<uint32_t>(hertz + 0.5);
+    x2 += static_cast<uint32_t>(hertz + 0.5);
+//    uint16_t chn = Channels[cc];
+//    if(cc >= 18)
+//    {
+//        m_regBD |= (0x10 >> (cc - 18));
+//        WriteReg(0x0BD, m_regBD);
+//        x &= ~0x2000u;
+//        //x |= 0x800; // for test
+//    }
+//    else if(chn != 0xFFF)
+//    {
+//        WriteReg(0xA0 + chn, x & 0xFF);
+//        WriteReg(0xB0 + chn, m_pit[c] = static_cast<uint8_t>(x >> 8));
+//    }
+
+    if(cc <= 2)
+    {
+        chip2.write0(0xA0 + cc,  x2 & 0xFF);
+        chip2.write0(0xA4 + cc, (x2>>8) & 0xFF);//Set frequency and octave
+        chip2.write0(0x28, 0xF0 + (cc));
+    } else {
+        chip2.write1(0xA0 + (cc)%3,  x2 & 0xFF);
+        chip2.write1(0xA4 + cc%3, (x2>>8) & 0xFF);//Set frequency and octave
+        chip2.write0(0x28, 0xF0 + (cc + 1));
     }
 
-    x += static_cast<uint32_t>(hertz + 0.5);
-    uint16_t chn = Channels[cc];
-
-    if(cc >= 18)
-    {
-        m_regBD |= (0x10 >> (cc - 18));
-        WriteReg(0x0BD, m_regBD);
-        x &= ~0x2000u;
-        //x |= 0x800; // for test
-    }
-    else if(chn != 0xFFF)
-    {
-        WriteReg(0xA0 + chn, x & 0xFF);
-        WriteReg(0xB0 + chn, m_pit[c] = static_cast<uint8_t>(x >> 8));
-    }
 }
 
 void Generator::Touch_Real(uint32_t c, uint32_t volume)
@@ -356,14 +433,12 @@ void Generator::PlayNoteF(int noteID)
         QString toStr()
         {
             return QString("Channels:\n"
-                           "2-op: %1, Ps-4op: %2\n"
-                           "4-op: %3")
-                   .arg(this->chan2op)
-                   .arg(this->chanPs4op)
+                           "4-op: %1")
                    .arg(this->chan4op);
         }
     } _debug { -1, -1, -1};
-    int tone = noteID;
+
+    int tone = noteID + 2;//Seems OPN lacks one tone, let's add two half-tones to fix that
 
     if(m_patch.tone)
     {
@@ -376,43 +451,42 @@ void Generator::PlayNoteF(int noteID)
     }
 
     uint16_t i[2] = { 0, 1 };
-    bool pseudo_4op  = (m_patch.flags & OPL_PatchSetup::Flag_Pseudo4op) != 0;
-    bool natural_4op = (m_patch.flags & OPL_PatchSetup::Flag_True4op) != 0;
+    //bool pseudo_4op  = (m_patch.flags & OPN_PatchSetup::Flag_Pseudo4op) != 0;
+//    bool natural_4op = true;//(m_patch.flags & OPN_PatchSetup::Flag_True4op) != 0;
     uint16_t  adlchannel[2] = { 0, 0 };
 
-    if(!natural_4op || pseudo_4op)
-    {
-        if(pseudo_4op)
-        {
-            adlchannel[0] = channels1[chanPs4op];
-            adlchannel[1] = channels2[chanPs4op];
-            /* Rotating channels to have nicer poliphony on key spam */
-            _debug.chanPs4op = chanPs4op++;
+//    if(!natural_4op || pseudo_4op)
+//    {
+//        if(pseudo_4op)
+//        {
+//            adlchannel[0] = channels1[chanPs4op];
+//            adlchannel[1] = channels2[chanPs4op];
+//            /* Rotating channels to have nicer poliphony on key spam */
+//            _debug.chanPs4op = chanPs4op++;
 
-            if(chanPs4op > (USED_CHANNELS_2OP_PS4 - 1))
-                chanPs4op = 0;
-        }
-        else
-        {
-            adlchannel[0] = channels[chan2op];
-            adlchannel[1] = channels[chan2op];
-            /* Rotating channels to have nicer poliphony on key spam */
-            _debug.chan2op = chan2op++;
+//            if(chanPs4op > (USED_CHANNELS_2OP_PS4 - 1))
+//                chanPs4op = 0;
+//        }
+//        else
+//        {
+//            adlchannel[0] = channels[chan2op];
+//            adlchannel[1] = channels[chan2op];
+//            /* Rotating channels to have nicer poliphony on key spam */
+//            _debug.chan2op = chan2op++;
 
-            if(chan2op > (USED_CHANNELS_2OP - 1))
-                chan2op = 0;
-        }
-    }
-    else if(natural_4op)
-    {
+//            if(chan2op > (USED_CHANNELS_2OP - 1))
+//                chan2op = 0;
+//        }
+//    }
+//    else if(natural_4op)
+//    {
         adlchannel[0] = channels1_4op[chan4op];
         adlchannel[1] = channels2_4op[chan4op];
         /* Rotating channels to have nicer poliphony on key spam */
         _debug.chan4op = chan4op++;
-
         if(chan4op > (USED_CHANNELS_4OP - 1))
             chan4op = 0;
-    }
+//    }
 
     emit debugInfo(_debug.toStr());
     m_ins[adlchannel[0]] = i[0];
@@ -421,27 +495,26 @@ void Generator::PlayNoteF(int noteID)
     double phase = 0.0;
     Patch(adlchannel[0], i[0]);
 
-    if(pseudo_4op || natural_4op)
-        Patch(adlchannel[1], i[1]);
+    //if(pseudo_4op || natural_4op)
+    //    Patch(adlchannel[1], i[1]);
 
-    Pan(adlchannel[0], 0x30);
+    //Pan(adlchannel[0], 0x30);
 
-    if(pseudo_4op || natural_4op)
-        Pan(adlchannel[1], 0x30);
+    //if(pseudo_4op || natural_4op)
+    //    Pan(adlchannel[1], 0x30);
 
     Touch_Real(adlchannel[0], 63);
 
-    if(pseudo_4op || natural_4op)
-        Touch_Real(adlchannel[1], 63);
+    //if(pseudo_4op || natural_4op)
+    //    Touch_Real(adlchannel[1], 63);
 
     bend  = 0.0 + m_patch.OPS[i[0]].finetune;
     NoteOn(adlchannel[0], BEND_COEFFICIENT * std::exp(0.057762265 * (tone + bend + phase)));
-
-    if(pseudo_4op)
-    {
-        bend  = 0.0 + m_patch.OPS[i[1]].finetune + m_patch.voice2_fine_tune;
-        NoteOn(adlchannel[1], BEND_COEFFICIENT * std::exp(0.057762265 * (tone + bend + phase)));
-    }
+//    if(pseudo_4op)
+//    {
+//        bend  = 0.0 + m_patch.OPS[i[1]].finetune + m_patch.voice2_fine_tune;
+//        NoteOn(adlchannel[1], BEND_COEFFICIENT * std::exp(0.057762265 * (tone + bend + phase)));
+//    }
 }
 
 void Generator::PlayDrum(uint8_t drum, int noteID)
@@ -528,7 +601,7 @@ void Generator::switch4op(bool enabled)
     }
 
     //Reset patch settings
-    memset(&m_patch, 0, sizeof(OPL_PatchSetup));
+    memset(&m_patch, 0, sizeof(OPN_PatchSetup));
     m_patch.OPS[0].modulator_40   = 0x3F;
     m_patch.OPS[0].modulator_E862 = 0x00FFFF00;
     m_patch.OPS[1].carrier_40     = 0x3F;
@@ -545,6 +618,7 @@ void Generator::switch4op(bool enabled)
 
 void Generator::Silence()
 {
+
     //Shutup!
     for(unsigned c = 0; c < NUM_OF_CHANNELS; ++c)
     {
@@ -723,9 +797,9 @@ void Generator::changePatch(FmBank::Instrument &instrument, bool isDrum)
         if(instrument.en_4op)
         {
             if(instrument.en_pseudo4op)
-                m_patch.flags |= OPL_PatchSetup::Flag_Pseudo4op;
+                m_patch.flags |= OPN_PatchSetup::Flag_Pseudo4op;
             else
-                m_patch.flags |= OPL_PatchSetup::Flag_True4op;
+                m_patch.flags |= OPN_PatchSetup::Flag_True4op;
         }
     }
 }
@@ -735,21 +809,24 @@ void Generator::changeNote(int32_t newnote)
     note = newnote;
 }
 
-void Generator::changeDeepTremolo(bool enabled)
+
+
+void Generator::changeLFO(bool enabled)
 {
-    DeepTremoloMode   = uchar(enabled);
-    WriteReg(0x0BD, m_regBD = (DeepTremoloMode * 0x80
-                               + DeepVibratoMode * 0x40
-                               + AdLibPercussionMode * 0x20));
+    lfo_enable = uint8_t(enabled);
+    lfo_reg = ((lfo_enable << 3) & (lfo_freq & 0x07)) & 0x0F;
+    chip2.write0(0x22, lfo_reg);
 }
 
-void Generator::changeDeepVibrato(bool enabled)
+void Generator::changeLFOfreq(int freq)
 {
-    DeepVibratoMode   = uchar(enabled);
-    WriteReg(0x0BD, m_regBD = (DeepTremoloMode * 0x80
-                               + DeepVibratoMode * 0x40
-                               + AdLibPercussionMode * 0x20));
+    lfo_freq = uint8_t(freq);
+    lfo_reg = ((lfo_enable << 3) & (lfo_freq & 0x07)) & 0x0F;
+    chip2.write0(0x22, lfo_reg);
 }
+
+
+
 
 void Generator::changeAdLibPercussion(bool enabled)
 {
