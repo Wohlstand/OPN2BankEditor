@@ -57,8 +57,6 @@ UI_DIR      = $$BUILD_OBJ_DIR/_build_$$ARCH/$$TARGET/_$$BUILDTP/.ui
 win32: RC_FILE = $$PWD/src/resources/res.rc
 
 SOURCES += \
-    src/FileFormats/dmxopl2.cpp \
-    src/FileFormats/junlevizion.cpp \
     src/audio.cpp \
     src/bank.cpp \
     src/bank_editor.cpp \
@@ -66,36 +64,26 @@ SOURCES += \
     src/controlls.cpp \
     src/main.cpp \
     src/ins_names.cpp \
-    src/opl/nukedopl3.c \
     src/opl/generator.cpp \
     src/piano.cpp \
-    src/FileFormats/apogeetmb.cpp \
-    src/FileFormats/sb_ibk.cpp \
-    src/FileFormats/adlibbnk.cpp \
     src/importer.cpp \
     src/FileFormats/ffmt_base.cpp \
-    src/FileFormats/milesopl.cpp \
-    src/opl/Ym2612_Emu.cpp
+    src/opl/Ym2612_Emu.cpp \
+    src/FileFormats/wohlstand_opn2.cpp
 
 
 HEADERS += \
-    src/FileFormats/dmxopl2.h \
     src/FileFormats/ffmt_base.h \
-    src/FileFormats/junlevizion.h \
     src/bank.h \
     src/bank_editor.h \
     src/common.h \
     src/ins_names.h \
-    src/opl/nukedopl3.h \
     src/opl/generator.h \
     src/piano.h \
     src/version.h \
-    src/FileFormats/apogeetmb.h \
-    src/FileFormats/sb_ibk.h \
-    src/FileFormats/adlibbnk.h \
     src/importer.h \
-    src/FileFormats/milesopl.h \
-    src/opl/Ym2612_Emu.h
+    src/opl/Ym2612_Emu.h \
+    src/FileFormats/wohlstand_opn2.h
 
 
 FORMS += \

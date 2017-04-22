@@ -22,10 +22,10 @@
 #include <QVector>
 
 /* *********** FM Operator indexes *********** */
-#define CARRIER1    0
-#define MODULATOR1  1
-#define CARRIER2    2
-#define MODULATOR2  3
+#define OPERATOR1    0
+#define OPERATOR2    1
+#define OPERATOR3    2
+#define OPERATOR4    3
 /* *********** FM Operator indexes *end******* */
 
 /**
@@ -51,61 +51,109 @@ public:
     struct Operator
     {
         /*
+         * --- About chip global properties bytes ---
+         *  LFO
+         *     4-bits unused
+         *     1-bit LFO on/off
+         *     3-bits LFO frequency (0 to 7)
+         *
+         *  Timer A
+         *      8-bit MSB
+         *      6-bits unused
+         *      2-bit LSB
+         *
+         *          They should be set in the order 24H, 25H
+         *          10-bit: 18 × (1024 - Timer A) microseconds
+         *          Timer A = all 1′s -> 18 µs = 0.018 ms
+         *          Timer A = all 0′s -> 18,400 µs = 18.4 ms
+         *
+         * Timer B
+         *      8-bit   288 × (256 - Timer B ) microseconds
+         *
+         *          Timer B = all 1′s -> 0.288 ms
+         *          Timer B = all 0′s -> 73.44 ms
+         *
+         * Timers; Ch 3/6 mode
+         *      1-bit must be always 0
+         *      1-bit 0 - Channel 3 is same as others, 1 - channel #3 has 4 separated frequencies
+         *      1-bit Reset B
+         *      1-bit Reset A
+         *      1-bit Enable A
+         *      1-bit Enable B
+         *      1-bit Load B
+         *      1-bit Load A
+         *
          * --- About operator data bytes ---
          *
-         * AM/VIB/EG/KSR/Multiple bits
-         *      1-bit Tremolo
-         *      1-bit Vibrato
-         *      1-bit Systain sound
-         *      1-bit Envelope scale (KSR)
-         *      4-bit Frequency Multiplication
+         * DAC sample (must be 8-bit PCM)
+         *      8-bit DAC amplitude value of each sample
          *
-         * KSL/attenuation settings
-         *      2-bit KSL (Key Scale Rate)
-         *      6-bit Level (0 max, 63 minimal)
+         * Detune / Multiple bits
+         *      1-bit unused
+         *      3-bits detune level
+         *      4-bits Frequency multiplication
          *
-         * Attack/decay rates
-         *      4-bit attak (0-zero, F-max)
-         *      4-bit decay (0-zero, F-max)
+         * Total Level (Attenuation)
+         *      1-bit unused
+         *      7-bits Level (0 max, 127 minimal)
          *
-         * Sustain/release rates
-         *      4-bit systain (0-max, F-zero)
-         *      4-bit release(0-zero, F-max)
+         * Rate Scale/Attack
+         *      2-bits Rate Scale
+         *      1-bit  unused
+         *      5-bits Attack (0 max, 31 minimal)
          *
-         * Wave select settings
-         *      4-bit unused
-         *      4-bit wave-from-0-to-7
+         * Decay1 (Decay before Systain) / Amplitude Modulation
+         *      1-bit  Amplitude Modulation
+         *      2-bits unused
+         *      5-bits Decay1 (0 max, 31 minimal)
          *
-         * Feedback/connection bits  &~0x30
-         *      4-bits 0000 Unused zone
-         *      3-bits 000-feedback
-         *      1-bit 0-fm, 1-am
+         * Decay2 (Decay while Systain)
+         *      3-bits unused
+         *      5-bits Decay2 (0 max, 31 minimal)
+         *
+         * Systain / Release
+         *      4-bits Systain
+         *      4-bits Release
+         *
+         * Proprietary / SSG-EG
+         *      4-bits Proprietary
+         *      4-bits SSG-EG
+         *
+         * Feedback / Algorithm
+         *      2-bits unused
+         *      3-bits Feedback
+         *      3-bits Algorithm
+         *
+         * Stereo (unused in the banks) / LFO Sensitivity (Maybe let modulate it by "Modulation" MIDI controller?)
+         *      1-bit Left speaker  (Don't save into file, must be controlled by MIDI panarame)
+         *      1-bit Right speaker (Don't save into file, must be controlled by MIDI panarame)
+         *      2-bits Amplitude Modulation sensitivity (0...3)
+         *      1-bit unused
+         *      3-bits Frequency Modulation sensitibity (Maybe handle by modulation MIDI controller) (0...7)
          */
 
-        //! Attacking level (from 0 to 15)
-        unsigned char attack;
-        //! Decaying level (from 0 to 15)
-        unsigned char decay;
-        //! Sustain level (from 0 to 15)
-        unsigned char sustain;
-        //! Release level (from 0 to 15)
-        unsigned char release;
-        //! Wave shape (from 0 to 7)
-        unsigned char waveform;
+        //! Detune level (from 0 to 7)
+        unsigned char detune;
         //! Frequency multiplication (from 0 to 15)
         unsigned char fmult;
-        //! Volume level (from 0 to 63)
+        //! Volume level (from 0 to 127)
         unsigned char level;
         //! Key Scale level (from 0 to 3)
-        unsigned char ksl;
-        //! Vibrato (0 or 1)
-        bool vib;
-        //! Tremolo (0 or 1)
-        bool am;
-        //! Enable sustaining (0 or 1)
-        bool eg;
-        //! Key scale Rate (Envelope scale) (0 or 1)
-        bool ksr;
+        unsigned char ratescale;
+        //! Attacking level (from 0 to 31)
+        unsigned char attack;
+        //! Enable/Disable EFO affecting
+        bool          am_enable;
+        //! Decaying 1 level (from 0 to 31)
+        unsigned char decay1;
+        //! Decaying 2 level (from 0 to 31)
+        unsigned char decay2;
+        //! Sustain level (from 0 to 15)
+        unsigned char sustain;
+        //! SSG-EG value (from 0 to 15)
+        unsigned char ssg_eg;
+        //! Release level (from 0 to 15)
+        unsigned char release;
     };
 
     /**
@@ -117,171 +165,56 @@ public:
         char name[33];
         //! FM operators
         Operator OP[4];
-        //! Feedback for a first modulator and carrier
-        unsigned char feedback1;
-        //! Feedback for a second modulator and carrier (used in 4-operators or double-voice mode)
-        unsigned char feedback2;
-        /**
-         * @brief Types of synthesis
-         */
-        enum Connections
-        {
-            //! Additive
-            AM = true,
-            //! Frequency modulation
-            FM = false
-        };
-        //! Connections for a first operators pair
-        bool connection1;
-        //! Connections for a second operators pair
-        bool connection2;
+        //! Feedback
+        uint8_t feedback;
+        //! Algorithm
+        uint8_t algorithm;
         //! Play only this note number independent from a requested key
-        unsigned char percNoteNum;
-        //! Is enabled four operators mode
-        bool en_4op;
-        //! Enable double-voice mode instead of real 4-operator mode
-        bool en_pseudo4op;
-        //! Fine tuning of second voice (pseudo-4-operators only, DMX-Specific)
-        char fine_tune;
+        uint8_t percNoteNum;
         //! Note offset (first operator pair)
-        short note_offset1;
-        //! Note offset (second operator pair, DMX-Specific)
-        short note_offset2;
-        //! Note velocity offset (TMB-Specific)
-        char velocity_offset;
-        //! AdLib specific parameter: Drum Number
-        unsigned char adlib_drum_number;
+        int16_t note_offset1;
 
-        /* ******** OPL3 merged values ******** */
+        //! Frequency modulation sensitivity (0 or 7)
+        uint8_t fm;
+        //! Amplitude modulation sensitivity (0...3)
+        uint8_t am;
 
-        /*!
-         * \brief Merge into AM/VIB/EG/KSR/Multiple bits byte
-         * \param OpID Operator type (CARRIER1, MODULATOR1, CARRIER2, MODULATOR2)
-         * \return merged byte
-         */
-        unsigned char getAVEKM(int OpID);
 
-        /*!
-         * \brief Split AM/VIB/EG/KSR/Multiple bits byte into internal values
-         * \param OpID Operator type (CARRIER1, MODULATOR1, CARRIER2, MODULATOR2)
-         * \param in merged byte
-         */
-        void setAVEKM(int OpID, unsigned char in);
+        /* ******** OPN2 merged values ******** */
+        uint8_t getRegDUMUL(int OpID);
+        void    setRegDUMUL(int OpID, uint8_t reg_dumul);
 
-        /*!
-         * \brief Merge into KSL/attenuation settings byte
-         * \param OpID Operator type (CARRIER1, MODULATOR1, CARRIER2, MODULATOR2)
-         * \return merged byte
-         */
-        unsigned char getKSLL(int OpID);
+        uint8_t getRegLevel(int OpID);
+        void    setRegLevel(int OpID, uint8_t reg_level);
 
-        /*!
-         * \brief Split KSL/attenuation settings byte into internal values
-         * \param OpID Operator type (CARRIER1, MODULATOR1, CARRIER2, MODULATOR2)
-         * \param in merged byte
-         */
-        void setKSLL(int OpID, unsigned char in);
+        uint8_t getRegRSAt(int OpID);
+        void    setRegRSAt(int OpID, uint8_t reg_rsat);
 
-        /*!
-         * \brief Merge into KSL/attenuation settings byte without attenuation
-         * \param OpID Operator type (CARRIER1, MODULATOR1, CARRIER2, MODULATOR2)
-         * \return merged byte
-         */
-        unsigned char getKSL(int OpID);
-        /*!
-         * \brief Store KSL value into internal values
-         * \param OpID Operator type (CARRIER1, MODULATOR1, CARRIER2, MODULATOR2)
-         * \param in merged byte
-         */
-        void setKSL(int OpID, unsigned char in);
+        uint8_t getRegAMD1(int OpID);
+        void    setRegAMD1(int OpID, uint8_t reg_amd1);
 
-        /*!
-         * \brief Merge into KSL/attenuation settings byte without KSL
-         * \param OpID Operator type (CARRIER1, MODULATOR1, CARRIER2, MODULATOR2)
-         * \return merged byte
-         */
-        unsigned char getLevel(int OpID);
+        uint8_t getRegD2(int OpID);
+        void    setRegD2(int OpID, uint8_t reg_d2);
 
-        /*!
-         * \brief Store attenuation value into internal values
-         * \param OpID Operator type (CARRIER1, MODULATOR1, CARRIER2, MODULATOR2)
-         * \param in merged byte
-         */
-        void setLevel(int OpID, unsigned char in);
+        uint8_t getRegSysRel(int OpID);
+        void    setRegSysRel(int OpID, uint8_t reg_sysrel);
 
-        /*!
-         * \brief Merge into Attack/decay rates byte
-         * \param OpID Operator type (CARRIER1, MODULATOR1, CARRIER2, MODULATOR2)
-         * \return merged byte
-         */
-        unsigned char getAtDec(int OpID);
-        /*!
-         * \brief Split Attack/decay rates byte into internal values
-         * \param OpID Operator type (CARRIER1, MODULATOR1, CARRIER2, MODULATOR2)
-         * \param in merged byte
-         */
-        void setAtDec(int OpID, unsigned char in);
+        uint8_t getRegSsgEg(int OpID);
+        void    setRegSsgEg(int OpID, uint8_t reg_ssgeg);
 
-        /*!
-         * \brief Merge into Sustain/release rates byte
-         * \param OpID Operator type (CARRIER1, MODULATOR1, CARRIER2, MODULATOR2)
-         * \return merged byte
-         */
-        unsigned char getSusRel(int OpID);
+        uint8_t getRegFbAlg();
+        void    setRegFbAlg(uint8_t reg_ssgeg);
 
-        /*!
-         * \brief Split Sustain/release rates byte into internal values
-         * \param OpID Operator type (CARRIER1, MODULATOR1, CARRIER2, MODULATOR2)
-         * \param in merged byte
-         */
-        void setSusRel(int OpID, unsigned char in);
-
-        /*!
-         * \brief Merge into waveform byte
-         * \param OpID Operator type (CARRIER1, MODULATOR1, CARRIER2, MODULATOR2)
-         * \return merged byte
-         */
-        unsigned char getWaveForm(int OpID);
-
-        /*!
-         * \brief Store and clear-up waveform byte into internal values
-         * \param OpID Operator type (CARRIER1, MODULATOR1, CARRIER2, MODULATOR2)
-         * \param in merged byte
-         */
-        void setWaveForm(int OpID, unsigned char in);
-
-        /*!
-         * \brief Merge into Feedback/connection byte
-         * \return merged byte
-         */
-        unsigned char getFBConn1();
-
-        /*!
-         * \brief Split Feedback/connection byte for first carrier and modulator into internal values
-         * \param in merged byte
-         */
-        void setFBConn1(unsigned char in);
-
-        /*!
-         * \brief Merge into Feedback/connection byte
-         * \return merged byte
-         */
-        unsigned char getFBConn2();
-
-        /*!
-         * \brief Split Feedback/connection byte for second carrier and modulator into internal values
-         * \param in merged byte
-         */
-        void setFBConn2(unsigned char in);
-
-        /*!
-         * \brief Merge operator data to send into 0xE862 register
-         * \param OpID Operator type (CARRIER1, MODULATOR1, CARRIER2, MODULATOR2)
-         * \return merged 4-byte register data
-         */
-        unsigned int getDataE862(int OpID);
-
+        uint8_t getRegLfoSens();
+        void    setRegLfoSens(uint8_t reg_lfosens);
     };
+
+    bool            lfo_enabled     = false;
+    unsigned char   lfo_frequency   = 0;
+
+    //Global chip LFO parameter
+    unsigned char getRegLFO();
+    void setRegLFO(unsigned char lfo_reg);
 
     /**
      * @brief Get empty instrument entry

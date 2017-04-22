@@ -27,12 +27,7 @@
 #include "ui_bank_editor.h"
 #include "ins_names.h"
 
-#include "FileFormats/adlibbnk.h"
-#include "FileFormats/apogeetmb.h"
-#include "FileFormats/dmxopl2.h"
-#include "FileFormats/junlevizion.h"
-#include "FileFormats/sb_ibk.h"
-#include "FileFormats/milesopl.h"
+#include "FileFormats/wohlstand_opn2.h"
 
 #include "common.h"
 #include "version.h"
@@ -45,7 +40,7 @@ BankEditor::BankEditor(QWidget *parent) :
     m_curInst = NULL;
     m_curInstBackup = NULL;
     m_lock = false;
-    m_recentFormat = FmBankFormatBase::FORMAT_JUNGLEVIZION;
+    m_recentFormat = FmBankFormatBase::FORMAT_WOHLSTAND_OPN2;
     m_recentNum     = -1;
     m_recentPerc    = false;
     ui->setupUi(this);
@@ -83,16 +78,12 @@ void BankEditor::loadSettings()
     QApplication::setOrganizationDomain(PGE_URL);
     QApplication::setApplicationName("OPN2 FM Banks Editor");
     QSettings setup;
-    ui->lfoEnable->setChecked(setup.value("lfo-enabled", false).toBool());
-    ui->lfoFrequency->setCurrentIndex(setup.value("lfo-frequency", 0).toInt());
     m_recentPath = setup.value("recent-path").toString();
 }
 
 void BankEditor::saveSettings()
 {
     QSettings setup;
-    setup.setValue("lfo-enabled", ui->lfoEnable->isChecked());
-    setup.setValue("lfo-frequency", ui->lfoFrequency->currentIndex());
     setup.setValue("recent-path", m_recentPath);
 }
 
@@ -137,15 +128,12 @@ void BankEditor::initFileData(QString &filePath)
     if(!ui->instruments->selectedItems().isEmpty())
     {
         int idOfSelected = ui->instruments->selectedItems().first()->data(Qt::UserRole).toInt();
-
         if(ui->melodic->isChecked())
             setMelodic();
         else
             setDrums();
-
         ui->instruments->clearSelection();
         QList<QListWidgetItem *> items = ui->instruments->findItems("*", Qt::MatchWildcard);
-
         for(int i = 0; i < items.size(); i++)
         {
             if(items[i]->data(Qt::UserRole).toInt() == idOfSelected)
@@ -154,7 +142,6 @@ void BankEditor::initFileData(QString &filePath)
                 break;
             }
         }
-
         if(!ui->instruments->selectedItems().isEmpty())
             on_instruments_currentItemChanged(ui->instruments->selectedItems().first(), NULL);
     }
@@ -163,6 +150,10 @@ void BankEditor::initFileData(QString &filePath)
 
     ui->currentFile->setText(filePath);
     m_bankBackup = m_bank;
+    m_lock = true;
+    ui->lfoEnable->setChecked(m_bank.lfo_enabled);
+    ui->lfoFrequency->setCurrentIndex(m_bank.lfo_frequency);
+    m_lock = false;
     reloadInstrumentNames();
     setCurrentInstrument(m_recentNum, m_recentPerc);
 }
@@ -177,7 +168,6 @@ void BankEditor::reInitFileDataAfterSave(QString &filePath)
 bool BankEditor::openFile(QString filePath)
 {
     int err = FmBankFormatBase::OpenBankFile(filePath, m_bank, &m_recentFormat);
-
     if(err != FmBankFormatBase::ERR_OK)
     {
         QString errText;
@@ -221,32 +211,8 @@ bool BankEditor::saveBankFile(QString filePath, FmBankFormatBase::Formats format
 
     switch(format)
     {
-    case FmBankFormatBase::FORMAT_JUNGLEVIZION:
-        err = JunleVizion::saveFile(filePath, m_bank);
-        break;
-
-    case FmBankFormatBase::FORMAT_DMX_OP2:
-        err = DmxOPL2::saveFile(filePath, m_bank);
-        break;
-
-    case FmBankFormatBase::FORMAT_APOGEE:
-        err = ApogeeTMB::saveFile(filePath, m_bank);
-        break;
-
-    case FmBankFormatBase::FORMAT_IBK:
-        err = SbIBK::saveFile(filePath, m_bank);
-        break;
-
-    case FmBankFormatBase::FORMAT_ADLIB_BKN1:
-        err = AdLibBnk::saveFile(filePath, m_bank, AdLibBnk::BNK_ADLIB);
-        break;
-
-    case FmBankFormatBase::FORMAT_ADLIB_BKNHMI:
-        err = AdLibBnk::saveFile(filePath, m_bank, AdLibBnk::BNK_HMI);
-        break;
-
-    case FmBankFormatBase::FORMAT_MILES:
-        err = MilesOPL::saveFile(filePath, m_bank);
+    case FmBankFormatBase::FORMAT_WOHLSTAND_OPN2:
+        err = WohlstandOPN2::saveFile(filePath, m_bank);
         break;
 
     case FmBankFormatBase::FORMAT_UNKNOWN:
@@ -338,7 +304,7 @@ void BankEditor::on_actionNew_triggered()
     if(!askForSaving())
         return;
 
-    m_recentFormat = FmBankFormatBase::FORMAT_JUNGLEVIZION;
+    m_recentFormat = FmBankFormatBase::FORMAT_WOHLSTAND_OPN2;
     ui->currentFile->setText(tr("<Untitled>"));
     ui->instruments->clearSelection();
     m_bank.reset();
@@ -478,84 +444,74 @@ void BankEditor::loadInstrument()
     ui->piano->setEnabled(ui->melodic->isChecked());
     ui->insName->setEnabled(true);
     m_lock = true;
+
+    ui->lfoEnable->setChecked(m_bank.lfo_enabled);
+    ui->lfoFrequency->setCurrentIndex(m_bank.lfo_frequency);
+
     ui->insName->setText(m_curInst->name);
     ui->perc_noteNum->setValue(m_curInst->percNoteNum);
-    ui->percMode->setCurrentIndex(m_curInst->adlib_drum_number > 0 ? (m_curInst->adlib_drum_number - 5) : 0);
-    ui->op4mode->setChecked(m_curInst->en_4op);
-    ui->doubleVoice->setEnabled(m_curInst->en_4op);
-    ui->doubleVoice->setChecked(m_curInst->en_pseudo4op);
-    ui->carrier2->setEnabled(m_curInst->en_4op);
-    ui->modulator2->setEnabled(m_curInst->en_4op);
-    ui->feedback2->setEnabled(m_curInst->en_4op);
-    ui->connect2->setEnabled(m_curInst->en_4op);
-    ui->feedback2label->setEnabled(m_curInst->en_4op);
-    ui->feedback1->setValue(m_curInst->feedback1);
-    ui->feedback2->setValue(m_curInst->feedback2);
-    ui->secVoiceFineTune->setValue(m_curInst->fine_tune);
     ui->noteOffset1->setValue(m_curInst->note_offset1);
-    ui->noteOffset2->setValue(m_curInst->note_offset2);
-    ui->velocityOffset->setValue(m_curInst->velocity_offset);
-    ui->am1->setChecked(m_curInst->connection1 == FmBank::Instrument::AM);
-    ui->fm1->setChecked(m_curInst->connection1 == FmBank::Instrument::FM);
-    ui->am2->setChecked(m_curInst->connection2 == FmBank::Instrument::AM);
-    ui->fm2->setChecked(m_curInst->connection2 == FmBank::Instrument::FM);
-    ui->op1_attack->setValue(m_curInst->OP[MODULATOR1].attack);
-    ui->op1_decay->setValue(m_curInst->OP[MODULATOR1].decay);
-    ui->op1_sustain->setValue(m_curInst->OP[MODULATOR1].sustain);
-    ui->op1_release->setValue(m_curInst->OP[MODULATOR1].release);
-    ui->op1_waveform->setCurrentIndex(m_curInst->OP[MODULATOR1].waveform);
-    ui->op1_freqmult->setValue(m_curInst->OP[MODULATOR1].fmult);
-    ui->op1_level->setValue(m_curInst->OP[MODULATOR1].level);
-    ui->op1_ksl->setValue(m_curInst->OP[MODULATOR1].ksl);
-    ui->op1_vib->setChecked(m_curInst->OP[MODULATOR1].vib);
-    ui->op1_am->setChecked(m_curInst->OP[MODULATOR1].am);
-    ui->op1_eg->setChecked(m_curInst->OP[MODULATOR1].eg);
-    ui->op1_ksr->setChecked(m_curInst->OP[MODULATOR1].ksr);
-    ui->op2_attack->setValue(m_curInst->OP[CARRIER1].attack);
-    ui->op2_decay->setValue(m_curInst->OP[CARRIER1].decay);
-    ui->op2_sustain->setValue(m_curInst->OP[CARRIER1].sustain);
-    ui->op2_release->setValue(m_curInst->OP[CARRIER1].release);
-    ui->op2_waveform->setCurrentIndex(m_curInst->OP[CARRIER1].waveform);
-    ui->op2_freqmult->setValue(m_curInst->OP[CARRIER1].fmult);
-    ui->op2_level->setValue(m_curInst->OP[CARRIER1].level);
-    ui->op2_ksl->setValue(m_curInst->OP[CARRIER1].ksl);
-    ui->op2_vib->setChecked(m_curInst->OP[CARRIER1].vib);
-    ui->op2_am->setChecked(m_curInst->OP[CARRIER1].am);
-    ui->op2_eg->setChecked(m_curInst->OP[CARRIER1].eg);
-    ui->op2_ksr->setChecked(m_curInst->OP[CARRIER1].ksr);
-    ui->op3_attack->setValue(m_curInst->OP[MODULATOR2].attack);
-    ui->op3_decay->setValue(m_curInst->OP[MODULATOR2].decay);
-    ui->op3_sustain->setValue(m_curInst->OP[MODULATOR2].sustain);
-    ui->op3_release->setValue(m_curInst->OP[MODULATOR2].release);
-    ui->op3_waveform->setCurrentIndex(m_curInst->OP[MODULATOR2].waveform);
-    ui->op3_freqmult->setValue(m_curInst->OP[MODULATOR2].fmult);
-    ui->op3_level->setValue(m_curInst->OP[MODULATOR2].level);
-    ui->op3_ksl->setValue(m_curInst->OP[MODULATOR2].ksl);
-    ui->op3_vib->setChecked(m_curInst->OP[MODULATOR2].vib);
-    ui->op3_am->setChecked(m_curInst->OP[MODULATOR2].am);
-    ui->op3_eg->setChecked(m_curInst->OP[MODULATOR2].eg);
-    ui->op3_ksr->setChecked(m_curInst->OP[MODULATOR2].ksr);
-    ui->op4_attack->setValue(m_curInst->OP[CARRIER2].attack);
-    ui->op4_decay->setValue(m_curInst->OP[CARRIER2].decay);
-    ui->op4_sustain->setValue(m_curInst->OP[CARRIER2].sustain);
-    ui->op4_release->setValue(m_curInst->OP[CARRIER2].release);
-    ui->op4_waveform->setCurrentIndex(m_curInst->OP[CARRIER2].waveform);
-    ui->op4_freqmult->setValue(m_curInst->OP[CARRIER2].fmult);
-    ui->op4_level->setValue(m_curInst->OP[CARRIER2].level);
-    ui->op4_ksl->setValue(m_curInst->OP[CARRIER2].ksl);
-    ui->op4_vib->setChecked(m_curInst->OP[CARRIER2].vib);
-    ui->op4_am->setChecked(m_curInst->OP[CARRIER2].am);
-    ui->op4_eg->setChecked(m_curInst->OP[CARRIER2].eg);
-    ui->op4_ksr->setChecked(m_curInst->OP[CARRIER2].ksr);
+
+    ui->feedback1->setValue(m_curInst->feedback);
+    ui->amsens->setCurrentIndex(m_curInst->am);
+    ui->fmsens->setCurrentIndex(m_curInst->fm);
+    ui->algorithm->setCurrentIndex(m_curInst->algorithm);
+
+    ui->op1_attack->setValue(       m_curInst->OP[OPERATOR1].attack);
+    ui->op1_decay1->setValue(       m_curInst->OP[OPERATOR1].decay1);
+    ui->op1_decay2->setValue(       m_curInst->OP[OPERATOR1].decay2);
+    ui->op1_sustain->setValue(      m_curInst->OP[OPERATOR1].sustain);
+    ui->op1_release->setValue(      m_curInst->OP[OPERATOR1].release);
+    ui->op1_am->setChecked(         m_curInst->OP[OPERATOR1].am_enable);
+    ui->op1_freqmult->setValue(     m_curInst->OP[OPERATOR1].fmult);
+    ui->op1_level->setValue(        m_curInst->OP[OPERATOR1].level);
+    ui->op1_detune->setCurrentIndex(m_curInst->OP[OPERATOR1].detune);
+    ui->op1_ratescale->setValue(    m_curInst->OP[OPERATOR1].ratescale);
+    ui->op1_ssgeg->setCurrentIndex( m_curInst->OP[OPERATOR1].ssg_eg);
+
+    ui->op2_attack->setValue(       m_curInst->OP[OPERATOR2].attack);
+    ui->op2_decay1->setValue(       m_curInst->OP[OPERATOR2].decay1);
+    ui->op2_decay2->setValue(       m_curInst->OP[OPERATOR2].decay2);
+    ui->op2_sustain->setValue(      m_curInst->OP[OPERATOR2].sustain);
+    ui->op2_release->setValue(      m_curInst->OP[OPERATOR2].release);
+    ui->op2_am->setChecked(         m_curInst->OP[OPERATOR2].am_enable);
+    ui->op2_freqmult->setValue(     m_curInst->OP[OPERATOR2].fmult);
+    ui->op2_level->setValue(        m_curInst->OP[OPERATOR2].level);
+    ui->op2_detune->setCurrentIndex(m_curInst->OP[OPERATOR2].detune);
+    ui->op2_ratescale->setValue(    m_curInst->OP[OPERATOR2].ratescale);
+    ui->op2_ssgeg->setCurrentIndex( m_curInst->OP[OPERATOR2].ssg_eg);
+
+    ui->op3_attack->setValue(       m_curInst->OP[OPERATOR3].attack);
+    ui->op3_decay1->setValue(       m_curInst->OP[OPERATOR3].decay1);
+    ui->op3_decay2->setValue(       m_curInst->OP[OPERATOR3].decay2);
+    ui->op3_sustain->setValue(      m_curInst->OP[OPERATOR3].sustain);
+    ui->op3_release->setValue(      m_curInst->OP[OPERATOR3].release);
+    ui->op3_am->setChecked(         m_curInst->OP[OPERATOR3].am_enable);
+    ui->op3_freqmult->setValue(     m_curInst->OP[OPERATOR3].fmult);
+    ui->op3_level->setValue(        m_curInst->OP[OPERATOR3].level);
+    ui->op3_detune->setCurrentIndex(m_curInst->OP[OPERATOR3].detune);
+    ui->op3_ratescale->setValue(    m_curInst->OP[OPERATOR3].ratescale);
+    ui->op3_ssgeg->setCurrentIndex( m_curInst->OP[OPERATOR3].ssg_eg);
+
+    ui->op4_attack->setValue(       m_curInst->OP[OPERATOR4].attack);
+    ui->op4_decay1->setValue(       m_curInst->OP[OPERATOR4].decay1);
+    ui->op4_decay2->setValue(       m_curInst->OP[OPERATOR4].decay2);
+    ui->op4_sustain->setValue(      m_curInst->OP[OPERATOR4].sustain);
+    ui->op4_release->setValue(      m_curInst->OP[OPERATOR4].release);
+    ui->op4_am->setChecked(         m_curInst->OP[OPERATOR4].am_enable);
+    ui->op4_freqmult->setValue(     m_curInst->OP[OPERATOR4].fmult);
+    ui->op4_level->setValue(        m_curInst->OP[OPERATOR4].level);
+    ui->op4_detune->setCurrentIndex(m_curInst->OP[OPERATOR4].detune);
+    ui->op4_ratescale->setValue(    m_curInst->OP[OPERATOR4].ratescale);
+    ui->op4_ssgeg->setCurrentIndex( m_curInst->OP[OPERATOR4].ssg_eg);
+
     m_lock = false;
 }
 
 void BankEditor::sendPatch()
 {
     if(!m_curInst) return;
-
     if(!m_generator) return;
-
     m_generator->changePatch(*m_curInst, ui->percussion->isChecked());
 }
 
@@ -568,8 +524,6 @@ void BankEditor::setDrumMode(bool dmode)
     }
     else
         ui->noteToTest->setValue(m_recentMelodicNote);
-
-    ui->percMode->setEnabled(dmode);
     ui->noteToTest->setDisabled(dmode);
     ui->testMajor->setDisabled(dmode);
     ui->testMinor->setDisabled(dmode);
@@ -622,7 +576,6 @@ void BankEditor::setDrums()
 void BankEditor::reloadInstrumentNames()
 {
     QList<QListWidgetItem *> items = ui->instruments->findItems("*", Qt::MatchWildcard);
-
     if(ui->percussion->isChecked())
     {
         for(int i = 0; i < items.size(); i++)
@@ -679,3 +632,4 @@ void BankEditor::on_actionDelInst_triggered()
 {
     QMessageBox::information(this, "Ouch", "Sorry, not implemented yet :-P");
 }
+

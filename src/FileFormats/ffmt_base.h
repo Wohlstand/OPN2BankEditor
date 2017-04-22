@@ -34,31 +34,22 @@ public:
     enum Formats
     {
         FORMAT_UNKNOWN = -1,
-        FORMAT_JUNGLEVIZION =   0,
-        FORMAT_DMX_OP2      =   1,
-        FORMAT_APOGEE       =   2,
-        FORMAT_IBK          =   3,
-        FORMAT_ADLIB_BKN1   =   4,
-        FORMAT_ADLIB_BKNHMI =   5,
-        FORMAT_MILES        =   6,
+        FORMAT_WOHLSTAND_OPN2 =   0,
 
         FORMATS_END,
-        FORMATS_BEGIN = FORMAT_JUNGLEVIZION,
+        FORMATS_BEGIN = FORMAT_WOHLSTAND_OPN2,
     };
 
     enum InsFormats
     {
         FORMAT_INST_UNKNOWN = -1,
-        FORMAT_INST_SBI     = 0,
-        FORMAT_INST_SBIex   = 1,
+        FORMAT_INST_OPN2    = 0,
     };
 
     static QString getSaveFiltersList();
-
     static QString getOpenFiltersList();
 
     static Formats getFormatFromFilter(QString filter);
-
     static QString getFilterFromFormat(Formats format);
 
     /**

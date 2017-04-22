@@ -259,83 +259,70 @@ class BankEditor : public QMainWindow
         void on_insName_editingFinished();
 
         void on_feedback1_valueChanged(int arg1);
-        void on_am1_clicked(bool checked);
-        void on_fm1_clicked(bool checked);
-
-        void on_percMode_currentIndexChanged(int index);
         void on_perc_noteNum_valueChanged(int arg1);
 
-        void on_feedback2_valueChanged(int arg1);
-        void on_am2_clicked(bool checked);
-        void on_fm2_clicked(bool checked);
-
-        void on_op4mode_clicked(bool checked);
-
-        void on_doubleVoice_toggled(bool checked);
-        void on_secVoiceFineTune_valueChanged(int arg1);
+        void on_algorithm_currentIndexChanged(int index);
+        void on_amsens_currentIndexChanged(int index);
+        void on_fmsens_currentIndexChanged(int index);
 
         void on_noteOffset1_valueChanged(int arg1);
-        void on_noteOffset2_valueChanged(int arg1);
-
-        void on_op1_attack_valueChanged(int arg1);
-        void on_op1_sustain_valueChanged(int arg1);
-        void on_op1_decay_valueChanged(int arg1);
-        void on_op1_release_valueChanged(int arg1);
-        void on_op1_level_valueChanged(int arg1);
-        void on_op1_freqmult_valueChanged(int arg1);
-        void on_op1_ksl_valueChanged(int arg1);
-        void on_op1_waveform_currentIndexChanged(int index);
-        void on_op1_am_toggled(bool checked);
-        void on_op1_vib_toggled(bool checked);
-        void on_op1_eg_toggled(bool checked);
-        void on_op1_ksr_toggled(bool checked);
-
-        void on_op2_attack_valueChanged(int arg1);
-        void on_op2_sustain_valueChanged(int arg1);
-        void on_op2_decay_valueChanged(int arg1);
-        void on_op2_release_valueChanged(int arg1);
-        void on_op2_level_valueChanged(int arg1);
-        void on_op2_freqmult_valueChanged(int arg1);
-        void on_op2_ksl_valueChanged(int arg1);
-        void on_op2_waveform_currentIndexChanged(int index);
-        void on_op2_am_toggled(bool checked);
-        void on_op2_vib_toggled(bool checked);
-        void on_op2_eg_toggled(bool checked);
-        void on_op2_ksr_toggled(bool checked);
-
-        void on_op3_attack_valueChanged(int arg1);
-        void on_op3_sustain_valueChanged(int arg1);
-        void on_op3_decay_valueChanged(int arg1);
-        void on_op3_release_valueChanged(int arg1);
-        void on_op3_level_valueChanged(int arg1);
-        void on_op3_freqmult_valueChanged(int arg1);
-        void on_op3_ksl_valueChanged(int arg1);
-        void on_op3_waveform_currentIndexChanged(int index);
-        void on_op3_am_toggled(bool checked);
-        void on_op3_vib_toggled(bool checked);
-        void on_op3_eg_toggled(bool checked);
-        void on_op3_ksr_toggled(bool checked);
-
-        void on_op4_attack_valueChanged(int arg1);
-        void on_op4_sustain_valueChanged(int arg1);
-        void on_op4_decay_valueChanged(int arg1);
-        void on_op4_release_valueChanged(int arg1);
-        void on_op4_level_valueChanged(int arg1);
-        void on_op4_freqmult_valueChanged(int arg1);
-        void on_op4_ksl_valueChanged(int arg1);
-        void on_op4_waveform_currentIndexChanged(int index);
-        void on_op4_am_toggled(bool checked);
-        void on_op4_vib_toggled(bool checked);
-        void on_op4_eg_toggled(bool checked);
-        void on_op4_ksr_toggled(bool checked);
-
-        void on_velocityOffset_valueChanged(int arg1);
 
         void on_actionAddInst_triggered();
-
         void on_actionDelInst_triggered();
 
-    protected:
+        void on_lfoEnable_clicked(bool checked);
+        void on_lfoFrequency_currentIndexChanged(int index);
+
+        void on_op1_attack_valueChanged(int arg1);
+        void on_op1_decay1_valueChanged(int arg1);
+        void on_op1_decay2_valueChanged(int arg1);
+        void on_op1_sustain_valueChanged(int arg1);
+        void on_op1_release_valueChanged(int arg1);
+        void on_op1_am_toggled(bool checked);
+        void on_op1_level_valueChanged(int arg1);
+        void on_op1_freqmult_valueChanged(int arg1);
+        void on_op1_detune_currentIndexChanged(int index);
+        void on_op1_ratescale_valueChanged(int arg1);
+        void on_op1_ssgeg_currentIndexChanged(int index);
+
+        void on_op2_attack_valueChanged(int arg1);
+        void on_op2_decay1_valueChanged(int arg1);
+        void on_op2_decay2_valueChanged(int arg1);
+        void on_op2_sustain_valueChanged(int arg1);
+        void on_op2_release_valueChanged(int arg1);
+        void on_op2_am_toggled(bool checked);
+        void on_op2_level_valueChanged(int arg1);
+        void on_op2_freqmult_valueChanged(int arg1);
+        void on_op2_detune_currentIndexChanged(int index);
+        void on_op2_ratescale_valueChanged(int arg1);
+        void on_op2_ssgeg_currentIndexChanged(int index);
+
+        void on_op3_attack_valueChanged(int arg1);
+        void on_op3_decay1_valueChanged(int arg1);
+        void on_op3_decay2_valueChanged(int arg1);
+        void on_op3_sustain_valueChanged(int arg1);
+        void on_op3_release_valueChanged(int arg1);
+        void on_op3_am_toggled(bool checked);
+        void on_op3_level_valueChanged(int arg1);
+        void on_op3_freqmult_valueChanged(int arg1);
+        void on_op3_detune_currentIndexChanged(int index);
+        void on_op3_ratescale_valueChanged(int arg1);
+        void on_op3_ssgeg_currentIndexChanged(int index);
+
+        void on_op4_attack_valueChanged(int arg1);
+        void on_op4_decay1_valueChanged(int arg1);
+        void on_op4_decay2_valueChanged(int arg1);
+        void on_op4_sustain_valueChanged(int arg1);
+        void on_op4_release_valueChanged(int arg1);
+        void on_op4_am_toggled(bool checked);
+        void on_op4_level_valueChanged(int arg1);
+        void on_op4_freqmult_valueChanged(int arg1);
+        void on_op4_detune_currentIndexChanged(int index);
+        void on_op4_ratescale_valueChanged(int arg1);
+        void on_op4_ssgeg_currentIndexChanged(int index);
+
+
+protected:
         void closeEvent(QCloseEvent *event);
         void dragEnterEvent(QDragEnterEvent *e);
         void dropEvent(QDropEvent *e);

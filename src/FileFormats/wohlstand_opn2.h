@@ -24,7 +24,7 @@
 /**
  * @brief Reader and Writer of the Junglevision Patch file format
  */
-class JunleVizion : public FmBankFormatBase
+class WohlstandOPN2 : public FmBankFormatBase
 {
 public:
     static bool detect(char* magic);

@@ -18,33 +18,16 @@
 
 #include "../common.h"
 
-#include "adlibbnk.h"
-#include "apogeetmb.h"
-#include "dmxopl2.h"
-#include "junlevizion.h"
-#include "milesopl.h"
-#include "sb_ibk.h"
+#include "wohlstand_opn2.h"
 
-const char *openFilters[]
+static const char *openFilters[]
 {
-    "JunleVision bank (*.op3)",
-    "DMX OPL-2 bank (*.op2 *.htc *.hxn)",
-    "Apogee Sound System timbre bank (*.tmb)",
-    "Sound Blaster IBK file (*.ibk)",
-    "AdLib/HMI instrument Bank (*.bnk)",
-    "",
-    "Audio Interface Library (Miles) bank (*.opl *.ad)"
+    "Standard OPN2 Bank by Wohlstand (*.wopn)",
 };
 
-const char *saveFilters[]
+static const char *saveFilters[]
 {
     openFilters[0],
-    openFilters[1],
-    openFilters[2],
-    openFilters[3],
-    "AdLib instrument bank (*.bnk)",
-    "HMI instrument bank (*.bnk)",
-    "Audio Interface Library (Miles) bank (*.opl *.ad)",
 };
 
 #include "ffmt_base.h"
@@ -53,24 +36,13 @@ const char *saveFilters[]
 QString FmBankFormatBase::getSaveFiltersList()
 {
     return  QString()
-            +  saveFilters[FORMAT_JUNGLEVIZION] + ";;" +
-            +  saveFilters[FORMAT_DMX_OP2]     + ";;" +
-            +  saveFilters[FORMAT_APOGEE]      + ";;" +
-            +  saveFilters[FORMAT_IBK]         + ";;" +
-            +  saveFilters[FORMAT_ADLIB_BKN1]  + ";;" +
-            +  saveFilters[FORMAT_ADLIB_BKNHMI] + ";;" +
-            +  saveFilters[FORMAT_MILES];
+            +  saveFilters[FORMAT_WOHLSTAND_OPN2] /*+ ";;"*/;
 }
 
 QString FmBankFormatBase::getOpenFiltersList()
 {
-    return  QString("Supported bank files (*.op3 *.op2  *.htc *.hxn *.tmb *.ibk *.bnk *.opl *.ad);;") +
-            +  openFilters[FORMAT_JUNGLEVIZION] + ";;" +
-            +  openFilters[FORMAT_DMX_OP2]      + ";;" +
-            +  openFilters[FORMAT_APOGEE]       + ";;" +
-            +  openFilters[FORMAT_IBK]          + ";;" +
-            +  openFilters[FORMAT_ADLIB_BKN1]   + ";;" +
-            +  openFilters[FORMAT_MILES] + ";;" +
+    return  QString("Supported bank files (*.wopn);;") +
+            +  openFilters[FORMAT_WOHLSTAND_OPN2] + ";;" +
             +  "All files (*.*)";
 }
 
@@ -102,43 +74,11 @@ int FmBankFormatBase::OpenBankFile(QString filePath, FmBank &bank, Formats *rece
     int err = FmBankFormatBase::ERR_UNSUPPORTED_FORMAT;
     Formats fmt = FORMAT_UNKNOWN;
 
-    //Check out for Junglevision file format
-    if(JunleVizion::detect(magic))
+    //Check out for Wohlstand OPN2 file format
+    if(WohlstandOPN2::detect(magic))
     {
-        err = JunleVizion::loadFile(filePath, bank);
-        fmt = FORMAT_JUNGLEVIZION;
-    }
-
-    //Check for DMX OPL2 file format
-    else if(DmxOPL2::detect(magic))
-    {
-        err = DmxOPL2::loadFile(filePath, bank);
-        fmt = FORMAT_DMX_OP2;
-    }
-
-    //Check for Sound Blaster IBK file format
-    else if(SbIBK::detect(magic))
-    {
-        err = SbIBK::loadFile(filePath, bank);
-        fmt = FORMAT_IBK;
-    }
-
-    //Check for AdLib BNK file format
-    else if(AdLibBnk::detect(magic))
-        err = AdLibBnk::loadFile(filePath, bank, fmt);
-
-    //Check for Apogee Sound System TMB file format
-    else if(ApogeeTMB::detect(filePath))
-    {
-        err = ApogeeTMB::loadFile(filePath, bank);
-        fmt = FORMAT_APOGEE;
-    }
-
-    //Check for Miles Sound System TMB file format
-    else if(MilesOPL::detect(filePath))
-    {
-        err = MilesOPL::loadFile(filePath, bank);
-        fmt = FORMAT_MILES;
+        err = WohlstandOPN2::loadFile(filePath, bank);
+        fmt = FORMAT_WOHLSTAND_OPN2;
     }
 
     if(recent)
@@ -154,12 +94,11 @@ int FmBankFormatBase::OpenInstrumentFile(QString filePath, FmBank::Instrument &i
 
     int err = FmBankFormatBase::ERR_UNSUPPORTED_FORMAT;
     InsFormats fmt = FORMAT_INST_UNKNOWN;
-
-    if(SbIBK::detectInst(magic))
-    {
-        err = SbIBK::loadFileInst(filePath, ins, isDrum);
-        fmt = FORMAT_INST_SBI;
-    }
+    //    if(SbIBK::detectInst(magic))
+//    {
+//        err = SbIBK::loadFileInst(filePath, ins, isDrum);
+//        fmt = FORMAT_INST_OPN2;
+//    }
 
     if(recent)
         *recent = fmt;

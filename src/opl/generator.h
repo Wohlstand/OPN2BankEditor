@@ -19,8 +19,6 @@
 #ifndef GENERATOR_H
 #define GENERATOR_H
 
-#include "nukedopl3.h"
-
 #include "Ym2612_Emu.h"
 
 #include "../bank.h"
@@ -29,37 +27,25 @@
 #include <QIODevice>
 #include <QObject>
 
-#define NUM_OF_CHANNELS         23
+#define NUM_OF_CHANNELS         6
 #define MAX_OPLGEN_BUFFER_SIZE  4096
 
 struct OPN_Operator
 {
-    //! Operator properties
-    uint32_t    modulator_E862, carrier_E862;
-    //! KSL/attenuation settings
-    uint8_t     modulator_40, carrier_40;
-    //! Feedback/connection bits for the channel
-    uint8_t     feedconn;
-    //! Fine tuning
-    int8_t      finetune;
+    //! Raw register data
+    uint8_t     data[7];
 };
 
 struct OPN_PatchSetup
 {
-    enum
-    {
-        Flag_True4op    = 0x04,
-        Flag_Pseudo4op  = 0x01,
-        Flag_NoSound    = 0x02
-    };
     //! Operators prepared for sending to OPL chip emulator
-    OPN_Operator OPS[2];
+    OPN_Operator    OPS[4];
+    uint8_t         fbalg;
+    uint8_t         lfosens;
+    //! Fine tuning
+    int8_t          finetune;
     //! Single note (for percussion instruments)
-    uint8_t     tone;
-    //! Extra patch flags
-    uint8_t     flags;
-    //! Pseudo-4op second voice only
-    double         voice2_fine_tune;
+    uint8_t         tone;
 };
 
 class Generator : public QIODevice
@@ -81,11 +67,10 @@ class Generator : public QIODevice
         void NoteOff(uint32_t c);
         void Touch_Real(uint32_t c, uint32_t volume);
         void Touch(unsigned c, unsigned volume);
-        void Patch(unsigned c, unsigned i);
-        void Pan(unsigned c, unsigned value);
+        void Patch(unsigned c);
+        void Pan(unsigned c, uint8_t value);
         void PlayNoteF(int noteID);
         void PlayDrum(uint8_t drum, int noteID);
-        void switch4op(bool enabled);
 
     public slots:
         void Silence();
@@ -105,41 +90,27 @@ class Generator : public QIODevice
         void changeLFO(bool enabled);
         void changeLFOfreq(int freq);
 
-        void changeAdLibPercussion(bool enabled);
     signals:
         void debugInfo(QString);
 
     private:
-        void WriteReg(uint16_t address, uint8_t byte);
+        void WriteReg(uint8_t port, uint16_t address, uint8_t byte);
         int32_t     note;
         uint8_t     lfo_enable = 0x00;
         uint8_t     lfo_freq   = 0x00;
         uint8_t     lfo_reg    = 0x00;
 
-        uint8_t     DeepTremoloMode;
-        uint8_t     DeepVibratoMode;
-        uint8_t     AdLibPercussionMode;
         uint8_t     testDrum;
-        _opl3_chip  chip;
         OPN_PatchSetup m_patch;
 
         Ym2612_Emu  chip2;
-
-        uint8_t     m_regBD;
-
-        int8_t      m_four_op_category[NUM_OF_CHANNELS * 2];
-        // 1 = quad-master, 2 = quad-slave, 0 = regular
-        // 3 = percussion BassDrum
-        // 4 = percussion Snare
-        // 5 = percussion Tom
-        // 6 = percussion Crash cymbal
-        // 7 = percussion Hihat
-        // 8 = percussion slave
 
         //! index of operators pair, cached, needed by Touch()
         uint16_t    m_ins[NUM_OF_CHANNELS];
         //! value poked to B0, cached, needed by NoteOff)(
         uint8_t     m_pit[NUM_OF_CHANNELS];
+        //! LFO and panning value cached
+        uint8_t     m_pan_lfo[NUM_OF_CHANNELS];
 };
 
 #endif // GENERATOR_H
