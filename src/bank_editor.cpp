@@ -376,14 +376,12 @@ void BankEditor::on_actionExit_triggered()
 void BankEditor::on_actionCopy_triggered()
 {
     if(!m_curInst) return;
-
     memcpy(&m_clipboard, m_curInst, sizeof(FmBank::Instrument));
 }
 
 void BankEditor::on_actionPaste_triggered()
 {
     if(!m_curInst) return;
-
     memcpy(m_curInst, &m_clipboard, sizeof(FmBank::Instrument));
     flushInstrument();
 }
@@ -414,11 +412,14 @@ void BankEditor::on_actionAbout_triggered()
     QMessageBox::about(this,
                        tr("About bank editor"),
                        tr("FM Bank Editor for Yamaha OPN2 chip, Version %1\n\n"
-                          "(c) 2017, Vitaly Novichkov \"Wohlstand\"\n"
+                          "%2\n"
                           "\n"
                           "Licensed under GNU GPLv3\n\n"
                           "Source code available on GitHub:\n"
-                          "%2").arg(VERSION).arg("https://github.com/Wohlstand/OPN2BankEditor"));
+                          "%3")
+                       .arg(VERSION)
+                       .arg(COPYRIGHT)
+                       .arg("https://github.com/Wohlstand/OPN2BankEditor"));
 }
 
 void BankEditor::on_instruments_currentItemChanged(QListWidgetItem *current, QListWidgetItem *)

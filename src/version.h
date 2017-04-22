@@ -23,8 +23,10 @@
 
 #define PGE_URL "wohlsoft.ru"
 
-#define PROGRAM_NAME "FM Bank Editor by Wohlstand"
+#define PROGRAM_NAME "OPN2 Bank Editor"
 
 #define VERSION "0.0.1-pre-alpha"
+
+#define COPYRIGHT "© 2016-2017, Vitaly Novichkov \"Wohlstand\""
 
 #endif // VERSION_H

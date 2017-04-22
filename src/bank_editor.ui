@@ -24,7 +24,7 @@
   </property>
   <property name="windowIcon">
    <iconset resource="resources/resources.qrc">
-    <normaloff>:/icons/opl3icon.ico</normaloff>:/icons/opl3icon.ico</iconset>
+    <normaloff>:/icons/opn2icon.ico</normaloff>:/icons/opn2icon.ico</iconset>
   </property>
   <widget class="QWidget" name="centralwidget">
    <widget class="QGroupBox" name="groupBox_2">

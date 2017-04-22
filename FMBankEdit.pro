@@ -26,7 +26,7 @@ QT += core gui widgets multimedia
 
 TEMPLATE = app
 
-TARGET = FMBankEdit
+TARGET = opn2_bank_editor
 
 android:{
     ARCH=android_arm
