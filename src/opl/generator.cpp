@@ -49,8 +49,8 @@ Generator::Generator(uint32_t sampleRate,
     memset(m_pit, 0, sizeof(uint8_t) * NUM_OF_CHANNELS);
     memset(m_pan_lfo, 0, sizeof(uint8_t) * NUM_OF_CHANNELS);
 
-    //Init chip
-    chip2.set_rate(sampleRate, 6350400.0);
+    //Init chip //7670453.0
+    chip2.set_rate(sampleRate, 7153353.0 * 2.0);
 
     lfo_reg = 0x00;
     WriteReg(0, 0x22, lfo_reg);   //LFO off
@@ -257,7 +257,7 @@ void Generator::PlayNoteF(int noteID)
         }
     } _debug {-1};
 
-    int tone = noteID + 2;//Seems OPN lacks one tone, let's add two half-tones to fix that
+    int tone = noteID;
 
     if(m_patch.tone)
     {
@@ -272,7 +272,7 @@ void Generator::PlayNoteF(int noteID)
     chan4op++;
     if(chan4op > (USED_CHANNELS_4OP - 1))
         chan4op = 0;
-    _debug.chan4op = chan4op;
+    _debug.chan4op = int32_t(chan4op);
 
     emit debugInfo(_debug.toStr());
     double bend = 0.0;
