@@ -35,6 +35,7 @@ public:
     {
         FORMAT_UNKNOWN = -1,
         FORMAT_WOHLSTAND_OPN2 =   0,
+        FORMAT_VGM_IMPORTER =   1,
 
         FORMATS_END,
         FORMATS_BEGIN = FORMAT_WOHLSTAND_OPN2,

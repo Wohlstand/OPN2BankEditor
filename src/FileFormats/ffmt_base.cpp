@@ -19,10 +19,12 @@
 #include "../common.h"
 
 #include "wohlstand_opn2.h"
+#include "vgm_import.h"
 
 static const char *openFilters[]
 {
     "Standard OPN2 Bank by Wohlstand (*.wopn)",
+    "Import from VGM file (*.vgm)",
 };
 
 static const char *saveFilters[]
@@ -41,8 +43,9 @@ QString FmBankFormatBase::getSaveFiltersList()
 
 QString FmBankFormatBase::getOpenFiltersList()
 {
-    return  QString("Supported bank files (*.wopn);;") +
+    return  QString("Supported bank files (*.wopn *.vgm);;") +
             +  openFilters[FORMAT_WOHLSTAND_OPN2] + ";;" +
+            +  openFilters[FORMAT_VGM_IMPORTER] + ";;" +
             +  "All files (*.*)";
 }
 
@@ -79,6 +82,13 @@ int FmBankFormatBase::OpenBankFile(QString filePath, FmBank &bank, Formats *rece
     {
         err = WohlstandOPN2::loadFile(filePath, bank);
         fmt = FORMAT_WOHLSTAND_OPN2;
+    }
+
+    //Check out for Wohlstand OPN2 file format
+    if(VGM_Importer::detect(magic))
+    {
+        err = VGM_Importer::loadFile(filePath, bank);
+        fmt = FORMAT_VGM_IMPORTER;
     }
 
     if(recent)

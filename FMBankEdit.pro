@@ -69,7 +69,8 @@ SOURCES += \
     src/importer.cpp \
     src/FileFormats/ffmt_base.cpp \
     src/opl/Ym2612_Emu.cpp \
-    src/FileFormats/wohlstand_opn2.cpp
+    src/FileFormats/wohlstand_opn2.cpp \
+    src/FileFormats/vgm_import.cpp
 
 
 HEADERS += \
@@ -83,7 +84,8 @@ HEADERS += \
     src/version.h \
     src/importer.h \
     src/opl/Ym2612_Emu.h \
-    src/FileFormats/wohlstand_opn2.h
+    src/FileFormats/wohlstand_opn2.h \
+    src/FileFormats/vgm_import.h
 
 
 FORMS += \
