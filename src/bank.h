@@ -179,6 +179,8 @@ public:
         //! Amplitude modulation sensitivity (0...3)
         uint8_t am;
 
+        bool operator==(const Instrument &fb);
+        bool operator!=(const Instrument &fb);
 
         /* ******** OPN2 merged values ******** */
         uint8_t getRegDUMUL(int OpID);

@@ -118,6 +118,29 @@ FmBank::Instrument FmBank::emptyInst()
     return inst;
 }
 
+bool FmBank::Instrument::operator==(const FmBank::Instrument &fb)
+{
+    if(memcmp(OP, fb.OP, sizeof(Operator)*4) != 0)
+        return false;
+    if(feedback != fb.feedback)
+        return false;
+    if(algorithm != fb.algorithm)
+        return false;
+    if(percNoteNum != fb.percNoteNum)
+        return false;
+    if(note_offset1 != fb.note_offset1)
+        return false;
+    if(fm != fb.fm)
+        return false;
+    if(am != fb.am)
+        return false;
+    return true;
+}
+
+bool FmBank::Instrument::operator!=(const FmBank::Instrument &fb)
+{
+    return !this->operator==(fb);
+}
 
 uint8_t FmBank::Instrument::getRegDUMUL(int OpID)
 {

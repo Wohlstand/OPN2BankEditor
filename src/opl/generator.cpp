@@ -172,10 +172,10 @@ void Generator::Touch_Real(uint32_t c, uint32_t volume)
 
     uint8_t op_vol[4] =
     {
-        m_patch.OPS[0].data[1],
-        m_patch.OPS[1].data[1],
-        m_patch.OPS[2].data[1],
-        m_patch.OPS[3].data[1],
+        m_patch.OPS[OPERATOR1].data[1],
+        m_patch.OPS[OPERATOR2].data[1],
+        m_patch.OPS[OPERATOR3].data[1],
+        m_patch.OPS[OPERATOR4].data[1],
     };
 
     bool alg_do[8][4] =
@@ -184,7 +184,7 @@ void Generator::Touch_Real(uint32_t c, uint32_t volume)
         {false,false,false,true},
         {false,false,false,true},
         {false,false,false,true},
-        {false,false,false,true},
+        {false,true, false,true},
         {false,true, true, true},
         {false,true, true, true},
         {false,true, true, true},
