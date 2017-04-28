@@ -69,6 +69,17 @@ QString FmBankFormatBase::getFilterFromFormat(FmBankFormatBase::Formats format)
     return saveFilters[format];
 }
 
+bool FmBankFormatBase::isImportOnly(FmBankFormatBase::Formats format)
+{
+    switch(format)
+    {
+    case FORMAT_VGM_IMPORTER:
+        return true;
+    default:
+        return false;
+    }
+}
+
 int FmBankFormatBase::OpenBankFile(QString filePath, FmBank &bank, Formats *recent)
 {
     char magic[32];

@@ -54,6 +54,13 @@ public:
     static QString getFilterFromFormat(Formats format);
 
     /**
+     * @brief Is given format designed for the instrument importing only
+     * @param format file format identificator
+     * @return true if this format is instrument import only
+     */
+    static bool isImportOnly(Formats format);
+
+    /**
      * @brief Error codes
      */
     enum ErrCode
