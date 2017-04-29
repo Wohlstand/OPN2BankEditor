@@ -394,7 +394,7 @@
        <property name="title">
         <string>Operator 1</string>
        </property>
-       <layout class="QGridLayout" name="gridLayout" columnstretch="0,0,0,0,0,0">
+       <layout class="QGridLayout" name="gridLayout" columnstretch="0,0,0,0">
         <item row="8" column="0" colspan="3">
          <widget class="QLabel" name="label_5">
           <property name="text">
@@ -719,7 +719,7 @@
        <property name="title">
         <string>Operator 2</string>
        </property>
-       <layout class="QGridLayout" name="gridLayout_2" columnstretch="0,0,0,0,0,0">
+       <layout class="QGridLayout" name="gridLayout_2" columnstretch="0,0,0,0">
         <item row="2" column="0">
          <widget class="QLabel" name="label_15">
           <property name="toolTip">
@@ -2079,6 +2079,7 @@ Available from 0 to 127</string>
     <addaction name="actionImport"/>
     <addaction name="actionOpen"/>
     <addaction name="actionSave"/>
+    <addaction name="actionSaveInstrument"/>
     <addaction name="separator"/>
     <addaction name="actionExit"/>
    </widget>
@@ -2114,7 +2115,7 @@ Available from 0 to 127</string>
   </action>
   <action name="actionSave">
    <property name="text">
-    <string>Save</string>
+    <string>Save bank as...</string>
    </property>
    <property name="shortcut">
     <string notr="true">Ctrl+S</string>
@@ -2175,6 +2176,11 @@ Available from 0 to 127</string>
   <action name="actionDelInst">
    <property name="text">
     <string>Delete current instrument</string>
+   </property>
+  </action>
+  <action name="actionSaveInstrument">
+   <property name="text">
+    <string>Save current instrument as...</string>
    </property>
   </action>
  </widget>

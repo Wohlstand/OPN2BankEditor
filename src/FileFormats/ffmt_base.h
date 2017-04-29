@@ -21,6 +21,7 @@
 
 #include <QString>
 #include "../bank.h"
+#include "ffmt_enums.h"
 
 /*!
  * \brief Base class provides errors enum and commonly used headers
@@ -28,59 +29,27 @@
 class FmBankFormatBase
 {
 public:
-    /**
-     * @brief The bank formats enum
-     */
-    enum Formats
-    {
-        FORMAT_UNKNOWN = -1,
-        FORMAT_WOHLSTAND_OPN2 =   0,
-        FORMAT_VGM_IMPORTER =   1,
+    FmBankFormatBase();
+    virtual ~FmBankFormatBase();
 
-        FORMATS_END,
-        FORMATS_BEGIN = FORMAT_WOHLSTAND_OPN2,
-    };
+    virtual bool detect(const QString &filePath, char* magic);
+    virtual bool detectInst(const QString &filePath, char* magic);
 
-    enum InsFormats
-    {
-        FORMAT_INST_UNKNOWN = -1,
-        FORMAT_INST_OPN2    = 0,
-    };
+    virtual FfmtErrCode loadFile(QString filePath, FmBank &bank);
+    virtual FfmtErrCode saveFile(QString filePath, FmBank &bank);
 
-    static QString getSaveFiltersList();
-    static QString getOpenFiltersList();
+    virtual FfmtErrCode loadFileInst(QString filePath, FmBank::Instrument &inst, bool *isDrum = 0);
+    virtual FfmtErrCode saveFileInst(QString filePath, FmBank::Instrument &inst, bool isDrum = false);
 
-    static Formats getFormatFromFilter(QString filter);
-    static QString getFilterFromFormat(Formats format);
+    virtual int         formatCaps();
+    virtual QString     formatName();
+    virtual QString     formatExtensionMask();
+    virtual BankFormats formatId();
 
-    /**
-     * @brief Is given format designed for the instrument importing only
-     * @param format file format identificator
-     * @return true if this format is instrument import only
-     */
-    static bool isImportOnly(Formats format);
-
-    /**
-     * @brief Error codes
-     */
-    enum ErrCode
-    {
-        //! Everything is OK
-        ERR_OK=0,
-        //! File wasn't opened because not exists or permission denied
-        ERR_NOFILE,
-        //! File format is corrupted/invalid/damaged
-        ERR_BADFORMAT,
-        //! Reading or Writing operation is not implemented for this file format
-        ERR_NOT_IMLEMENTED,
-        //! Detected file format is not supported
-        ERR_UNSUPPORTED_FORMAT,
-        //! Any other error
-        ERR_UNKNOWN
-    };
-
-    static int  OpenBankFile(QString filePath, FmBank &bank, Formats *recent=0);
-    static int  OpenInstrumentFile(QString filePath, FmBank::Instrument &ins, InsFormats *recent=0, bool *isDrum = 0);
+    virtual int         formatInstCaps();
+    virtual QString     formatInstName();
+    virtual QString     formatInstExtensionMask();
+    virtual InstFormats formatInstId();
 };
 
 #endif // FMBANKFORMATBASE_H

@@ -77,8 +77,11 @@ class BankEditor : public QMainWindow
         //! OPL chip emulator frontent
         Generator       *m_generator;
 
-        //! Recent file format which was been used
-        FmBankFormatBase::Formats m_recentFormat;
+        //! Recent bank file format which was been used
+        BankFormats     m_recentFormat;
+
+        //! Recent instrument file format which was been used
+        InstFormats     m_recentInstFormat;
 
         /* ********** Audio output stuff ********** */
         //! Buffer for audio data transfering
@@ -142,18 +145,29 @@ class BankEditor : public QMainWindow
         bool openFile(QString filePath);
 
         /*!
-         * \brief Save file
+         * \brief Save bank file
          * \param filePath absolute path where save a file
          * \param format Target format to save a file
          * \return true if file successfully saved, false if failed
          */
-        bool saveBankFile(QString filePath, FmBankFormatBase::Formats format);
+        bool saveBankFile(QString filePath, BankFormats format);
         /*!
-         * \brief Open Save-As dialog box
+         * \brief Save current instrument file
+         * \param filePath absolute path where save a file
+         * \param format Target format to save a file
+         * \return true if file successfully saved, false if failed
+         */
+        bool saveInstrumentFile(QString filePath, InstFormats format);
+        /*!
+         * \brief Open Save-As dialog box for entire bank
          * \return true if file successfuly saved, false on rejecting or on fail
          */
         bool saveFileAs();
-
+        /*!
+         * \brief Open Save-As dialog box for single instrument
+         * \return true if file successfuly saved, false on rejecting or on fail
+         */
+        bool saveInstFileAs();
         /*!
          * \brief Checks was file modified or not. If file modified, asks saving.
          * \return true if no modifications detected or file saved or rejected. false if operation has been cancel
@@ -228,11 +242,13 @@ class BankEditor : public QMainWindow
          */
         void on_actionSave_triggered();
         /**
+         * @brief Save current instrument into the file
+         */
+        void on_actionSaveInstrument_triggered();
+        /**
          * @brief Exit from the program
          */
         void on_actionExit_triggered();
-
-
         /**
          * @brief Copy current instrument into the clipboard
          */
@@ -321,8 +337,7 @@ class BankEditor : public QMainWindow
         void on_op4_ratescale_valueChanged(int arg1);
         void on_op4_ssgeg_currentIndexChanged(int index);
 
-
-protected:
+    protected:
         void closeEvent(QCloseEvent *event);
         void dragEnterEvent(QDragEnterEvent *e);
         void dropEvent(QDropEvent *e);

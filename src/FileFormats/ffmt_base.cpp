@@ -16,113 +16,80 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "../common.h"
-
-#include "wohlstand_opn2.h"
-#include "vgm_import.h"
-
-static const char *openFilters[]
-{
-    "Standard OPN2 Bank by Wohlstand (*.wopn)",
-    "Import from VGM file (*.vgm)",
-};
-
-static const char *saveFilters[]
-{
-    openFilters[0],
-};
-
 #include "ffmt_base.h"
 
+FmBankFormatBase::FmBankFormatBase() {}
 
-QString FmBankFormatBase::getSaveFiltersList()
+FmBankFormatBase::~FmBankFormatBase()
+{}
+
+bool FmBankFormatBase::detect(const QString&, char*)
 {
-    return  QString()
-            +  saveFilters[FORMAT_WOHLSTAND_OPN2] /*+ ";;"*/;
+    return false;
 }
 
-QString FmBankFormatBase::getOpenFiltersList()
+bool FmBankFormatBase::detectInst(const QString &, char *)
 {
-    return  QString("Supported bank files (*.wopn *.vgm);;") +
-            +  openFilters[FORMAT_WOHLSTAND_OPN2] + ";;" +
-            +  openFilters[FORMAT_VGM_IMPORTER] + ";;" +
-            +  "All files (*.*)";
+    return false;
 }
 
-FmBankFormatBase::Formats FmBankFormatBase::getFormatFromFilter(QString filter)
+FfmtErrCode FmBankFormatBase::loadFile(QString, FmBank &)
 {
-    for(int i = (int)FORMATS_BEGIN; i < (int)FORMATS_END; i++)
-    {
-        if(filter == saveFilters[i])
-            return (Formats)i;
-    }
-    return FORMAT_UNKNOWN;
+    return FfmtErrCode::ERR_NOT_IMLEMENTED;
 }
 
-QString FmBankFormatBase::getFilterFromFormat(FmBankFormatBase::Formats format)
+FfmtErrCode FmBankFormatBase::saveFile(QString, FmBank &)
 {
-    if(format >= FORMATS_END)
-        return "UNKNOWN";
-    if(format < FORMATS_BEGIN)
-        return "UNKNOWN";
-
-    return saveFilters[format];
+    return FfmtErrCode::ERR_NOT_IMLEMENTED;
 }
 
-bool FmBankFormatBase::isImportOnly(FmBankFormatBase::Formats format)
+FfmtErrCode FmBankFormatBase::loadFileInst(QString, FmBank::Instrument &, bool *)
 {
-    switch(format)
-    {
-    case FORMAT_VGM_IMPORTER:
-        return true;
-    default:
-        return false;
-    }
+    return FfmtErrCode::ERR_NOT_IMLEMENTED;
 }
 
-int FmBankFormatBase::OpenBankFile(QString filePath, FmBank &bank, Formats *recent)
+FfmtErrCode FmBankFormatBase::saveFileInst(QString, FmBank::Instrument &, bool)
 {
-    char magic[32];
-    getMagic(filePath, magic, 32);
-
-    int err = FmBankFormatBase::ERR_UNSUPPORTED_FORMAT;
-    Formats fmt = FORMAT_UNKNOWN;
-
-    //Check out for Wohlstand OPN2 file format
-    if(WohlstandOPN2::detect(magic))
-    {
-        err = WohlstandOPN2::loadFile(filePath, bank);
-        fmt = FORMAT_WOHLSTAND_OPN2;
-    }
-
-    //Check out for Wohlstand OPN2 file format
-    if(VGM_Importer::detect(magic))
-    {
-        err = VGM_Importer::loadFile(filePath, bank);
-        fmt = FORMAT_VGM_IMPORTER;
-    }
-
-    if(recent)
-        *recent = fmt;
-
-    return err;
+    return FfmtErrCode::ERR_NOT_IMLEMENTED;
 }
 
-int FmBankFormatBase::OpenInstrumentFile(QString filePath, FmBank::Instrument &ins, FmBankFormatBase::InsFormats *recent, bool *isDrum)
+int FmBankFormatBase::formatCaps()
 {
-    char magic[32];
-    getMagic(filePath, magic, 32);
-
-    int err = FmBankFormatBase::ERR_UNSUPPORTED_FORMAT;
-    InsFormats fmt = FORMAT_INST_UNKNOWN;
-    //    if(SbIBK::detectInst(magic))
-//    {
-//        err = SbIBK::loadFileInst(filePath, ins, isDrum);
-//        fmt = FORMAT_INST_OPN2;
-//    }
-
-    if(recent)
-        *recent = fmt;
-
-    return err;
+    return (int)FormatCaps::FORMAT_CAPS_NOTHING;
 }
+
+int FmBankFormatBase::formatInstCaps()
+{
+    return (int)FormatCaps::FORMAT_CAPS_NOTHING;
+}
+
+QString FmBankFormatBase::formatInstName()
+{
+    return "Unknown format";
+}
+
+QString FmBankFormatBase::formatInstExtensionMask()
+{
+    return "*.*";
+}
+
+QString FmBankFormatBase::formatName()
+{
+    return "Unknown format";
+}
+
+QString FmBankFormatBase::formatExtensionMask()
+{
+    return "*.*";
+}
+
+BankFormats FmBankFormatBase::formatId()
+{
+    return BankFormats::FORMAT_UNKNOWN;
+}
+
+InstFormats FmBankFormatBase::formatInstId()
+{
+    return InstFormats::FORMAT_INST_UNKNOWN;
+}
+

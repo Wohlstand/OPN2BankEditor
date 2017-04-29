@@ -69,8 +69,9 @@ SOURCES += \
     src/importer.cpp \
     src/FileFormats/ffmt_base.cpp \
     src/opl/Ym2612_Emu.cpp \
-    src/FileFormats/wohlstand_opn2.cpp \
-    src/FileFormats/vgm_import.cpp
+    src/FileFormats/format_vgm_import.cpp \
+    src/FileFormats/format_wohlstand_opn2.cpp \
+    src/FileFormats/ffmt_factory.cpp
 
 
 HEADERS += \
@@ -84,8 +85,10 @@ HEADERS += \
     src/version.h \
     src/importer.h \
     src/opl/Ym2612_Emu.h \
-    src/FileFormats/wohlstand_opn2.h \
-    src/FileFormats/vgm_import.h
+    src/FileFormats/format_vgm_import.h \
+    src/FileFormats/ffmt_enums.h \
+    src/FileFormats/ffmt_factory.h \
+    src/FileFormats/format_wohlstand_opn2.h
 
 
 FORMS += \

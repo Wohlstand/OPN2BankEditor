@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "vgm_import.h"
+#include "format_vgm_import.h"
 #include "../common.h"
 
 #include <QSet>
@@ -24,13 +24,12 @@
 
 const char magic_vgm[4] = {0x56, 0x67, 0x6D, 0x20};
 
-
-bool VGM_Importer::detect(char *magic)
+bool VGM_Importer::detect(const QString &, char *magic)
 {
     return (memcmp(magic_vgm, magic, 4) == 0);
 }
 
-int VGM_Importer::loadFile(QString filePath, FmBank &bank)
+FfmtErrCode VGM_Importer::loadFile(QString filePath, FmBank &bank)
 {
     uint8_t ymram[2][0xFF];
     char magic[4];
@@ -45,14 +44,14 @@ int VGM_Importer::loadFile(QString filePath, FmBank &bank)
 
     QFile file(filePath);
     if(!file.open(QIODevice::ReadOnly))
-        return ERR_NOFILE;
+        return FfmtErrCode::ERR_NOFILE;
 
     bank.reset();
     if(file.read(magic, 4) != 4)
-        return ERR_BADFORMAT;
+        return FfmtErrCode::ERR_BADFORMAT;
 
     if(memcmp(magic, magic_vgm, 4) != 0)
-        return ERR_BADFORMAT;
+        return FfmtErrCode::ERR_BADFORMAT;
 
     file.seek(0x34);
     file.read(char_p(numb), 4);
@@ -252,12 +251,25 @@ int VGM_Importer::loadFile(QString filePath, FmBank &bank)
 
     file.close();
 
-    return ERR_OK;
+    return FfmtErrCode::ERR_OK;
 }
 
-int VGM_Importer::saveFile(QString, FmBank &)
+int VGM_Importer::formatCaps()
 {
-    return ERR_UNSUPPORTED_FORMAT;
+    return (int)FormatCaps::FORMAT_CAPS_IMPORT;
 }
 
+QString VGM_Importer::formatName()
+{
+    return "Video Game Music";
+}
 
+QString VGM_Importer::formatExtensionMask()
+{
+    return "*.vgm";
+}
+
+BankFormats VGM_Importer::formatId()
+{
+    return BankFormats::FORMAT_VGM_IMPORTER;
+}

@@ -24,12 +24,24 @@
 /**
  * @brief Reader and Writer of the Junglevision Patch file format
  */
-class WohlstandOPN2 : public FmBankFormatBase
+class WohlstandOPN2 final : public FmBankFormatBase
 {
 public:
-    static bool detect(char* magic);
-    static int  loadFile(QString filePath, FmBank &bank);
-    static int  saveFile(QString filePath, FmBank &bank);
+    bool        detect(const QString &filePath, char* magic) override;
+    bool        detectInst(const QString &filePath, char* magic) override;
+    FfmtErrCode loadFile(QString filePath, FmBank &bank) override;
+    FfmtErrCode saveFile(QString filePath, FmBank &bank) override;
+    int         formatCaps() override;
+    QString     formatName() override;
+    QString     formatExtensionMask() override;
+    BankFormats formatId() override;
+
+    FfmtErrCode loadFileInst(QString filePath, FmBank::Instrument &inst, bool *isDrum = 0) override;
+    FfmtErrCode saveFileInst(QString filePath, FmBank::Instrument &inst, bool isDrum = false) override;
+    int         formatInstCaps() override;
+    QString     formatInstName() override;
+    QString     formatInstExtensionMask() override;
+    InstFormats formatInstId() override;
 };
 
 #endif // JUNLEVIZION_H
