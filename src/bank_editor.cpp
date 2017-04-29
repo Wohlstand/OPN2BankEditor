@@ -271,7 +271,6 @@ bool BankEditor::saveInstrumentFile(QString filePath, InstFormats format)
     }
     else
     {
-        reInitFileDataAfterSave(filePath);
         return true;
     }
 }
