@@ -1,6 +1,6 @@
 /*
- * OPL Bank Editor by Wohlstand, a free tool for music bank editing
- * Copyright (c) 2016 Vitaly Novichkov <admin@wohlnet.ru>
+ * OPN2 Bank Editor by Wohlstand, a free tool for music bank editing
+ * Copyright (c) 2017 Vitaly Novichkov <admin@wohlnet.ru>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,8 +16,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef JUNLEVIZION_H
-#define JUNLEVIZION_H
+#ifndef WOHLSTAND_OPN2_H
+#define WOHLSTAND_OPN2_H
 
 #include "ffmt_base.h"
 
@@ -44,4 +44,4 @@ public:
     InstFormats formatInstId() override;
 };
 
-#endif // JUNLEVIZION_H
+#endif // WOHLSTAND_OPN2_H

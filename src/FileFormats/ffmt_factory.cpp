@@ -1,5 +1,5 @@
 /*
- * OPL Bank Editor by Wohlstand, a free tool for music bank editing
+ * OPN2 Bank Editor by Wohlstand, a free tool for music bank editing
  * Copyright (c) 2016-2017 Vitaly Novichkov <admin@wohlnet.ru>
  *
  * This program is free software: you can redistribute it and/or modify
