@@ -148,20 +148,20 @@ FfmtErrCode VGM_Importer::loadFile(QString filePath, FmBank &bank)
                         ins.setRegD2(op,    ymram[i][0x70 + (op*4) + ch]);
                         ins.setRegSysRel(op,ymram[i][0x80 + (op*4) + ch]);
                         ins.setRegSsgEg(op, ymram[i][0x90 + (op*4) + ch]);
-                        insRaw.push_back(ins.getRegDUMUL(op));
-                        insRaw.push_back(ins.getRegLevel(op));
-                        insRaw.push_back(ins.getRegRSAt(op));
-                        insRaw.push_back(ins.getRegAMD1(op));
-                        insRaw.push_back(ins.getRegD2(op));
-                        insRaw.push_back(ins.getRegSysRel(op));
-                        insRaw.push_back(ins.getRegSsgEg(op));
+                        insRaw.push_back((char)ins.getRegDUMUL(op));
+                        insRaw.push_back((char)ins.getRegLevel(op));
+                        insRaw.push_back((char)ins.getRegRSAt(op));
+                        insRaw.push_back((char)ins.getRegAMD1(op));
+                        insRaw.push_back((char)ins.getRegD2(op));
+                        insRaw.push_back((char)ins.getRegSysRel(op));
+                        insRaw.push_back((char)ins.getRegSsgEg(op));
                     }
 
                     ins.setRegLfoSens(ymram[i][0xB4 + ch]);
                     ins.setRegFbAlg(ymram[i][0xB0 + ch]);
 
-                    insRaw.push_back(ins.getRegLfoSens());
-                    insRaw.push_back(ins.getRegFbAlg());
+                    insRaw.push_back((char)ins.getRegLfoSens());
+                    insRaw.push_back((char)ins.getRegFbAlg());
 
                     /* Maximize key volume */
                     uint8_t olevels[4] =
@@ -204,10 +204,10 @@ FfmtErrCode VGM_Importer::loadFile(QString filePath, FmBank &bank)
                     }
 
                     //Encode volume bytes back
-                    insRaw[1 + OPERATOR1*7] = ins.getRegLevel(OPERATOR1);
-                    insRaw[1 + OPERATOR2*7] = ins.getRegLevel(OPERATOR2);
-                    insRaw[1 + OPERATOR3*7] = ins.getRegLevel(OPERATOR3);
-                    insRaw[1 + OPERATOR4*7] = ins.getRegLevel(OPERATOR4);
+                    insRaw[1 + OPERATOR1*7] = (char)ins.getRegLevel(OPERATOR1);
+                    insRaw[1 + OPERATOR2*7] = (char)ins.getRegLevel(OPERATOR2);
+                    insRaw[1 + OPERATOR3*7] = (char)ins.getRegLevel(OPERATOR3);
+                    insRaw[1 + OPERATOR4*7] = (char)ins.getRegLevel(OPERATOR4);
 
                     if(!cache.contains(insRaw))
                     {
