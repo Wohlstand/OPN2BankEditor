@@ -199,7 +199,7 @@ void Generator::Touch_Real(uint32_t c, uint32_t volume)
     for(uint8_t op = 0; op < 4; op++)
     {
         uint8_t x = op_vol[op];
-        uint8_t vol_res = (alg_do[alg][op]) ? uint8_t(127 - volume + volume * ((x&127)/127)) : x;
+        uint8_t vol_res = (alg_do[alg][op]) ? uint8_t(127 - (volume * (volume - (x&127)))/127) : x;
         WriteReg(port, 0x40 + cc + (4 * op), vol_res);
     }
     // Correct formula (ST3, AdPlug):
@@ -214,7 +214,7 @@ void Generator::Touch(unsigned c, unsigned volume) // Volume maxes at 127*127*12
 {
     // The formula below: SOLVE(V=127^3 * 2^( (A-63.49999) / 8), A)
     //Touch_Real(c, static_cast<unsigned int>(volume > 8725  ? std::log(volume) * 11.541561 + (0.5 - 104.22845) : 0));
-    Touch_Real(c, volume / 3u);
+    Touch_Real(c, volume);
     // The incorrect formula below: SOLVE(V=127^3 * (2^(A/63)-1), A)
     //Touch_Real(c, volume>11210 ? 91.61112 * std::log(4.8819E-7*volume + 1.0)+0.5 : 0);
 }
