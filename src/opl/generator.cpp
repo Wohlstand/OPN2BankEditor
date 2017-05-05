@@ -180,24 +180,27 @@ void Generator::Touch_Real(uint32_t c, uint32_t volume)
 
     bool alg_do[8][4] =
     {
-        //OP1   OP2   OP3   OP4
-        {false,false,false,true},
-        {false,false,false,true},
-        {false,false,false,true},
-        {false,true, false,true},
-        {false,true, true, true},
-        {false,true, true, true},
-        {false,true, true, true},
-        {true, true, true, true},
+        /*
+         * Yeah, Operator 2 and 3 are seems swapped
+         * which we can see in the algorithm 4
+         */
+        //OP1   OP3   OP2    OP4
+        //30    34    38     3C
+        {false,false,false,true},//Algorithm #0:  W = 1 * 2 * 3 * 4
+        {false,false,false,true},//Algorithm #1:  W = (1 + 2) * 3 * 4
+        {false,false,false,true},//Algorithm #2:  W = (1 + (2 * 3)) * 4
+        {false,false,false,true},//Algorithm #3:  W = ((1 * 2) + 3) * 4
+        {false,false,true, true},//Algorithm #4:  W = (1 * 2) + (3 * 4)
+        {false,true ,true ,true},//Algorithm #5:  W = (1 * (2 + 3 + 4)
+        {false,true ,true ,true},//Algorithm #6:  W = (1 * 2) + 3 + 4
+        {true ,true ,true ,true},//Algorithm #7:  W = 1 + 2 + 3 + 4
     };
     uint8_t alg = m_patch.fbalg & 0x07;
     for(uint8_t op = 0; op < 4; op++)
     {
         uint8_t x = op_vol[op];
-        WriteReg(port,
-                 0x40 + cc + (4 * op),
-                 (alg_do[alg][op]) ? uint8_t((x|127) - volume + volume * (x&127)/127) : x
-                 );
+        uint8_t vol_res = (alg_do[alg][op]) ? uint8_t(127 - volume + volume * ((x&127)/127)) : x;
+        WriteReg(port, 0x40 + cc + (4 * op), vol_res);
     }
     // Correct formula (ST3, AdPlug):
     //   63-((63-(instrvol))/63)*chanvol
