@@ -26,6 +26,11 @@
 #define OPERATOR2    1
 #define OPERATOR3    2
 #define OPERATOR4    3
+//Human readable. The reason of de-facto swapped second and third operators
+#define OPERATOR1_HR    0
+#define OPERATOR2_HR    2
+#define OPERATOR3_HR    1
+#define OPERATOR4_HR    3
 /* *********** FM Operator indexes *end******* */
 
 /**
