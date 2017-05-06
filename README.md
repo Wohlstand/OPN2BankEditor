@@ -1,7 +1,7 @@
 # OPN2BankEditor
 A small cross-platform editor of the OPN2 FM chip (which is widely used in Sega Genesis (aka Mega Drive) game console)
 
-**!!!Experimental and is not ready!!!**
+**BETA. Please report me any bugs and imperfections you have found**
 
 # How to build
 You need a Qt 5 to build this project.

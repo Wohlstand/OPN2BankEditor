@@ -25,7 +25,7 @@
 
 #define PROGRAM_NAME "OPN2 Bank Editor"
 
-#define VERSION "0.0.1-pre-alpha"
+#define VERSION "1.0.0-beta"
 
 #define COPYRIGHT "© 2016-2017, Vitaly Novichkov \"Wohlstand\""
 
