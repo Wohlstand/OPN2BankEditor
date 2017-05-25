@@ -19,7 +19,7 @@ windeployqt opn2_bank_editor.exe
 IF ERRORLEVEL 1 goto error
 cd ..
 
-"%SEVENZIP%\7z" a -tzip "opn2-bank-editor\opn2-bank-editor-dev-win32.zip" bin-release\
+"%SEVENZIP%\7z" a -tzip "opn2-bank-editor\opn2-bank-editor-dev-win32.zip" .\license.txt .\WOPN-and-OPNI-Specification.txt .\bin-release\* Bank_Examples
 
 goto quit
 :error
