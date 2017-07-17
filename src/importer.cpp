@@ -102,7 +102,6 @@ bool Importer::openFile(QString filePath, bool isBank)
     if(err != FfmtErrCode::ERR_OK)
     {
         QString errText;
-
         switch(err)
         {
         case FfmtErrCode::ERR_BADFORMAT:
@@ -126,7 +125,6 @@ bool Importer::openFile(QString filePath, bool isBank)
         ErrMessageO(this, errText);
         return false;
     }
-
     if(FmBankFormatFactory::isImportOnly(format))
     {
         ui->importReplace->click();
@@ -557,10 +555,6 @@ void Importer::on_doImport_clicked()
                              ui->melodic->isChecked() ?
                                  m_bank.Ins_Melodic_box[id] :
                                  m_bank.Ins_Percussion_box[id], m_main->m_recentNum);
-                //if(ui->melodic->isChecked())
-                //    m_main->m_bank.Ins_Melodic_box[m_main->m_recentNum] = m_bank.Ins_Melodic_box[id];
-                //else
-                //    m_main->m_bank.Ins_Percussion_box[m_main->m_recentNum] = m_bank.Ins_Percussion_box[id];
         }
         else
         {

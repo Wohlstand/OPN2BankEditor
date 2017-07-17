@@ -263,7 +263,6 @@ void BankEditor::keyPressEvent(QKeyEvent *event)
         case Qt::Key_Space:
             m_generator->PlayNote();
             break;
-
         default:
             break;
         }
@@ -317,7 +316,6 @@ void BankEditor::keyReleaseEvent(QKeyEvent *event)
         case Qt::Key_P:
             m_generator->NoteOffAllChans();
             break;
-
         default:
             break;
         }
@@ -329,7 +327,6 @@ void BankEditor::keyReleaseEvent(QKeyEvent *event)
         case Qt::Key_Space:
             m_generator->NoteOffAllChans();
             break;
-
         default:
             break;
         }

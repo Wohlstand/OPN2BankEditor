@@ -50,7 +50,7 @@ enum class FormatCaps
 /**
  * @brief Error codes
  */
-enum FfmtErrCode
+enum class FfmtErrCode
 {
     //! Everything is OK
     ERR_OK=0,

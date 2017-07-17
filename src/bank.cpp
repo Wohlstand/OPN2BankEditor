@@ -65,8 +65,8 @@ bool FmBank::operator==(const FmBank &fb)
     bool res = true;
     res &= (Ins_Melodic_box.size() == fb.Ins_Melodic_box.size());
     res &= (Ins_Percussion_box.size() == fb.Ins_Percussion_box.size());
-    lfo_enabled     = fb.lfo_enabled;
-    lfo_frequency   = fb.lfo_frequency;
+    res &= (lfo_enabled == fb.lfo_enabled);
+    res &= (lfo_frequency == fb.lfo_frequency);
     if(res)
     {
         int size = Ins_Melodic_box.size() * static_cast<int>(sizeof(Instrument));
@@ -95,6 +95,20 @@ void FmBank::reset()
     Ins_Percussion  = Ins_Percussion_box.data();
     memset(Ins_Melodic,    0, size);
     memset(Ins_Percussion, 0, size);
+}
+
+void FmBank::reset(uint16_t melodic_banks, uint16_t percussion_banks)
+{
+    size_t insnum = 128;
+    size_t size = sizeof(Instrument) * insnum;
+    lfo_enabled     = false;
+    lfo_frequency   = 0;
+    Ins_Melodic_box.resize(static_cast<int>(insnum * melodic_banks));
+    Ins_Percussion_box.resize(static_cast<int>(insnum * percussion_banks));
+    Ins_Melodic     = Ins_Melodic_box.data();
+    Ins_Percussion  = Ins_Percussion_box.data();
+    memset(Ins_Melodic,    0, size * melodic_banks);
+    memset(Ins_Percussion, 0, size * percussion_banks);
 }
 
 unsigned char FmBank::getRegLFO()

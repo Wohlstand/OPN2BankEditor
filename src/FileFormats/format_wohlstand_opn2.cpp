@@ -82,8 +82,9 @@ static bool writeInstrument(QFile &file, FmBank::Instrument &ins)
 
 FfmtErrCode WohlstandOPN2::loadFile(QString filePath, FmBank &bank)
 {
-    unsigned short count_melodic_banks     = 1;
-    unsigned short count_percusive_banks   = 1;
+    uint16_t count_melodic_banks     = 1;
+    uint16_t count_percusive_banks   = 1;
+
     char magic[32];
     memset(magic, 0, 32);
 
@@ -105,6 +106,12 @@ FfmtErrCode WohlstandOPN2::loadFile(QString filePath, FmBank &bank)
 
     count_melodic_banks     = toUint16BE(head);
     count_percusive_banks   = toUint16BE(head + 2);
+
+    if((count_melodic_banks < 1) || (count_percusive_banks < 1))
+        return FfmtErrCode::ERR_BADFORMAT;
+
+    bank.reset(count_melodic_banks, count_percusive_banks);
+
     bank.setRegLFO(head[4]);
 
     uint16_t total = 128 * count_melodic_banks;
@@ -137,8 +144,8 @@ FfmtErrCode WohlstandOPN2::saveFile(QString filePath, FmBank &bank)
     FmBank::Instrument null;
     memset(&null, 0, sizeof(FmBank::Instrument));
 
-    unsigned short count_melodic_banks     = 1;
-    unsigned short count_percusive_banks   = 1;
+    uint16_t count_melodic_banks     = uint16_t(((bank.countMelodic() - 1)/ 128) + 1);
+    uint16_t count_percusive_banks   = uint16_t(((bank.countDrums() - 1)/ 128) + 1);
 
     QFile file(filePath);
     if(!file.open(QIODevice::WriteOnly))
@@ -152,20 +159,32 @@ FfmtErrCode WohlstandOPN2::saveFile(QString filePath, FmBank &bank)
     head[4] = bank.getRegLFO();
     file.write(char_p(head), 5);
 
-    unsigned short total = 128 * count_melodic_banks;
+    uint16_t total = 128 * count_melodic_banks;
+    uint16_t total_insts = uint16_t(bank.Ins_Melodic_box.size());
     bool wrtiePercussion = false;
+    FmBank::Instrument *insts = bank.Ins_Melodic;
 
 tryAgain:
     for(uint16_t i = 0; i < total; i++)
     {
-        FmBank::Instrument &ins = (wrtiePercussion) ? bank.Ins_Percussion[i] : bank.Ins_Melodic[i];
-        if(!writeInstrument(file, ins))
-            return FfmtErrCode::ERR_BADFORMAT;
+        if(i < total_insts)
+        {
+            FmBank::Instrument &ins = insts[i];
+            if(!writeInstrument(file, ins))
+                return FfmtErrCode::ERR_BADFORMAT;
+        }
+        else
+        {
+            if(!writeInstrument(file, null))
+                return FfmtErrCode::ERR_BADFORMAT;
+        }
     }
 
     if(!wrtiePercussion)
     {
         total = 128 * count_percusive_banks;
+        insts = bank.Ins_Percussion;
+        total_insts = uint16_t(bank.Ins_Percussion_box.size());
         wrtiePercussion = true;
         goto tryAgain;
     }

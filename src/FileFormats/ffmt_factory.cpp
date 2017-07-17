@@ -265,7 +265,8 @@ FfmtErrCode FmBankFormatFactory::SaveBankFile(QString filePath, FmBank &bank, Ba
 FfmtErrCode FmBankFormatFactory::OpenInstrumentFile(QString filePath,
                                          FmBank::Instrument &ins,
                                          InstFormats *recent,
-                                         bool *isDrum, bool import)
+                                         bool *isDrum,
+                                         bool import)
 {
     char magic[32];
     getMagic(filePath, magic, 32);
