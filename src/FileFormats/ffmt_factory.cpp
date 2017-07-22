@@ -112,7 +112,7 @@ QString FmBankFormatFactory::getInstOpenFiltersList(bool import)
         Q_ASSERT(p.get());//It must be non-null!
         if(!masks.isEmpty())
             masks.append(' ');
-        if(p->formatCaps() & (int)dst)
+        if(p->formatInstCaps() & (int)dst)
         {
             masks.append(p->formatInstExtensionMask());
             formats.append(QString("%1 (%2);;").arg(p->formatInstName()).arg(p->formatInstExtensionMask()));
@@ -130,7 +130,7 @@ QString FmBankFormatFactory::getInstSaveFiltersList()
     for(FmBankFormatBase_uptr &p : g_formatsInstr)
     {
         Q_ASSERT(p.get());//It must be non-null!
-        if(p->formatCaps() & (int)FormatCaps::FORMAT_CAPS_SAVE)
+        if(p->formatInstCaps() & (int)FormatCaps::FORMAT_CAPS_SAVE)
         {
             formats.append(QString("%1 (%2);;").arg(p->formatInstName()).arg(p->formatInstExtensionMask()));
         }
