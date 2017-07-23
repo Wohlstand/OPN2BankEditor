@@ -78,8 +78,6 @@ Bytes-Lenght |      Description
 --Header--
     11            | Magic number "WOPN2-BANK\0". Where '\0' is a zero byte
                   |     which termiates the string
-    1             | Is this instrument a percussion.
-                  | 0 - melodic, or 1 - percussion
     2             | [MBanks] Unsigned 16-bit integer, count of melodic
                   |     MIDI banks (every bank contains 128 instruments)
     2             | [PBanks] Unsigned 16-bit integer, count of percussion
