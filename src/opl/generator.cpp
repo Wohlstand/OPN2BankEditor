@@ -210,16 +210,16 @@ void Generator::Touch_Real(uint32_t c, uint32_t volume)
     //   63 + chanvol * (instrvol / 63.0 - 1)
 }
 
-void Generator::Touch(unsigned c, unsigned volume) // Volume maxes at 127*127*127
+void Generator::Touch(uint32_t c, uint32_t volume) // Volume maxes at 127*127*127
 {
     // The formula below: SOLVE(V=127^3 * 2^( (A-63.49999) / 8), A)
-    //Touch_Real(c, static_cast<unsigned int>(volume > 8725  ? std::log(volume) * 11.541561 + (0.5 - 104.22845) : 0));
+    //Touch_Real(c, static_cast<uint32_t>(volume > 8725  ? std::log(volume) * 11.541561 + (0.5 - 104.22845) : 0));
     Touch_Real(c, volume);
     // The incorrect formula below: SOLVE(V=127^3 * (2^(A/63)-1), A)
     //Touch_Real(c, volume>11210 ? 91.61112 * std::log(4.8819E-7*volume + 1.0)+0.5 : 0);
 }
 
-void Generator::Patch(unsigned c)
+void Generator::Patch(uint32_t c)
 {
     uint8_t port = (c <= 2) ? 0 : 1;
     uint8_t cc   = c % 3;
@@ -238,7 +238,7 @@ void Generator::Patch(unsigned c)
     WriteReg(port, 0xB4 + cc, m_pan_lfo[c]);
 }
 
-void Generator::Pan(unsigned c, uint8_t value)
+void Generator::Pan(uint32_t c, uint8_t value)
 {
     uint8_t cc = c % 3;
     uint8_t port = (c <= 2) ? 0 : 1;
@@ -316,7 +316,7 @@ void Generator::PlayDrum(uint8_t drum, int noteID)
 void Generator::Silence()
 {
     //Shutup!
-    for(unsigned c = 0; c < NUM_OF_CHANNELS; ++c)
+    for(uint32_t c = 0; c < NUM_OF_CHANNELS; ++c)
     {
         NoteOff(c);
         Touch_Real(c, 0);
@@ -325,7 +325,7 @@ void Generator::Silence()
 
 void Generator::NoteOffAllChans()
 {
-    for(unsigned c = 0; c < NUM_OF_CHANNELS; ++c)
+    for(uint32_t c = 0; c < NUM_OF_CHANNELS; ++c)
         NoteOff(c);
 }
 
@@ -412,7 +412,7 @@ void Generator::changePatch(FmBank::Instrument &instrument, bool isDrum)
         {
             if(instrument.percNoteNum && instrument.percNoteNum < 20)
             {
-                uchar nnum = instrument.percNoteNum;
+                uint8_t nnum = instrument.percNoteNum;
                 while(nnum && nnum < 20)
                 {
                     nnum += 12;

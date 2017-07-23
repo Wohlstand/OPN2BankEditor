@@ -21,9 +21,6 @@
 
 #include <QFile>
 
-//! Typedef to unsigned char
-typedef unsigned char uchar;
-
 //! Typedef to signed character pointer
 typedef char*         char_p;
 
@@ -46,18 +43,18 @@ qint64 readLE(QFile &file, uint32_t &out);
 /*!
  * \brief Write little-endian unsigned short into the file
  * \param file File descriptor
- * \param out Source reference
+ * \param in Source reference
  * \return number of written bytes
  */
-qint64 writeLE(QFile &file, uint16_t &out);
+qint64 writeLE(QFile &file, const uint16_t &in);
 
 /*!
  * \brief Write little-endian unsigned int into the file
  * \param file File descriptor
- * \param out Source reference
+ * \param in Source reference
  * \return number of written bytes
  */
-qint64 writeLE(QFile &file, uint32_t &out);
+qint64 writeLE(QFile &file, const uint32_t &in);
 
 /*!
  * \brief Read big-endian unsigned short from a file
@@ -70,10 +67,10 @@ qint64 readBE(QFile &file, uint16_t &out);
 /*!
  * \brief Write big-endian unsigned short into the file
  * \param file File descriptor
- * \param out Source reference
+ * \param in Source reference
  * \return number of written bytes
  */
-qint64 writeBE(QFile &file, uint16_t &out);
+qint64 writeBE(QFile &file, const uint16_t &in);
 
 /*!
  * \brief Convers array of little endian bytes into short
@@ -130,7 +127,7 @@ void fromUint16LE(uint16_t in, uint8_t *arr);
  * \param [in] in Source number
  * \param [out] arr Target byte array
  */
-void fromUint16BE(uint16_t in, uchar *arr);
+void fromUint16BE(uint16_t in, uint8_t *arr);
 
 /*!
  * \brief Converts signed short into big endian byte array

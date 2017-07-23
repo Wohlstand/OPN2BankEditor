@@ -19,14 +19,8 @@
 #include "bank.h"
 #include <memory.h>
 
-//! Typedef to unsigned char
-typedef unsigned char uchar;
-
 //! Typedef to signed character pointer
 typedef char         *char_p;
-
-//! Typedef to unsigned integer
-typedef unsigned int uint;
 
 FmBank::FmBank()
 {
@@ -111,15 +105,15 @@ void FmBank::reset(uint16_t melodic_banks, uint16_t percussion_banks)
     memset(Ins_Percussion, 0, size * percussion_banks);
 }
 
-unsigned char FmBank::getRegLFO()
+uint8_t FmBank::getRegLFO()
 {
-    uchar out = 0;
-    out |= 0x08 & (uchar(lfo_enabled) << 3);
-    out |= 0x07 & uchar(lfo_frequency);
+    uint8_t out = 0;
+    out |= 0x08 & (uint8_t(lfo_enabled) << 3);
+    out |= 0x07 & uint8_t(lfo_frequency);
     return out;
 }
 
-void FmBank::setRegLFO(unsigned char lfo_reg)
+void FmBank::setRegLFO(uint8_t lfo_reg)
 {
     lfo_enabled     = ((lfo_reg & 0x08) >> 3);
     lfo_frequency   = 0x07 & lfo_reg;
@@ -158,9 +152,9 @@ bool FmBank::Instrument::operator!=(const FmBank::Instrument &fb)
 
 uint8_t FmBank::Instrument::getRegDUMUL(int OpID)
 {
-    uchar out = 0;
-    out |= 0x70 & (uchar(OP[OpID].detune) << 4);
-    out |= 0x0F & (uchar(OP[OpID].fmult));
+    uint8_t out = 0;
+    out |= 0x70 & (uint8_t(OP[OpID].detune) << 4);
+    out |= 0x0F & (uint8_t(OP[OpID].fmult));
     return out;
 }
 
@@ -172,7 +166,7 @@ void FmBank::Instrument::setRegDUMUL(int OpID, uint8_t reg_dumul)
 
 uint8_t FmBank::Instrument::getRegLevel(int OpID)
 {
-    uchar out = 0;
+    uint8_t out = 0;
     out = OP[OpID].level & 0x7F;
     return out;
 }
@@ -184,9 +178,9 @@ void FmBank::Instrument::setRegLevel(int OpID, uint8_t reg_level)
 
 uint8_t FmBank::Instrument::getRegRSAt(int OpID)
 {
-    uchar out = 0;
-    out |= 0xC0 & (uchar(OP[OpID].ratescale) << 6);
-    out |= 0x1F & (uchar(OP[OpID].attack));
+    uint8_t out = 0;
+    out |= 0xC0 & (uint8_t(OP[OpID].ratescale) << 6);
+    out |= 0x1F & (uint8_t(OP[OpID].attack));
     return out;
 }
 
@@ -198,9 +192,9 @@ void FmBank::Instrument::setRegRSAt(int OpID, uint8_t reg_rsat)
 
 uint8_t FmBank::Instrument::getRegAMD1(int OpID)
 {
-    uchar out = 0;
-    out |= 0x80 & (uchar(OP[OpID].am_enable) << 7);
-    out |= 0x1F & (uchar(OP[OpID].decay1));
+    uint8_t out = 0;
+    out |= 0x80 & (uint8_t(OP[OpID].am_enable) << 7);
+    out |= 0x1F & (uint8_t(OP[OpID].decay1));
     return out;
 }
 
@@ -212,8 +206,8 @@ void FmBank::Instrument::setRegAMD1(int OpID, uint8_t reg_amd1)
 
 uint8_t FmBank::Instrument::getRegD2(int OpID)
 {
-    uchar out = 0;
-    out |= 0x1F & (uchar(OP[OpID].decay2));
+    uint8_t out = 0;
+    out |= 0x1F & (uint8_t(OP[OpID].decay2));
     return out;
 }
 
@@ -224,9 +218,9 @@ void FmBank::Instrument::setRegD2(int OpID, uint8_t reg_d2)
 
 uint8_t FmBank::Instrument::getRegSysRel(int OpID)
 {
-    uchar out = 0;
-    out |= 0xF0 & (uchar(OP[OpID].sustain) << 4);
-    out |= 0x0F & (uchar(OP[OpID].release));
+    uint8_t out = 0;
+    out |= 0xF0 & (uint8_t(OP[OpID].sustain) << 4);
+    out |= 0x0F & (uint8_t(OP[OpID].release));
     return out;
 }
 
@@ -238,8 +232,8 @@ void FmBank::Instrument::setRegSysRel(int OpID, uint8_t reg_sysrel)
 
 uint8_t FmBank::Instrument::getRegSsgEg(int OpID)
 {
-    uchar out = 0;
-    out |= 0x0F & (uchar(OP[OpID].ssg_eg));
+    uint8_t out = 0;
+    out |= 0x0F & (uint8_t(OP[OpID].ssg_eg));
     return out;
 }
 
@@ -251,8 +245,8 @@ void FmBank::Instrument::setRegSsgEg(int OpID, uint8_t reg_ssgeg)
 uint8_t FmBank::Instrument::getRegFbAlg()
 {
     uint8_t out = 0;
-    out |= 0x38 & (uchar(feedback) << 3);
-    out |= 0x07 & (uchar(algorithm));
+    out |= 0x38 & (uint8_t(feedback) << 3);
+    out |= 0x07 & (uint8_t(algorithm));
     return out;
 }
 
@@ -264,9 +258,9 @@ void FmBank::Instrument::setRegFbAlg(uint8_t reg_ssgeg)
 
 uint8_t FmBank::Instrument::getRegLfoSens()
 {
-    uchar out = 0;
-    out |= 0x30 & (uchar(am) << 4);
-    out |= 0x07 & (uchar(fm));
+    uint8_t out = 0;
+    out |= 0x30 & (uint8_t(am) << 4);
+    out |= 0x07 & (uint8_t(fm));
     return out;
 }
 

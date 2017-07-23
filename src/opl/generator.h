@@ -66,9 +66,9 @@ class Generator : public QIODevice
         void NoteOn(uint32_t c, double hertz);
         void NoteOff(uint32_t c);
         void Touch_Real(uint32_t c, uint32_t volume);
-        void Touch(unsigned c, unsigned volume);
-        void Patch(unsigned c);
-        void Pan(unsigned c, uint8_t value);
+        void Touch(uint32_t c, uint32_t volume);
+        void Patch(uint32_t c);
+        void Pan(uint32_t c, uint8_t value);
         void PlayNoteF(int noteID);
         void PlayDrum(uint8_t drum, int noteID);
 

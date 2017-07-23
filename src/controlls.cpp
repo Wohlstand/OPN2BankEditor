@@ -55,7 +55,7 @@ void BankEditor::on_feedback1_valueChanged(int arg1)
 {
     if(m_lock) return;
     if(!m_curInst) return;
-    m_curInst->feedback = uchar(arg1);
+    m_curInst->feedback = uint8_t(arg1);
     sendPatch();
 }
 
@@ -63,7 +63,7 @@ void BankEditor::on_algorithm_currentIndexChanged(int index)
 {
     if(m_lock) return;
     if(!m_curInst) return;
-    m_curInst->algorithm = uchar(index);
+    m_curInst->algorithm = uint8_t(index);
     sendPatch();
 }
 
@@ -71,7 +71,7 @@ void BankEditor::on_amsens_currentIndexChanged(int index)
 {
     if(m_lock) return;
     if(!m_curInst) return;
-    m_curInst->am = uchar(index);
+    m_curInst->am = uint8_t(index);
     sendPatch();
 }
 
@@ -79,7 +79,7 @@ void BankEditor::on_fmsens_currentIndexChanged(int index)
 {
     if(m_lock) return;
     if(!m_curInst) return;
-    m_curInst->fm = uchar(index);
+    m_curInst->fm = uint8_t(index);
     sendPatch();
 }
 

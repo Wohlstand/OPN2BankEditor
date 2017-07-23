@@ -145,27 +145,27 @@ public:
          */
 
         //! Detune level (from 0 to 7)
-        unsigned char detune;
+        uint8_t detune;
         //! Frequency multiplication (from 0 to 15)
-        unsigned char fmult;
+        uint8_t fmult;
         //! Volume level (from 0 to 127)
-        unsigned char level;
+        uint8_t level;
         //! Key Scale level (from 0 to 3)
-        unsigned char ratescale;
+        uint8_t ratescale;
         //! Attacking level (from 0 to 31)
-        unsigned char attack;
+        uint8_t attack;
         //! Enable/Disable EFO affecting
-        bool          am_enable;
+        bool    am_enable;
         //! Decaying 1 level (from 0 to 31)
-        unsigned char decay1;
+        uint8_t decay1;
         //! Decaying 2 level (from 0 to 31)
-        unsigned char decay2;
+        uint8_t decay2;
         //! Sustain level (from 0 to 15)
-        unsigned char sustain;
+        uint8_t sustain;
         //! SSG-EG value (from 0 to 15)
-        unsigned char ssg_eg;
+        uint8_t ssg_eg;
         //! Release level (from 0 to 15)
-        unsigned char release;
+        uint8_t release;
     };
 
     /**
@@ -223,12 +223,12 @@ public:
         void    setRegLfoSens(uint8_t reg_lfosens);
     };
 
-    bool            lfo_enabled     = false;
-    unsigned char   lfo_frequency   = 0;
+    bool    lfo_enabled     = false;
+    uint8_t lfo_frequency   = 0;
 
     //Global chip LFO parameter
-    unsigned char getRegLFO();
-    void setRegLFO(unsigned char lfo_reg);
+    uint8_t getRegLFO();
+    void setRegLFO(uint8_t lfo_reg);
 
     /**
      * @brief Get empty instrument entry
