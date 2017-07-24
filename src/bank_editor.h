@@ -19,7 +19,9 @@
 #ifndef BANK_EDITOR_H
 #define BANK_EDITOR_H
 
+#ifdef ENABLE_AUDIO_TESTING
 #include <QAudioOutput>
+#endif
 #include <QTimer>
 #include <QMainWindow>
 #include <QList>
@@ -89,6 +91,7 @@ private:
     //! Timer to push audio data
     QTimer           m_pushTimer;
 
+    #ifdef ENABLE_AUDIO_TESTING
     //! Audio device spec
     QAudioDeviceInfo m_device;
     //! Audio output interface
@@ -97,6 +100,7 @@ private:
     QIODevice       *m_output;//not owned
     //! Audio format preferences
     QAudioFormat     m_format;
+    #endif
 
     /*!
      * \brief Initializes audio subsystem and FM generator
@@ -159,7 +163,7 @@ public:
      */
     bool saveInstrumentFile(QString filePath, InstFormats format);
     /*!
-     * \brief Open Save-As dialog box for entire bank
+     * \brief Open Save-As dialog box
      * \return true if file successfuly saved, false on rejecting or on fail
      */
     bool saveFileAs();
@@ -168,6 +172,7 @@ public:
      * \return true if file successfuly saved, false on rejecting or on fail
      */
     bool saveInstFileAs();
+
     /*!
      * \brief Checks was file modified or not. If file modified, asks saving.
      * \return true if no modifications detected or file saved or rejected. false if operation has been cancel

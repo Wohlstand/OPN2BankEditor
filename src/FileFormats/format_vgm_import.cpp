@@ -21,6 +21,7 @@
 
 #include <QSet>
 #include <QByteArray>
+#include <algorithm>
 
 const char magic_vgm[4] = {0x56, 0x67, 0x6D, 0x20};
 

@@ -19,7 +19,7 @@
 #include <QFileDialog>
 #include <QMessageBox>
 #include <QSettings>
-
+#include <QUrl>
 #include <QMimeData>
 
 #include "importer.h"
@@ -65,8 +65,11 @@ BankEditor::BankEditor(QWidget *parent) :
     loadInstrument();
     m_buffer.resize(8192);
     m_buffer.fill(0, 8192);
+    #if QT_VERSION >= 0x050000
     this->setWindowFlags(Qt::WindowTitleHint | Qt::WindowSystemMenuHint |
-                         Qt::WindowCloseButtonHint | Qt::WindowMinimizeButtonHint);
+                         Qt::WindowCloseButtonHint |
+                         Qt::WindowMinimizeButtonHint);
+    #endif
     this->setFixedSize(this->window()->width(), this->window()->height());
     m_importer = new Importer(this);
     connect(ui->actionImport, SIGNAL(triggered()), m_importer, SLOT(show()));
@@ -76,10 +79,12 @@ BankEditor::BankEditor(QWidget *parent) :
 
 BankEditor::~BankEditor()
 {
+    #ifdef ENABLE_AUDIO_TESTING
     m_pushTimer.stop();
     m_audioOutput->stop();
     m_generator->stop();
     delete m_audioOutput;
+    #endif
     delete m_generator;
     delete m_importer;
     delete ui;
@@ -127,7 +132,6 @@ void BankEditor::dropEvent(QDropEvent *e)
     foreach(const QUrl &url, e->mimeData()->urls())
     {
         const QString &fileName = url.toLocalFile();
-
         if(openFile(fileName))
             break; //Only first valid file!
     }
@@ -468,8 +472,8 @@ void BankEditor::setCurrentInstrument(int num, bool isPerc)
     {
         m_curInst = isPerc ? &m_bank.Ins_Percussion[num] : &m_bank.Ins_Melodic[num];
         m_curInstBackup = isPerc ?
-                    (num < m_bankBackup.countDrums() ? &m_bankBackup.Ins_Percussion[num] : nullptr) :
-                    (num < m_bankBackup.countMelodic() ? &m_bankBackup.Ins_Melodic[num] : nullptr);
+                          (num < m_bankBackup.countDrums() ? &m_bankBackup.Ins_Percussion[num] : nullptr) :
+                          (num < m_bankBackup.countMelodic() ? &m_bankBackup.Ins_Melodic[num] : nullptr);
     }
     else
     {
@@ -610,6 +614,7 @@ void BankEditor::on_actionAdLibBnkMode_triggered(bool checked)
     ui->bank_no->setHidden(checked);
     ui->actionAddBank->setDisabled(checked);
     ui->actionCloneBank->setDisabled(checked);
+    ui->actionClearBank->setDisabled(checked);
     ui->actionDeleteBank->setDisabled(checked);
     if(checked)
         on_bank_no_currentIndexChanged(ui->bank_no->currentIndex());
@@ -910,19 +915,19 @@ void BankEditor::on_actionClearBank_triggered()
 
         if(isDrumsMode())
         {
-            if (needToShoot_end >= m_bank.Ins_Percussion_box.size())
+            if(needToShoot_end >= m_bank.Ins_Percussion_box.size())
                 needToShoot_end = m_bank.Ins_Percussion_box.size();
             memset(m_bank.Ins_Percussion + needToShoot_begin,
                    0,
-                   sizeof(FmBank::Instrument) * size_t(needToShoot_end - needToShoot_begin) );
+                   sizeof(FmBank::Instrument) * size_t(needToShoot_end - needToShoot_begin));
         }
         else
         {
-            if (needToShoot_end >= m_bank.Ins_Melodic_box.size())
+            if(needToShoot_end >= m_bank.Ins_Melodic_box.size())
                 needToShoot_end = m_bank.Ins_Melodic_box.size();
             memset(m_bank.Ins_Melodic + needToShoot_begin,
                    0,
-                   sizeof(FmBank::Instrument) * size_t(needToShoot_end - needToShoot_begin) );
+                   sizeof(FmBank::Instrument) * size_t(needToShoot_end - needToShoot_begin));
         }
         reloadInstrumentNames();
         loadInstrument();
@@ -962,7 +967,7 @@ void BankEditor::on_actionDeleteBank_triggered()
 
         if(isDrumsMode())
         {
-            if (needToShoot_end >= m_bank.Ins_Percussion_box.size())
+            if(needToShoot_end >= m_bank.Ins_Percussion_box.size())
                 needToShoot_end = m_bank.Ins_Percussion_box.size();
             m_bank.Ins_Percussion_box.remove(needToShoot_begin, needToShoot_end - needToShoot_begin);
             m_bank.Ins_Percussion = m_bank.Ins_Percussion_box.data();
@@ -970,7 +975,7 @@ void BankEditor::on_actionDeleteBank_triggered()
         }
         else
         {
-            if (needToShoot_end >= m_bank.Ins_Melodic_box.size())
+            if(needToShoot_end >= m_bank.Ins_Melodic_box.size())
                 needToShoot_end = m_bank.Ins_Melodic_box.size();
             m_bank.Ins_Melodic_box.remove(needToShoot_begin, needToShoot_end - needToShoot_begin);
             m_bank.Ins_Melodic = m_bank.Ins_Melodic_box.data();
