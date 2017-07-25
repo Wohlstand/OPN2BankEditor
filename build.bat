@@ -19,10 +19,9 @@ windeployqt opn2_bank_editor.exe
 IF ERRORLEVEL 1 goto error
 cd ..
 
-"%SEVENZIP%\7z" a -tzip "opn2-bank-editor\opn2-bank-editor-dev-win32.zip" .\license.txt .\WOPN-and-OPNI-Specification.txt .\bin-release\* Bank_Examples
+"%SEVENZIP%\7z" a -tzip "opn2-bank-editor\opn2-bank-editor-dev-win32.zip" .\license.txt .\Specifications\WOPN-and-OPNI-Specification.txt .\Specifications\YM2612.pdf .\bin-release\* Bank_Examples
 
 goto quit
 :error
 echo ==============BUILD ERRORED!===============
 :quit
-
