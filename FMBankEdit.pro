@@ -33,6 +33,7 @@ greaterThan(QT_MAJOR_VERSION, 4):{
         CONFIG += static
         QMAKE_LFLAGS += -static-libgcc -static-libstdc++
         DEFINES += snprintf=_snprintf
+        DEFINES += NO_NATIVE_OPEN_DIALOGS
     }
 }
 
