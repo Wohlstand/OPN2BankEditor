@@ -24,7 +24,7 @@
   </property>
   <property name="windowIcon">
    <iconset resource="resources/resources.qrc">
-    <normaloff>:/icons/opn2icon.ico</normaloff>:/icons/opn2icon.ico</iconset>
+    <normaloff>:/icons/opn2_16.png</normaloff>:/icons/opn2_16.png</iconset>
   </property>
   <widget class="QWidget" name="centralwidget">
    <widget class="QGroupBox" name="groupBox_2">
@@ -2127,7 +2127,7 @@ Available from 0 to 127</string>
      <x>0</x>
      <y>0</y>
      <width>965</width>
-     <height>22</height>
+     <height>18</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
