@@ -85,7 +85,7 @@ class Generator : public QIODevice
         void PlayMinor7Chord();
 
         void changePatch(FmBank::Instrument &instrument, bool isDrum = false);
-        void changeNote(int32_t newnote);
+        void changeNote(int newnote);
 
         void changeLFO(bool enabled);
         void changeLFOfreq(int freq);

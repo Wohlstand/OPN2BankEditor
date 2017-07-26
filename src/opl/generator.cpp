@@ -423,9 +423,9 @@ void Generator::changePatch(FmBank::Instrument &instrument, bool isDrum)
     }
 }
 
-void Generator::changeNote(int32_t newnote)
+void Generator::changeNote(int newnote)
 {
-    note = newnote;
+    note = int32_t(newnote);
 }
 
 
