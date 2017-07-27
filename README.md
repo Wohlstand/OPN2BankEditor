@@ -1,4 +1,6 @@
 # OPN2BankEditor
+![OPN2 Editor Logo](src/resources/opn2_48.png)
+
 A small cross-platform editor of the OPN2 FM chip (which is widely used in Sega Genesis (aka Mega Drive) game console)
 
 # CI Build status
