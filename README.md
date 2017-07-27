@@ -1,7 +1,10 @@
 # OPN2BankEditor
 A small cross-platform editor of the OPN2 FM chip (which is widely used in Sega Genesis (aka Mega Drive) game console)
 
-[![Build status](https://ci.appveyor.com/api/projects/status/mtl3v7gemh10p30g?svg=true)](https://ci.appveyor.com/project/Wohlstand/opn2bankeditor)
+# CI Build status
+Linux | Windows (32-bit) | macOS
+------------ | ------------- | -------------
+[![Build Status](https://travis-ci.org/Wohlstand/OPL3BankEditor.svg?branch=master)](https://travis-ci.org/Wohlstand/OPN2BankEditor) | [![Build status](https://ci.appveyor.com/api/projects/status/mtl3v7gemh10p30g?svg=true)](https://ci.appveyor.com/project/Wohlstand/opn2bankeditor) | Comming soon!
 
 **BETA. Please report me any bugs and imperfections you have found**
 
