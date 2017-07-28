@@ -29,6 +29,7 @@ greaterThan(QT_MAJOR_VERSION, 4):{
     CONFIG += c++11
 } else {
     QMAKE_CXXFLAGS += -std=c++11
+    DEFINES += IS_QT_4
     win32: {
         CONFIG += static
         QMAKE_LFLAGS += -static-libgcc -static-libstdc++ -static
@@ -85,7 +86,8 @@ SOURCES += \
     src/opl/Ym2612_Emu.cpp \
     src/FileFormats/format_vgm_import.cpp \
     src/FileFormats/format_wohlstand_opn2.cpp \
-    src/FileFormats/ffmt_factory.cpp
+    src/FileFormats/ffmt_factory.cpp \
+    src/formats_sup.cpp
 
 
 HEADERS += \
@@ -102,11 +104,13 @@ HEADERS += \
     src/FileFormats/format_vgm_import.h \
     src/FileFormats/ffmt_enums.h \
     src/FileFormats/ffmt_factory.h \
-    src/FileFormats/format_wohlstand_opn2.h
+    src/FileFormats/format_wohlstand_opn2.h \
+    src/formats_sup.h
 
 
 FORMS += \
     src/bank_editor.ui \
+    src/formats_sup.ui \
     src/importer.ui
 
 RESOURCES += \

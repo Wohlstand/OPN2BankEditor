@@ -16,24 +16,25 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef VGM_IMPORT_H
-#define VGM_IMPORT_H
+#ifndef FORMATS_SUP_H
+#define FORMATS_SUP_H
 
-#include "ffmt_base.h"
+#include <QDialog>
 
-/**
- * @brief Import from VGM files
- */
-class VGM_Importer final : public FmBankFormatBase
+namespace Ui {
+class formats_sup;
+}
+
+class formats_sup : public QDialog
 {
+    Q_OBJECT
+
 public:
-    bool        detect(const QString &filePath, char* magic) override;
-    FfmtErrCode loadFile(QString filePath, FmBank &bank) override;
-    int         formatCaps() const override;
-    QString     formatName() const override;
-    QString     formatModuleName() const override;
-    QString     formatExtensionMask() const override;
-    BankFormats formatId() const override;
+    explicit formats_sup(QWidget *parent = 0);
+    ~formats_sup();
+
+private:
+    Ui::formats_sup *ui;
 };
 
-#endif // VGM_IMPORT_H
+#endif // FORMATS_SUP_H

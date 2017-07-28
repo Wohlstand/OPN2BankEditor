@@ -255,22 +255,27 @@ FfmtErrCode VGM_Importer::loadFile(QString filePath, FmBank &bank)
     return FfmtErrCode::ERR_OK;
 }
 
-int VGM_Importer::formatCaps()
+int VGM_Importer::formatCaps() const
 {
     return (int)FormatCaps::FORMAT_CAPS_IMPORT;
 }
 
-QString VGM_Importer::formatName()
+QString VGM_Importer::formatName() const
 {
     return "Video Game Music";
 }
 
-QString VGM_Importer::formatExtensionMask()
+QString VGM_Importer::formatModuleName() const
+{
+    return "Video Game Music importer";
+}
+
+QString VGM_Importer::formatExtensionMask() const
 {
     return "*.vgm";
 }
 
-BankFormats VGM_Importer::formatId()
+BankFormats VGM_Importer::formatId() const
 {
     return BankFormats::FORMAT_VGM_IMPORTER;
 }

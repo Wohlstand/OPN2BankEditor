@@ -194,22 +194,22 @@ tryAgain:
     return FfmtErrCode::ERR_OK;
 }
 
-int WohlstandOPN2::formatCaps()
+int WohlstandOPN2::formatCaps() const
 {
     return (int)FormatCaps::FORMAT_CAPS_EVERYTHING;
 }
 
-QString WohlstandOPN2::formatName()
+QString WohlstandOPN2::formatName() const
 {
     return "Standard OPN2 bank by Wohlstand";
 }
 
-QString WohlstandOPN2::formatExtensionMask()
+QString WohlstandOPN2::formatExtensionMask() const
 {
     return "*.wopn";
 }
 
-BankFormats WohlstandOPN2::formatId()
+BankFormats WohlstandOPN2::formatId() const
 {
     return BankFormats::FORMAT_WOHLSTAND_OPN2;
 }
@@ -258,22 +258,22 @@ FfmtErrCode WohlstandOPN2::saveFileInst(QString filePath, FmBank::Instrument &in
     return FfmtErrCode::ERR_OK;
 }
 
-int WohlstandOPN2::formatInstCaps()
+int WohlstandOPN2::formatInstCaps() const
 {
     return (int)FormatCaps::FORMAT_CAPS_EVERYTHING;
 }
 
-QString WohlstandOPN2::formatInstName()
+QString WohlstandOPN2::formatInstName() const
 {
     return "Standard OPN2 instrument by Wohlstand";
 }
 
-QString WohlstandOPN2::formatInstExtensionMask()
+QString WohlstandOPN2::formatInstExtensionMask() const
 {
     return "*.opni";
 }
 
-InstFormats WohlstandOPN2::formatInstId()
+InstFormats WohlstandOPN2::formatInstId() const
 {
     return InstFormats::FORMAT_INST_WOPN2;
 }

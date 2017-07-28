@@ -33,6 +33,9 @@ public:
     static QString getInstOpenFiltersList(bool import = false);
     static QString getInstSaveFiltersList();
 
+    static QList<const FmBankFormatBase *> allBankFormats();
+    static QList<const FmBankFormatBase *> allInstrumentFormats();
+
     static BankFormats  getFormatFromFilter(QString filter);
     static QString      getFilterFromFormat(BankFormats format, int requiredCaps);
 

@@ -2147,6 +2147,8 @@ Available from 0 to 127</string>
     <property name="title">
      <string>Help</string>
     </property>
+    <addaction name="actionFormatsSup"/>
+    <addaction name="separator"/>
     <addaction name="actionAbout"/>
    </widget>
    <widget class="QMenu" name="menuEdito">
@@ -2282,6 +2284,11 @@ Available from 0 to 127</string>
    </property>
    <property name="text">
     <string>AdLib BNK mode</string>
+   </property>
+  </action>
+  <action name="actionFormatsSup">
+   <property name="text">
+    <string>Supported formats...</string>
    </property>
   </action>
  </widget>
