@@ -77,36 +77,34 @@ SOURCES += \
     src/bank_editor.cpp \
     src/common.cpp \
     src/controlls.cpp \
-    src/main.cpp \
-    src/ins_names.cpp \
-    src/opl/generator.cpp \
-    src/piano.cpp \
-    src/importer.cpp \
     src/FileFormats/ffmt_base.cpp \
-    src/opl/Ym2612_Emu.cpp \
+    src/FileFormats/ffmt_factory.cpp \
     src/FileFormats/format_vgm_import.cpp \
     src/FileFormats/format_wohlstand_opn2.cpp \
-    src/FileFormats/ffmt_factory.cpp \
-    src/formats_sup.cpp
-
+    src/formats_sup.cpp \
+    src/importer.cpp \
+    src/ins_names.cpp \
+    src/main.cpp \
+    src/opl/generator.cpp \
+    src/opl/Ym2612_Emu.cpp \
+    src/piano.cpp
 
 HEADERS += \
-    src/FileFormats/ffmt_base.h \
-    src/bank.h \
     src/bank_editor.h \
+    src/bank.h \
     src/common.h \
-    src/ins_names.h \
-    src/opl/generator.h \
-    src/piano.h \
-    src/version.h \
-    src/importer.h \
-    src/opl/Ym2612_Emu.h \
-    src/FileFormats/format_vgm_import.h \
+    src/FileFormats/ffmt_base.h \
     src/FileFormats/ffmt_enums.h \
     src/FileFormats/ffmt_factory.h \
+    src/FileFormats/format_vgm_import.h \
     src/FileFormats/format_wohlstand_opn2.h \
-    src/formats_sup.h
-
+    src/formats_sup.h \
+    src/importer.h \
+    src/ins_names.h \
+    src/opl/generator.h \
+    src/opl/Ym2612_Emu.h \
+    src/piano.h \
+    src/version.h
 
 FORMS += \
     src/bank_editor.ui \
@@ -115,4 +113,3 @@ FORMS += \
 
 RESOURCES += \
     src/resources/resources.qrc
-
