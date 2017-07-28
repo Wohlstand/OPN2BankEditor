@@ -50,67 +50,67 @@ struct OPN_PatchSetup
 
 class Generator : public QIODevice
 {
-        Q_OBJECT
+    Q_OBJECT
 
-    public:
-        Generator(uint32_t sampleRate, QObject *parent);
-        ~Generator();
+public:
+    Generator(uint32_t sampleRate, QObject *parent);
+    ~Generator();
 
-        void start();
-        void stop();
+    void start();
+    void stop();
 
-        qint64 readData(char *data, qint64 maxlen);
-        qint64 writeData(const char *data, qint64 len);
-        qint64 bytesAvailable() const;
+    qint64 readData(char *data, qint64 maxlen);
+    qint64 writeData(const char *data, qint64 len);
+    qint64 bytesAvailable() const;
 
-        void NoteOn(uint32_t c, double hertz);
-        void NoteOff(uint32_t c);
-        void Touch_Real(uint32_t c, uint32_t volume);
-        void Touch(uint32_t c, uint32_t volume);
-        void Patch(uint32_t c);
-        void Pan(uint32_t c, uint8_t value);
-        void PlayNoteF(int noteID);
-        void PlayDrum(uint8_t drum, int noteID);
+    void NoteOn(uint32_t c, double hertz);
+    void NoteOff(uint32_t c);
+    void Touch_Real(uint32_t c, uint32_t volume);
+    void Touch(uint32_t c, uint32_t volume);
+    void Patch(uint32_t c);
+    void Pan(uint32_t c, uint8_t value);
+    void PlayNoteF(int noteID);
+    void PlayDrum(uint8_t drum, int noteID);
 
-    public slots:
-        void Silence();
-        void NoteOffAllChans();
+public slots:
+    void Silence();
+    void NoteOffAllChans();
 
-        void PlayNote();
-        void PlayMajorChord();
-        void PlayMinorChord();
-        void PlayAugmentedChord();
-        void PlayDiminishedChord();
-        void PlayMajor7Chord();
-        void PlayMinor7Chord();
+    void PlayNote();
+    void PlayMajorChord();
+    void PlayMinorChord();
+    void PlayAugmentedChord();
+    void PlayDiminishedChord();
+    void PlayMajor7Chord();
+    void PlayMinor7Chord();
 
-        void changePatch(FmBank::Instrument &instrument, bool isDrum = false);
-        void changeNote(int newnote);
+    void changePatch(FmBank::Instrument &instrument, bool isDrum = false);
+    void changeNote(int newnote);
 
-        void changeLFO(bool enabled);
-        void changeLFOfreq(int freq);
+    void changeLFO(bool enabled);
+    void changeLFOfreq(int freq);
 
-    signals:
-        void debugInfo(QString);
+signals:
+    void debugInfo(QString);
 
-    private:
-        void WriteReg(uint8_t port, uint16_t address, uint8_t byte);
-        int32_t     note;
-        uint8_t     lfo_enable = 0x00;
-        uint8_t     lfo_freq   = 0x00;
-        uint8_t     lfo_reg    = 0x00;
+private:
+    void WriteReg(uint8_t port, uint16_t address, uint8_t byte);
+    int32_t     note;
+    uint8_t     lfo_enable = 0x00;
+    uint8_t     lfo_freq   = 0x00;
+    uint8_t     lfo_reg    = 0x00;
 
-        uint8_t     testDrum;
-        OPN_PatchSetup m_patch;
+    uint8_t     testDrum;
+    OPN_PatchSetup m_patch;
 
-        Ym2612_Emu  chip2;
+    Ym2612_Emu  chip2;
 
-        //! index of operators pair, cached, needed by Touch()
-        uint16_t    m_ins[NUM_OF_CHANNELS];
-        //! value poked to B0, cached, needed by NoteOff)(
-        uint8_t     m_pit[NUM_OF_CHANNELS];
-        //! LFO and panning value cached
-        uint8_t     m_pan_lfo[NUM_OF_CHANNELS];
+    //! index of operators pair, cached, needed by Touch()
+    uint16_t    m_ins[NUM_OF_CHANNELS];
+    //! value poked to B0, cached, needed by NoteOff)(
+    uint8_t     m_pit[NUM_OF_CHANNELS];
+    //! LFO and panning value cached
+    uint8_t     m_pan_lfo[NUM_OF_CHANNELS];
 };
 
 #endif // GENERATOR_H
