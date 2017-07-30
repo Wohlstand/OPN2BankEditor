@@ -34,9 +34,8 @@ FmBank::FmBank(const FmBank &fb)
     lfo_frequency   = fb.lfo_frequency;
     Ins_Melodic_box     = fb.Ins_Melodic_box;
     Ins_Percussion_box  = fb.Ins_Percussion_box;
-    //int size = sizeof(Instrument)*128;
-    //memcpy(Ins_Melodic,    fb.Ins_Melodic,    size);
-    //memcpy(Ins_Percussion, fb.Ins_Percussion, size);
+    Ins_Melodic     = Ins_Melodic_box.data();
+    Ins_Percussion  = Ins_Percussion_box.data();
 }
 
 FmBank &FmBank::operator=(const FmBank &fb)
