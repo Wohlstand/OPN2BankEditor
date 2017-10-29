@@ -20,7 +20,7 @@
 #include <qendian.h>
 #include <cmath>
 
-#define BEND_COEFFICIENT 172.4387
+#define BEND_COEFFICIENT 321.88557
 
 #define USED_CHANNELS_2OP       18
 #define USED_CHANNELS_2OP_PS4   9
@@ -49,8 +49,8 @@ Generator::Generator(uint32_t sampleRate,
     memset(m_pit, 0, sizeof(uint8_t) * NUM_OF_CHANNELS);
     memset(m_pan_lfo, 0, sizeof(uint8_t) * NUM_OF_CHANNELS);
 
-    //Init chip //7670453.0
-    chip2.set_rate(sampleRate, 7153353.0 * 2.0);
+    //Init chip //7670454.0
+    chip2.set_rate(sampleRate, 7670454.0);
 
     lfo_reg = 0x00;
     WriteReg(0, 0x22, lfo_reg);   //LFO off
@@ -149,17 +149,17 @@ void Generator::NoteOn(uint32_t c, double hertz) // Hertz range: 0..131071
     uint8_t  port   = (c <= 2) ? 0 : 1;
     uint16_t x2 = 0x0000;
 
-    if(hertz < 0 || hertz > 131071) // Avoid infinite loop
+    if(hertz < 0 || hertz > 262143) // Avoid infinite loop
         return;
 
-    while(hertz >= 1023.5)
+    while(hertz >= 2047.5)
     {
         hertz /= 2.0;    // Calculate octave
         x2 += 0x800;
     }
     x2 += static_cast<uint32_t>(hertz + 0.5);
-    WriteReg(port, 0xA0 + cc,  x2 & 0xFF);
     WriteReg(port, 0xA4 + cc, (x2>>8) & 0xFF);//Set frequency and octave
+    WriteReg(port, 0xA0 + cc,  x2 & 0xFF);
     WriteReg(0, 0x28, 0xF0 + uint8_t((c <= 2) ? c : c + 1));
 }
 
