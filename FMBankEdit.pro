@@ -24,7 +24,7 @@
 
 QT += core gui
 greaterThan(QT_MAJOR_VERSION, 4):{
-    QT += widgets multimedia
+    QT += widgets multimedia concurrent
     DEFINES += ENABLE_AUDIO_TESTING
     CONFIG += c++11
 } else {
@@ -87,7 +87,8 @@ SOURCES += \
     src/main.cpp \
     src/opl/generator.cpp \
     src/opl/Ym2612_Emu.cpp \
-    src/piano.cpp
+    src/piano.cpp \
+    src/opl/measurer.cpp
 
 HEADERS += \
     src/bank_editor.h \
@@ -104,7 +105,8 @@ HEADERS += \
     src/opl/generator.h \
     src/opl/Ym2612_Emu.h \
     src/piano.h \
-    src/version.h
+    src/version.h \
+    src/opl/measurer.h
 
 FORMS += \
     src/bank_editor.ui \

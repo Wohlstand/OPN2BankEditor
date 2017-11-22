@@ -28,6 +28,7 @@
 #include <QListWidgetItem>
 #include "bank.h"
 #include "opl/generator.h"
+#include "opl/measurer.h"
 
 #include "FileFormats/ffmt_base.h"
 
@@ -57,6 +58,8 @@ private:
     Importer           *m_importer;
     //! Path for currently opened file
     QString             m_recentPath;
+    //! Recently opened bank file
+    QString             m_recentBankFilePath;
 
     //! Currently loaded FM bank
     FmBank              m_bank;
@@ -84,6 +87,9 @@ private:
 
     //! OPL chip emulator frontent
     Generator       *m_generator;
+
+    //! Sound length measurer
+    Measurer        *m_measurer;
 
     //! Recent bank file format which was been used
     BankFormats     m_recentFormat;
@@ -290,10 +296,25 @@ private slots:
     void on_actionAbout_triggered();
 
     /**
+     * @brief Rename current bank
+     */
+    void on_bankRename_clicked();
+
+    /**
      * @brief Reload instruments list for specific bank ID
      * @param index ID of bank
      */
     void on_bank_no_currentIndexChanged(int index);
+
+    /**
+     * @brief Read value from MSB field and write into bank meta-data entry
+     */
+    void on_bank_msb_editingFinished();
+
+    /**
+     * @brief Read value from LSB field and write into bank meta-data entry
+     */
+    void on_bank_lsb_editingFinished();
 
     /**
      * @brief Add new instrument into end

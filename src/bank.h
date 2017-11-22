@@ -185,6 +185,10 @@ public:
         uint8_t percNoteNum;
         //! Note offset (first operator pair)
         int16_t note_offset1;
+        //! Number of milliseconds of produced sound while sustaining
+        uint16_t ms_sound_kon;
+        //! Number of milliseconds of produced sound while release
+        uint16_t ms_sound_koff;
 
         //! Frequency modulation sensitivity (0 or 7)
         uint8_t fm;
@@ -195,39 +199,49 @@ public:
         bool operator!=(const Instrument &fb);
 
         /* ******** OPN2 merged values ******** */
-        uint8_t getRegDUMUL(int OpID);
+        uint8_t getRegDUMUL(int OpID) const;
         void    setRegDUMUL(int OpID, uint8_t reg_dumul);
 
-        uint8_t getRegLevel(int OpID);
+        uint8_t getRegLevel(int OpID) const;
         void    setRegLevel(int OpID, uint8_t reg_level);
 
-        uint8_t getRegRSAt(int OpID);
+        uint8_t getRegRSAt(int OpID) const;
         void    setRegRSAt(int OpID, uint8_t reg_rsat);
 
-        uint8_t getRegAMD1(int OpID);
+        uint8_t getRegAMD1(int OpID) const;
         void    setRegAMD1(int OpID, uint8_t reg_amd1);
 
-        uint8_t getRegD2(int OpID);
+        uint8_t getRegD2(int OpID) const;
         void    setRegD2(int OpID, uint8_t reg_d2);
 
-        uint8_t getRegSysRel(int OpID);
+        uint8_t getRegSysRel(int OpID) const;
         void    setRegSysRel(int OpID, uint8_t reg_sysrel);
 
-        uint8_t getRegSsgEg(int OpID);
+        uint8_t getRegSsgEg(int OpID) const;
         void    setRegSsgEg(int OpID, uint8_t reg_ssgeg);
 
-        uint8_t getRegFbAlg();
+        uint8_t getRegFbAlg() const;
         void    setRegFbAlg(uint8_t reg_ssgeg);
 
-        uint8_t getRegLfoSens();
+        uint8_t getRegLfoSens() const;
         void    setRegLfoSens(uint8_t reg_lfosens);
+    };
+
+    struct MidiBank
+    {
+        //! Custom bank name
+        char name[33];
+        //! MIDI bank MSB index
+        uint8_t msb;
+        //! MIDI bank LSB index
+        uint8_t lsb;
     };
 
     bool    lfo_enabled     = false;
     uint8_t lfo_frequency   = 0;
 
     //Global chip LFO parameter
-    uint8_t getRegLFO();
+    uint8_t getRegLFO() const;
     void setRegLFO(uint8_t lfo_reg);
 
     /**
@@ -236,9 +250,14 @@ public:
      */
     static Instrument emptyInst();
 
-    inline int countMelodic()   { return Ins_Melodic_box.size(); }
+    /**
+     * @brief Get empty bank meta-data entry
+     * @return null-filled bank entry
+     */
+    static MidiBank emptyBank(uint16_t index = 0);
 
-    inline int countDrums()     { return Ins_Percussion_box.size(); }
+    inline int countMelodic() const { return Ins_Melodic_box.size(); }
+    inline int countDrums() const   { return Ins_Percussion_box.size(); }
 
     //! Pointer to array of melodic instruments
     Instrument* Ins_Melodic;
@@ -248,6 +267,25 @@ public:
     QVector<Instrument> Ins_Melodic_box;
     //! Array of percussion instruments
     QVector<Instrument> Ins_Percussion_box;
+    //! Array of melodic MIDI bank meta-data per every index
+    QVector<MidiBank>   Banks_Melodic;
+    //! Array of percussion MIDI bank meta-data per every index
+    QVector<MidiBank>   Banks_Percussion;
+};
+
+class TmpBank
+{
+public:
+    TmpBank(FmBank &bank, int minMelodic, int minPercusive);
+
+    //! Pointer to array of melodic instruments
+    FmBank::Instrument* insMelodic;
+    //! Pointer to array of percussion instruments
+    FmBank::Instrument* insPercussion;
+    //! Array of melodic instruments
+    QVector<FmBank::Instrument> tmpMelodic;
+    //! Array of percussion instruments
+    QVector<FmBank::Instrument> tmpPercussion;
 };
 
 #endif // BANK_H

@@ -25,7 +25,7 @@
 
 #define PROGRAM_NAME "OPN2 Bank Editor"
 
-#define VERSION "1.0.0-beta"
+#define VERSION "1.1.0-beta"
 
 #ifdef IS_QT_4
 #define COPYRIGHT_SIGN "(C)"
