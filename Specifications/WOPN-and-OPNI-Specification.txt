@@ -8,6 +8,11 @@ Author:             Vitaliy Novichkov "Wohlstand"
 Contacts emails:    admin@wohlnet.ru, nvd339@yandex.ru
 ===============================================================================
 
+Versions:
+- Version 1: (April, 30, 2017): First release
+- Version 2: (November, 24, 2017): Added bank meta-data
+              and measured sounding delays per each instrument
+
 ===============================================================================
 Contents:
     1. Single-instrument entry
