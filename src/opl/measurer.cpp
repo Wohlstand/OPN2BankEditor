@@ -157,7 +157,8 @@ static void MeasureDurations(FmBank::Instrument *in_p)
     const unsigned max_on  = 40;
     const unsigned max_off = 60;
 
-    const double min_coefficient = 0.005;
+    const double min_coefficient_on = 0.2;
+    const double min_coefficient_off = 0.2;
 
     // For up to 40 seconds, measure mean amplitude.
     std::vector<double> amplitudecurve_on;
@@ -184,7 +185,7 @@ static void MeasureDurations(FmBank::Instrument *in_p)
         if(std_deviation > highest_sofar)
             highest_sofar = std_deviation;
 
-        if(period > 6 * interval && std_deviation < highest_sofar * min_coefficient)
+        if(period > 6 * interval && std_deviation < highest_sofar * min_coefficient_on)
             break;
     }
 
@@ -216,7 +217,7 @@ static void MeasureDurations(FmBank::Instrument *in_p)
         std_deviation = std::sqrt(std_deviation / samples_per_interval);
         amplitudecurve_off.push_back(std_deviation);
 
-        if(std_deviation < highest_sofar * min_coefficient)
+        if(std_deviation < highest_sofar * min_coefficient_off)
             break;
     }
 
@@ -237,7 +238,7 @@ static void MeasureDurations(FmBank::Instrument *in_p)
     }
     for(size_t a = peak_amplitude_time; a < amplitudecurve_on.size(); ++a)
     {
-        if(amplitudecurve_on[a] <= peak_amplitude_value * min_coefficient)
+        if(amplitudecurve_on[a] <= peak_amplitude_value * min_coefficient_on)
         {
             quarter_amplitude_time = a;
             break;
@@ -245,14 +246,14 @@ static void MeasureDurations(FmBank::Instrument *in_p)
     }
     for(size_t a = 0; a < amplitudecurve_off.size(); ++a)
     {
-        if(amplitudecurve_off[a] <= peak_amplitude_value * min_coefficient)
+        if(amplitudecurve_off[a] <= peak_amplitude_value * min_coefficient_off)
         {
             keyoff_out_time = a;
             break;
         }
     }
 
-    if(keyoff_out_time == 0 && amplitudecurve_on.back() < peak_amplitude_value * min_coefficient)
+    if(keyoff_out_time == 0 && amplitudecurve_on.back() < peak_amplitude_value * min_coefficient_off)
         keyoff_out_time = quarter_amplitude_time;
 
     DurationInfo result;
