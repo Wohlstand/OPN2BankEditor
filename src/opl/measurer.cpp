@@ -31,14 +31,6 @@
 //Measurer is always needs for emulator
 #include "Ym2612_Emu.h"
 
-/******************************************************************
- ******************************************************************
- *                  DRAFT
- * THIS MEASURER IS WIP AND IS NOT WORKING AND RESULTS GARBAGE!!!
- *
- ******************************************************************
- ******************************************************************/
-
 struct DurationInfo
 {
     uint64_t    peak_amplitude_time;
