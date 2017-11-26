@@ -37,6 +37,7 @@ enum InstFormats
     FORMAT_INST_UNKNOWN = -1,
     FORMAT_INST_WOPN2   = 0,
     FORMAT_INST_TFI_MM  = 1,
+    FORMAT_INST_DM_DMP  = 2,
 };
 
 enum class FormatCaps

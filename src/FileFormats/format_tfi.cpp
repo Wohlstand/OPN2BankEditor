@@ -28,7 +28,7 @@
 bool TFI_MM::detectInst(const QString &filePath, char * /*magic*/)
 {
     //By name extension
-    if(filePath.startsWith(".tfi", Qt::CaseInsensitive))
+    if(filePath.endsWith(".tfi", Qt::CaseInsensitive))
         return true;
 
     //By file size :-P
@@ -124,6 +124,9 @@ FfmtErrCode TFI_MM::loadFileInst(QString filePath, FmBank::Instrument &inst, boo
 
     if(isDrum)
         *isDrum = false;
+
+    QByteArray name = QFileInfo(filePath).baseName().toUtf8();
+    strncpy(inst.name, name.data(), name.size() < 32 ? (size_t)name.size() : 32);
 
     file.close();
 

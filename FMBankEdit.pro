@@ -79,6 +79,7 @@ SOURCES += \
     src/controlls.cpp \
     src/FileFormats/ffmt_base.cpp \
     src/FileFormats/ffmt_factory.cpp \
+    src/FileFormats/format_deflemask_dmp.cpp \
     src/FileFormats/format_tfi.cpp \
     src/FileFormats/format_vgm_import.cpp \
     src/FileFormats/format_wohlstand_opn2.cpp \
@@ -98,6 +99,7 @@ HEADERS += \
     src/FileFormats/ffmt_base.h \
     src/FileFormats/ffmt_enums.h \
     src/FileFormats/ffmt_factory.h \
+    src/FileFormats/format_deflemask_dmp.h \
     src/FileFormats/format_tfi.h \
     src/FileFormats/format_vgm_import.h \
     src/FileFormats/format_wohlstand_opn2.h \

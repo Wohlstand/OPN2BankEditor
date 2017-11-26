@@ -26,6 +26,7 @@
 #include "format_wohlstand_opn2.h"
 #include "format_vgm_import.h"
 #include "format_tfi.h"
+#include "format_deflemask_dmp.h"
 
 typedef std::unique_ptr<FmBankFormatBase> FmBankFormatBase_uptr;
 typedef std::list<FmBankFormatBase_uptr>  FmBankFormatsL;
@@ -53,6 +54,7 @@ void FmBankFormatFactory::registerAllFormats()
     registerInstFormat(new WohlstandOPN2());
     registerBankFormat(new VGM_Importer());
     registerInstFormat(new TFI_MM());
+    registerInstFormat(new DefleMask());
 }
 
 
