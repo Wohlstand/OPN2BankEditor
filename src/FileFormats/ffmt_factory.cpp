@@ -25,6 +25,7 @@
 
 #include "format_wohlstand_opn2.h"
 #include "format_vgm_import.h"
+#include "format_tfi.h"
 
 typedef std::unique_ptr<FmBankFormatBase> FmBankFormatBase_uptr;
 typedef std::list<FmBankFormatBase_uptr>  FmBankFormatsL;
@@ -51,6 +52,7 @@ void FmBankFormatFactory::registerAllFormats()
     registerBankFormat(new WohlstandOPN2());
     registerInstFormat(new WohlstandOPN2());
     registerBankFormat(new VGM_Importer());
+    registerInstFormat(new TFI_MM());
 }
 
 
@@ -323,7 +325,7 @@ FfmtErrCode FmBankFormatFactory::OpenInstrumentFile(QString filePath,
 FfmtErrCode FmBankFormatFactory::SaveInstrumentFile(QString filePath, FmBank::Instrument &ins, InstFormats dest, bool isDrum)
 {
     FfmtErrCode err = FfmtErrCode::ERR_UNSUPPORTED_FORMAT;
-    for(FmBankFormatBase_uptr &p : g_formats)
+    for(FmBankFormatBase_uptr &p : g_formatsInstr)
     {
         Q_ASSERT(p.get());//It must be non-null!
         if((p->formatInstCaps() & (int)FormatCaps::FORMAT_CAPS_SAVE) && (p->formatInstId() == dest))

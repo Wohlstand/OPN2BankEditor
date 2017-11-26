@@ -35,7 +35,8 @@ enum BankFormats
 enum InstFormats
 {
     FORMAT_INST_UNKNOWN = -1,
-    FORMAT_INST_WOPN2    = 0,
+    FORMAT_INST_WOPN2   = 0,
+    FORMAT_INST_TFI_MM  = 1,
 };
 
 enum class FormatCaps

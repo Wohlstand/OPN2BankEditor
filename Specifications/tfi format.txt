@@ -1,0 +1,143 @@
+TFI File Format
+
+The .tfi file format is the instrument format used for TFM Music Maker programmed by Shiru. It uses two Yamaha YM2203 chips and is largely backwards compatible with other chips in the OPN series by Yamaha.
+Contents
+
+    1 Organization
+    2 Descriptions
+        2.1 Algorithm Values
+        2.2 Feedback Values
+        2.3 Multiplier Values
+        2.4 Detune values
+        2.5 SSG-EG Values
+
+
+
+Organization
+
+Every .tfi file is composed of 42 bytes of info. The organization of these bytes are listed in the table below with abbreviated functions as an overview.
+AL 	FB
+MT 	DT 	TL 	RS 	AR 	DR 	SR 	RR 	SL 	EG
+MT 	DT 	TL 	RS 	AR 	DR 	SR 	RR 	SL 	EG
+MT 	DT 	TL 	RS 	AR 	DR 	SR 	RR 	SL 	EG
+MT 	DT 	TL 	RS 	AR 	DR 	SR 	RR 	SL 	EG
+
+
+
+
+A brief description of the functions of each byte, their offsets and the valid range are listed in the chart below.
+Hex Offset 	Function 	Range
+0x00 	Algorithm 	$00-$07
+0x01 	Feedback 	$00-$07
+0x02 	OP0 Multiplier 	$00-$0F
+0x03 	OP0 Detune 	$00-$06
+0x04 	OP0 Total Level 	$00-$7F
+0x05 	OP0 Rate Scaling 	$00-$03
+0x06 	OP0 Attack Rate 	$00-$1F
+0x07 	OP0 Decay Rate 	$00-$1F
+0x08 	OP0 Sustain Rate 	$00-$1F
+0x09 	OP0 Release Rate 	$00-$0F
+0x0A 	OP0 Sustain Level 	$00-$0F
+0x0B 	OP0 SSG-EG 	$00, $08-$0F
+0x0C 	OP1 Multiplier 	$00-$0F
+0x0D 	OP1 Detune 	$00-$06
+0x0E 	OP1 Total Level 	$00-$3F
+0x0F 	OP1 Rate Scaling 	$00-$03
+0x10 	OP1 Attack Rate 	$00-$1F
+0x11 	OP1 Decay Rate 	$00-$1F
+0x12 	OP1 Sustain Rate 	$00-$1F
+0x13 	OP1 Release Rate 	$00-$0F
+0x14 	OP1 Sustain Level 	$00-$0F
+0x15 	OP1 SSG-EG 	$00, $08-$0F
+0x16 	OP2 Multiplier 	$00-$0F
+0x17 	OP2 Detune 	$00-$06
+0x18 	OP2 Total Level 	$00-$3F
+0x19 	OP2 Rate Scaling 	$00-$03
+0x1A 	OP2 Attack Rate 	$00-$1F
+0x1B 	OP2 Decay Rate 	$00-$1F
+0x1C 	OP2 Sustain Rate 	$00-$1F
+0x1D 	OP2 Release Rate 	$00-$0F
+0x1E 	OP2 Sustain Level 	$00-$0F
+0x1F 	OP2 SSG-EG 	$00, $08-$0F
+0x20 	OP3 Multiplier 	$00-$0F
+0x21 	OP3 Detune 	$00-$06
+0x22 	OP3 Total Level 	$00-$3F
+0x23 	OP3 Rate Scaling 	$00-$3F
+0x24 	OP3 Attack Rate 	$00-$1F
+0x25 	OP3 Decay Rate 	$00-$1F
+0x26 	OP3 Sustain Rate 	$00-$1F
+0x27 	OP3 Release Rate 	$00-$0F
+0x28 	OP3 Sustain Level 	$00-$0F
+0x29 	OP3 SSG-EG 	$00, $08-$0F
+
+
+Descriptions
+Algorithm Values
+
+Feedback values only affect Operator 0. In the descriptions below a "+" sign indicates that the operators involved are combined through additive synthesis and a ">" sign indicates that the operators involved are combined through FM synthesis where the operator(s) to the left are the modulator wave and the operator(s) to the right are the carrier waves.
+
+    $00 = OP0 > OP2 > OP1 > OP3
+    $01 = (OP0 + OP2) > OP1 > OP3
+    $02 = (OP0 + (OP2 > OP1)) > OP3
+    $03 = ((OP0 > OP2) + OP1) > OP3
+    $04 = (OP0 > OP2) + (OP1 > OP3)
+    $05 = (OP0 > OP1) + (OP0 > OP2) + (OP0 > OP3)
+    $06 = (OP0 > OP2) + OP1 + OP3
+    $07 = OP0 + OP1 + OP2 + OP3
+
+
+
+Feedback Values
+
+Number of times Operator 0 feeds back into itself
+Multiplier Values
+
+These Multiplier values are the same for all Yamaha FM chips
+
+    $00 = 1/2x or the octave below
+    $01 = 1x or at pitch
+    $02 = 2x or an octave above
+    $03 = 3x or an octave and a perfect fifth above
+    $04 = 4x or two octaves above
+    $05 = 5x or two octaves and a major third above
+    $06 = 6x or two octaves and a fifth above
+    $07 = 7x or two octaves and a minor seventh above
+    $08 = 8x or three octaves above
+    $09 = 9x or three octaves and a major second above
+    $0A = 10x or three octaves and a major third above
+    $0B = 10x or three octaves and a major third above
+    $0C = 12x or three octaves and a perfect fifth above
+    $0D = 12x or three octaves and a perfect fifth above
+    $0E = 15x or three octaves and a major seventh above
+    $0F = 15x or three octaves and a major seventh above
+
+
+
+Detune values
+
+Exact meaning for detune values and how they affect tuning are not clearly outlined in any literature regarding the YM2203 and may need further research to identify.
+
+    $00 = -3
+    $01 = -2
+    $02 = -1
+    $03 = no detune
+    $04 = +1
+    $05 = +2
+    $06 = +3
+
+
+
+SSG-EG Values
+
+When enabled, the Software Sound Generator-Envelope Generator will change the order in which the Attack, Decay, Sustain and Release sections of the envelope will be stepped through. In the description below "OFF" means the envelope will cycle once and then will be silenced and "ON" means the envelope will cycle once and then play at the volume indicated in the operator's TL value.
+
+    $00 = Do not use SSG-EG
+    $08 = ADSR ADSR ADSR
+    $09 = ADSR OFF
+    $0A = ADSR RSDA ADSR
+    $0B = ADSR ON
+    $0C = RSDA RSDA RSDA
+    $0D = RSDA ON
+    $0E = RSDA ADSR RSDA
+    $0F = RSDA OFF
+

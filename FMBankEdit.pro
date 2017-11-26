@@ -79,6 +79,7 @@ SOURCES += \
     src/controlls.cpp \
     src/FileFormats/ffmt_base.cpp \
     src/FileFormats/ffmt_factory.cpp \
+    src/FileFormats/format_tfi.cpp \
     src/FileFormats/format_vgm_import.cpp \
     src/FileFormats/format_wohlstand_opn2.cpp \
     src/formats_sup.cpp \
@@ -86,9 +87,9 @@ SOURCES += \
     src/ins_names.cpp \
     src/main.cpp \
     src/opl/generator.cpp \
+    src/opl/measurer.cpp \
     src/opl/Ym2612_Emu.cpp \
-    src/piano.cpp \
-    src/opl/measurer.cpp
+    src/piano.cpp
 
 HEADERS += \
     src/bank_editor.h \
@@ -97,16 +98,17 @@ HEADERS += \
     src/FileFormats/ffmt_base.h \
     src/FileFormats/ffmt_enums.h \
     src/FileFormats/ffmt_factory.h \
+    src/FileFormats/format_tfi.h \
     src/FileFormats/format_vgm_import.h \
     src/FileFormats/format_wohlstand_opn2.h \
     src/formats_sup.h \
     src/importer.h \
     src/ins_names.h \
     src/opl/generator.h \
+    src/opl/measurer.h \
     src/opl/Ym2612_Emu.h \
     src/piano.h \
-    src/version.h \
-    src/opl/measurer.h
+    src/version.h
 
 FORMS += \
     src/bank_editor.ui \
