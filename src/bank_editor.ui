@@ -2388,7 +2388,10 @@ Available from 0 to 127</string>
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>AdLib BNK mode</string>
+    <string>United view of all banks</string>
+   </property>
+   <property name="toolTip">
+    <string>All instruments of all banks will be shown as one big list without spliting instruments sets by banks</string>
    </property>
   </action>
   <action name="actionFormatsSup">
