@@ -158,7 +158,7 @@ static void MeasureDurations(FmBank::Instrument *in_p)
     const unsigned max_off = 60;
 
     const double min_coefficient_on = 0.2;
-    const double min_coefficient_off = 0.2;
+    const double min_coefficient_off = 0.1;
 
     // For up to 40 seconds, measure mean amplitude.
     std::vector<double> amplitudecurve_on;
