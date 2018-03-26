@@ -2264,6 +2264,7 @@ Available from 0 to 127</string>
     <addaction name="actionPaste"/>
     <addaction name="separator"/>
     <addaction name="actionReset_current_instrument"/>
+    <addaction name="actionReMeasure"/>
     <addaction name="separator"/>
     <addaction name="actionAddBank"/>
     <addaction name="actionCloneBank"/>
@@ -2397,6 +2398,11 @@ Available from 0 to 127</string>
   <action name="actionFormatsSup">
    <property name="text">
     <string>Supported formats...</string>
+   </property>
+  </action>
+  <action name="actionReMeasure">
+   <property name="text">
+    <string>Re-Calculate all sounding delays</string>
    </property>
   </action>
  </widget>

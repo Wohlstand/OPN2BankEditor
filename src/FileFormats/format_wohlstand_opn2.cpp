@@ -76,6 +76,7 @@ static bool readInstrument(QFile &file, FmBank::Instrument &ins, uint16_t &versi
     {
         ins.ms_sound_kon  = toUint16BE(idata + 65);
         ins.ms_sound_koff = toUint16BE(idata + 67);
+        ins.is_blank = (ins.ms_sound_kon == 0) && (ins.ms_sound_koff == 0);
     }
     return true;
 }
@@ -103,8 +104,16 @@ static bool writeInstrument(QFile &file, FmBank::Instrument &ins, bool hasSoundK
 
     if(hasSoundKoefficients)
     {
-        fromUint16BE(ins.ms_sound_kon,  odata + 65);
-        fromUint16BE(ins.ms_sound_koff, odata + 67);
+        if(ins.is_blank)
+        {
+            fromUint16BE(0, odata + 65);
+            fromUint16BE(0, odata + 67);
+        }
+        else
+        {
+            fromUint16BE(ins.ms_sound_kon,  odata + 65);
+            fromUint16BE(ins.ms_sound_koff, odata + 67);
+        }
         return (file.write(char_p(odata), WOPL_INST_SIZE_V2) == WOPL_INST_SIZE_V2);
     } else
         return (file.write(char_p(odata), WOPL_INST_SIZE_V1) == WOPL_INST_SIZE_V1);
