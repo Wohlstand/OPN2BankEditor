@@ -103,7 +103,9 @@ SOURCES += \
     src/opl/chips/gens_opn2.cpp \
     src/opl/chips/opn_chip_base.cpp \
     src/opl/chips/nuked_opn2.cpp \
-    src/opl/chips/nuked/ym3438.c
+    src/opl/chips/nuked/ym3438.c \
+    src/opl/chips/mame_opn2.cpp \
+    src/opl/chips/mame/mame_ym2612fm.c
 
 HEADERS += \
     src/bank_editor.h \
@@ -128,7 +130,10 @@ HEADERS += \
     src/opl/chips/gens_opn2.h \
     src/opl/chips/opn_chip_base.h \
     src/opl/chips/nuked_opn2.h \
-    src/opl/chips/nuked/ym3438.h
+    src/opl/chips/nuked/ym3438.h \
+    src/opl/chips/mame_opn2.h \
+    src/opl/chips/mame/mamedef.h \
+    src/opl/chips/mame/mame_ym2612fm.h
 
 FORMS += \
     src/bank_editor.ui \

@@ -22,6 +22,7 @@
 
 #include "chips/gens_opn2.h"
 #include "chips/nuked_opn2.h"
+#include "chips/mame_opn2.h"
 
 #define BEND_COEFFICIENT 321.88557
 
@@ -145,6 +146,9 @@ void Generator::switchChip(Generator::OPN_Chips chipId)
         break;
     case CHIP_Nuked:
         chip.reset(new NukedOPN2());
+        break;
+    case CHIP_MAME:
+        chip.reset(new MameOPN2());
         break;
     }
     initChip();

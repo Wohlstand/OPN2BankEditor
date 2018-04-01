@@ -27,6 +27,7 @@ NukedOPN2::~NukedOPN2()
 
 void NukedOPN2::setRate(uint32_t rate, uint32_t clock)
 {
+    OPNChipBase::setRate(rate, clock);
     ym3438_t *chip_r = reinterpret_cast<ym3438_t*>(chip);
     OPN2_Reset(chip_r, rate, clock);
 }

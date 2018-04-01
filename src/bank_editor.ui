@@ -2298,6 +2298,7 @@ Available from 0 to 127</string>
       <string>Choose chip emulator</string>
      </property>
      <addaction name="actionEmulatorNuked"/>
+     <addaction name="actionEmulatorMame"/>
      <addaction name="actionEmulatorGens"/>
     </widget>
     <addaction name="menuChoose_chip_emulator"/>
@@ -2442,6 +2443,14 @@ Available from 0 to 127</string>
    </property>
    <property name="text">
     <string>Nuked OPN2 (very accurate)</string>
+   </property>
+  </action>
+  <action name="actionEmulatorMame">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Mame YM2612</string>
    </property>
   </action>
   <action name="actionEmulatorGens">

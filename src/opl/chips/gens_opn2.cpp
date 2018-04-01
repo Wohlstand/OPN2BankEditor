@@ -21,6 +21,7 @@ GensOPN2::~GensOPN2()
 
 void GensOPN2::setRate(uint32_t rate, uint32_t clock)
 {
+    OPNChipBase::setRate(rate, clock);
     chip->set_rate(rate, clock);
 }
 

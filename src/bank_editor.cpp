@@ -90,6 +90,7 @@ BankEditor::BankEditor(QWidget *parent) :
     m_measurer = new Measurer(this);
     connect(ui->actionImport, SIGNAL(triggered()), m_importer, SLOT(show()));
     connect(ui->actionEmulatorNuked, SIGNAL(triggered()), this, SLOT(toggleEmulator()));
+    connect(ui->actionEmulatorMame, SIGNAL(triggered()), this, SLOT(toggleEmulator()));
     connect(ui->actionEmulatorGens, SIGNAL(triggered()), this, SLOT(toggleEmulator()));
 
     /* Hide first 7 SSG-EG items */
@@ -135,6 +136,7 @@ void BankEditor::loadSettings()
     m_currentChip = (Generator::OPN_Chips)setup.value("chip-emulator", 0).toInt();
 
     ui->actionEmulatorNuked->setChecked(false);
+    ui->actionEmulatorMame->setChecked(false);
     ui->actionEmulatorGens->setChecked(false);
 
     switch(m_currentChip)
@@ -144,6 +146,9 @@ void BankEditor::loadSettings()
         break;
     case Generator::CHIP_GENS:
         ui->actionEmulatorGens->setChecked(true);
+        break;
+    case Generator::CHIP_MAME:
+        ui->actionEmulatorMame->setChecked(true);
         break;
     }
 }
@@ -556,6 +561,7 @@ void BankEditor::toggleEmulator()
 {
     QObject *menuItem = sender();
     ui->actionEmulatorNuked->setChecked(false);
+    ui->actionEmulatorMame->setChecked(false);
     ui->actionEmulatorGens->setChecked(false);
     if(menuItem == ui->actionEmulatorNuked)
     {
@@ -568,6 +574,13 @@ void BankEditor::toggleEmulator()
     {
         ui->actionEmulatorGens->setChecked(true);
         m_currentChip = Generator::CHIP_GENS;
+        m_generator->switchChip(m_currentChip);
+    }
+    else
+    if(menuItem == ui->actionEmulatorMame)
+    {
+        ui->actionEmulatorMame->setChecked(true);
+        m_currentChip = Generator::CHIP_MAME;
         m_generator->switchChip(m_currentChip);
     }
 }
