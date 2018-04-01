@@ -30,7 +30,7 @@ protected:
     QIODevice *m_audioSource = nullptr;
 public:
     AudioOutBase(QObject *parent);
-    virtual ~AudioOutBase();;
+    virtual ~AudioOutBase();
     virtual bool init(int sampleRate, int channels) = 0;
     virtual void setAudioSource(QIODevice *audioSource);
     virtual void start() = 0;

@@ -29,7 +29,7 @@
 #include "generator.h"
 
 //Measurer is always needs for emulator
-#include "Ym2612_Emu.h"
+#include "chips/gens_opn2.h"
 
 struct DurationInfo
 {
@@ -47,22 +47,14 @@ struct DurationInfo
 
 struct ChipEmulator
 {
-    Ym2612_Emu opl;
+    GensOPN2 opl;
     void setRate(uint32_t rate)
     {
-        opl.set_rate(rate, 7670454.0);
+        opl.setRate(rate, 7670454.0);
     }
     void WRITE_REG(uint8_t port, uint8_t address, uint8_t byte)
     {
-        switch(port)
-        {
-        case 0:
-            opl.write0(address, byte);
-            break;
-        case 1:
-            opl.write1(address, byte);
-            break;
-        }
+        opl.writeReg(port, address, byte);
     }
 };
 
@@ -169,7 +161,7 @@ static void MeasureDurations(FmBank::Instrument *in_p)
         stereoSampleBuf.clear();
         stereoSampleBuf.resize(samples_per_interval * 2, 0);
 
-        opn.opl.run(samples_per_interval, stereoSampleBuf.data());
+        opn.opl.generate(stereoSampleBuf.data(), samples_per_interval);
 
         double mean = 0.0;
         for(unsigned long c = 0; c < samples_per_interval; ++c)
@@ -208,7 +200,7 @@ static void MeasureDurations(FmBank::Instrument *in_p)
         stereoSampleBuf.clear();
         stereoSampleBuf.resize(samples_per_interval * 2);
 
-        opn.opl.run(samples_per_interval, stereoSampleBuf.data());
+        opn.opl.generate(stereoSampleBuf.data(), samples_per_interval);
 
         double mean = 0.0;
         for(unsigned long c = 0; c < samples_per_interval; ++c)

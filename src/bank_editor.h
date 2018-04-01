@@ -58,6 +58,8 @@ private:
     QString             m_recentPath;
     //! Recently opened bank file
     QString             m_recentBankFilePath;
+    //! Currently using chip
+    Generator::OPN_Chips m_currentChip;
 
     //! Currently loaded FM bank
     FmBank              m_bank;
@@ -231,6 +233,11 @@ private slots:
      * @param previous Unused, just pass NULL
      */
     void on_instruments_currentItemChanged(QListWidgetItem *current, QListWidgetItem *);
+
+    /**
+     * @brief Toggle the chip emulator
+     */
+    void toggleEmulator();
 
     /**
      * @brief Clear all buffers and begin a new bank

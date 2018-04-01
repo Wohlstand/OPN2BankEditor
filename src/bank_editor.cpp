@@ -88,8 +88,10 @@ BankEditor::BankEditor(QWidget *parent) :
     m_importer = new Importer(this);
     m_measurer = new Measurer(this);
     connect(ui->actionImport, SIGNAL(triggered()), m_importer, SLOT(show()));
-    initAudio();
+    connect(ui->actionEmulatorNuked, SIGNAL(triggered()), this, SLOT(toggleEmulator()));
+    connect(ui->actionEmulatorGens, SIGNAL(triggered()), this, SLOT(toggleEmulator()));
     loadSettings();
+    initAudio();
 }
 
 BankEditor::~BankEditor()
@@ -114,12 +116,27 @@ void BankEditor::loadSettings()
     QApplication::setApplicationName("OPN2 FM Banks Editor");
     QSettings setup;
     m_recentPath = setup.value("recent-path").toString();
+    m_currentChip = (Generator::OPN_Chips)setup.value("chip-emulator", 0).toInt();
+
+    ui->actionEmulatorNuked->setChecked(false);
+    ui->actionEmulatorGens->setChecked(false);
+
+    switch(m_currentChip)
+    {
+    case Generator::CHIP_Nuked:
+        ui->actionEmulatorNuked->setChecked(true);
+        break;
+    case Generator::CHIP_GENS:
+        ui->actionEmulatorGens->setChecked(true);
+        break;
+    }
 }
 
 void BankEditor::saveSettings()
 {
     QSettings setup;
     setup.setValue("recent-path", m_recentPath);
+    setup.setValue("chip-emulator", (int)m_currentChip);
 }
 
 
@@ -517,6 +534,26 @@ void BankEditor::on_instruments_currentItemChanged(QListWidgetItem *current, QLi
     }
 
     flushInstrument();
+}
+
+void BankEditor::toggleEmulator()
+{
+    QObject *menuItem = sender();
+    ui->actionEmulatorNuked->setChecked(false);
+    ui->actionEmulatorGens->setChecked(false);
+    if(menuItem == ui->actionEmulatorNuked)
+    {
+        ui->actionEmulatorNuked->setChecked(true);
+        m_currentChip = Generator::CHIP_Nuked;
+        m_generator->switchChip(m_currentChip);
+    }
+    else
+    if(menuItem == ui->actionEmulatorGens)
+    {
+        ui->actionEmulatorGens->setChecked(true);
+        m_currentChip = Generator::CHIP_GENS;
+        m_generator->switchChip(m_currentChip);
+    }
 }
 
 

@@ -19,10 +19,12 @@
 #ifndef GENERATOR_H
 #define GENERATOR_H
 
-#include "Ym2612_Emu.h"
+#include "chips/opn_chip_base.h"
 
 #include "../bank.h"
 #include <stdint.h>
+#include <memory>
+#include <mutex>
 
 #include <QIODevice>
 #include <QObject>
@@ -53,8 +55,16 @@ class Generator : public QIODevice
     Q_OBJECT
 
 public:
-    Generator(uint32_t sampleRate, QObject *parent);
+    enum OPN_Chips
+    {
+        CHIP_Nuked = 0,
+        CHIP_GENS,
+    };
+    Generator(uint32_t sampleRate, OPN_Chips initialChip, QObject *parent);
     ~Generator();
+
+    void initChip();
+    void switchChip(OPN_Chips chipId);
 
     void start();
     void stop();
@@ -103,7 +113,10 @@ private:
     uint8_t     testDrum;
     OPN_PatchSetup m_patch;
 
-    Ym2612_Emu  chip2;
+    uint32_t    m_rate = 44100;
+
+    std::unique_ptr<OPNChipBase> chip;
+    std::mutex                   chip_mutex;
 
     //! index of operators pair, cached, needed by Touch()
     uint16_t    m_ins[NUM_OF_CHANNELS];

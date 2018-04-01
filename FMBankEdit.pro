@@ -97,9 +97,13 @@ SOURCES += \
     src/main.cpp \
     src/opl/generator.cpp \
     src/opl/measurer.cpp \
-    src/opl/Ym2612_Emu.cpp \
+    src/opl/chips/gens/Ym2612_Emu.cpp \
     src/piano.cpp \
-    src/audio/ao_base.cpp
+    src/audio/ao_base.cpp \
+    src/opl/chips/gens_opn2.cpp \
+    src/opl/chips/opn_chip_base.cpp \
+    src/opl/chips/nuked_opn2.cpp \
+    src/opl/chips/nuked/ym3438.c
 
 HEADERS += \
     src/bank_editor.h \
@@ -117,10 +121,14 @@ HEADERS += \
     src/ins_names.h \
     src/opl/generator.h \
     src/opl/measurer.h \
-    src/opl/Ym2612_Emu.h \
+    src/opl/chips/gens/Ym2612_Emu.h \
     src/piano.h \
     src/version.h \
-    src/audio/ao_base.h
+    src/audio/ao_base.h \
+    src/opl/chips/gens_opn2.h \
+    src/opl/chips/opn_chip_base.h \
+    src/opl/chips/nuked_opn2.h \
+    src/opl/chips/nuked/ym3438.h
 
 FORMS += \
     src/bank_editor.ui \

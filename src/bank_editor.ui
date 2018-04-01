@@ -2232,7 +2232,7 @@ Available from 0 to 127</string>
      <x>0</x>
      <y>0</y>
      <width>965</width>
-     <height>22</height>
+     <height>20</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -2277,8 +2277,22 @@ Available from 0 to 127</string>
     <addaction name="separator"/>
     <addaction name="actionAdLibBnkMode"/>
    </widget>
+   <widget class="QMenu" name="menuSettings">
+    <property name="title">
+     <string>Settings</string>
+    </property>
+    <widget class="QMenu" name="menuChoose_chip_emulator">
+     <property name="title">
+      <string>Choose chip emulator</string>
+     </property>
+     <addaction name="actionEmulatorNuked"/>
+     <addaction name="actionEmulatorGens"/>
+    </widget>
+    <addaction name="menuChoose_chip_emulator"/>
+   </widget>
    <addaction name="menuFile"/>
    <addaction name="menuEdito"/>
+   <addaction name="menuSettings"/>
    <addaction name="menuHelp"/>
   </widget>
   <action name="actionOpen">
@@ -2403,6 +2417,27 @@ Available from 0 to 127</string>
   <action name="actionReMeasure">
    <property name="text">
     <string>Re-Calculate all sounding delays</string>
+   </property>
+  </action>
+  <action name="actionAudio_output">
+   <property name="text">
+    <string>Audio output</string>
+   </property>
+  </action>
+  <action name="actionEmulatorNuked">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Nuked OPN2 (very accurate)</string>
+   </property>
+  </action>
+  <action name="actionEmulatorGens">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>GENS 2.10 (for slow CPUs, legacy)</string>
    </property>
   </action>
  </widget>

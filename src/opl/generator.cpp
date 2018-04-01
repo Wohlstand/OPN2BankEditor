@@ -20,6 +20,9 @@
 #include <qendian.h>
 #include <cmath>
 
+#include "chips/gens_opn2.h"
+#include "chips/nuked_opn2.h"
+
 #define BEND_COEFFICIENT 321.88557
 
 #define USED_CHANNELS_2OP       18
@@ -27,9 +30,11 @@
 #define USED_CHANNELS_4OP       6
 
 Generator::Generator(uint32_t sampleRate,
+                     OPN_Chips initialChip,
                      QObject *parent)
     :   QIODevice(parent)
 {
+    m_rate = sampleRate;
     note = 60;
     m_patch =
     {
@@ -49,8 +54,16 @@ Generator::Generator(uint32_t sampleRate,
     memset(m_pit, 0, sizeof(uint8_t) * NUM_OF_CHANNELS);
     memset(m_pan_lfo, 0, sizeof(uint8_t) * NUM_OF_CHANNELS);
 
-    //Init chip //7670454.0
-    chip2.set_rate(sampleRate, 7670454.0);
+    switchChip(initialChip);
+}
+
+Generator::~Generator()
+{}
+
+void Generator::initChip()
+{
+    //Init chip //7670454
+    chip->setRate(m_rate, 7670454);
 
     lfo_reg = 0x00;
     WriteReg(0, 0x22, lfo_reg);   //LFO off
@@ -121,20 +134,26 @@ Generator::Generator(uint32_t sampleRate,
     Silence();
 }
 
-Generator::~Generator()
-{}
+void Generator::switchChip(Generator::OPN_Chips chipId)
+{
+    std::lock_guard<std::mutex> g(chip_mutex);
+    Q_UNUSED(g);
+
+    switch(chipId)
+    {
+    case CHIP_GENS:
+        chip.reset(new GensOPN2());
+        break;
+    case CHIP_Nuked:
+        chip.reset(new NukedOPN2());
+        break;
+    }
+    initChip();
+}
 
 void Generator::WriteReg(uint8_t port, uint16_t address, uint8_t byte)
 {
-    switch(port)
-    {
-    case 0:
-        chip2.write0(address, byte);
-        break;
-    case 1:
-        chip2.write1(address, byte);
-        break;
-    }
+    chip->writeReg(port, address, byte);
 }
 
 void Generator::NoteOff(uint32_t c)
@@ -434,14 +453,14 @@ void Generator::changeLFO(bool enabled)
 {
     lfo_enable = uint8_t(enabled);
     lfo_reg = (((lfo_enable << 3)&0x08) | (lfo_freq & 0x07)) & 0x0F;
-    chip2.write0(0x22, lfo_reg);
+    WriteReg(0, 0x22, lfo_reg);
 }
 
 void Generator::changeLFOfreq(int freq)
 {
     lfo_freq = uint8_t(freq);
     lfo_reg = (((lfo_enable << 3)&0x08) | (lfo_freq & 0x07)) & 0x0F;
-    chip2.write0(0x22, lfo_reg);
+    WriteReg(0, 0x22, lfo_reg);
 }
 
 
@@ -458,11 +477,13 @@ void Generator::stop()
 
 qint64 Generator::readData(char *data, qint64 len)
 {
-    int16_t *_out = reinterpret_cast<short *>(data);
+    std::lock_guard<std::mutex> g(chip_mutex);
+    Q_UNUSED(g);
+
+    int16_t *_out = reinterpret_cast<int16_t *>(data);
     len -= len % 4; //must be multiple 4!
     uint32_t lenS = (static_cast<uint32_t>(len) / 4);
-    memset(_out, 0, len);
-    chip2.run(lenS, _out);
+    chip->generate(_out, lenS);
     return len;
 }
 
