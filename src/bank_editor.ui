@@ -650,84 +650,87 @@
         </item>
         <item row="10" column="3">
          <widget class="QComboBox" name="op1_ssgeg">
+          <property name="toolTip">
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;SSG-EG - &lt;span style=&quot; font-weight:600;&quot;&gt;S&lt;/span&gt;oftware-controlled &lt;span style=&quot; font-weight:600;&quot;&gt;S&lt;/span&gt;ound &lt;span style=&quot; font-weight:600;&quot;&gt;G&lt;/span&gt;enerator - Envelope generator.&lt;/p&gt;&lt;p&gt;The Envelope generator (EG) is an unique low-frequency signal generator which can be used to modulate the output of the tone channels.&lt;/p&gt;&lt;p&gt;Envelope shape register ($0D): &lt;/p&gt;&lt;table border=&quot;1&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px;&quot; cellspacing=&quot;2&quot; cellpadding=&quot;0&quot;&gt;&lt;tr&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Bit &lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;7 &lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;6 &lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;5 &lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;4 &lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;3 &lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;2 &lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;1 &lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;0 &lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Def &lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;td colspan=&quot;4&quot;&gt;&lt;p align=&quot;center&quot;&gt;- &lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;CONT &lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;ATT &lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;ALT &lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;HOLD &lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;ul style=&quot;margin-top: 0px; margin-bottom: 0px; margin-left: 0px; margin-right: 0px; -qt-list-indent: 1;&quot;&gt;&lt;li style=&quot; margin-top:12px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;CONT: Should always be 1 ?&lt;/li&gt;&lt;li style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;ATT: Counter direction (0:Down, 1:Up)&lt;/li&gt;&lt;li style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;ALT: Alternate direction each period&lt;/li&gt;&lt;li style=&quot; margin-top:0px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;HOLD: Hold value after first period (depends on ALT)&lt;/li&gt;&lt;/ul&gt;&lt;p&gt;Envelope frequency = 8M / 2 / (256 * value) &lt;/p&gt;&lt;p&gt;Note that each period is 32 analog steps (5-bit internal counter).&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          </property>
           <item>
            <property name="text">
-            <string>0</string>
+            <string>Disabled</string>
            </property>
           </item>
           <item>
            <property name="text">
-            <string>1</string>
+            <string>0001</string>
            </property>
           </item>
           <item>
            <property name="text">
-            <string>2</string>
+            <string>0010</string>
            </property>
           </item>
           <item>
            <property name="text">
-            <string>3</string>
+            <string>0011</string>
            </property>
           </item>
           <item>
            <property name="text">
-            <string>4</string>
+            <string>0100</string>
            </property>
           </item>
           <item>
            <property name="text">
-            <string>5</string>
+            <string>0101</string>
            </property>
           </item>
           <item>
            <property name="text">
-            <string>6</string>
+            <string>0110</string>
            </property>
           </item>
           <item>
            <property name="text">
-            <string>7</string>
+            <string>0111</string>
            </property>
           </item>
           <item>
            <property name="text">
-            <string>8</string>
+            <string>1000 \|\|\|\|</string>
            </property>
           </item>
           <item>
            <property name="text">
-            <string>9</string>
+            <string>1001 \_____</string>
            </property>
           </item>
           <item>
            <property name="text">
-            <string>10</string>
+            <string>1010 \/\/\/\/</string>
            </property>
           </item>
           <item>
            <property name="text">
-            <string>11</string>
+            <string>1011 \|¯¯¯¯</string>
            </property>
           </item>
           <item>
            <property name="text">
-            <string>12</string>
+            <string>1100 /|/|/|/|</string>
            </property>
           </item>
           <item>
            <property name="text">
-            <string>13</string>
+            <string>1101 /¯¯¯¯</string>
            </property>
           </item>
           <item>
            <property name="text">
-            <string>14</string>
+            <string>1110 /\/\/\/\</string>
            </property>
           </item>
           <item>
            <property name="text">
-            <string>15</string>
+            <string>1111 /|____</string>
            </property>
           </item>
          </widget>
@@ -1091,84 +1094,87 @@
         </item>
         <item row="10" column="3">
          <widget class="QComboBox" name="op2_ssgeg">
+          <property name="toolTip">
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;SSG-EG - &lt;span style=&quot; font-weight:600;&quot;&gt;S&lt;/span&gt;oftware-controlled &lt;span style=&quot; font-weight:600;&quot;&gt;S&lt;/span&gt;ound &lt;span style=&quot; font-weight:600;&quot;&gt;G&lt;/span&gt;enerator - Envelope generator.&lt;/p&gt;&lt;p&gt;The Envelope generator (EG) is an unique low-frequency signal generator which can be used to modulate the output of the tone channels.&lt;/p&gt;&lt;p&gt;Envelope shape register ($0D): &lt;/p&gt;&lt;table border=&quot;1&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px;&quot; cellspacing=&quot;2&quot; cellpadding=&quot;0&quot;&gt;&lt;tr&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Bit &lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;7 &lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;6 &lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;5 &lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;4 &lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;3 &lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;2 &lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;1 &lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;0 &lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Def &lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;td colspan=&quot;4&quot;&gt;&lt;p align=&quot;center&quot;&gt;- &lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;CONT &lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;ATT &lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;ALT &lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;HOLD &lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;ul style=&quot;margin-top: 0px; margin-bottom: 0px; margin-left: 0px; margin-right: 0px; -qt-list-indent: 1;&quot;&gt;&lt;li style=&quot; margin-top:12px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;CONT: Should always be 1 ?&lt;/li&gt;&lt;li style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;ATT: Counter direction (0:Down, 1:Up)&lt;/li&gt;&lt;li style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;ALT: Alternate direction each period&lt;/li&gt;&lt;li style=&quot; margin-top:0px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;HOLD: Hold value after first period (depends on ALT)&lt;/li&gt;&lt;/ul&gt;&lt;p&gt;Envelope frequency = 8M / 2 / (256 * value) &lt;/p&gt;&lt;p&gt;Note that each period is 32 analog steps (5-bit internal counter).&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          </property>
           <item>
            <property name="text">
-            <string>0</string>
+            <string>Disabled</string>
            </property>
           </item>
           <item>
            <property name="text">
-            <string>1</string>
+            <string>0001</string>
            </property>
           </item>
           <item>
            <property name="text">
-            <string>2</string>
+            <string>0010</string>
            </property>
           </item>
           <item>
            <property name="text">
-            <string>3</string>
+            <string>0011</string>
            </property>
           </item>
           <item>
            <property name="text">
-            <string>4</string>
+            <string>0100</string>
            </property>
           </item>
           <item>
            <property name="text">
-            <string>5</string>
+            <string>0101</string>
            </property>
           </item>
           <item>
            <property name="text">
-            <string>6</string>
+            <string>0110</string>
            </property>
           </item>
           <item>
            <property name="text">
-            <string>7</string>
+            <string>0111</string>
            </property>
           </item>
           <item>
            <property name="text">
-            <string>8</string>
+            <string>1000 \|\|\|\|</string>
            </property>
           </item>
           <item>
            <property name="text">
-            <string>9</string>
+            <string>1001 \_____</string>
            </property>
           </item>
           <item>
            <property name="text">
-            <string>10</string>
+            <string>1010 \/\/\/\/</string>
            </property>
           </item>
           <item>
            <property name="text">
-            <string>11</string>
+            <string>1011 \|¯¯¯¯</string>
            </property>
           </item>
           <item>
            <property name="text">
-            <string>12</string>
+            <string>1100 /|/|/|/|</string>
            </property>
           </item>
           <item>
            <property name="text">
-            <string>13</string>
+            <string>1101 /¯¯¯¯</string>
            </property>
           </item>
           <item>
            <property name="text">
-            <string>14</string>
+            <string>1110 /\/\/\/\</string>
            </property>
           </item>
           <item>
            <property name="text">
-            <string>15</string>
+            <string>1111 /|____</string>
            </property>
           </item>
          </widget>
@@ -1311,84 +1317,87 @@
         </item>
         <item row="10" column="3">
          <widget class="QComboBox" name="op3_ssgeg">
+          <property name="toolTip">
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;SSG-EG - &lt;span style=&quot; font-weight:600;&quot;&gt;S&lt;/span&gt;oftware-controlled &lt;span style=&quot; font-weight:600;&quot;&gt;S&lt;/span&gt;ound &lt;span style=&quot; font-weight:600;&quot;&gt;G&lt;/span&gt;enerator - Envelope generator.&lt;/p&gt;&lt;p&gt;The Envelope generator (EG) is an unique low-frequency signal generator which can be used to modulate the output of the tone channels.&lt;/p&gt;&lt;p&gt;Envelope shape register ($0D): &lt;/p&gt;&lt;table border=&quot;1&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px;&quot; cellspacing=&quot;2&quot; cellpadding=&quot;0&quot;&gt;&lt;tr&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Bit &lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;7 &lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;6 &lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;5 &lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;4 &lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;3 &lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;2 &lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;1 &lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;0 &lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Def &lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;td colspan=&quot;4&quot;&gt;&lt;p align=&quot;center&quot;&gt;- &lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;CONT &lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;ATT &lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;ALT &lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;HOLD &lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;ul style=&quot;margin-top: 0px; margin-bottom: 0px; margin-left: 0px; margin-right: 0px; -qt-list-indent: 1;&quot;&gt;&lt;li style=&quot; margin-top:12px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;CONT: Should always be 1 ?&lt;/li&gt;&lt;li style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;ATT: Counter direction (0:Down, 1:Up)&lt;/li&gt;&lt;li style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;ALT: Alternate direction each period&lt;/li&gt;&lt;li style=&quot; margin-top:0px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;HOLD: Hold value after first period (depends on ALT)&lt;/li&gt;&lt;/ul&gt;&lt;p&gt;Envelope frequency = 8M / 2 / (256 * value) &lt;/p&gt;&lt;p&gt;Note that each period is 32 analog steps (5-bit internal counter).&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          </property>
           <item>
            <property name="text">
-            <string>0</string>
+            <string>Disabled</string>
            </property>
           </item>
           <item>
            <property name="text">
-            <string>1</string>
+            <string>0001</string>
            </property>
           </item>
           <item>
            <property name="text">
-            <string>2</string>
+            <string>0010</string>
            </property>
           </item>
           <item>
            <property name="text">
-            <string>3</string>
+            <string>0011</string>
            </property>
           </item>
           <item>
            <property name="text">
-            <string>4</string>
+            <string>0100</string>
            </property>
           </item>
           <item>
            <property name="text">
-            <string>5</string>
+            <string>0101</string>
            </property>
           </item>
           <item>
            <property name="text">
-            <string>6</string>
+            <string>0110</string>
            </property>
           </item>
           <item>
            <property name="text">
-            <string>7</string>
+            <string>0111</string>
            </property>
           </item>
           <item>
            <property name="text">
-            <string>8</string>
+            <string>1000 \|\|\|\|</string>
            </property>
           </item>
           <item>
            <property name="text">
-            <string>9</string>
+            <string>1001 \_____</string>
            </property>
           </item>
           <item>
            <property name="text">
-            <string>10</string>
+            <string>1010 \/\/\/\/</string>
            </property>
           </item>
           <item>
            <property name="text">
-            <string>11</string>
+            <string>1011 \|¯¯¯¯</string>
            </property>
           </item>
           <item>
            <property name="text">
-            <string>12</string>
+            <string>1100 /|/|/|/|</string>
            </property>
           </item>
           <item>
            <property name="text">
-            <string>13</string>
+            <string>1101 /¯¯¯¯</string>
            </property>
           </item>
           <item>
            <property name="text">
-            <string>14</string>
+            <string>1110 /\/\/\/\</string>
            </property>
           </item>
           <item>
            <property name="text">
-            <string>15</string>
+            <string>1111 /|____</string>
            </property>
           </item>
          </widget>
@@ -1638,84 +1647,87 @@
         </item>
         <item row="10" column="3">
          <widget class="QComboBox" name="op4_ssgeg">
+          <property name="toolTip">
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;SSG-EG - &lt;span style=&quot; font-weight:600;&quot;&gt;S&lt;/span&gt;oftware-controlled &lt;span style=&quot; font-weight:600;&quot;&gt;S&lt;/span&gt;ound &lt;span style=&quot; font-weight:600;&quot;&gt;G&lt;/span&gt;enerator - Envelope generator.&lt;/p&gt;&lt;p&gt;The Envelope generator (EG) is an unique low-frequency signal generator which can be used to modulate the output of the tone channels.&lt;/p&gt;&lt;p&gt;Envelope shape register ($0D): &lt;/p&gt;&lt;table border=&quot;1&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px;&quot; cellspacing=&quot;2&quot; cellpadding=&quot;0&quot;&gt;&lt;tr&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Bit &lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;7 &lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;6 &lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;5 &lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;4 &lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;3 &lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;2 &lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;1 &lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;0 &lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Def &lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;td colspan=&quot;4&quot;&gt;&lt;p align=&quot;center&quot;&gt;- &lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;CONT &lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;ATT &lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;ALT &lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;HOLD &lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;ul style=&quot;margin-top: 0px; margin-bottom: 0px; margin-left: 0px; margin-right: 0px; -qt-list-indent: 1;&quot;&gt;&lt;li style=&quot; margin-top:12px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;CONT: Should always be 1 ?&lt;/li&gt;&lt;li style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;ATT: Counter direction (0:Down, 1:Up)&lt;/li&gt;&lt;li style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;ALT: Alternate direction each period&lt;/li&gt;&lt;li style=&quot; margin-top:0px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;HOLD: Hold value after first period (depends on ALT)&lt;/li&gt;&lt;/ul&gt;&lt;p&gt;Envelope frequency = 8M / 2 / (256 * value) &lt;/p&gt;&lt;p&gt;Note that each period is 32 analog steps (5-bit internal counter).&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          </property>
           <item>
            <property name="text">
-            <string>0</string>
+            <string>Disabled</string>
            </property>
           </item>
           <item>
            <property name="text">
-            <string>1</string>
+            <string>0001</string>
            </property>
           </item>
           <item>
            <property name="text">
-            <string>2</string>
+            <string>0010</string>
            </property>
           </item>
           <item>
            <property name="text">
-            <string>3</string>
+            <string>0011</string>
            </property>
           </item>
           <item>
            <property name="text">
-            <string>4</string>
+            <string>0100</string>
            </property>
           </item>
           <item>
            <property name="text">
-            <string>5</string>
+            <string>0101</string>
            </property>
           </item>
           <item>
            <property name="text">
-            <string>6</string>
+            <string>0110</string>
            </property>
           </item>
           <item>
            <property name="text">
-            <string>7</string>
+            <string>0111</string>
            </property>
           </item>
           <item>
            <property name="text">
-            <string>8</string>
+            <string>1000 \|\|\|\|</string>
            </property>
           </item>
           <item>
            <property name="text">
-            <string>9</string>
+            <string>1001 \_____</string>
            </property>
           </item>
           <item>
            <property name="text">
-            <string>10</string>
+            <string>1010 \/\/\/\/</string>
            </property>
           </item>
           <item>
            <property name="text">
-            <string>11</string>
+            <string>1011 \|¯¯¯¯</string>
            </property>
           </item>
           <item>
            <property name="text">
-            <string>12</string>
+            <string>1100 /|/|/|/|</string>
            </property>
           </item>
           <item>
            <property name="text">
-            <string>13</string>
+            <string>1101 /¯¯¯¯</string>
            </property>
           </item>
           <item>
            <property name="text">
-            <string>14</string>
+            <string>1110 /\/\/\/\</string>
            </property>
           </item>
           <item>
            <property name="text">
-            <string>15</string>
+            <string>1111 /|____</string>
            </property>
           </item>
          </widget>

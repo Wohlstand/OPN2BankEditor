@@ -22,6 +22,7 @@
 #include <QSettings>
 #include <QUrl>
 #include <QMimeData>
+#include <QStandardItemModel>
 
 #include "importer.h"
 #include "formats_sup.h"
@@ -90,6 +91,21 @@ BankEditor::BankEditor(QWidget *parent) :
     connect(ui->actionImport, SIGNAL(triggered()), m_importer, SLOT(show()));
     connect(ui->actionEmulatorNuked, SIGNAL(triggered()), this, SLOT(toggleEmulator()));
     connect(ui->actionEmulatorGens, SIGNAL(triggered()), this, SLOT(toggleEmulator()));
+
+    /* Hide first 7 SSG-EG items */
+    {
+        QComboBox *ssgegs[4] = {ui->op1_ssgeg, ui->op2_ssgeg, ui->op3_ssgeg, ui->op4_ssgeg};
+        for(size_t i = 0; i < 4; i++)
+        {
+            QStandardItemModel* model = qobject_cast<QStandardItemModel*>(ssgegs[i]->model());
+            for(int j = 1; j < 8; j++)
+            {
+                QStandardItem* item = model->item(j);
+                item->setFlags(item->flags() & ~Qt::ItemIsEnabled);
+            }
+        }
+    }
+
     loadSettings();
     initAudio();
 }
