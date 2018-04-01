@@ -171,7 +171,7 @@ void Generator::NoteOn(uint32_t c, double hertz) // Hertz range: 0..131071
     if(hertz < 0 || hertz > 262143) // Avoid infinite loop
         return;
 
-    while(hertz >= 2047.5)
+    while((hertz >= 1023.75) && (x2 < 0x3800))
     {
         hertz /= 2.0;    // Calculate octave
         x2 += 0x800;
@@ -283,9 +283,10 @@ void Generator::PlayNoteF(int noteID)
 
     if(m_patch.tone)
     {
-        if(m_patch.tone < 20)
+        /*if(m_patch.tone < 20)
             tone += m_patch.tone;
-        else if(m_patch.tone < 128)
+        else */
+        if(m_patch.tone < 128)
             tone = m_patch.tone;
         else
             tone -= m_patch.tone - 128;
@@ -314,9 +315,9 @@ void Generator::PlayDrum(uint8_t drum, int noteID)
 
     if(m_patch.tone)
     {
-        if(m_patch.tone < 20)
+        /*if(m_patch.tone < 20)
             tone += m_patch.tone;
-        else if(m_patch.tone < 128)
+        else */if(m_patch.tone < 128)
             tone = m_patch.tone;
         else
             tone -= m_patch.tone - 128;
