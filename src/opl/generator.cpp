@@ -36,6 +36,7 @@ Generator::Generator(uint32_t sampleRate,
 {
     m_rate = sampleRate;
     note = 60;
+    lfo_reg = 0x00;
     m_patch =
     {
         {
@@ -64,8 +65,6 @@ void Generator::initChip()
 {
     //Init chip //7670454
     chip->setRate(m_rate, 7670454);
-
-    lfo_reg = 0x00;
     WriteReg(0, 0x22, lfo_reg);   //LFO off
     WriteReg(0, 0x27, 0x0 );   //Channel 3 mode normal
 
@@ -99,25 +98,25 @@ void Generator::initChip()
         WriteReg(port, 0x58 + ch, 0x5F);   //RS/AR operator 3
         WriteReg(port, 0x5C + ch, 0x94);   //RS/AR operator 4
 
-        WriteReg(port, 0x60 + ch, 0x5 );   //AM/D1R operator 1
-        WriteReg(port, 0x64 + ch, 0x5 );   //AM/D1R operator 2
-        WriteReg(port, 0x68 + ch, 0x5 );   //AM/D1R operator 3
-        WriteReg(port, 0x6C + ch, 0x7 );   //AM/D1R operator 4
+        WriteReg(port, 0x60 + ch, 0x05);   //AM/D1R operator 1
+        WriteReg(port, 0x64 + ch, 0x05);   //AM/D1R operator 2
+        WriteReg(port, 0x68 + ch, 0x05);   //AM/D1R operator 3
+        WriteReg(port, 0x6C + ch, 0x07);   //AM/D1R operator 4
 
-        WriteReg(port, 0x70 + ch, 0x2 );   //D2R operator 1
-        WriteReg(port, 0x74 + ch, 0x2 );   //D2R operator 2
-        WriteReg(port, 0x78 + ch, 0x2 );   //D2R operator 3
-        WriteReg(port, 0x7C + ch, 0x2 );   //D2R operator 4
+        WriteReg(port, 0x70 + ch, 0x02);   //D2R operator 1
+        WriteReg(port, 0x74 + ch, 0x02);   //D2R operator 2
+        WriteReg(port, 0x78 + ch, 0x02);   //D2R operator 3
+        WriteReg(port, 0x7C + ch, 0x02);   //D2R operator 4
 
         WriteReg(port, 0x80 + ch, 0x11);   //D1L/RR Operator 1
         WriteReg(port, 0x84 + ch, 0x11);   //D1L/RR Operator 2
         WriteReg(port, 0x88 + ch, 0x11);   //D1L/RR Operator 3
         WriteReg(port, 0x8C + ch, 0xA6);   //D1L/RR Operator 4
 
-        WriteReg(port, 0x90 + ch, 0x0 );   //Proprietary shit
-        WriteReg(port, 0x94 + ch, 0x0 );   //Proprietary shit
-        WriteReg(port, 0x98 + ch, 0x0 );   //Proprietary shit
-        WriteReg(port, 0x9C + ch, 0x0 );   //Proprietary shit
+        WriteReg(port, 0x90 + ch, 0x00);   //Proprietary shit
+        WriteReg(port, 0x94 + ch, 0x00);   //Proprietary shit
+        WriteReg(port, 0x98 + ch, 0x00);   //Proprietary shit
+        WriteReg(port, 0x9C + ch, 0x00);   //Proprietary shit
 
         WriteReg(port, 0xB0 + ch, 0x32);   //Feedback/Algorithm
 
