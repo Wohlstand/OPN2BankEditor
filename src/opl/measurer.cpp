@@ -152,6 +152,7 @@ static void MeasureDurations(FmBank::Instrument *in_p, OPNChipBase *chip)
         opn.WRITE_REG(0, 0x28, 0xF0 + uint8_t((c <= 2) ? c : c + 1));
     }
 
+    const unsigned max_silent = 6;
     const unsigned max_on  = 40;
     const unsigned max_off = 60;
 
@@ -189,7 +190,10 @@ static void MeasureDurations(FmBank::Instrument *in_p, OPNChipBase *chip)
         if(std_deviation > highest_sofar)
             highest_sofar = std_deviation;
 
-        if(period > 6 * interval && std_deviation < highest_sofar * min_coefficient_on)
+        if((period > max_silent * interval) &&
+            ((std_deviation < highest_sofar * min_coefficient_on) ||
+             (sound_min >= -1 && sound_max <= 1))
+        )
             break;
     }
 
@@ -227,6 +231,9 @@ static void MeasureDurations(FmBank::Instrument *in_p, OPNChipBase *chip)
         amplitudecurve_off.push_back(std_deviation);
 
         if(std_deviation < highest_sofar * min_coefficient_off)
+            break;
+
+        if((period > max_silent * interval) && (sound_min >= -1 && sound_max <= 1))
             break;
     }
 
