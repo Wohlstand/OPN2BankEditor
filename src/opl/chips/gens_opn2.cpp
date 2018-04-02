@@ -61,3 +61,8 @@ int GensOPN2::generateAndMix(int16_t *output, size_t frames)
     chip->run((int)frames, output);
     return (int)frames;
 }
+
+const char *GensOPN2::emulatorName()
+{
+    return "GENS 2.10 OPN2";
+}

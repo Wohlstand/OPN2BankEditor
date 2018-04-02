@@ -70,3 +70,8 @@ int MameOPN2::generateAndMix(int16_t *output, size_t frames)
     ym2612_generate(chip, output, (int)frames, 1);
     return (int)frames;
 }
+
+const char *MameOPN2::emulatorName()
+{
+    return "Mame YM2612";
+}

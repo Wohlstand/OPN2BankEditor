@@ -63,3 +63,8 @@ int NukedOPN2::generateAndMix(int16_t *output, size_t frames)
     OPN2_GenerateStreamMix(chip_r, output, (Bit32u)frames);
     return (int)frames;
 }
+
+const char *NukedOPN2::emulatorName()
+{
+    return "Nuked OPN2";
+}

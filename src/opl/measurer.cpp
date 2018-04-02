@@ -21,7 +21,9 @@
 #include <QFuture>
 #endif
 #include <QQueue>
+#include <QSharedPointer>
 #include <QProgressDialog>
+#include <QElapsedTimer>
 
 #include <cmath>
 
@@ -29,6 +31,9 @@
 #include "generator.h"
 
 //Measurer is always needs for emulator
+#include "chips/opn_chip_base.h"
+#include "chips/nuked_opn2.h"
+#include "chips/mame_opn2.h"
 #include "chips/gens_opn2.h"
 
 struct DurationInfo
@@ -47,18 +52,18 @@ struct DurationInfo
 
 struct ChipEmulator
 {
-    GensOPN2 opl;
+    OPNChipBase *opl;
     void setRate(uint32_t rate)
     {
-        opl.setRate(rate, 7670454.0);
+        opl->setRate(rate, 7670454.0);
     }
     void WRITE_REG(uint8_t port, uint8_t address, uint8_t byte)
     {
-        opl.writeReg(port, address, byte);
+        opl->writeReg(port, address, byte);
     }
 };
 
-static void MeasureDurations(FmBank::Instrument *in_p)
+static void MeasureDurations(FmBank::Instrument *in_p, OPNChipBase *chip)
 {
     FmBank::Instrument &in = *in_p;
     std::vector<int16_t> stereoSampleBuf;
@@ -70,6 +75,7 @@ static void MeasureDurations(FmBank::Instrument *in_p)
         in.percNoteNum < 20 ? (44 + in.percNoteNum) :
                             in.percNoteNum >= 128 ? (44 + 128 - in.percNoteNum) : in.percNoteNum;
     ChipEmulator opn;
+    opn.opl = chip;
 
     opn.setRate(rate);
     opn.WRITE_REG(0, 0x22, 0x00);   //LFO off
@@ -161,7 +167,7 @@ static void MeasureDurations(FmBank::Instrument *in_p)
         stereoSampleBuf.clear();
         stereoSampleBuf.resize(samples_per_interval * 2, 0);
 
-        opn.opl.generate(stereoSampleBuf.data(), samples_per_interval);
+        opn.opl->generate(stereoSampleBuf.data(), samples_per_interval);
 
         double mean = 0.0;
         for(unsigned long c = 0; c < samples_per_interval; ++c)
@@ -200,7 +206,7 @@ static void MeasureDurations(FmBank::Instrument *in_p)
         stereoSampleBuf.clear();
         stereoSampleBuf.resize(samples_per_interval * 2);
 
-        opn.opl.generate(stereoSampleBuf.data(), samples_per_interval);
+        opn.opl->generate(stereoSampleBuf.data(), samples_per_interval);
 
         double mean = 0.0;
         for(unsigned long c = 0; c < samples_per_interval; ++c)
@@ -275,6 +281,45 @@ static void MeasureDurations(FmBank::Instrument *in_p)
     in.is_blank = result.nosound;
 }
 
+static void MeasureDurationsDefault(FmBank::Instrument *in_p)
+{
+    GensOPN2 chip;
+    MeasureDurations(in_p, &chip);
+}
+
+static void MeasureDurationsBenchmark(FmBank::Instrument *in_p, OPNChipBase *chip, QVector<Measurer::BenchmarkResult> *result)
+{
+    QElapsedTimer timer;
+    Measurer::BenchmarkResult res;
+    timer.start();
+    MeasureDurations(in_p, chip);
+    res.elapsed = timer.elapsed();
+    res.name = QString::fromUtf8(chip->emulatorName());
+    result->push_back(res);
+}
+
+static void MeasureDurationsBenchmarkRunner(FmBank::Instrument *in_p, QVector<Measurer::BenchmarkResult> *result)
+{
+    QList<QSharedPointer<OPNChipBase>> emuls =
+    {
+        QSharedPointer<OPNChipBase>(new NukedOPN2),
+        QSharedPointer<OPNChipBase>(new MameOPN2),
+        QSharedPointer<OPNChipBase>(new GensOPN2)
+    };
+    //dialog->metaObject()->invokeMethod(NULL, "setMinimum", Qt::BlockingQueuedConnection, Q_ARG(int, 0));
+    //dialog->metaObject()->invokeMethod(NULL, "setMaximum", Qt::BlockingQueuedConnection, Q_ARG(int, emuls.size() - 1));
+    //dialog->metaObject()->invokeMethod(NULL, "setValue", Qt::BlockingQueuedConnection, Q_ARG(int, 0));
+    //dialog->setMinimum(0);
+    //dialog->setMaximum(emuls.size());
+    //dialog->setValue(0);
+    //int counter = 0;
+    for(QSharedPointer<OPNChipBase> &p : emuls)
+    {
+        MeasureDurationsBenchmark(in_p, p.data(), result);
+        //dialog->setValue(counter++);
+        //dialog->metaObject()->invokeMethod(NULL, "setValue", Qt::BlockingQueuedConnection, Q_ARG(int, counter++));
+    }
+}
 
 Measurer::Measurer(QWidget *parent) :
     QObject(parent),
@@ -337,7 +382,7 @@ bool Measurer::doMeasurement(FmBank &bank, FmBank &bankBackup, bool forceReset)
     watcher.connect(&watcher, SIGNAL(progressRangeChanged(int,int)), &m_progressBox, SLOT(setRange(int,int)));
     watcher.connect(&watcher, SIGNAL(progressValueChanged(int)), &m_progressBox, SLOT(setValue(int)));
 
-    watcher.setFuture(QtConcurrent::map(tasks, &MeasureDurations));
+    watcher.setFuture(QtConcurrent::map(tasks, &MeasureDurationsDefault));
 
     m_progressBox.exec();
     watcher.waitForFinished();
@@ -386,22 +431,50 @@ bool Measurer::doMeasurement(FmBank::Instrument &instrument)
     m_progressBox.setWindowTitle(tr("Sounding delay calculation"));
     m_progressBox.setLabelText(tr("Please wait..."));
 
-    #ifndef IS_QT_4
+#ifndef IS_QT_4
     QFutureWatcher<void> watcher;
     watcher.connect(&m_progressBox, SIGNAL(canceled()), &watcher, SLOT(cancel()));
     watcher.connect(&watcher, SIGNAL(progressRangeChanged(int,int)), &m_progressBox, SLOT(setRange(int,int)));
     watcher.connect(&watcher, SIGNAL(progressValueChanged(int)), &m_progressBox, SLOT(setValue(int)));
 
-    watcher.setFuture(QtConcurrent::run(&MeasureDurations, &instrument));
+    watcher.setFuture(QtConcurrent::run(&MeasureDurationsDefault, &instrument));
 
     m_progressBox.exec();
+
     watcher.waitForFinished();
 
     return !watcher.isCanceled();
 
-    #else
+#else
     m_progressBox.show();
     MeasureDurations(&instrument);
     return true;
-    #endif
+#endif
+}
+
+bool Measurer::runBenchmark(FmBank::Instrument &instrument, QVector<BenchmarkResult> &result)
+{
+    QProgressDialog m_progressBox(m_parentWindow);
+    m_progressBox.setWindowModality(Qt::WindowModal);
+    m_progressBox.setWindowTitle(tr("Benchmarking emulators"));
+    m_progressBox.setLabelText(tr("Please wait..."));
+    m_progressBox.setCancelButton(NULL);
+
+
+#ifndef IS_QT_4
+    QFutureWatcher<void> watcher;
+    watcher.connect(&m_progressBox, SIGNAL(canceled()), &watcher, SLOT(cancel()));
+    watcher.connect(&watcher, SIGNAL(progressRangeChanged(int,int)), &m_progressBox, SLOT(setRange(int,int)));
+    watcher.connect(&watcher, SIGNAL(progressValueChanged(int)), &m_progressBox, SLOT(setValue(int)));
+    watcher.connect(&watcher, SIGNAL(finished()), &m_progressBox, SLOT(accept()));
+
+    watcher.setFuture(QtConcurrent::run(MeasureDurationsBenchmarkRunner, &instrument, &result));
+    m_progressBox.exec();
+    watcher.waitForFinished();
+#else
+    m_progressBox.show();
+    MeasureDurationsBenchmarkRunner(&instrument, result);
+#endif
+
+    return true;
 }

@@ -1878,7 +1878,7 @@
        <x>10</x>
        <y>40</y>
        <width>101</width>
-       <height>22</height>
+       <height>20</height>
       </rect>
      </property>
      <property name="toolTip">
@@ -2244,7 +2244,7 @@ Available from 0 to 127</string>
      <x>0</x>
      <y>0</y>
      <width>965</width>
-     <height>20</height>
+     <height>22</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -2276,7 +2276,9 @@ Available from 0 to 127</string>
     <addaction name="actionPaste"/>
     <addaction name="separator"/>
     <addaction name="actionReset_current_instrument"/>
+    <addaction name="separator"/>
     <addaction name="actionReMeasure"/>
+    <addaction name="actionChipsBenchmark"/>
     <addaction name="separator"/>
     <addaction name="actionAddBank"/>
     <addaction name="actionCloneBank"/>
@@ -2459,6 +2461,11 @@ Available from 0 to 127</string>
    </property>
    <property name="text">
     <string>GENS 2.10 (for slow CPUs, legacy)</string>
+   </property>
+  </action>
+  <action name="actionChipsBenchmark">
+   <property name="text">
+    <string>Run emulators benchmark</string>
    </property>
   </action>
  </widget>

@@ -278,6 +278,11 @@ private slots:
     void on_actionReMeasure_triggered();
 
     /**
+     * @brief Run benchmark of all supported emulators basing on current instrument
+     */
+    void on_actionChipsBenchmark_triggered();
+
+    /**
      * @brief Show all supported formats list
      */
     void on_actionFormatsSup_triggered();

@@ -519,6 +519,30 @@ void BankEditor::on_actionReMeasure_triggered()
     }
 }
 
+void BankEditor::on_actionChipsBenchmark_triggered()
+{
+    if(m_curInst)
+    {
+        QVector<Measurer::BenchmarkResult> res;
+        m_measurer->runBenchmark(*m_curInst, res);
+        QString resStr;
+        for(Measurer::BenchmarkResult &r : res)
+            resStr += QString("%1 passed in %2 milliseconds.\n").arg(r.name).arg(r.elapsed);
+        QMessageBox::information(this,
+                                 tr("Benchmark result"),
+                                 tr("Result of emulators benchmark based on '%1' instrument:\n\n%2")
+                                 .arg(m_curInst->name)
+                                 .arg(resStr)
+                                 );
+    }
+    else
+    {
+        QMessageBox::information(this,
+                                 tr("Instrument is not selected"),
+                                 tr("Please select any instrument to begin the benchmark of emulators!"));
+    }
+}
+
 void BankEditor::on_actionFormatsSup_triggered()
 {
     formats_sup sup(this);
