@@ -290,7 +290,7 @@ static void MeasureDurations(FmBank::Instrument *in_p, OPNChipBase *chip)
 
 static void MeasureDurationsDefault(FmBank::Instrument *in_p)
 {
-    GensOPN2 chip;
+    MameOPN2 chip;
     MeasureDurations(in_p, &chip);
 }
 
@@ -313,19 +313,8 @@ static void MeasureDurationsBenchmarkRunner(FmBank::Instrument *in_p, QVector<Me
         QSharedPointer<OPNChipBase>(new MameOPN2),
         QSharedPointer<OPNChipBase>(new GensOPN2)
     };
-    //dialog->metaObject()->invokeMethod(NULL, "setMinimum", Qt::BlockingQueuedConnection, Q_ARG(int, 0));
-    //dialog->metaObject()->invokeMethod(NULL, "setMaximum", Qt::BlockingQueuedConnection, Q_ARG(int, emuls.size() - 1));
-    //dialog->metaObject()->invokeMethod(NULL, "setValue", Qt::BlockingQueuedConnection, Q_ARG(int, 0));
-    //dialog->setMinimum(0);
-    //dialog->setMaximum(emuls.size());
-    //dialog->setValue(0);
-    //int counter = 0;
     for(QSharedPointer<OPNChipBase> &p : emuls)
-    {
         MeasureDurationsBenchmark(in_p, p.data(), result);
-        //dialog->setValue(counter++);
-        //dialog->metaObject()->invokeMethod(NULL, "setValue", Qt::BlockingQueuedConnection, Q_ARG(int, counter++));
-    }
 }
 
 Measurer::Measurer(QWidget *parent) :
