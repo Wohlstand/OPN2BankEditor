@@ -61,21 +61,12 @@ inline int16_t Limit2Short(INT32 Value)
 
 int MameOPN2::generate(int16_t *output, size_t frames)
 {
-    size_t i = 0;
-    //YM2612GenerateStream(NULL, output, (uint32_t)frames);
-    stream_sample_t *buffer[2];
+    ym2612_generate(chip, output, (int)frames, 0);
+    return (int)frames;
+}
 
-    for(i = 0; i < 2; i++)
-        buffer[i] = (stream_sample_t*)malloc(sizeof(stream_sample_t) * frames);
-
-    ym2612_update_one(chip, buffer, (int)frames);
-    for(i = 0; i < frames; i++)
-    {
-        *output++ = Limit2Short(buffer[0][i]);
-        *output++ = Limit2Short(buffer[1][i]);
-    }
-
-    for(i = 0; i < 2; i++)
-        free(buffer[i]);
+int MameOPN2::generateAndMix(int16_t *output, size_t frames)
+{
+    ym2612_generate(chip, output, (int)frames, 1);
     return (int)frames;
 }

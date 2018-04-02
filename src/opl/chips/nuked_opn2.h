@@ -16,6 +16,7 @@ public:
     virtual void reset(uint32_t rate, uint32_t clock) override;
     virtual void writeReg(uint32_t port, uint16_t addr, uint8_t data) override;
     virtual int generate(int16_t *output, size_t frames) override;
+    virtual int generateAndMix(int16_t *output, size_t frames) override;
 };
 
 #endif // NUKED_OPN2_H

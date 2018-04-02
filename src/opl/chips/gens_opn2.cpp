@@ -55,3 +55,9 @@ int GensOPN2::generate(int16_t *output, size_t frames)
     chip->run((int)frames, output);
     return (int)frames;
 }
+
+int GensOPN2::generateAndMix(int16_t *output, size_t frames)
+{
+    chip->run((int)frames, output);
+    return (int)frames;
+}

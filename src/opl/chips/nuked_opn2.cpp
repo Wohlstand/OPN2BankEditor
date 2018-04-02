@@ -56,3 +56,10 @@ int NukedOPN2::generate(int16_t *output, size_t frames)
     OPN2_GenerateStream(chip_r, output, (Bit32u)frames);
     return (int)frames;
 }
+
+int NukedOPN2::generateAndMix(int16_t *output, size_t frames)
+{
+    ym3438_t *chip_r = reinterpret_cast<ym3438_t*>(chip);
+    OPN2_GenerateStreamMix(chip_r, output, (Bit32u)frames);
+    return (int)frames;
+}
