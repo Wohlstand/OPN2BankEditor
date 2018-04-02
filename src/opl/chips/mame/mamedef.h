@@ -31,7 +31,7 @@ __extension__ typedef signed long long		INT64;
 typedef UINT32	offs_t;
 
 /* stream_sample_t is used to represent a single sample in a sound stream */
-typedef INT32 stream_sample_t;
+typedef INT16 stream_sample_t;
 
 #if defined(VGM_BIG_ENDIAN)
 #define BYTE_XOR_BE(x)	 (x)
@@ -56,8 +56,6 @@ typedef INT32 stream_sample_t;
 #else
 #define logerror
 #endif
-
-extern stream_sample_t* DUMMYBUF[];
 
 typedef void (*SRATE_CALLBACK)(void*, UINT32);
 

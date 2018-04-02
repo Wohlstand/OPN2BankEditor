@@ -136,7 +136,8 @@
 #include "mamedef.h"
 #include "mame_ym2612fm.h"
 
-stream_sample_t* DUMMYBUF[0x02] = {NULL, NULL};
+//stream_sample_t* DUMMYBUF[0x02] = {NULL, NULL};
+static stream_sample_t *DUMMYBUF = NULL;
 
 /* shared function building option */
 #define BUILD_OPN (BUILD_YM2203||BUILD_YM2608||BUILD_YM2610||BUILD_YM2610B||BUILD_YM2612||BUILD_YM3438)
@@ -2244,20 +2245,20 @@ static void init_tables(void)
 /*******************************************************************************/
 
 /* Generate samples for one of the YM2612s */
-void ym2612_update_one(void *chip, FMSAMPLE **buffer, int length)
+void ym2612_generate(void *chip, FMSAMPLE *buffer, int frames, int mix)
 {
 	YM2612 *F2612 = (YM2612 *)chip;
 	FM_OPN *OPN   = &F2612->OPN;
 	INT32 *out_fm = OPN->out_fm;
 	int i;
-	FMSAMPLE  *bufL,*bufR;
+	FMSAMPLE  *bufOut;//*bufL,*bufR;
 	INT32 dacout;
 	FM_CH	*cch[6];
 	int lt,rt;
 
 	/* set bufer */
-	bufL = buffer[0];
-	bufR = buffer[1];
+	bufOut = buffer;
+	//bufR = buffer[1];
 
 	cch[0]   = &F2612->CH[0];
 	cch[1]   = &F2612->CH[1];
@@ -2288,7 +2289,7 @@ void ym2612_update_one(void *chip, FMSAMPLE **buffer, int length)
 	refresh_fc_eg_chan( OPN, cch[3] );
 	refresh_fc_eg_chan( OPN, cch[4] );
 	refresh_fc_eg_chan( OPN, cch[5] );
-	if (! length)
+	if (! frames)
 	{
 		update_ssg_eg_channel(&cch[0]->SLOT[SLOT1]);
 		update_ssg_eg_channel(&cch[1]->SLOT[SLOT1]);
@@ -2300,7 +2301,7 @@ void ym2612_update_one(void *chip, FMSAMPLE **buffer, int length)
 
 
 	/* buffering */
-	for(i=0; i < length ; i++)
+	for(i=0; i < frames ; i++)
 	{
 		/* clear outputs */
 		out_fm[0] = 0;
@@ -2411,8 +2412,14 @@ void ym2612_update_one(void *chip, FMSAMPLE **buffer, int length)
 			F2612->WaveR = rt;
 		if (F2612->WaveOutMode ^ 0x03)
 			F2612->WaveOutMode ^= 0x03;
-		bufL[i] = F2612->WaveL;
-		bufR[i] = F2612->WaveR;
+		if(mix)
+		{
+			*bufOut++ += (FMSAMPLE)F2612->WaveL;
+			*bufOut++ += (FMSAMPLE)F2612->WaveR;
+		} else {
+			*bufOut++ = (FMSAMPLE)F2612->WaveL;
+			*bufOut++ = (FMSAMPLE)F2612->WaveR;
+		}
 
 		/* CSM mode: if CSM Key ON has occured, CSM Key OFF need to be sent       */
 		/* only if Timer A does not overflow again (i.e CSM Key ON not set again) */
