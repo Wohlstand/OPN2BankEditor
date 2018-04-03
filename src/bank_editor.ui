@@ -10,7 +10,7 @@
     <x>0</x>
     <y>0</y>
     <width>965</width>
-    <height>814</height>
+    <height>824</height>
    </rect>
   </property>
   <property name="focusPolicy">
@@ -2244,7 +2244,7 @@ Available from 0 to 127</string>
      <x>0</x>
      <y>0</y>
      <width>965</width>
-     <height>22</height>
+     <height>20</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -2310,6 +2310,7 @@ Available from 0 to 127</string>
    <addaction name="menuSettings"/>
    <addaction name="menuHelp"/>
   </widget>
+  <widget class="QStatusBar" name="statusBar"/>
   <action name="actionOpen">
    <property name="text">
     <string>Open</string>
