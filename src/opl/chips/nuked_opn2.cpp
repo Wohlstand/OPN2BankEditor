@@ -2,8 +2,6 @@
 #include "nuked/ym3438.h"
 #include <cstring>
 
-#include <QtDebug>
-
 NukedOPN2::NukedOPN2() :
     OPNChipBase()
 {

@@ -3,8 +3,6 @@
 #include <cstdlib>
 #include <assert.h>
 
-#include <QtDebug>
-
 MameOPN2::MameOPN2() :
     OPNChipBase()
 {
@@ -73,5 +71,5 @@ int MameOPN2::generateAndMix(int16_t *output, size_t frames)
 
 const char *MameOPN2::emulatorName()
 {
-    return "Mame YM2612";
+    return "MAME YM2612";
 }
