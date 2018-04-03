@@ -215,10 +215,47 @@ tryAgain:
     return FfmtErrCode::ERR_OK;
 }
 
+static void bankFillBack(FmBank &bank, int alignMelodic, int alignDrums)
+{
+    if(alignMelodic != 128)
+    {
+        bank.Ins_Melodic_box.reserve(alignMelodic);
+        while(bank.Ins_Melodic_box.size() % 128 != 0)
+            bank.Ins_Melodic_box.push_back(FmBank::emptyInst());
+        bank.Ins_Melodic = bank.Ins_Melodic_box.data();
+    }
+    if(alignDrums != 128)
+    {
+        bank.Ins_Percussion_box.reserve(alignDrums);
+        while(bank.Ins_Percussion_box.size() % 128 != 0)
+            bank.Ins_Percussion_box.push_back(FmBank::emptyInst());
+        bank.Ins_Percussion = bank.Ins_Percussion_box.data();
+    }
+}
+
+static void bankStripBack(FmBank &bank, int alignMelodic, int alignDrums)
+{
+    if(alignMelodic != 128)
+    {
+        bank.Ins_Melodic_box.erase(bank.Ins_Melodic_box.end() - alignMelodic,
+                                   bank.Ins_Melodic_box.end());
+        bank.Ins_Melodic = bank.Ins_Melodic_box.data();
+    }
+    if(alignDrums != 128)
+    {
+        bank.Ins_Percussion_box.erase(bank.Ins_Percussion_box.end() - alignMelodic,
+                                      bank.Ins_Percussion_box.end());
+        bank.Ins_Percussion = bank.Ins_Percussion_box.data();
+    }
+}
+
 FfmtErrCode WohlstandOPN2::saveFile(QString filePath, FmBank &bank)
 {
     FmBank::Instrument null;
     memset(&null, 0, sizeof(FmBank::Instrument));
+
+    int alignMelodic = 128 - bank.countMelodic() % 128;
+    int alignDrums   = 128 - bank.countDrums() % 128;
 
     uint16_t count_melodic_banks     = uint16_t(((bank.countMelodic() - 1)/ 128) + 1);
     uint16_t count_percusive_banks   = uint16_t(((bank.countDrums() - 1)/ 128) + 1);
@@ -267,6 +304,7 @@ FfmtErrCode WohlstandOPN2::saveFile(QString filePath, FmBank &bank)
     bool wrtiePercussion = false;
     FmBank::Instrument *insts = bank.Ins_Melodic;
 
+    bankFillBack(bank, alignMelodic, alignDrums);
 tryAgain:
     for(uint16_t i = 0; i < total; i++)
     {
@@ -274,12 +312,18 @@ tryAgain:
         {
             FmBank::Instrument &ins = insts[i];
             if(!writeInstrument(file, ins))
+            {
+                bankStripBack(bank, alignMelodic, alignDrums);
                 return FfmtErrCode::ERR_BADFORMAT;
+            }
         }
         else
         {
             if(!writeInstrument(file, null))
+            {
+                bankStripBack(bank, alignMelodic, alignDrums);
                 return FfmtErrCode::ERR_BADFORMAT;
+            }
         }
     }
 
@@ -291,6 +335,8 @@ tryAgain:
         wrtiePercussion = true;
         goto tryAgain;
     }
+
+    bankStripBack(bank, alignMelodic, alignDrums);
 
     file.close();
 
