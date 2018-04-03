@@ -454,7 +454,7 @@ bool Measurer::runBenchmark(FmBank::Instrument &instrument, QVector<BenchmarkRes
     m_progressBox.setWindowModality(Qt::WindowModal);
     m_progressBox.setWindowTitle(tr("Benchmarking emulators"));
     m_progressBox.setLabelText(tr("Please wait..."));
-    m_progressBox.setCancelButton(NULL);
+    m_progressBox.setCancelButton(nullptr);
 
 
 #ifndef IS_QT_4
