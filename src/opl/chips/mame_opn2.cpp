@@ -44,19 +44,6 @@ void MameOPN2::writeReg(uint32_t port, uint16_t addr, uint8_t data)
     ym2612_write(chip, 1 + (int)(port) * 2, data);
 }
 
-inline int16_t Limit2Short(INT32 Value)
-{
-    INT32 NewValue;
-
-    NewValue = Value;
-    if (NewValue < -0x8000)
-        NewValue = -0x8000;
-    if (NewValue > 0x7FFF)
-        NewValue = 0x7FFF;
-
-    return (int16_t)NewValue;
-}
-
 int MameOPN2::generate(int16_t *output, size_t frames)
 {
     ym2612_generate(chip, output, (int)frames, 0);
