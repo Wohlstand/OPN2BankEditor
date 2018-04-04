@@ -2432,11 +2432,11 @@ void ym2612_generate(void *chip, FMSAMPLE *buffer, int frames, int mix)
 			F2612->WaveOutMode ^= 0x03;
 		if(mix)
 		{
-			*bufOut++ += (FMSAMPLE)F2612->WaveL;
-			*bufOut++ += (FMSAMPLE)F2612->WaveR;
+			*bufOut++ += (FMSAMPLE)(F2612->WaveL / 2);
+			*bufOut++ += (FMSAMPLE)(F2612->WaveR / 2);
 		} else {
-			*bufOut++ = (FMSAMPLE)F2612->WaveL;
-			*bufOut++ = (FMSAMPLE)F2612->WaveR;
+			*bufOut++ = (FMSAMPLE)(F2612->WaveL / 2);
+			*bufOut++ = (FMSAMPLE)(F2612->WaveR / 2);
 		}
 
 		/* CSM mode: if CSM Key ON has occured, CSM Key OFF need to be sent       */
