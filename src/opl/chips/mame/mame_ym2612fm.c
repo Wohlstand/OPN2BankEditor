@@ -24,6 +24,8 @@
 **
 **  CHANGELOG:
 **
+**
+** xx-xx-xxxx
 **  - fixed LFO implementation:
 **      .added support for CH3 special mode: fixes various sound effects (birds in Warlock, bug sound in Aladdin...)
 **      .inverted LFO AM waveform: fixes Spider-Man & Venom : Separation Anxiety (intro), California Games (surfing event)
@@ -956,18 +958,18 @@ INLINE void set_timers( FM_OPN *OPN, FM_ST *ST, void *n, int v )
 	{
 		ST->TBC = ( 256-ST->TB)<<4;
 		/* External timer handler */
-		if (ST->timer_handler) (ST->timer_handler)(n,1,ST->TBC * ST->timer_prescaler,ST->clock);
+		if (ST->timer_handler) (ST->timer_handler)(n,1,ST->TBC * ST->timer_prescaler,(int)ST->clock);
 	}
 	/* load a */
 	if ((v&1) && !(ST->mode&1))
 	{
 		ST->TAC = (1024-ST->TA);
 		/* External timer handler */
-		if (ST->timer_handler) (ST->timer_handler)(n,0,ST->TAC * ST->timer_prescaler,ST->clock);
+		if (ST->timer_handler) (ST->timer_handler)(n,0,ST->TAC * ST->timer_prescaler,(int)ST->clock);
 		ST->TAC *= 4096;
 	}
 
-	ST->mode = v;
+	ST->mode = (UINT32)v;
 }
 
 
@@ -978,7 +980,7 @@ INLINE void TimerAOver(FM_ST *ST)
 	if(ST->mode & 0x04) FM_STATUS_SET(ST,0x01);
 	/* clear or reload the counter */
 	ST->TAC = (1024-ST->TA);
-	if (ST->timer_handler) (ST->timer_handler)(ST->param,0,ST->TAC * ST->timer_prescaler,ST->clock);
+	if (ST->timer_handler) (ST->timer_handler)(ST->param,0,ST->TAC * ST->timer_prescaler,(int)ST->clock);
 	ST->TAC *= 4096;
 }
 /* Timer B Overflow */
@@ -988,7 +990,7 @@ INLINE void TimerBOver(FM_ST *ST)
 	if(ST->mode & 0x08) FM_STATUS_SET(ST,0x02);
 	/* clear or reload the counter */
 	ST->TBC = ( 256-ST->TB)<<4;
-	if (ST->timer_handler) (ST->timer_handler)(ST->param,1,ST->TBC * ST->timer_prescaler,ST->clock);
+	if (ST->timer_handler) (ST->timer_handler)(ST->param,1,ST->TBC * ST->timer_prescaler,(int)ST->clock);
 }
 
 
@@ -1626,10 +1628,7 @@ INLINE signed int op_calc(UINT32 phase, unsigned int env, signed int pm)
 
 INLINE signed int op_calc1(UINT32 phase, unsigned int env, signed int pm)
 {
-  UINT32 p;
-
-  p = (env<<3) + sin_tab[ ( ((signed int)((phase & ~FREQ_MASK) + pm      )) >> FREQ_SH ) & SIN_MASK ];
-
+  UINT32 p = (env<<3) + sin_tab[ ( ((signed int)((phase & ~FREQ_MASK) + pm      )) >> FREQ_SH ) & SIN_MASK ];
   if (p >= TL_TAB_LEN)
     return 0;
   return tl_tab[p];
@@ -2041,9 +2040,9 @@ static void OPNWriteReg(FM_OPN *OPN, int r, int v)
 		{
 		case 0:		/* 0xb0-0xb2 : FB,ALGO */
 			{
-				int feedback = (v>>3)&7;
+				unsigned char feedback = ((v>>3)&7);
 				CH->ALGO = v&7;
-				CH->FB   = feedback ? feedback+6 : 0;
+				CH->FB   = feedback ? feedback + 6 : 0;
 				setup_connection( OPN, CH, c );
 			}
 			break;

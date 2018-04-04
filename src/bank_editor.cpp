@@ -65,8 +65,8 @@ BankEditor::BankEditor(QWidget *parent) :
 {
     FmBankFormatFactory::registerAllFormats();
     memset(&m_clipboard, 0, sizeof(FmBank::Instrument));
-    m_curInst = NULL;
-    m_curInstBackup = NULL;
+    m_curInst = nullptr;
+    m_curInstBackup = nullptr;
     m_lock = false;
     m_recentFormat = BankFormats::FORMAT_WOHLSTAND_OPN2;
     m_recentNum     = -1;
