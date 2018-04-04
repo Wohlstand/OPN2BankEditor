@@ -21,11 +21,12 @@
 #include <QFuture>
 #endif
 #include <QQueue>
-#include <QSharedPointer>
 #include <QProgressDialog>
-#include <QElapsedTimer>
 
+#include <vector>
+#include <chrono>
 #include <cmath>
+#include <memory>
 
 #include "measurer.h"
 #include "generator.h"
@@ -296,25 +297,26 @@ static void MeasureDurationsDefault(FmBank::Instrument *in_p)
 
 static void MeasureDurationsBenchmark(FmBank::Instrument *in_p, OPNChipBase *chip, QVector<Measurer::BenchmarkResult> *result)
 {
-    QElapsedTimer timer;
+    std::chrono::steady_clock::time_point start, stop;
     Measurer::BenchmarkResult res;
-    timer.start();
+    start = std::chrono::steady_clock::now();
     MeasureDurations(in_p, chip);
-    res.elapsed = timer.elapsed();
+    stop  = std::chrono::steady_clock::now();
+    res.elapsed = std::chrono::duration_cast<std::chrono::milliseconds>(stop - start).count();
     res.name = QString::fromUtf8(chip->emulatorName());
     result->push_back(res);
 }
 
 static void MeasureDurationsBenchmarkRunner(FmBank::Instrument *in_p, QVector<Measurer::BenchmarkResult> *result)
 {
-    QList<QSharedPointer<OPNChipBase>> emuls =
+    std::vector<std::shared_ptr<OPNChipBase > > emuls =
     {
-        QSharedPointer<OPNChipBase>(new NukedOPN2),
-        QSharedPointer<OPNChipBase>(new MameOPN2),
-        QSharedPointer<OPNChipBase>(new GensOPN2)
+        std::shared_ptr<OPNChipBase>(new NukedOPN2),
+        std::shared_ptr<OPNChipBase>(new MameOPN2),
+        std::shared_ptr<OPNChipBase>(new GensOPN2)
     };
-    for(QSharedPointer<OPNChipBase> &p : emuls)
-        MeasureDurationsBenchmark(in_p, p.data(), result);
+    for(std::shared_ptr<OPNChipBase> &p : emuls)
+        MeasureDurationsBenchmark(in_p, p.get(), result);
 }
 
 Measurer::Measurer(QWidget *parent) :
@@ -411,7 +413,7 @@ bool Measurer::doMeasurement(FmBank &bank, FmBank &bankBackup, bool forceReset)
     int count = 0;
     foreach(FmBank::Instrument *ins, tasks)
     {
-        MeasureDurations(ins);
+        MeasureDurationsDefault(ins);
         m_progressBox.setValue(++count);
         if(m_progressBox.wasCanceled())
             return false;
@@ -443,7 +445,7 @@ bool Measurer::doMeasurement(FmBank::Instrument &instrument)
 
 #else
     m_progressBox.show();
-    MeasureDurations(&instrument);
+    MeasureDurationsDefault(&instrument);
     return true;
 #endif
 }
@@ -469,7 +471,7 @@ bool Measurer::runBenchmark(FmBank::Instrument &instrument, QVector<BenchmarkRes
     watcher.waitForFinished();
 #else
     m_progressBox.show();
-    MeasureDurationsBenchmarkRunner(&instrument, result);
+    MeasureDurationsBenchmarkRunner(&instrument, &result);
 #endif
 
     return true;
