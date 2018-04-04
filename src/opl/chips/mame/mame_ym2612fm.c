@@ -24,6 +24,9 @@
 **
 **  CHANGELOG:
 **
+** 26-09-2017 Eke-Eke (Genesis Plus GX):
+**  - fixed EG counter loopback behavior (verified on YM3438 die)
+**  - reverted changes to EG rates 2-7 increment values
 **
 ** xx-xx-xxxx
 **  - fixed LFO implementation:
@@ -265,8 +268,8 @@ O(18),O(18),O(18),O(18),O(18),O(18),O(18),O(18),
 O( 0),O( 1),O( 2),O( 3),
 O( 0),O( 1),O( 2),O( 3),
 */
-O(18),O(18),O( 0),O( 0),
-O( 0),O( 0),O( 2),O( 2),   /* Nemesis's tests */
+O(18),O(18),O( 2),O( 3),    /* from Nemesis's tests on real YM2612 hardware */
+O( 0),O( 1),O( 2),O( 2),    /* Nemesis's tests */
 
 O( 0),O( 1),O( 2),O( 3),
 O( 0),O( 1),O( 2),O( 3),
@@ -2364,9 +2367,15 @@ void ym2612_generate(void *chip, FMSAMPLE *buffer, int frames, int mix)
 		OPN->eg_timer += OPN->eg_timer_add;
 		while (OPN->eg_timer >= OPN->eg_timer_overflow)
 		{
+			/* reset EG timer */
 			OPN->eg_timer -= OPN->eg_timer_overflow;
+			/* increment EG counter */
 			OPN->eg_cnt++;
+			/* EG counter is 12-bit only and zero value is skipped (verified on real hardware) */
+			if (OPN->eg_cnt == 4096)
+				OPN->eg_cnt = 1;
 
+			/* advance envelope generator */
 			advance_eg_channel(OPN, &cch[0]->SLOT[SLOT1]);
 			advance_eg_channel(OPN, &cch[1]->SLOT[SLOT1]);
 			advance_eg_channel(OPN, &cch[2]->SLOT[SLOT1]);
