@@ -287,8 +287,8 @@ void Generator::PlayNoteF(int noteID)
     if(m_patch.tone)
     {
         tone = m_patch.tone;
-        if(tone  > 128)
-            tone -= tone - 128;
+        if(tone > 128)
+            tone -= 128;
     }
 
     chan4op++;
@@ -315,8 +315,8 @@ void Generator::PlayDrum(uint8_t drum, int noteID)
     if(m_patch.tone)
     {
         tone = m_patch.tone;
-        if(tone  > 128)
-            tone -= tone - 128;
+        if(tone > 128)
+            tone -= 128;
     }
 
     uint32_t adlchannel = 18 + drum;

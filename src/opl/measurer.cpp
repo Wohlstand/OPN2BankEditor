@@ -72,7 +72,7 @@ static void MeasureDurations(FmBank::Instrument *in_p, OPNChipBase *chip)
     const unsigned rate = 44100;
     const unsigned interval             = 150;
     const unsigned samples_per_interval = rate / interval;
-    const int notenum = in.percNoteNum >= 128 ? (128 - in.percNoteNum) : in.percNoteNum;
+    const int notenum = in.percNoteNum >= 128 ? (in.percNoteNum - 128) : in.percNoteNum;
     ChipEmulator opn;
     opn.opl = chip;
 
