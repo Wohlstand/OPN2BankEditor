@@ -47,7 +47,10 @@ static bool readInstrument(QFile &file, FmBank::Instrument &ins, uint16_t &versi
     uint8_t idata[WOPL_INST_SIZE_V2];
     if(version >= 2)
     {
-        if(file.read(char_p(idata), WOPL_INST_SIZE_V2) != WOPL_INST_SIZE_V2)
+        qint64 got = file.read(char_p(idata), WOPL_INST_SIZE_V2);
+        if((hasSoundKoefficients && (got != WOPL_INST_SIZE_V2)) ||
+           (!hasSoundKoefficients && (got < WOPL_INST_SIZE_V1))
+        )
             return false;
     }
     else
