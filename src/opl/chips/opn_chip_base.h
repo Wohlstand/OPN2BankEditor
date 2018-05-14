@@ -4,6 +4,11 @@
 #include <stdint.h>
 #include <stddef.h>
 
+#if !defined(_MSC_VER) && (__cplusplus <= 199711L)
+#define final
+#define override
+#endif
+
 class OPNChipBase
 {
 protected:
@@ -20,6 +25,8 @@ public:
     virtual void writeReg(uint32_t port, uint16_t addr, uint8_t data) = 0;
     virtual int generate(int16_t *output, size_t frames) = 0;
     virtual int generateAndMix(int16_t *output, size_t frames) = 0;
+    virtual int generate32(int32_t *output, size_t frames);
+    virtual int generateAndMix32(int32_t *output, size_t frames);
     virtual const char* emulatorName() = 0;
 };
 
