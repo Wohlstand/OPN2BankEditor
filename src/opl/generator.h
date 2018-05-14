@@ -71,9 +71,6 @@ public:
     void initChip();
     void switchChip(OPN_Chips chipId);
 
-    void start() {}
-    void stop() {}
-
     void generate(int16_t *frames, unsigned nframes);
 
     void NoteOn(uint32_t c, double hertz);
