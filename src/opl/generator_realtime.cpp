@@ -265,8 +265,8 @@ void RealtimeGenerator::rt_message_process(int tag, const uint8_t *data, unsigne
         gen.PlayNote();
         break;
     case MSG_CtlStopNote:
-        /* TODO: OPN2 note manager */
-        gen.NoteOffAllChans();
+        gen.changeNote(*(unsigned *)data);
+        gen.StopNote();
         break;
     case MSG_CtlPlayChord: {
         ChordMessage msg = *(ChordMessage *)data;
@@ -310,8 +310,8 @@ void RealtimeGenerator::rt_midi_process(const uint8_t *data, unsigned len)
 
         switch(msg) {
         case 0x8:
-            /* TODO: OPN2 note manager */
-            gen.NoteOffAllChans();
+            gen.changeNote((int)note);
+            gen.StopNote();
             break;
         case 0x9:
             gen.changeNote((int)note);

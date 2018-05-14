@@ -26,8 +26,6 @@
 
 #define BEND_COEFFICIENT 321.88557
 
-#define USED_CHANNELS_2OP       18
-#define USED_CHANNELS_2OP_PS4   9
 #define USED_CHANNELS_4OP       6
 
 QString GeneratorDebugInfo::toStr()
@@ -59,6 +57,7 @@ Generator::Generator(uint32_t sampleRate, OPN_Chips initialChip)
     memset(m_ins, 0, sizeof(uint16_t) * NUM_OF_CHANNELS);
     memset(m_pit, 0, sizeof(uint8_t) * NUM_OF_CHANNELS);
     memset(m_pan_lfo, 0, sizeof(uint8_t) * NUM_OF_CHANNELS);
+    rythmModePercussionMode = 0;
 
     switchChip(initialChip);
 
@@ -278,8 +277,6 @@ void Generator::PlayNoteF(int noteID)
     if(!m_isInstrumentLoaded)
         return;//Deny playing notes without instrument loaded
 
-    static uint32_t chan4op = 5;
-
     int tone = noteID;
 
     if(m_patch.tone)
@@ -289,20 +286,34 @@ void Generator::PlayNoteF(int noteID)
             tone -= 128;
     }
 
-    chan4op++;
-    if(chan4op > (USED_CHANNELS_4OP - 1))
-        chan4op = 0;
-    m_debug.chan4op = int32_t(chan4op);
+    int ch = m_noteManager.noteOn(noteID);
+    m_debug.chan4op = int32_t(ch);
 
     double bend = 0.0;
     double phase = 0.0;
 
-    Patch(chan4op);
-    Pan(chan4op, 0xC0);
-    Touch_Real(chan4op, 127);
+    Patch(ch);
+    Pan(ch, 0xC0);
+    Touch_Real(ch, 127);
 
     bend  = 0.0 + m_patch.finetune;
-    NoteOn(chan4op, BEND_COEFFICIENT * std::exp(0.057762265 * (tone + bend + phase)));
+    NoteOn(ch, BEND_COEFFICIENT * std::exp(0.057762265 * (tone + bend + phase)));
+}
+
+void Generator::StopNoteF(int noteID)
+{
+    if(rythmModePercussionMode)
+    {
+        //TODO: Turn each working RythmMode drum individually!
+        //updateRegBD();
+        return;
+    }
+
+    int ch = m_noteManager.noteOff(noteID);
+    if (ch == -1)
+        return;
+
+    NoteOff(ch);
 }
 
 void Generator::PlayDrum(uint8_t drum, int noteID)
@@ -337,12 +348,16 @@ void Generator::Silence()
         NoteOff(c);
         Touch_Real(c, 0);
     }
+
+    m_noteManager.clearNotes();
 }
 
 void Generator::NoteOffAllChans()
 {
     for(uint32_t c = 0; c < NUM_OF_CHANNELS; ++c)
         NoteOff(c);
+
+    m_noteManager.clearNotes();
 }
 
 
@@ -402,10 +417,20 @@ void Generator::PlayMinor7Chord()
     PlayNoteF(note - 5);
 }
 
+void Generator::StopNote()
+{
+    if(rythmModePercussionMode)
+        NoteOffAllChans();
+    else
+        StopNoteF(note);
+}
+
 
 
 void Generator::changePatch(const FmBank::Instrument &instrument, bool isDrum)
 {
+    rythmModePercussionMode = isDrum;
+
     //Shutup everything
     Silence();
     {
@@ -427,6 +452,8 @@ void Generator::changePatch(const FmBank::Instrument &instrument, bool isDrum)
         if(isDrum)
             m_patch.tone = instrument.percNoteNum;
     }
+
+    m_noteManager.allocateChannels(USED_CHANNELS_4OP);
 
     m_isInstrumentLoaded = true;//Mark instrument as loaded
 }
@@ -455,4 +482,89 @@ void Generator::changeLFOfreq(int freq)
 void Generator::generate(int16_t *frames, unsigned nframes)
 {
     chip->generate(frames, nframes);
+}
+
+Generator::NotesManager::NotesManager()
+{}
+
+Generator::NotesManager::~NotesManager()
+{}
+
+void Generator::NotesManager::allocateChannels(int count)
+{
+    channels.clear();
+    channels.resize(count);
+    cycle = 0;
+}
+
+uint8_t Generator::NotesManager::noteOn(int note)
+{
+    uint8_t beganAt = cycle;
+    uint8_t chan = 0;
+
+    // Increase age of all working notes;
+    for(Note &ch : channels)
+    {
+        if(note >= 0)
+            ch.age++;
+    }
+
+    do
+    {
+        chan = cycle++;
+        // Rotate cycles
+        if(cycle == channels.size())
+            cycle = 0;
+
+        if(channels[chan].note == -1)
+        {
+            channels[chan].note = note;
+            channels[chan].age = 0;
+            break;
+        }
+
+        if (cycle == beganAt) // If no free channels found
+        {
+            int age = -1;
+            int oldest = -1;
+            // Find oldest note
+            for(uint8_t c = 0; c < channels.size(); c++)
+            {
+                if((channels[c].note >= 0) && ((age == -1) || (channels[c].age > age)))
+                {
+                    oldest = c;
+                    age = channels[c].age;
+                }
+            }
+
+            if(age >= 0)
+            {
+                chan = (uint8_t)oldest;
+                channels[chan].note = note;
+                channels[chan].age = 0;
+            }
+            break;
+        }
+    } while(1);
+
+    return chan;
+}
+
+int8_t Generator::NotesManager::noteOff(int note)
+{
+    for(uint8_t chan = 0; chan < channels.size(); chan++)
+    {
+        if(channels[chan].note == note)
+        {
+            channels[chan].note = -1;
+            return (int8_t)chan;
+        }
+    }
+    return -1;
+}
+
+void Generator::NotesManager::clearNotes()
+{
+    for(uint8_t chan = 0; chan < channels.size(); chan++)
+        channels[chan].note = -1;
 }
