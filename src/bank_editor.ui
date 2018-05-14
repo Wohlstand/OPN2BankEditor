@@ -2193,9 +2193,9 @@ Available from 0 to 127</string>
     <property name="geometry">
      <rect>
       <x>840</x>
-      <y>500</y>
+      <y>590</y>
       <width>121</width>
-      <height>151</height>
+      <height>101</height>
      </rect>
     </property>
     <property name="frameShape">
@@ -2237,6 +2237,68 @@ Available from 0 to 127</string>
      <enum>Qt::Horizontal</enum>
     </property>
    </widget>
+   <widget class="QGroupBox" name="midiIn_zone">
+    <property name="geometry">
+     <rect>
+      <x>840</x>
+      <y>510</y>
+      <width>121</width>
+      <height>71</height>
+     </rect>
+    </property>
+    <property name="title">
+     <string>MIDI Input</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
+    </property>
+    <layout class="QHBoxLayout" name="horizontalLayout">
+     <item>
+      <spacer name="horizontalSpacer">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>10</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item>
+      <widget class="QLabel" name="label_50">
+       <property name="text">
+        <string>Select port:</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QToolButton" name="midiIn">
+       <property name="text">
+        <string>...</string>
+       </property>
+       <property name="icon">
+        <iconset resource="resources/resources.qrc">
+         <normaloff>:/mporto.png</normaloff>:/mporto.png</iconset>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <spacer name="horizontalSpacer_2">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>10</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+    </layout>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menuBar">
    <property name="geometry">
@@ -2244,7 +2306,7 @@ Available from 0 to 127</string>
      <x>0</x>
      <y>0</y>
      <width>965</width>
-     <height>20</height>
+     <height>24</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
