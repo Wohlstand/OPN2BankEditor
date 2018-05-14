@@ -472,7 +472,9 @@ void Generator::generate(int16_t *frames, unsigned nframes)
 }
 
 Generator::NotesManager::NotesManager()
-{}
+{
+    channels.reserve(USED_CHANNELS_4OP);
+}
 
 Generator::NotesManager::~NotesManager()
 {}
