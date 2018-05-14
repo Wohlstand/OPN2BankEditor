@@ -141,13 +141,13 @@ private:
     std::unique_ptr<Ring_Buffer> m_rb_midi;
     std::unique_ptr<uint8_t[]> m_body;
 
-#if defined(ENABLE_WIN9X_OPL_PROXY)
+#if !defined(_WIN32)
+    std::mutex m_generator_mutex;
+    typedef std::mutex mutex_type;
+#else
     class QStdMutex
     {
     public:
-        QStdMutex()
-        {}
-        ~QStdMutex() {}
         void lock() { m.lock(); }
         void unlock() { m.unlock(); }
         bool try_lock() { return m.tryLock(); }
@@ -156,27 +156,6 @@ private:
     };
     QStdMutex m_generator_mutex;
     typedef QStdMutex mutex_type;
-#elif !defined(_WIN32)
-    std::mutex m_generator_mutex;
-    typedef std::mutex mutex_type;
-#else
-    class WindowsMutex
-    {
-    public:
-        WindowsMutex()
-        {
-            if (!(hMutex = CreateMutex(nullptr, false, nullptr)))
-                throw std::system_error(GetLastError(), std::system_category());
-        }
-        ~WindowsMutex() { CloseHandle(hMutex); }
-        void lock() { WaitForSingleObject(hMutex, INFINITE); }
-        void unlock() { ReleaseMutex(hMutex); }
-        bool try_lock() { return WaitForSingleObject(hMutex, 0) == WAIT_OBJECT_0; }
-    private:
-        HANDLE hMutex;
-    };
-    WindowsMutex m_generator_mutex;
-    typedef WindowsMutex mutex_type;
 #endif
 };
 
