@@ -1,6 +1,6 @@
 /*
  * OPL Bank Editor by Wohlstand, a free tool for music bank editing
- * Copyright (c) 2017-2018 Vitaly Novichkov <admin@wohlnet.ru>
+ * Copyright (c) 2018 Vitaly Novichkov <admin@wohlnet.ru>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,25 +16,32 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef AO_BASE_H
-#define AO_BASE_H
+#ifndef LATENCY_H
+#define LATENCY_H
 
-#include <QIODevice>
+#include <QDialog>
+class QSlider;
+class QLineEdit;
 
-class AudioOutBase :
-        public QObject
+class LatencyDialog : public QDialog
 {
     Q_OBJECT
 
-protected:
-    QIODevice *m_audioSource = nullptr;
 public:
-    AudioOutBase(QObject *parent);
-    virtual ~AudioOutBase();
-    virtual bool init(int sampleRate, int channels) = 0;
-    virtual void setAudioSource(QIODevice *audioSource);
-    virtual void start() = 0;
-    virtual void stop() = 0;
+    LatencyDialog(QWidget *parent = nullptr);
+    ~LatencyDialog();
+
+    double latency() const;
+    void setLatency(double lat);
+
+private:
+    void setupUi();
+    QSlider *m_ctlLatency;
+    QLineEdit *m_ctlLatencyEdit;
+
+private slots:
+    void onSliderValueChanged(int value);
+    void onTextEditingFinished();
 };
 
-#endif // AO_BASE_H
+#endif // LATENCY_H

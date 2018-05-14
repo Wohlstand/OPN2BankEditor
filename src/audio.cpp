@@ -24,116 +24,91 @@
 
 #include <QtDebug>
 
-#ifdef ENABLE_AUDIO_TESTING
-#   ifdef USE_AUDIO_QTMM
-#       include "audio/ao_qtmm.h"
-#   endif
-#   ifdef USE_AUDIO_ALSA
-#       include "audio/ao_alsa.h"
-#   endif
-#endif
-
 void BankEditor::initAudio()
 {
-    /*INIT AUDIO!!!*/
-    int rate = 44100;
-    int channels = 2;
+    qDebug() << "Init audioOut...";
+    m_audioOut = new AudioOutRt(m_audioLatency * 1e-3, this);
+    qDebug() << "Init Generator...";
+    std::shared_ptr<Generator> generator(
+        new Generator(uint32_t(m_audioOut->sampleRate()), m_currentChip));
+    qDebug() << "Init Rt-Generator...";
+    RealtimeGenerator *rtgenerator = new RealtimeGenerator(generator, this);
+    qDebug() << "Seting pointer of RT Generator...";
+    m_generator = rtgenerator;
 
-    #   ifdef USE_AUDIO_ALSA
-    if (!m_audioOut)
-    {
-        m_audioOut = new AudioOutALSA(this);
-        if(!m_audioOut->init(rate, channels))
-        {
-            qWarning() << "Failed to initialize ALSA";
-            delete m_audioOut;
-        }
-    }
-    #endif
-
-    #ifdef USE_AUDIO_QTMM
-    if (!m_audioOut)
-    {
-        m_audioOut = new AudioOutQtMM(this);
-        m_audioOut->init(rate, channels);
-    }
-    #endif
-
-    m_generator = new Generator(uint32_t(rate), m_currentChip, this);
-    #ifdef ENABLE_AUDIO_TESTING
-    if (m_audioOut)
-        m_audioOut->setAudioSource(m_generator);
-    #endif
-
+    qDebug() << "Init signals and slots of keys...";
     //Test note
-    connect(ui->testNote,  SIGNAL(pressed()),  m_generator,  SLOT(PlayNote()));
-    connect(ui->testNote,  SIGNAL(released()), m_generator,  SLOT(NoteOffAllChans()));
+    connect(ui->testNote,  SIGNAL(pressed()),  m_generator,  SLOT(ctl_playNote()));
+    connect(ui->testNote,  SIGNAL(released()), m_generator,  SLOT(ctl_noteOffAllChans()));
     //Test major chord
-    connect(ui->testMajor, SIGNAL(pressed()),  m_generator, SLOT(PlayMajorChord()));
-    connect(ui->testMajor, SIGNAL(released()), m_generator, SLOT(NoteOffAllChans()));
+    connect(ui->testMajor, SIGNAL(pressed()),  m_generator, SLOT(ctl_playMajorChord()));
+    connect(ui->testMajor, SIGNAL(released()), m_generator, SLOT(ctl_noteOffAllChans()));
     //Test minor chord
-    connect(ui->testMinor, SIGNAL(pressed()),  m_generator, SLOT(PlayMinorChord()));
-    connect(ui->testMinor, SIGNAL(released()), m_generator, SLOT(NoteOffAllChans()));
+    connect(ui->testMinor, SIGNAL(pressed()),  m_generator, SLOT(ctl_playMinorChord()));
+    connect(ui->testMinor, SIGNAL(released()), m_generator, SLOT(ctl_noteOffAllChans()));
     //Test augmented chord
-    connect(ui->testAugmented, SIGNAL(pressed()),  m_generator, SLOT(PlayAugmentedChord()));
-    connect(ui->testAugmented, SIGNAL(released()), m_generator, SLOT(NoteOffAllChans()));
+    connect(ui->testAugmented, SIGNAL(pressed()),  m_generator, SLOT(ctl_playAugmentedChord()));
+    connect(ui->testAugmented, SIGNAL(released()), m_generator, SLOT(ctl_noteOffAllChans()));
     //Test diminished chord
-    connect(ui->testDiminished, SIGNAL(pressed()),  m_generator, SLOT(PlayDiminishedChord()));
-    connect(ui->testDiminished, SIGNAL(released()), m_generator, SLOT(NoteOffAllChans()));
+    connect(ui->testDiminished, SIGNAL(pressed()),  m_generator, SLOT(ctl_playDiminishedChord()));
+    connect(ui->testDiminished, SIGNAL(released()), m_generator, SLOT(ctl_noteOffAllChans()));
     //Test major 7-chord
-    connect(ui->testMajor7, SIGNAL(pressed()),  m_generator, SLOT(PlayMajor7Chord()));
-    connect(ui->testMajor7, SIGNAL(released()), m_generator, SLOT(NoteOffAllChans()));
+    connect(ui->testMajor7, SIGNAL(pressed()),  m_generator, SLOT(ctl_playMajor7Chord()));
+    connect(ui->testMajor7, SIGNAL(released()), m_generator, SLOT(ctl_noteOffAllChans()));
     //Test minor 7-chord
-    connect(ui->testMinor7, SIGNAL(pressed()),  m_generator, SLOT(PlayMinor7Chord()));
-    connect(ui->testMinor7, SIGNAL(released()), m_generator, SLOT(NoteOffAllChans()));
+    connect(ui->testMinor7, SIGNAL(pressed()),  m_generator, SLOT(ctl_playMinor7Chord()));
+    connect(ui->testMinor7, SIGNAL(released()), m_generator, SLOT(ctl_noteOffAllChans()));
     //Shut up that annoying noice!
-    connect(ui->shutUp, SIGNAL(clicked()), m_generator, SLOT(Silence()));
+    connect(ui->shutUp, SIGNAL(clicked()), m_generator, SLOT(ctl_silence()));
     //Note to test
-    #if QT_VERSION >= 0x050000
-    connect(ui->noteToTest, static_cast<void(QSpinBox::*)(int)>(&QSpinBox::valueChanged), m_generator, &Generator::changeNote);
-    #else
+#if QT_VERSION >= 0x050000
+    connect(ui->noteToTest, static_cast<void(QSpinBox::*)(int)>(&QSpinBox::valueChanged), m_generator, &IRealtimeControl::changeNote);
+#else
     connect(ui->noteToTest, SIGNAL(valueChanged(int)), m_generator, SLOT(changeNote(int)));
-    #endif
+#endif
     m_generator->changeNote(ui->noteToTest->value());
 
     //LFO enable/disable, and LFO frequency
-    #if QT_VERSION >= 0x050000
+#if QT_VERSION >= 0x050000
     connect(ui->lfoEnable,      &QCheckBox::toggled,
-            m_generator,        &Generator::changeLFO);
+            m_generator,        &IRealtimeControl::ctl_changeLFO);
     connect(ui->lfoFrequency,   static_cast<void(QComboBox::*)(int)>(&QComboBox::currentIndexChanged),
-            m_generator,        &Generator::changeLFOfreq);
-    #else
+            m_generator,        &IRealtimeControl::ctl_changeLFOfreq);
+#else
     connect(ui->lfoEnable,      SIGNAL(toggled(bool)),
-            m_generator,        SLOT(changeLFO(bool)));
+            m_generator,        SLOT(ctl_changeLFO(bool)));
     connect(ui->lfoFrequency,   SIGNAL(currentIndexChanged(int)),
-            m_generator,        SLOT(changeLFOfreq(int)));
-    #endif
+            m_generator,        SLOT(ctl_changeLFOfreq(int)));
+#endif
 
     //Generator's debug info
     connect(m_generator, SIGNAL(debugInfo(QString)), ui->debugBox, SLOT(setText(QString)));
     //Key pressed on piano bar
-    #if QT_VERSION >= 0x050000
+#if QT_VERSION >= 0x050000
     connect(ui->piano, &Piano::gotNote,     ui->noteToTest, &QSpinBox::setValue);
-    connect(ui->piano, &Piano::pressed,     m_generator,    &Generator::PlayNote);
-    connect(ui->piano, &Piano::released,    m_generator,    &Generator::NoteOffAllChans);
-    #else
+    connect(ui->piano, &Piano::pressed,     m_generator,    &IRealtimeControl::ctl_playNote);
+    connect(ui->piano, &Piano::released,    m_generator,    &IRealtimeControl::ctl_noteOffAllChans);
+#else
     connect(ui->piano, SIGNAL(gotNote(int)), ui->noteToTest, SLOT(setValue(int)));
-    connect(ui->piano, SIGNAL(pressed()),   m_generator,    SLOT(PlayNote()));
-    connect(ui->piano, SIGNAL(released()),  m_generator,    SLOT(NoteOffAllChans()));
-    #endif
+    connect(ui->piano, SIGNAL(pressed()),   m_generator,    SLOT(ctl_playNote()));
+    connect(ui->piano, SIGNAL(released()),  m_generator,    SLOT(ctl_noteOffAllChans()));
+#endif
     //Piano on the importer dialog pressed
     m_importer->connect(m_importer->ui->piano, SIGNAL(gotNote(int)), ui->noteToTest, SLOT(setValue(int)));
-    m_importer->connect(m_importer->ui->piano, SIGNAL(pressed()),    m_generator, SLOT(PlayNote()));
-    m_importer->connect(m_importer->ui->piano, SIGNAL(released()),   m_generator, SLOT(NoteOffAllChans()));
+    m_importer->connect(m_importer->ui->piano, SIGNAL(pressed()),    m_generator, SLOT(ctl_playNote()));
+    m_importer->connect(m_importer->ui->piano, SIGNAL(released()),   m_generator, SLOT(ctl_noteOffAllChans()));
     //Test note button on the importer dialog box
-    m_importer->connect(m_importer->ui->testNote,  SIGNAL(pressed()),  m_generator,  SLOT(PlayNote()));
-    m_importer->connect(m_importer->ui->testNote,  SIGNAL(released()), m_generator,  SLOT(NoteOffAllChans()));
+    m_importer->connect(m_importer->ui->testNote,  SIGNAL(pressed()),  m_generator,  SLOT(ctl_playNote()));
+    m_importer->connect(m_importer->ui->testNote,  SIGNAL(released()), m_generator,  SLOT(ctl_noteOffAllChans()));
+
+    qDebug() << "Trying to start audio... (with dereferencing of RtGenerator!)";
     //Start generator!
-    m_generator->start();
-    #ifdef ENABLE_AUDIO_TESTING
-    if (m_audioOut)
-        m_audioOut->start();
-    #endif
+    m_audioOut->start(*rtgenerator);
+
+#ifdef ENABLE_MIDI
+    qDebug() << "Trying to init MIDI-IN...";
+    m_midiIn = new MidiInRt(*rtgenerator, this);
+#endif
 }
 
 void BankEditor::keyPressEvent(QKeyEvent *event)
@@ -273,14 +248,14 @@ void BankEditor::keyPressEvent(QKeyEvent *event)
         }
 
         if(pn)
-            m_generator->PlayNote();
+            m_generator->ctl_playNote();
     }
     else
     {
         switch(event->key())
         {
         case Qt::Key_Space:
-            m_generator->PlayNote();
+            m_generator->ctl_playNote();
             break;
         default:
             break;
@@ -333,7 +308,7 @@ void BankEditor::keyReleaseEvent(QKeyEvent *event)
         case Qt::Key_O:
         case Qt::Key_0:
         case Qt::Key_P:
-            m_generator->NoteOffAllChans();
+            m_generator->ctl_noteOffAllChans();
             break;
         default:
             break;
@@ -344,7 +319,7 @@ void BankEditor::keyReleaseEvent(QKeyEvent *event)
         switch(event->key())
         {
         case Qt::Key_Space:
-            m_generator->NoteOffAllChans();
+            m_generator->ctl_noteOffAllChans();
             break;
         default:
             break;
@@ -353,28 +328,3 @@ void BankEditor::keyReleaseEvent(QKeyEvent *event)
 
     QMainWindow::keyReleaseEvent(event);
 }
-
-#ifdef ENABLE_MIDI
-void BankEditor::onMidiDataReceived(const unsigned char *data, size_t length)
-{
-    if(length == 3)
-    {
-        unsigned msg = data[0] >> 4;
-        unsigned note = data[1] & 0x7f;
-        unsigned vel = data[2] & 0x7f;
-
-        if(msg == 0x9 && vel == 0)
-            msg = 0x8;
-
-        switch(msg) {
-            case 0x8:
-                m_generator->NoteOffAllChans();
-                break;
-            case 0x9:
-                m_generator->changeNote(note);
-                m_generator->PlayNote();
-                break;
-        }
-    }
-}
-#endif

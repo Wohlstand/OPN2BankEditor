@@ -30,10 +30,14 @@
 #define USED_CHANNELS_2OP_PS4   9
 #define USED_CHANNELS_4OP       6
 
-Generator::Generator(uint32_t sampleRate,
-                     OPN_Chips initialChip,
-                     QObject *parent)
-    :   QIODevice(parent)
+QString GeneratorDebugInfo::toStr()
+{
+    return QString("Channels:\n"
+                   "4-op: %1")
+        .arg(this->chan4op);
+}
+
+Generator::Generator(uint32_t sampleRate, OPN_Chips initialChip)
 {
     m_rate = sampleRate;
     note = 60;
@@ -57,6 +61,10 @@ Generator::Generator(uint32_t sampleRate,
     memset(m_pan_lfo, 0, sizeof(uint8_t) * NUM_OF_CHANNELS);
 
     switchChip(initialChip);
+
+    //Send the null patch to initialize the OPL stuff
+    changePatch(FmBank::emptyInst(), false);
+    m_isInstrumentLoaded = false;//Reset the flag to false as no instruments loaded
 }
 
 Generator::~Generator()
@@ -136,9 +144,6 @@ void Generator::initChip()
 
 void Generator::switchChip(Generator::OPN_Chips chipId)
 {
-    std::lock_guard<std::mutex> g(chip_mutex);
-    Q_UNUSED(g);
-
     switch(chipId)
     {
     case CHIP_GENS:
@@ -270,17 +275,10 @@ void Generator::Pan(uint32_t c, uint8_t value)
 
 void Generator::PlayNoteF(int noteID)
 {
+    if(!m_isInstrumentLoaded)
+        return;//Deny playing notes without instrument loaded
+
     static uint32_t chan4op = 5;
-    static struct DebugInfo
-    {
-        int32_t chan4op;
-        QString toStr()
-        {
-            return QString("Channels:\n"
-                           "4-op: %1")
-                   .arg(this->chan4op);
-        }
-    } _debug {-1};
 
     int tone = noteID;
 
@@ -294,9 +292,8 @@ void Generator::PlayNoteF(int noteID)
     chan4op++;
     if(chan4op > (USED_CHANNELS_4OP - 1))
         chan4op = 0;
-    _debug.chan4op = int32_t(chan4op);
+    m_debug.chan4op = int32_t(chan4op);
 
-    emit debugInfo(_debug.toStr());
     double bend = 0.0;
     double phase = 0.0;
 
@@ -310,6 +307,9 @@ void Generator::PlayNoteF(int noteID)
 
 void Generator::PlayDrum(uint8_t drum, int noteID)
 {
+    if(!m_isInstrumentLoaded)
+        return;//Deny playing notes without instrument loaded
+
     int tone = noteID;
 
     if(m_patch.tone)
@@ -404,7 +404,7 @@ void Generator::PlayMinor7Chord()
 
 
 
-void Generator::changePatch(FmBank::Instrument &instrument, bool isDrum)
+void Generator::changePatch(const FmBank::Instrument &instrument, bool isDrum)
 {
     //Shutup everything
     Silence();
@@ -427,6 +427,8 @@ void Generator::changePatch(FmBank::Instrument &instrument, bool isDrum)
         if(isDrum)
             m_patch.tone = instrument.percNoteNum;
     }
+
+    m_isInstrumentLoaded = true;//Mark instrument as loaded
 }
 
 void Generator::changeNote(int newnote)
@@ -450,38 +452,7 @@ void Generator::changeLFOfreq(int freq)
     WriteReg(0, 0x22, lfo_reg);
 }
 
-
-
-void Generator::start()
+void Generator::generate(int16_t *frames, unsigned nframes)
 {
-    open(QIODevice::ReadOnly);
-}
-
-void Generator::stop()
-{
-    close();
-}
-
-qint64 Generator::readData(char *data, qint64 len)
-{
-    std::lock_guard<std::mutex> g(chip_mutex);
-    Q_UNUSED(g);
-
-    int16_t *_out = reinterpret_cast<int16_t *>(data);
-    len -= len % 4; //must be multiple 4!
-    uint32_t lenS = (static_cast<uint32_t>(len) / 4);
-    chip->generate(_out, lenS);
-    return len;
-}
-
-qint64 Generator::writeData(const char *data, qint64 len)
-{
-    Q_UNUSED(data);
-    Q_UNUSED(len);
-    return 0;
-}
-
-qint64 Generator::bytesAvailable() const
-{
-    return 4096;// + QIODevice::bytesAvailable();
+    chip->generate(frames, nframes);
 }
