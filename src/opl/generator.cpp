@@ -57,7 +57,6 @@ Generator::Generator(uint32_t sampleRate, OPN_Chips initialChip)
     memset(m_ins, 0, sizeof(uint16_t) * NUM_OF_CHANNELS);
     memset(m_pit, 0, sizeof(uint8_t) * NUM_OF_CHANNELS);
     memset(m_pan_lfo, 0, sizeof(uint8_t) * NUM_OF_CHANNELS);
-    rythmModePercussionMode = 0;
 
     switchChip(initialChip);
 
@@ -302,13 +301,6 @@ void Generator::PlayNoteF(int noteID)
 
 void Generator::StopNoteF(int noteID)
 {
-    if(rythmModePercussionMode)
-    {
-        //TODO: Turn each working RythmMode drum individually!
-        //updateRegBD();
-        return;
-    }
-
     int ch = m_noteManager.noteOff(noteID);
     if (ch == -1)
         return;
@@ -419,18 +411,13 @@ void Generator::PlayMinor7Chord()
 
 void Generator::StopNote()
 {
-    if(rythmModePercussionMode)
-        NoteOffAllChans();
-    else
-        StopNoteF(note);
+    StopNoteF(note);
 }
 
 
 
 void Generator::changePatch(const FmBank::Instrument &instrument, bool isDrum)
 {
-    rythmModePercussionMode = isDrum;
-
     //Shutup everything
     Silence();
     {

@@ -139,7 +139,6 @@ private:
     uint8_t     lfo_freq   = 0x00;
     uint8_t     lfo_reg    = 0x00;
 
-    uint8_t     rythmModePercussionMode;
     uint8_t     testDrum;
     OPN_PatchSetup m_patch;
 
