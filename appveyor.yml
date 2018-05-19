@@ -21,6 +21,9 @@ skip_commits:
 # Operating system (build VM template)
 os: unstable
 
+environment:
+    APPVEYOR_BUILD_WORKER_IMAGE: "Visual Studio 2013"
+
 # clone directory
 clone_folder: C:\_Repos\OPN2BankEditor
 clone_depth:  3  # clone entire repository history if not defined
