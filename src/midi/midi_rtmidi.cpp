@@ -71,6 +71,9 @@ bool MidiInRt::canOpenVirtual()
 bool MidiInRt::getPortList(QVector<QString> &ports)
 {
     RtMidiIn *midiin = lazyInstance();
+#if (QT_VERSION < 0x050000) && defined(_WIN32)
+    RtMidi::Api api = midiin->getCurrentApi();
+#endif
 
     m_errorSignaled = false;
     unsigned count = midiin->getPortCount();
@@ -81,10 +84,21 @@ bool MidiInRt::getPortList(QVector<QString> &ports)
     for(unsigned i = 0; i < count; ++i)
     {
         m_errorSignaled = false;
-        std::string name = midiin->getPortName(i);
-        if(m_errorSignaled)
-            return false;
-        ports[i] = QString::fromStdString(name);
+#if (QT_VERSION < 0x050000) && defined(_WIN32)
+        if(api == RtMidi::WINDOWS_MM)
+        {
+            MIDIINCAPSA deviceCaps;
+            midiInGetDevCapsA(i, &deviceCaps, sizeof(MIDIINCAPSA));
+            ports[i] = QString::fromLocal8Bit(deviceCaps.szPname);
+        }
+        else
+#endif
+        {
+            std::string name = midiin->getPortName(i);
+            if(m_errorSignaled)
+                return false;
+            ports[i] = QString::fromStdString(name);
+        }
     }
     return true;
 }
