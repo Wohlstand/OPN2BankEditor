@@ -828,7 +828,7 @@
            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Enable affecting by LFO&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Make this operator be affected by LFO.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
           </property>
           <property name="text">
-           <string>Enable aplitude modulation</string>
+           <string>Enable amplitude modulation</string>
           </property>
          </widget>
         </item>
@@ -964,7 +964,7 @@
            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Enable affecting by LFO&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Make this operator be affected by LFO.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
           </property>
           <property name="text">
-           <string>Enable aplitude modulation</string>
+           <string>Enable amplitude modulation</string>
           </property>
          </widget>
         </item>
@@ -1495,7 +1495,7 @@
            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Enable affecting by LFO&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Make this operator be affected by LFO.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
           </property>
           <property name="text">
-           <string>Enable aplitude modulation</string>
+           <string>Enable amplitude modulation</string>
           </property>
          </widget>
         </item>
@@ -1825,7 +1825,7 @@
            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Enable affecting by LFO&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Make this operator be affected by LFO.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
           </property>
           <property name="text">
-           <string>Enable aplitude modulation</string>
+           <string>Enable amplitude modulation</string>
           </property>
          </widget>
         </item>
