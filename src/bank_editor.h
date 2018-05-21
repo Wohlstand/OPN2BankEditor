@@ -443,6 +443,11 @@ private slots:
     void on_op4_ratescale_valueChanged(int arg1);
     void on_op4_ssgeg_currentIndexChanged(int index);
 
+    /**
+     * @brief Adjusts the size of the window after it has been shown
+     */
+    void onBankEditorShown();
+
     #ifdef ENABLE_MIDI
     void on_midiIn_triggered(QAction *);
     void onMidiPortTriggered();
@@ -458,6 +463,7 @@ protected:
     void dropEvent(QDropEvent *e);
     virtual void keyPressEvent(QKeyEvent *event);
     virtual void keyReleaseEvent(QKeyEvent *event);
+    void showEvent(QShowEvent *event);
     bool eventFilter(QObject *watched, QEvent *event);
 
 private:

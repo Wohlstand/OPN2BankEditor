@@ -88,7 +88,6 @@ BankEditor::BankEditor(QWidget *parent) :
 #else
     this->setWindowFlags(this->windowFlags() & ~Qt::WindowMaximizeButtonHint);
 #endif
-    this->setFixedSize(this->window()->width(), this->window()->height());
     m_importer = new Importer(this);
     m_measurer = new Measurer(this);
     connect(ui->actionImport, SIGNAL(triggered()), m_importer, SLOT(show()));
@@ -214,6 +213,12 @@ void BankEditor::dropEvent(QDropEvent *e)
     }
 }
 
+void BankEditor::showEvent(QShowEvent *event)
+{
+    QMainWindow::showEvent(event);
+    QTimer::singleShot(0, this, SLOT(onBankEditorShown()));
+}
+
 bool BankEditor::eventFilter(QObject *watched, QEvent *event)
 {
     if (watched == ui->instruments)
@@ -238,6 +243,11 @@ bool BankEditor::eventFilter(QObject *watched, QEvent *event)
         }
     }
     return QMainWindow::eventFilter(watched, event);
+}
+
+void BankEditor::onBankEditorShown()
+{
+    adjustSize();
 }
 
 void BankEditor::initFileData(QString &filePath)
