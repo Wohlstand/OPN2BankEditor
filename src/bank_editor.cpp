@@ -110,6 +110,8 @@ BankEditor::BankEditor(QWidget *parent) :
         }
     }
 
+    ui->instruments->installEventFilter(this);
+
     loadSettings();
     initAudio();
 #ifdef ENABLE_MIDI
@@ -212,6 +214,31 @@ void BankEditor::dropEvent(QDropEvent *e)
     }
 }
 
+bool BankEditor::eventFilter(QObject *watched, QEvent *event)
+{
+    if (watched == ui->instruments)
+    {
+        /* Take arrow and page key events, reserve others for piano. */
+        QEvent::Type type = event->type();
+        if (type == QEvent::KeyPress || type == QEvent::KeyRelease)
+        {
+            QKeyEvent *keyEvent = static_cast<QKeyEvent *>(event);
+            int key = keyEvent->key();
+            bool accepted =
+                key == Qt::Key_Up || key == Qt::Key_Down ||
+                key == Qt::Key_Left || key == Qt::Key_Right ||
+                key == Qt::Key_PageUp || key == Qt::Key_PageDown;
+            if (!accepted) {
+                if (type == QEvent::KeyPress)
+                    pianoKeyPress(keyEvent);
+                else if (type == QEvent::KeyRelease)
+                    pianoKeyRelease(keyEvent);
+                return true;
+            }
+        }
+    }
+    return QMainWindow::eventFilter(watched, event);
+}
 
 void BankEditor::initFileData(QString &filePath)
 {
