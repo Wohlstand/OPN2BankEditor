@@ -50,10 +50,14 @@ struct OPN_PatchSetup
     uint8_t         tone;
 };
 
-class Generator : public QIODevice
+struct GeneratorDebugInfo
 {
-    Q_OBJECT
+    int32_t chan4op = -1;
+    QString toStr();
+};
 
+class Generator
+{
 public:
     enum OPN_Chips
     {
@@ -61,18 +65,13 @@ public:
         CHIP_GENS,
         CHIP_MAME
     };
-    Generator(uint32_t sampleRate, OPN_Chips initialChip, QObject *parent);
+    Generator(uint32_t sampleRate, OPN_Chips initialChip);
     ~Generator();
 
     void initChip();
     void switchChip(OPN_Chips chipId);
 
-    void start();
-    void stop();
-
-    qint64 readData(char *data, qint64 maxlen);
-    qint64 writeData(const char *data, qint64 len);
-    qint64 bytesAvailable() const;
+    void generate(int16_t *frames, unsigned nframes);
 
     void NoteOn(uint32_t c, double hertz);
     void NoteOff(uint32_t c);
@@ -81,9 +80,10 @@ public:
     void Patch(uint32_t c);
     void Pan(uint32_t c, uint8_t value);
     void PlayNoteF(int noteID);
+    void StopNoteF(int noteID);
     void PlayDrum(uint8_t drum, int noteID);
 
-public slots:
+public:
     void Silence();
     void NoteOffAllChans();
 
@@ -94,19 +94,47 @@ public slots:
     void PlayDiminishedChord();
     void PlayMajor7Chord();
     void PlayMinor7Chord();
+    void StopNote();
 
-    void changePatch(FmBank::Instrument &instrument, bool isDrum = false);
+    void changePatch(const FmBank::Instrument &instrument, bool isDrum = false);
     void changeNote(int newnote);
 
     void changeLFO(bool enabled);
     void changeLFOfreq(int freq);
 
-signals:
-    void debugInfo(QString);
+    const GeneratorDebugInfo &debugInfo() const
+        { return m_debug; }
+
+private:
+    GeneratorDebugInfo m_debug;
 
 private:
     void WriteReg(uint8_t port, uint16_t address, uint8_t byte);
+
+    class NotesManager
+    {
+        struct Note
+        {
+            //! Currently pressed key. -1 means channel is free
+            int note    = -1;
+            //! Age in count of noteOn requests
+            int age = 0;
+        };
+        //! Channels range, contains entries count equal to chip channels
+        QVector<Note> channels;
+        //! Round-Robin cycler. Looks for any free channel that is not busy. Otherwise, oldest busy note will be replaced
+        uint8_t cycle = 0;
+    public:
+        NotesManager();
+        ~NotesManager();
+        void allocateChannels(int count);
+        uint8_t noteOn(int note);
+        int8_t  noteOff(int note);
+        void clearNotes();
+    } m_noteManager;
+
     int32_t     note;
+    bool        m_isInstrumentLoaded = false;
     uint8_t     lfo_enable = 0x00;
     uint8_t     lfo_freq   = 0x00;
     uint8_t     lfo_reg    = 0x00;
@@ -117,7 +145,6 @@ private:
     uint32_t    m_rate = 44100;
 
     std::unique_ptr<OPNChipBase> chip;
-    std::mutex                   chip_mutex;
 
     //! index of operators pair, cached, needed by Touch()
     uint16_t    m_ins[NUM_OF_CHANNELS];

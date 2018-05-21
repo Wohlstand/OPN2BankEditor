@@ -1,6 +1,6 @@
 /*
  * OPL Bank Editor by Wohlstand, a free tool for music bank editing
- * Copyright (c) 2017-2018 Vitaly Novichkov <admin@wohlnet.ru>
+ * Copyright (c) 2018 Vitaly Novichkov <admin@wohlnet.ru>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,15 +16,22 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "ao_base.h"
+#include <QObject>
+#include <RtAudio.h>
+#include <memory>
 
-AudioOutBase::AudioOutBase(QObject *parent) :
-    QObject(parent)
-{}
+class IRealtimeProcess;
 
-AudioOutBase::~AudioOutBase() {}
-
-void AudioOutBase::setAudioSource(QIODevice *audioSource)
+class AudioOutRt : public QObject
 {
-    m_audioSource = audioSource;
-}
+public:
+    explicit AudioOutRt(double latency, QObject *parent = nullptr);
+    unsigned sampleRate() const;
+    void start(IRealtimeProcess &rt);
+    void stop();
+private:
+    static int process(void *outputbuffer, void *, unsigned nframes, double, RtAudioStreamStatus, void *userdata);
+    static void errorCallback(RtAudioError::Type type, const std::string &errorText);
+    IRealtimeProcess *m_rt = nullptr;
+    std::unique_ptr<RtAudio> m_audioOut;
+};

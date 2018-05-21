@@ -2366,6 +2366,7 @@ Available from 0 to 127</string>
      <addaction name="actionEmulatorGens"/>
     </widget>
     <addaction name="menuChoose_chip_emulator"/>
+    <addaction name="actionLatency"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuEdito"/>
@@ -2529,6 +2530,11 @@ Available from 0 to 127</string>
   <action name="actionChipsBenchmark">
    <property name="text">
     <string>Run emulators benchmark</string>
+   </property>
+  </action>
+  <action name="actionLatency">
+   <property name="text">
+    <string>Audio &amp;latency...</string>
    </property>
   </action>
  </widget>

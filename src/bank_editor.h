@@ -25,8 +25,9 @@
 #include <QListWidgetItem>
 #include "bank.h"
 #include "opl/generator.h"
+#include "opl/generator_realtime.h"
 #include "opl/measurer.h"
-#include "audio/ao_base.h"
+#include "audio/ao_rtaudio.h"
 #include "midi/midi_rtmidi.h"
 
 #include "FileFormats/ffmt_base.h"
@@ -61,7 +62,19 @@ private:
     QString             m_recentBankFilePath;
     //! Currently using chip
     Generator::OPN_Chips m_currentChip;
+    //! Audio latency (ms)
+    double m_audioLatency;
 
+public:
+    //! Audio latency constants (ms)
+    enum
+    {
+        audioMinimumLatency = 1,
+        audioDefaultLatency = 20,
+        audioMaximumLatency = 100,
+    };
+
+private:
     //! Currently loaded FM bank
     FmBank              m_bank;
     //! Backup of currently loaded FM bank
@@ -87,7 +100,7 @@ private:
     bool m_lock;
 
     //! OPL chip emulator frontent
-    Generator       *m_generator;
+    IRealtimeControl *m_generator;
 
     //! Sound length measurer
     Measurer        *m_measurer;
@@ -99,9 +112,7 @@ private:
     InstFormats     m_recentInstFormat;
 
     /* ********** Audio output stuff ********** */
-    #ifdef ENABLE_AUDIO_TESTING
-    AudioOutBase    *m_audioOut = nullptr;
-    #endif
+    AudioOutRt    *m_audioOut = nullptr;
 
     /* ********** MIDI input stuff ********** */
     #ifdef ENABLE_MIDI
@@ -361,6 +372,10 @@ private slots:
      * @param checked AdLib BNK mode is turned on
      */
     void on_actionAdLibBnkMode_triggered(bool checked);
+    /**
+     * @brief Opens the latency setting dialog
+     */
+    void on_actionLatency_triggered();
 
 
     /* ***************** Instrument Parameters editing ***************** */
@@ -431,7 +446,6 @@ private slots:
     #ifdef ENABLE_MIDI
     void on_midiIn_triggered(QAction *);
     void onMidiPortTriggered();
-    void onMidiDataReceived(const unsigned char *data, size_t length);
     #endif
 
 protected:

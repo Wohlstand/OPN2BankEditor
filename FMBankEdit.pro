@@ -35,9 +35,11 @@ greaterThan(QT_MAJOR_VERSION, 4):{
         QMAKE_LFLAGS += -static-libgcc -static-libstdc++ -static
         #DEFINES += snprintf=_snprintf
         DEFINES += NO_NATIVE_OPEN_DIALOGS
+        INCLUDEPATH += $$PWD/src/audio/for-mingw-9x
     }
 }
 CONFIG += rtmidi
+CONFIG += rtaudio
 
 TEMPLATE = app
 TARGET = opn2_bank_editor
@@ -72,14 +74,9 @@ UI_DIR      = $$BUILD_OBJ_DIR/_build_$$ARCH/$$TARGET/_$$BUILDTP/.ui
 win32: RC_FILE = $$PWD/src/resources/res.rc
 macx: ICON = $$PWD/src/resources/opn2.icns
 
-greaterThan(QT_MAJOR_VERSION, 4):{
-    include("src/audio/ao_qtmm.pri")
+rtaudio {
+    include("src/audio/ao_rtaudio.pri")
 }
-linux-*: {
-    DEFINES += ENABLE_AUDIO_TESTING
-    include("src/audio/ao_alsa.pri")
-}
-
 rtmidi {
     DEFINES += ENABLE_MIDI
     include("src/midi/midi_rtmidi.pri")
@@ -99,13 +96,15 @@ SOURCES += \
     src/FileFormats/format_wohlstand_opn2.cpp \
     src/formats_sup.cpp \
     src/importer.cpp \
+    src/latency.cpp \
     src/ins_names.cpp \
     src/main.cpp \
     src/opl/generator.cpp \
+    src/opl/generator_realtime.cpp \
+    src/opl/realtime/ring_buffer.cpp \
     src/opl/measurer.cpp \
     src/opl/chips/gens/Ym2612_Emu.cpp \
     src/piano.cpp \
-    src/audio/ao_base.cpp \
     src/opl/chips/gens_opn2.cpp \
     src/opl/chips/opn_chip_base.cpp \
     src/opl/chips/nuked_opn2.cpp \
@@ -126,13 +125,16 @@ HEADERS += \
     src/FileFormats/format_wohlstand_opn2.h \
     src/formats_sup.h \
     src/importer.h \
+    src/latency.h \
     src/ins_names.h \
     src/opl/generator.h \
+    src/opl/generator_realtime.h \
     src/opl/measurer.h \
+    src/opl/realtime/ring_buffer.h \
+    src/opl/realtime/ring_buffer.tcc \
     src/opl/chips/gens/Ym2612_Emu.h \
     src/piano.h \
     src/version.h \
-    src/audio/ao_base.h \
     src/opl/chips/gens_opn2.h \
     src/opl/chips/opn_chip_base.h \
     src/opl/chips/nuked_opn2.h \

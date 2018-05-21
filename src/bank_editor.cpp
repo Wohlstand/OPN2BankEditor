@@ -30,6 +30,7 @@
 #include "formats_sup.h"
 #include "bank_editor.h"
 #include "ui_bank_editor.h"
+#include "latency.h"
 #include "ins_names.h"
 
 #include "FileFormats/ffmt_factory.h"
@@ -80,13 +81,13 @@ BankEditor::BankEditor(QWidget *parent) :
     connect(ui->melodic,    SIGNAL(clicked(bool)),  this,   SLOT(setMelodic()));
     connect(ui->percussion, SIGNAL(clicked(bool)),  this,   SLOT(setDrums()));
     loadInstrument();
-    #if QT_VERSION >= 0x050000
+#if QT_VERSION >= 0x050000
     this->setWindowFlags(Qt::WindowTitleHint | Qt::WindowSystemMenuHint |
                          Qt::WindowCloseButtonHint |
                          Qt::WindowMinimizeButtonHint);
-    #else
+#else
     this->setWindowFlags(this->windowFlags() & ~Qt::WindowMaximizeButtonHint);
-    #endif
+#endif
     this->setFixedSize(this->window()->width(), this->window()->height());
     m_importer = new Importer(this);
     m_measurer = new Measurer(this);
@@ -112,15 +113,11 @@ BankEditor::BankEditor(QWidget *parent) :
     loadSettings();
     initAudio();
 #ifdef ENABLE_MIDI
-    MidiInRt *midiIn = m_midiIn = new MidiInRt(this);
     QAction *midiInAction = m_midiInAction = new QAction(
         ui->midiIn->icon(), ui->midiIn->text(), this);
     ui->midiIn->setDefaultAction(midiInAction);
     QMenu *midiInMenu = new QMenu(this);
     midiInAction->setMenu(midiInMenu);
-    connect(midiIn, SIGNAL(midiDataReceived(const unsigned char *, size_t)),
-            this, SLOT(onMidiDataReceived(const unsigned char *, size_t)),
-            Qt::BlockingQueuedConnection);
 #else
     ui->midiIn_zone->hide();
 #endif
@@ -128,17 +125,14 @@ BankEditor::BankEditor(QWidget *parent) :
 
 BankEditor::~BankEditor()
 {
-    #ifdef ENABLE_AUDIO_TESTING
     if (m_audioOut)
         m_audioOut->stop();
-    m_generator->stop();
     delete m_audioOut;
     m_audioOut = nullptr;
-    #endif
-    #ifdef ENABLE_MIDI
+#ifdef ENABLE_MIDI
     delete m_midiIn;
     m_midiIn = nullptr;
-    #endif
+#endif
     delete m_measurer;
     delete m_generator;
     delete m_importer;
@@ -153,6 +147,12 @@ void BankEditor::loadSettings()
     QSettings setup;
     m_recentPath = setup.value("recent-path").toString();
     m_currentChip = (Generator::OPN_Chips)setup.value("chip-emulator", 0).toInt();
+    m_audioLatency = setup.value("audio-latency", audioDefaultLatency).toDouble();
+
+    if (m_audioLatency < audioMinimumLatency)
+        m_audioLatency = audioMinimumLatency;
+    else if (m_audioLatency > audioMaximumLatency)
+        m_audioLatency = audioMaximumLatency;
 
     ui->actionEmulatorNuked->setChecked(false);
     ui->actionEmulatorMame->setChecked(false);
@@ -177,6 +177,7 @@ void BankEditor::saveSettings()
     QSettings setup;
     setup.setValue("recent-path", m_recentPath);
     setup.setValue("chip-emulator", (int)m_currentChip);
+    setup.setValue("audio-latency", m_audioLatency);
 }
 
 
@@ -616,21 +617,21 @@ void BankEditor::toggleEmulator()
     {
         ui->actionEmulatorNuked->setChecked(true);
         m_currentChip = Generator::CHIP_Nuked;
-        m_generator->switchChip(m_currentChip);
+        m_generator->ctl_switchChip(m_currentChip);
     }
     else
     if(menuItem == ui->actionEmulatorGens)
     {
         ui->actionEmulatorGens->setChecked(true);
         m_currentChip = Generator::CHIP_GENS;
-        m_generator->switchChip(m_currentChip);
+        m_generator->ctl_switchChip(m_currentChip);
     }
     else
     if(menuItem == ui->actionEmulatorMame)
     {
         ui->actionEmulatorMame->setChecked(true);
         m_currentChip = Generator::CHIP_MAME;
-        m_generator->switchChip(m_currentChip);
+        m_generator->ctl_switchChip(m_currentChip);
     }
 }
 
@@ -742,7 +743,7 @@ void BankEditor::sendPatch()
 {
     if(!m_curInst) return;
     if(!m_generator) return;
-    m_generator->changePatch(*m_curInst, ui->percussion->isChecked());
+    m_generator->ctl_changePatch(*m_curInst, ui->percussion->isChecked());
 }
 
 void BankEditor::setDrumMode(bool dmode)
@@ -806,6 +807,15 @@ void BankEditor::on_actionAdLibBnkMode_triggered(bool checked)
         if(!selected.isEmpty())
             ui->bank_no->setCurrentIndex(selected.front()->data(INS_BANK_ID).toInt());
     }
+}
+
+void BankEditor::on_actionLatency_triggered()
+{
+    LatencyDialog *dlg = new LatencyDialog(this);
+    dlg->setLatency(m_audioLatency);
+    dlg->exec();
+    m_audioLatency = dlg->latency();
+    delete dlg;
 }
 
 void BankEditor::on_bankRename_clicked()
@@ -1289,13 +1299,6 @@ void BankEditor::updateMidiInMenu()
                 this, SLOT(onMidiPortTriggered()));
     }
 
-    menu->addSeparator();
-    QAction *act = new QAction("Disable", menu);
-    menu->addAction(act);
-    act->setData((unsigned)-2);
-    connect(act, SIGNAL(triggered()),
-            this, SLOT(onMidiPortTriggered()));
-
     for(unsigned i = 0, n = ports.size(); i < n; ++i)
     {
         QAction *act = new QAction(ports[i], menu);
@@ -1304,6 +1307,13 @@ void BankEditor::updateMidiInMenu()
         connect(act, SIGNAL(triggered()),
                 this, SLOT(onMidiPortTriggered()));
     }
+
+    menu->addSeparator();
+    QAction *act = new QAction("Disable", menu);
+    menu->addAction(act);
+    act->setData((unsigned)-2);
+    connect(act, SIGNAL(triggered()),
+            this, SLOT(onMidiPortTriggered()));
 }
 
 void BankEditor::on_midiIn_triggered(QAction *)
