@@ -440,7 +440,10 @@ void Generator::StopNote()
     StopNoteF(note);
 }
 
-
+void Generator::PitchBendSensitivity(int cents)
+{
+    m_bendsense = cents * (1e-2 / 8192);
+}
 
 void Generator::changePatch(const FmBank::Instrument &instrument, bool isDrum)
 {
