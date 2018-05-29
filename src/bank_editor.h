@@ -443,6 +443,9 @@ private slots:
     void on_op4_ratescale_valueChanged(int arg1);
     void on_op4_ssgeg_currentIndexChanged(int index);
 
+    void on_pitchBendSlider_valueChanged(int value);
+    void on_pitchBendSlider_sliderReleased();
+
     /**
      * @brief Adjusts the size of the window after it has been shown
      */

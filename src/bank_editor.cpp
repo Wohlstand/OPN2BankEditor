@@ -111,6 +111,8 @@ BankEditor::BankEditor(QWidget *parent) :
 
     ui->instruments->installEventFilter(this);
 
+    ui->pitchBendSlider->setTracking(true);
+
     loadSettings();
     initAudio();
 #ifdef ENABLE_MIDI

@@ -446,6 +446,8 @@ void Generator::changePatch(const FmBank::Instrument &instrument, bool isDrum)
 {
     //Shutup everything
     Silence();
+    m_bend = 0.0;
+    m_bendsense = 2.0 / 8192;
     {
         for(int op = 0; op < 4; op++)
         {

@@ -18,7 +18,7 @@
 
 #include "bank_editor.h"
 #include "ui_bank_editor.h"
-
+#include <cmath>
 
 void BankEditor::on_lfoEnable_clicked(bool checked)
 {
@@ -467,4 +467,15 @@ void BankEditor::on_op4_ssgeg_currentIndexChanged(int index)
     if(!m_curInst) return;
     m_curInst->OP[OPERATOR4_HR].ssg_eg = uint8_t(index);
     sendPatch();
+}
+
+void BankEditor::on_pitchBendSlider_valueChanged(int value)
+{
+    int bend = (int)std::lround(value * (8192.0 / 100.0));
+    m_generator->ctl_pitchBend(bend);
+}
+
+void BankEditor::on_pitchBendSlider_sliderReleased()
+{
+    ui->pitchBendSlider->setValue(0);  // spring back to middle position
 }
