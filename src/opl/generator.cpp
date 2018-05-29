@@ -276,7 +276,16 @@ void Generator::PlayNoteF(int noteID)
     if(!m_isInstrumentLoaded)
         return;//Deny playing notes without instrument loaded
 
-    int tone = noteID;
+    int ch = m_noteManager.noteOn(noteID);
+    PlayNoteCh(ch);
+}
+
+void Generator::PlayNoteCh(int ch)
+{
+    if(!m_isInstrumentLoaded)
+        return;//Deny playing notes without instrument loaded
+
+    int tone;
 
     if(m_patch.tone)
     {
@@ -284,8 +293,11 @@ void Generator::PlayNoteF(int noteID)
         if(tone > 128)
             tone -= 128;
     }
+    else
+    {
+        tone = m_noteManager.channel(ch).note;
+    }
 
-    int ch = m_noteManager.noteOn(noteID);
     m_debug.chan4op = int32_t(ch);
 
     double bend = 0.0;
@@ -295,7 +307,7 @@ void Generator::PlayNoteF(int noteID)
     Pan(ch, 0xC0);
     Touch_Real(ch, 127);
 
-    bend  = 0.0 + m_patch.finetune;
+    bend  = m_bend + m_patch.finetune;
     NoteOn(ch, BEND_COEFFICIENT * std::exp(0.057762265 * (tone + bend + phase)));
 }
 
@@ -306,6 +318,20 @@ void Generator::StopNoteF(int noteID)
         return;
 
     NoteOff(ch);
+}
+
+void Generator::PitchBend(int bend)
+{
+    if(!m_isInstrumentLoaded)
+        return;//Deny playing notes without instrument loaded
+
+    m_bend = bend * m_bendsense;
+
+    int channels = m_noteManager.channelCount();
+    for(int ch = 0; ch < channels; ++ch) {
+        if(m_noteManager.channel(ch).note != -1)
+            PlayNoteCh(ch);
+    }
 }
 
 void Generator::PlayDrum(uint8_t drum, int noteID)
@@ -328,7 +354,7 @@ void Generator::PlayDrum(uint8_t drum, int noteID)
     Touch_Real(adlchannel, 127);
     double bend = 0.0;
     double phase = 0.0;
-    bend  = 0.0 + m_patch.finetune;
+    bend  = m_bend + m_patch.finetune;
     NoteOn(adlchannel, BEND_COEFFICIENT * std::exp(0.057762265 * (tone + bend + phase)));
 }
 
