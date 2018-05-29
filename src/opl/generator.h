@@ -110,6 +110,8 @@ public:
     const GeneratorDebugInfo &debugInfo() const
         { return m_debug; }
 
+    static uint32_t getChipVolume(uint32_t volume, uint8_t midivolume, uint8_t midiexpr);
+
 private:
     GeneratorDebugInfo m_debug;
 

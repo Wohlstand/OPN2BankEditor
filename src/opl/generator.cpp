@@ -313,7 +313,8 @@ void Generator::PlayNoteCh(int ch, uint32_t volume)
 
     Patch(ch);
     Pan(ch, 0xC0);
-    Touch_Real(ch, 127);  /* TODO volume for velocity */
+
+    Touch_Real(ch, getChipVolume(volume, 127, 127));
 
     bend  = m_bend + m_patch.finetune;
     NoteOn(ch, BEND_COEFFICIENT * std::exp(0.057762265 * (tone + bend + phase)));
@@ -560,6 +561,12 @@ void Generator::changeLFOfreq(int freq)
     lfo_freq = uint8_t(freq);
     lfo_reg = (((lfo_enable << 3)&0x08) | (lfo_freq & 0x07)) & 0x0F;
     WriteReg(0, 0x22, lfo_reg);
+}
+
+uint32_t Generator::getChipVolume(uint32_t volume, uint8_t midivolume, uint8_t midiexpr)
+{
+    volume *= midivolume * midiexpr;
+    return volume > 8725 ? static_cast<uint32_t>((std::log(static_cast<double>(volume)) * (11.541561) + (0.5 - 104.22845)) * 2.0) : 0;
 }
 
 void Generator::generate(int16_t *frames, unsigned nframes)
