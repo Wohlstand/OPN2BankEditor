@@ -82,6 +82,7 @@ public:
     void PlayNoteF(int noteID);
     void PlayNoteCh(int channelID);
     void StopNoteF(int noteID);
+    void StopNoteCh(int channelID);
     void PlayDrum(uint8_t drum, int noteID);
 
 public:
@@ -98,6 +99,7 @@ public:
     void StopNote();
     void PitchBend(int bend);
     void PitchBendSensitivity(int cents);
+    void Hold(bool held);
 
     void changePatch(const FmBank::Instrument &instrument, bool isDrum = false);
     void changeNote(int newnote);
@@ -123,6 +125,8 @@ private:
             int note    = -1;
             //! Age in count of noteOn requests
             int age = 0;
+            //! Whether it has a pending noteOff being delayed while held
+            bool held = false;
         };
     private:
         //! Channels range, contains entries count equal to chip channels
@@ -135,6 +139,9 @@ private:
         void allocateChannels(int count);
         uint8_t noteOn(int note);
         int8_t  noteOff(int note);
+        void    channelOff(int ch);
+        int8_t  findNoteOffChannel(int note);
+        void hold(int ch, bool h);
         void clearNotes();
         const Note &channel(int ch) const
             { return channels.at(ch); }
@@ -145,6 +152,7 @@ private:
     int32_t     note;
     double      m_bend = 0.0;
     double      m_bendsense = 2.0 / 8192;
+    bool        m_hold = false;
     bool        m_isInstrumentLoaded = false;
     uint8_t     lfo_enable = 0x00;
     uint8_t     lfo_freq   = 0x00;

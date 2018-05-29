@@ -313,9 +313,28 @@ void Generator::PlayNoteCh(int ch)
 
 void Generator::StopNoteF(int noteID)
 {
-    int ch = m_noteManager.noteOff(noteID);
+    if(!m_isInstrumentLoaded)
+        return;//Deny playing notes without instrument loaded
+
+    int ch = m_noteManager.findNoteOffChannel(noteID);
     if (ch == -1)
         return;
+
+    StopNoteCh(ch);
+}
+
+void Generator::StopNoteCh(int ch)
+{
+    if(!m_isInstrumentLoaded)
+        return;//Deny playing notes without instrument loaded
+
+    if(m_hold)
+    {
+        m_noteManager.hold(ch, true);  // stop later after hold is over
+        return;
+    }
+
+    m_noteManager.channelOff(ch);
 
     NoteOff(ch);
 }
@@ -372,6 +391,19 @@ void Generator::Silence()
 
 void Generator::NoteOffAllChans()
 {
+    if(m_hold)
+    {
+        // mark all channels held for later key-off
+        int channels = m_noteManager.channelCount();
+        for(int ch = 0; ch < channels; ++ch)
+        {
+            const NotesManager::Note &channel = m_noteManager.channel(ch);
+            if(channel.note != -1)
+                m_noteManager.hold(ch, true);
+        }
+        return;
+    }
+
     for(uint32_t c = 0; c < NUM_OF_CHANNELS; ++c)
         NoteOff(c);
 
@@ -445,12 +477,35 @@ void Generator::PitchBendSensitivity(int cents)
     m_bendsense = cents * (1e-2 / 8192);
 }
 
+void Generator::Hold(bool held)
+{
+    if(!m_isInstrumentLoaded)
+        return;//Deny playing notes without instrument loaded
+
+    if (m_hold == held)
+        return;
+    m_hold = held;
+
+    if (!held)
+    {
+        // key-off all held notes now
+        int channels = m_noteManager.channelCount();
+        for(int ch = 0; ch < channels; ++ch)
+        {
+            const NotesManager::Note &channel = m_noteManager.channel(ch);
+            if(channel.note != -1 && channel.held)
+                StopNoteCh(ch);
+        }
+    }
+}
+
 void Generator::changePatch(const FmBank::Instrument &instrument, bool isDrum)
 {
     //Shutup everything
     Silence();
     m_bend = 0.0;
     m_bendsense = 2.0 / 8192;
+    m_hold = false;
     {
         for(int op = 0; op < 4; op++)
         {
@@ -539,6 +594,7 @@ uint8_t Generator::NotesManager::noteOn(int note)
         if(channels[chan].note == -1)
         {
             channels[chan].note = note;
+            channels[chan].held = false;
             channels[chan].age = 0;
             break;
         }
@@ -561,6 +617,7 @@ uint8_t Generator::NotesManager::noteOn(int note)
             {
                 chan = (uint8_t)oldest;
                 channels[chan].note = note;
+                channels[chan].held = false;
                 channels[chan].age = 0;
             }
             break;
@@ -572,15 +629,31 @@ uint8_t Generator::NotesManager::noteOn(int note)
 
 int8_t Generator::NotesManager::noteOff(int note)
 {
+    int8_t chan = findNoteOffChannel(note);
+    if(chan != -1)
+        channelOff(chan);
+    return chan;
+}
+
+void Generator::NotesManager::channelOff(int ch)
+{
+    channels[ch].note = -1;
+}
+
+int8_t Generator::NotesManager::findNoteOffChannel(int note)
+{
+    // find the first active note not in held state (delayed noteoff)
     for(uint8_t chan = 0; chan < channels.size(); chan++)
     {
-        if(channels[chan].note == note)
-        {
-            channels[chan].note = -1;
+        if(channels[chan].note == note && !channels[chan].held)
             return (int8_t)chan;
-        }
     }
     return -1;
+}
+
+void Generator::NotesManager::hold(int ch, bool h)
+{
+    channels[ch].held = h;
 }
 
 void Generator::NotesManager::clearNotes()
