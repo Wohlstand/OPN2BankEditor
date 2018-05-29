@@ -276,7 +276,15 @@ void Generator::PlayNoteF(int noteID)
     if(!m_isInstrumentLoaded)
         return;//Deny playing notes without instrument loaded
 
-    int ch = m_noteManager.noteOn(noteID);
+    bool replace;
+    int ch = m_noteManager.noteOn(noteID, &replace);
+
+    if(replace) {
+        //if it replaces an old note, shut up the old one first
+        //this lets the sustain take over with a fresh envelope
+        NoteOff(ch);
+    }
+
     PlayNoteCh(ch);
 }
 
@@ -505,7 +513,7 @@ void Generator::changePatch(const FmBank::Instrument &instrument, bool isDrum)
     Silence();
     m_bend = 0.0;
     m_bendsense = 2.0 / 8192;
-    m_hold = false;
+    //m_hold = false;
     {
         for(int op = 0; op < 4; op++)
         {
@@ -572,7 +580,7 @@ void Generator::NotesManager::allocateChannels(int count)
     cycle = 0;
 }
 
-uint8_t Generator::NotesManager::noteOn(int note)
+uint8_t Generator::NotesManager::noteOn(int note, bool *r)
 {
     uint8_t beganAt = cycle;
     uint8_t chan = 0;
@@ -583,6 +591,8 @@ uint8_t Generator::NotesManager::noteOn(int note)
         if(note >= 0)
             ch.age++;
     }
+
+    bool replace = true;
 
     do
     {
@@ -596,6 +606,7 @@ uint8_t Generator::NotesManager::noteOn(int note)
             channels[chan].note = note;
             channels[chan].held = false;
             channels[chan].age = 0;
+            replace = false;
             break;
         }
 
@@ -623,6 +634,9 @@ uint8_t Generator::NotesManager::noteOn(int note)
             break;
         }
     } while(1);
+
+    if(r)
+        *r = replace;
 
     return chan;
 }
