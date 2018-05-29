@@ -145,7 +145,7 @@ private:
         void clearNotes();
         const Note &channel(int ch) const
             { return channels.at(ch); }
-        const int channelCount() const
+        int channelCount() const
             { return (int)channels.size(); }
     } m_noteManager;
 
