@@ -288,7 +288,7 @@ void Generator::PlayNoteF(int noteID, uint32_t volume)
     PlayNoteCh(ch, volume);
 }
 
-void Generator::PlayNoteCh(int ch, uint32_t volume)
+void Generator::PlayNoteCh(int ch, uint32_t volume, bool patch)
 {
     if(!m_isInstrumentLoaded)
         return;//Deny playing notes without instrument loaded
@@ -311,8 +311,11 @@ void Generator::PlayNoteCh(int ch, uint32_t volume)
     double bend = 0.0;
     double phase = 0.0;
 
-    Patch(ch);
-    Pan(ch, 0xC0);
+    if(patch)
+    {
+        Patch(ch);
+        Pan(ch, 0xC0);
+    }
 
     Touch_Real(ch, getChipVolume(volume, 127, 127));
 
@@ -360,7 +363,7 @@ void Generator::PitchBend(int bend)
     {
         const NotesManager::Note &channel = m_noteManager.channel(ch);
         if(m_noteManager.channel(ch).note != -1)
-            PlayNoteCh(ch, channel.volume);
+            PlayNoteCh(ch, channel.volume, false);
     }
 }
 

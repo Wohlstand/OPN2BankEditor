@@ -80,7 +80,7 @@ public:
     void Patch(uint32_t c);
     void Pan(uint32_t c, uint8_t value);
     void PlayNoteF(int noteID, uint32_t volume = 127);
-    void PlayNoteCh(int channelID, uint32_t volume = 127);
+    void PlayNoteCh(int channelID, uint32_t volume = 127, bool patch = true);
     void StopNoteF(int noteID);
     void StopNoteCh(int channelID);
     void PlayDrum(uint8_t drum, int noteID);

@@ -212,7 +212,7 @@ void RealtimeGenerator::ctl_changeLFO(bool lfo)
 void RealtimeGenerator::ctl_changeLFOfreq(int freq)
 {
     Ring_Buffer &rb = *m_rb_ctl;
-    MessageHeader hdr = {MSG_CtlLFO, sizeof(int)};
+    MessageHeader hdr = {MSG_CtlLFOFreq, sizeof(int)};
     wait_for_fifo_write_space(rb, hdr.size);
     rb.put(hdr);
     rb.put(freq);
