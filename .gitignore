@@ -26,6 +26,7 @@ Makefile*
 *build-*
 /_build_data/*
 /bin-*/*
+/build/*
 
 # QtCreator
 

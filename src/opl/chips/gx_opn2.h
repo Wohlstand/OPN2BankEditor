@@ -1,22 +1,24 @@
-#ifndef MAME_OPN2_H
-#define MAME_OPN2_H
+#ifndef GX_OPN2_H
+#define GX_OPN2_H
 
 #include "opn_chip_base.h"
 
-class MameOPN2 final : public OPNChipBaseT<MameOPN2>
+struct YM2612GX;
+class GXOPN2 final : public OPNChipBaseT<GXOPN2>
 {
-    void *chip;
+    YM2612GX *m_chip;
+    unsigned int m_framecount;
 public:
-    MameOPN2();
-    ~MameOPN2() override;
+    GXOPN2();
+    ~GXOPN2() override;
 
     void setRate(uint32_t rate, uint32_t clock) override;
     void reset() override;
     void writeReg(uint32_t port, uint16_t addr, uint8_t data) override;
     void nativePreGenerate() override;
-    void nativePostGenerate() override {}
+    void nativePostGenerate() override;
     void nativeGenerate(int16_t *frame) override;
     const char *emulatorName() override;
 };
 
-#endif // MAME_OPN2_H
+#endif // GX_OPN2_H

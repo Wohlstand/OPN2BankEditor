@@ -3505,6 +3505,7 @@ Available from 0 to 127</string>
      </property>
      <addaction name="actionEmulatorNuked"/>
      <addaction name="actionEmulatorMame"/>
+     <addaction name="actionEmulatorGX"/>
      <addaction name="actionEmulatorGens"/>
     </widget>
     <addaction name="menuChoose_chip_emulator"/>
@@ -3677,6 +3678,14 @@ Available from 0 to 127</string>
   <action name="actionLatency">
    <property name="text">
     <string>Audio &amp;latency...</string>
+   </property>
+  </action>
+  <action name="actionEmulatorGX">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Genesis Plus GX</string>
    </property>
   </action>
  </widget>

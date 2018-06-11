@@ -106,11 +106,12 @@ SOURCES += \
     src/opl/chips/gens/Ym2612_Emu.cpp \
     src/piano.cpp \
     src/opl/chips/gens_opn2.cpp \
-    src/opl/chips/opn_chip_base.cpp \
     src/opl/chips/nuked_opn2.cpp \
     src/opl/chips/nuked/ym3438.c \
     src/opl/chips/mame_opn2.cpp \
-    src/opl/chips/mame/mame_ym2612fm.c
+    src/opl/chips/mame/mame_ym2612fm.c \
+    src/opl/chips/gx_opn2.cpp \
+    src/opl/chips/gx/gx_ym2612.c
 
 HEADERS += \
     src/bank_editor.h \
@@ -137,11 +138,14 @@ HEADERS += \
     src/version.h \
     src/opl/chips/gens_opn2.h \
     src/opl/chips/opn_chip_base.h \
+    src/opl/chips/opn_chip_base.tcc \
     src/opl/chips/nuked_opn2.h \
     src/opl/chips/nuked/ym3438.h \
     src/opl/chips/mame_opn2.h \
+    src/opl/chips/gx_opn2.h \
     src/opl/chips/mame/mamedef.h \
-    src/opl/chips/mame/mame_ym2612fm.h
+    src/opl/chips/mame/mame_ym2612fm.h \
+    src/opl/chips/gx/gx_ym2612.h
 
 FORMS += \
     src/bank_editor.ui \

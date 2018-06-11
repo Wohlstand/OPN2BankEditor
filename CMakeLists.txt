@@ -60,11 +60,12 @@ set(SOURCES
   "src/opl/measurer.cpp"
   "src/opl/chips/gens_opn2.cpp"
   "src/opl/chips/gens/Ym2612_Emu.cpp"
-  "src/opl/chips/opn_chip_base.cpp"
   "src/opl/chips/nuked_opn2.cpp"
   "src/opl/chips/nuked/ym3438.c"
   "src/opl/chips/mame_opn2.cpp"
-  "src/opl/chips/mame/mame_ym2612fm.c")
+  "src/opl/chips/mame/mame_ym2612fm.c"
+  "src/opl/chips/gx_opn2.cpp"
+  "src/opl/chips/gx/gx_ym2612.c")
 
 qt5_wrap_ui(FORMS
   "src/bank_editor.ui"

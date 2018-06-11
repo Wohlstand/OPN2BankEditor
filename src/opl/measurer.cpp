@@ -32,10 +32,10 @@
 #include "generator.h"
 
 //Measurer is always needs for emulator
-#include "chips/opn_chip_base.h"
 #include "chips/nuked_opn2.h"
 #include "chips/mame_opn2.h"
 #include "chips/gens_opn2.h"
+#include "chips/gx_opn2.h"
 
 struct DurationInfo
 {
@@ -311,6 +311,7 @@ static void MeasureDurationsBenchmarkRunner(FmBank::Instrument *in_p, QVector<Me
     {
         std::shared_ptr<OPNChipBase>(new NukedOPN2),
         std::shared_ptr<OPNChipBase>(new MameOPN2),
+        std::shared_ptr<OPNChipBase>(new GXOPN2),
         std::shared_ptr<OPNChipBase>(new GensOPN2)
     };
     for(std::shared_ptr<OPNChipBase> &p : emuls)

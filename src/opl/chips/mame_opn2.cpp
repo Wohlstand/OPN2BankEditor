@@ -3,16 +3,10 @@
 #include <cstdlib>
 #include <assert.h>
 
-MameOPN2::MameOPN2() :
-    OPNChipBase()
+MameOPN2::MameOPN2()
 {
-    chip = ym2612_init(NULL, (int)m_clock, (int)m_rate, NULL, NULL);
-}
-
-MameOPN2::MameOPN2(const MameOPN2 &c) :
-    OPNChipBase(c)
-{
-    chip = ym2612_init(NULL, (int)m_clock, (int)m_rate, NULL, NULL);
+    chip = NULL;
+    setRate(m_rate, m_clock);
 }
 
 MameOPN2::~MameOPN2()
@@ -22,20 +16,17 @@ MameOPN2::~MameOPN2()
 
 void MameOPN2::setRate(uint32_t rate, uint32_t clock)
 {
-    OPNChipBase::setRate(rate, clock);
-    ym2612_shutdown(chip);
+    OPNChipBaseT::setRate(rate, clock);
+    if(chip)
+        ym2612_shutdown(chip);
     chip = ym2612_init(NULL, (int)clock, (int)rate, NULL, NULL);
     ym2612_reset_chip(chip);
 }
 
 void MameOPN2::reset()
 {
+    OPNChipBaseT::reset();
     ym2612_reset_chip(chip);
-}
-
-void MameOPN2::reset(uint32_t rate, uint32_t clock)
-{
-    setRate(rate, clock);
 }
 
 void MameOPN2::writeReg(uint32_t port, uint16_t addr, uint8_t data)
@@ -44,16 +35,16 @@ void MameOPN2::writeReg(uint32_t port, uint16_t addr, uint8_t data)
     ym2612_write(chip, 1 + (int)(port) * 2, data);
 }
 
-int MameOPN2::generate(int16_t *output, size_t frames)
+void MameOPN2::nativePreGenerate()
 {
-    ym2612_generate(chip, output, (int)frames, 0);
-    return (int)frames;
+    void *chip = this->chip;
+    ym2612_pre_generate(chip);
 }
 
-int MameOPN2::generateAndMix(int16_t *output, size_t frames)
+void MameOPN2::nativeGenerate(int16_t *frame)
 {
-    ym2612_generate(chip, output, (int)frames, 1);
-    return (int)frames;
+    void *chip = this->chip;
+    ym2612_generate_one_native(chip, frame);
 }
 
 const char *MameOPN2::emulatorName()

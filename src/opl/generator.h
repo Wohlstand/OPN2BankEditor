@@ -63,7 +63,8 @@ public:
     {
         CHIP_Nuked = 0,
         CHIP_GENS,
-        CHIP_MAME
+        CHIP_MAME,
+        CHIP_GX
     };
     Generator(uint32_t sampleRate, OPN_Chips initialChip);
     ~Generator();
