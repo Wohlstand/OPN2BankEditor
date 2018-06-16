@@ -589,6 +589,33 @@ void BankEditor::on_actionReMeasure_triggered()
     }
 }
 
+void BankEditor::on_actionReMeasureOne_triggered()
+{
+    FmBank::Instrument *inst = m_curInst;
+    FmBank::Instrument *instBackup = m_curInstBackup;
+    if(!inst)
+    {
+        QMessageBox::information(this,
+                                 tr("Nothing to measure"),
+                                 tr("No selected instrument to measure. Please select an instrument first!"));
+        return;
+    }
+
+    FmBank::Instrument workInst = *inst;
+    workInst.is_blank = false;
+
+    const FmBank::Instrument blankInst = FmBank::emptyInst();
+    if(memcmp(&workInst, &blankInst, sizeof(FmBank::Instrument)) == 0)
+        return;
+
+    if(m_measurer->doMeasurement(workInst))
+    {
+        *instBackup = *inst;
+        *inst = workInst;
+        loadInstrument();
+    }
+}
+
 void BankEditor::on_actionChipsBenchmark_triggered()
 {
     if(m_curInst)
@@ -718,6 +745,7 @@ void BankEditor::loadInstrument()
         m_lock = true;
         ui->insName->setEnabled(false);
         ui->insName->clear();
+        ui->debugDelaysInfo->setText(tr("Delays on: %1, off: %2").arg("--").arg("--"));
         m_lock = false;
         return;
     }
@@ -732,6 +760,9 @@ void BankEditor::loadInstrument()
     ui->lfoFrequency->setCurrentIndex(m_bank.lfo_frequency);
 
     ui->insName->setText(m_curInst->name);
+    ui->debugDelaysInfo->setText(tr("Delays on: %1, off: %2")
+                                 .arg(m_curInst->ms_sound_kon)
+                                 .arg(m_curInst->ms_sound_koff));
     ui->perc_noteNum->setValue(m_curInst->percNoteNum);
     ui->noteOffset1->setValue(m_curInst->note_offset1);
 

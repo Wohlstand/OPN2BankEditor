@@ -2892,6 +2892,28 @@
            </widget>
           </item>
           <item>
+           <widget class="QLabel" name="debugDelaysInfo">
+            <property name="enabled">
+             <bool>true</bool>
+            </property>
+            <property name="font">
+             <font>
+              <family>Monospace</family>
+              <pointsize>7</pointsize>
+             </font>
+            </property>
+            <property name="text">
+             <string notr="true">Delay on: --, off: --</string>
+            </property>
+            <property name="textFormat">
+             <enum>Qt::RichText</enum>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignCenter</set>
+            </property>
+           </widget>
+          </item>
+          <item>
            <widget class="QGroupBox" name="midiIn_zone">
             <property name="title">
              <string>MIDI Input</string>
@@ -3481,6 +3503,7 @@ Available from 0 to 127</string>
     <addaction name="separator"/>
     <addaction name="actionReset_current_instrument"/>
     <addaction name="separator"/>
+    <addaction name="actionReMeasureOne"/>
     <addaction name="actionReMeasure"/>
     <addaction name="actionChipsBenchmark"/>
     <addaction name="separator"/>
@@ -3686,6 +3709,11 @@ Available from 0 to 127</string>
    </property>
    <property name="text">
     <string>Genesis Plus GX</string>
+   </property>
+  </action>
+  <action name="actionReMeasureOne">
+   <property name="text">
+    <string>Re-Calculate sounding delays of instrument</string>
    </property>
   </action>
  </widget>
