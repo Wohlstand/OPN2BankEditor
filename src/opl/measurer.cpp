@@ -1,5 +1,5 @@
 /*
- * OPL Bank Editor by Wohlstand, a free tool for music bank editing
+ * OPN2 Bank Editor by Wohlstand, a free tool for music bank editing
  * Copyright (c) 2017-2018 Vitaly Novichkov <admin@wohlnet.ru>
  *
  * This program is free software: you can redistribute it and/or modify
@@ -41,19 +41,10 @@
 #include "chips/gens_opn2.h"
 #include "chips/gx_opn2.h"
 
-struct DurationInfo
-{
-    uint64_t    peak_amplitude_time;
-    double      peak_amplitude_value;
-    double      quarter_amplitude_time;
-    double      begin_amplitude;
-    double      interval;
-    double      keyoff_out_time;
-    int64_t     ms_sound_kon;
-    int64_t     ms_sound_koff;
-    bool        nosound;
-    uint8_t     padding[7];
-};
+//typedef NukedOPN2 DefaultOPN2;
+typedef MameOPN2 DefaultOPN2;
+
+typedef Measurer::DurationInfo DurationInfo;
 
 template <class T>
 class AudioHistory
@@ -231,9 +222,9 @@ struct TinySynth
         m_chip->writeReg(0, 0x2B, 0x0 );   //DAC off
     }
 
-    void setInstrument(FmBank::Instrument *in_p)
+    void setInstrument(const FmBank::Instrument *in_p)
     {
-        FmBank::Instrument &in = *in_p;
+        const FmBank::Instrument &in = *in_p;
         OPN_PatchSetup patch;
 
         m_notenum = in.percNoteNum >= 128 ? (in.percNoteNum - 128) : in.percNoteNum;
@@ -359,9 +350,11 @@ static void BenchmarkChip(FmBank::Instrument *in_p, OPNChipBase *chip)
     }
 }
 
-static void MeasureDurations(FmBank::Instrument *in_p, OPNChipBase *chip)
+static void ComputeDurations(const FmBank::Instrument *in_p, DurationInfo *result_p, OPNChipBase *chip)
 {
-    FmBank::Instrument &in = *in_p;
+    const FmBank::Instrument &in = *in_p;
+    DurationInfo &result = *result_p;
+
     AudioHistory<double> audioHistory;
 
     const unsigned interval             = 150;
@@ -370,6 +363,11 @@ static void MeasureDurations(FmBank::Instrument *in_p, OPNChipBase *chip)
     const double historyLength = 0.1;  // maximum duration to memorize (seconds)
     audioHistory.reset(std::ceil(historyLength * g_outputRate));
 
+    const double timestep = (double)samples_per_interval / g_outputRate;  // interval between analysis steps (seconds)
+#if defined(ENABLE_PLOTS)
+    result.amps_timestep = timestep;
+#endif
+
     std::unique_ptr<double[]> window;
     window.reset(new double[audioHistory.capacity()]);
     unsigned winsize = 0;
@@ -377,7 +375,7 @@ static void MeasureDurations(FmBank::Instrument *in_p, OPNChipBase *chip)
     TinySynth synth;
     synth.m_chip = chip;
     synth.resetChip();
-    synth.setInstrument(in_p);
+    synth.setInstrument(&in);
     synth.noteOn();
 
     /* For capturing */
@@ -408,13 +406,15 @@ static void MeasureDurations(FmBank::Instrument *in_p, OPNChipBase *chip)
     int16_t audioBuffer[audioBufferSize];
 
     // For up to 40 seconds, measure mean amplitude.
-#if defined(DEBUG_AMPLITUDE_PEAK_VALIDATION) || defined(DEBUG_WRITE_AMPLITUDE_PLOT)
-    std::vector<double> amplitudecurve_on;
-#endif
     double highest_sofar = 0;
     short sound_min = 0, sound_max = 0;
 
-#if defined(DEBUG_AMPLITUDE_PEAK_VALIDATION) || defined(DEBUG_WRITE_AMPLITUDE_PLOT)
+#if defined(ENABLE_PLOTS)
+    std::vector<double> &amplitudecurve_on = result.amps_on;
+    amplitudecurve_on.clear();
+    amplitudecurve_on.reserve(max_period_on);
+#elif defined(DEBUG_AMPLITUDE_PEAK_VALIDATION) || defined(DEBUG_WRITE_AMPLITUDE_PLOT)
+    std::vector<double> amplitudecurve_on;
     amplitudecurve_on.reserve(max_period_on);
 #endif
     for(unsigned period = 0; period < max_period_on; ++period, ++windows_passed_on)
@@ -461,7 +461,7 @@ static void MeasureDurations(FmBank::Instrument *in_p, OPNChipBase *chip)
             quarter_amplitude_time_found = true;
         }
         /* ======== Peak time detection =END==== */
-#if defined(DEBUG_AMPLITUDE_PEAK_VALIDATION) || defined(DEBUG_WRITE_AMPLITUDE_PLOT)
+#if defined(ENABLE_PLOTS) || defined(DEBUG_AMPLITUDE_PEAK_VALIDATION) || defined(DEBUG_WRITE_AMPLITUDE_PLOT)
         amplitudecurve_on.push_back(rms);
 #endif
         if(rms > highest_sofar)
@@ -533,7 +533,7 @@ static void MeasureDurations(FmBank::Instrument *in_p, OPNChipBase *chip)
     {
         // Reset the emulator and re-run the "ON" simulation until reaching the peak time
         synth.resetChip();
-        synth.setInstrument(in_p);
+        synth.setInstrument(&in);
         synth.noteOn();
 
         audioHistory.reset(std::ceil(historyLength * g_outputRate));
@@ -555,7 +555,11 @@ static void MeasureDurations(FmBank::Instrument *in_p, OPNChipBase *chip)
     }
 
     // Now, for up to 60 seconds, measure mean amplitude.
-#if defined(DEBUG_AMPLITUDE_PEAK_VALIDATION) || defined(DEBUG_WRITE_AMPLITUDE_PLOT)
+#if defined(ENABLE_PLOTS)
+    std::vector<double> &amplitudecurve_off = result.amps_off;
+    amplitudecurve_off.clear();
+    amplitudecurve_off.reserve(max_period_on);
+#elif defined(DEBUG_AMPLITUDE_PEAK_VALIDATION) || defined(DEBUG_WRITE_AMPLITUDE_PLOT)
     std::vector<double> amplitudecurve_off;
     amplitudecurve_off.reserve(max_period_off);
 #endif
@@ -590,7 +594,7 @@ static void MeasureDurations(FmBank::Instrument *in_p, OPNChipBase *chip)
             keyoff_out_time_found = true;
         }
         /* ======== Find Key Off time ==END=== */
-#if defined(DEBUG_AMPLITUDE_PEAK_VALIDATION) || defined(DEBUG_WRITE_AMPLITUDE_PLOT)
+#if defined(ENABLE_PLOTS) || defined(DEBUG_AMPLITUDE_PEAK_VALIDATION) || defined(DEBUG_WRITE_AMPLITUDE_PLOT)
         amplitudecurve_off.push_back(rms);
 #endif
         if(rms < highest_sofar * min_coefficient_off)
@@ -602,8 +606,7 @@ static void MeasureDurations(FmBank::Instrument *in_p, OPNChipBase *chip)
 
 #ifdef DEBUG_WRITE_AMPLITUDE_PLOT
     WriteAmplitudePlot(
-        "/tmp/amplitude", amplitudecurve_on, amplitudecurve_off,
-        (double)samples_per_interval / g_outputRate);
+        "/tmp/amplitude", amplitudecurve_on, amplitudecurve_off, timestep);
 #endif
 
 #ifdef DEBUG_AMPLITUDE_PEAK_VALIDATION
@@ -625,7 +628,6 @@ static void MeasureDurations(FmBank::Instrument *in_p, OPNChipBase *chip)
     }
 #endif
 
-    DurationInfo result;
     result.peak_amplitude_time = peak_amplitude_time;
     result.peak_amplitude_value = peak_amplitude_value;
     result.begin_amplitude = begin_amplitude;
@@ -635,7 +637,19 @@ static void MeasureDurations(FmBank::Instrument *in_p, OPNChipBase *chip)
     result.ms_sound_kon  = (int64_t)(quarter_amplitude_time * 1000.0 / interval);
     result.ms_sound_koff = (int64_t)(keyoff_out_time        * 1000.0 / interval);
     result.nosound = (peak_amplitude_value < 0.5) || ((sound_min >= -1) && (sound_max <= 1));
+}
 
+static void ComputeDurationsDefault(const FmBank::Instrument *in, DurationInfo *result)
+{
+    DefaultOPN2 chip;
+    ComputeDurations(in, result, &chip);
+}
+
+static void MeasureDurations(FmBank::Instrument *in_p, OPNChipBase *chip)
+{
+    FmBank::Instrument &in = *in_p;
+    DurationInfo result;
+    ComputeDurations(&in, &result, chip);
     in.ms_sound_kon = (uint16_t)result.ms_sound_kon;
     in.ms_sound_koff = (uint16_t)result.ms_sound_koff;
     in.is_blank = result.nosound;
@@ -643,7 +657,7 @@ static void MeasureDurations(FmBank::Instrument *in_p, OPNChipBase *chip)
 
 static void MeasureDurationsDefault(FmBank::Instrument *in_p)
 {
-    MameOPN2 chip;
+    DefaultOPN2 chip;
     MeasureDurations(in_p, &chip);
 }
 
@@ -799,6 +813,33 @@ bool Measurer::doMeasurement(FmBank::Instrument &instrument)
 #else
     m_progressBox.show();
     MeasureDurationsDefault(&instrument);
+    return true;
+#endif
+}
+
+bool Measurer::doComputation(const FmBank::Instrument &instrument, DurationInfo &result)
+{
+    QProgressDialog m_progressBox(m_parentWindow);
+    m_progressBox.setWindowModality(Qt::WindowModal);
+    m_progressBox.setWindowTitle(tr("Sounding delay calculation"));
+    m_progressBox.setLabelText(tr("Please wait..."));
+
+#ifndef IS_QT_4
+    QFutureWatcher<void> watcher;
+    watcher.connect(&m_progressBox, SIGNAL(canceled()), &watcher, SLOT(cancel()));
+    watcher.connect(&watcher, SIGNAL(progressRangeChanged(int,int)), &m_progressBox, SLOT(setRange(int,int)));
+    watcher.connect(&watcher, SIGNAL(progressValueChanged(int)), &m_progressBox, SLOT(setValue(int)));
+    watcher.connect(&watcher, SIGNAL(finished()), &m_progressBox, SLOT(accept()));
+
+    watcher.setFuture(QtConcurrent::run(&ComputeDurationsDefault, &instrument, &result));
+    m_progressBox.exec();
+    watcher.waitForFinished();
+
+    return !watcher.isCanceled();
+
+#else
+    m_progressBox.show();
+    ComputeDurationsDefault(&instrument, &result);
     return true;
 #endif
 }

@@ -3505,6 +3505,7 @@ Available from 0 to 127</string>
     <addaction name="separator"/>
     <addaction name="actionReMeasureOne"/>
     <addaction name="actionReMeasure"/>
+    <addaction name="actionDelayAnalysis"/>
     <addaction name="actionChipsBenchmark"/>
     <addaction name="separator"/>
     <addaction name="actionAddBank"/>
@@ -3714,6 +3715,11 @@ Available from 0 to 127</string>
   <action name="actionReMeasureOne">
    <property name="text">
     <string>Re-Calculate sounding delays of instrument</string>
+   </property>
+  </action>
+  <action name="actionDelayAnalysis">
+   <property name="text">
+    <string>Run delay analysis</string>
    </property>
   </action>
  </widget>

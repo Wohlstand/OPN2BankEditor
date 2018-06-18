@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 3.2)
 project(OPN2BankEditor LANGUAGES C CXX)
 
+list(APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake")
+
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 set(CMAKE_AUTOMOC ON)
@@ -12,6 +14,10 @@ if(CMAKE_CXX_COMPILER_ID MATCHES "^(GNU|Clang)$")
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall")
 endif()
 
+if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
+  add_definitions("-D_USE_MATH_DEFINES")
+endif()
+
 set(USE_RTMIDI "ON" CACHE STRING "Use RtMidi")
 set(USE_RTAUDIO "ON" CACHE STRING "Use RtAudio")
 
@@ -19,7 +25,14 @@ include(FindPkgConfig)
 
 find_package(Qt5Widgets REQUIRED)
 find_package(Qt5Concurrent REQUIRED)
+find_package(Qwt)
 find_package(Threads REQUIRED)
+
+if(QWT_FOUND)
+  set(ENABLE_PLOTS ON)
+else()
+  set(ENABLE_PLOTS OFF)
+endif()
 
 message("!! Optional feature summary:")
 message("!!   RtMidi: ${USE_RTMIDI}")
@@ -33,6 +46,8 @@ if(USE_RTAUDIO)
     message("!!   -- Pulseaudio driver: ${PULSEAUDIO_FOUND}")
   endif()
 endif()
+
+message("!!   Plots: ${ENABLE_PLOTS}")
 
 include_directories("src")
 
@@ -66,17 +81,38 @@ set(SOURCES
   "src/opl/chips/mame/mame_ym2612fm.c"
   "src/opl/chips/gx_opn2.cpp"
   "src/opl/chips/gx/gx_ym2612.c")
+if(ENABLE_PLOTS)
+  list(APPEND SOURCES
+    "src/delay_analysis.cpp")
+endif()
 
-qt5_wrap_ui(FORMS
+set(UIS
   "src/bank_editor.ui"
   "src/formats_sup.ui"
   "src/importer.ui")
+if(ENABLE_PLOTS)
+  list(APPEND UIS
+    "src/delay_analysis.ui")
+endif()
+
+qt5_wrap_ui(FORMS ${UIS})
 
 qt5_add_resources(RESOURCES
   "src/resources/resources.qrc")
 
 add_executable(OPN2BankEditor WIN32 MACOSX_BUNDLE ${SOURCES} ${FORMS} ${RESOURCES})
+if(ENABLE_PLOTS)
+  target_compile_definitions(OPN2BankEditor PRIVATE "-DENABLE_PLOTS")
+  target_include_directories(OPN2BankEditor PRIVATE ${QWT_INCLUDE_DIRS})
+endif()
+
+if(NOT MSVC)
+  target_compile_options(OPN2BankEditor PRIVATE "-fopenmp")
+endif()
 target_link_libraries(OPN2BankEditor PRIVATE Qt5::Widgets Qt5::Concurrent ${CMAKE_THREAD_LIBS_INIT})
+if(ENABLE_PLOTS)
+  target_link_libraries(OPN2BankEditor PRIVATE ${QWT_LIBRARIES})
+endif()
 
 if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
   set(ICON "${CMAKE_SOURCE_DIR}/src/resources/res.rc")

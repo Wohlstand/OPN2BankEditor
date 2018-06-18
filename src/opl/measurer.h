@@ -1,5 +1,5 @@
 /*
- * OPL Bank Editor by Wohlstand, a free tool for music bank editing
+ * OPN2 Bank Editor by Wohlstand, a free tool for music bank editing
  * Copyright (c) 2017-2018 Vitaly Novichkov <admin@wohlnet.ru>
  *
  * This program is free software: you can redistribute it and/or modify
@@ -22,6 +22,7 @@
 #include <QObject>
 #include <QWidget>
 #include <QVector>
+#include <vector>
 #include "../bank.h"
 
 class Measurer : public QObject
@@ -36,6 +37,26 @@ public:
 
     bool doMeasurement(FmBank &bank, FmBank &bankBackup, bool forceReset = false);
     bool doMeasurement(FmBank::Instrument &instrument);
+
+    struct DurationInfo
+    {
+        uint64_t    peak_amplitude_time;
+        double      peak_amplitude_value;
+        double      quarter_amplitude_time;
+        double      begin_amplitude;
+        double      interval;
+        double      keyoff_out_time;
+        int64_t     ms_sound_kon;
+        int64_t     ms_sound_koff;
+        bool        nosound;
+#if defined(ENABLE_PLOTS)
+        std::vector<double> amps_on;
+        std::vector<double> amps_off;
+        double amps_timestep;
+#endif
+    };
+    bool doComputation(const FmBank::Instrument &instrument, DurationInfo &result);
+
     struct BenchmarkResult {
         QString name;
         qint64  elapsed;
