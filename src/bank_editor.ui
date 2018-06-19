@@ -10,7 +10,7 @@
     <x>0</x>
     <y>0</y>
     <width>1035</width>
-    <height>817</height>
+    <height>848</height>
    </rect>
   </property>
   <property name="focusPolicy">
@@ -113,7 +113,7 @@
                </property>
                <layout class="QHBoxLayout" name="horizontalLayout_8">
                 <property name="spacing">
-                 <number>0</number>
+                 <number>8</number>
                 </property>
                 <property name="leftMargin">
                  <number>0</number>
@@ -3470,7 +3470,7 @@ Available from 0 to 127</string>
      <x>0</x>
      <y>0</y>
      <width>1035</width>
-     <height>20</height>
+     <height>22</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
