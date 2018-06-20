@@ -16,13 +16,18 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include "main.h"
 #include "bank_editor.h"
-#include <QApplication>
+#include <QLibraryInfo>
 #include <QStringList>
+#include <QDebug>
+#include <QDir>
+#include <QFile>
 
 int main(int argc, char *argv[])
 {
-    QApplication a(argc, argv);
+    Application a(argc, argv);
+
     BankEditor w;
     w.show();
 
@@ -31,4 +36,50 @@ int main(int argc, char *argv[])
         w.openFile(args[1]);
 
     return a.exec();
+}
+
+Application::Application(int &argc, char **argv)
+    : QApplication(argc, argv)
+{
+    installTranslator(&m_qtTranslator);
+    installTranslator(&m_appTranslator);
+}
+
+void Application::translate(const QString &language)
+{
+    if (language.isEmpty())
+        return translate(QLocale::system().name());
+
+    QString qtTranslationDir = getQtTranslationDir();
+    qDebug() << "Qt translation dir:" << qtTranslationDir;
+    m_qtTranslator.load("qt_" + language, qtTranslationDir);
+
+    QString appTranslationDir = getAppTranslationDir();
+    qDebug() << "App translation dir:" << appTranslationDir;
+    m_appTranslator.load("opn2bankeditor_" + language, appTranslationDir);
+}
+
+QString Application::getQtTranslationDir() const
+{
+#if defined(Q_OS_WIN)
+    return QCoreApplication::applicationDirPath() + "/translations";
+#elif defined(Q_OS_DARWIN)
+    return QCoreApplication::applicationDirPath() + "/../Resources/translations";
+#else
+    return QLibraryInfo::location(QLibraryInfo::TranslationsPath);
+#endif
+}
+
+QString Application::getAppTranslationDir() const
+{
+#if defined(Q_OS_WIN) || defined(Q_OS_DARWIN)
+    return getQtTranslationDir();
+#else
+    //QString qtTranslationDir = QLibraryInfo::location(QLibraryInfo::TranslationsPath);
+    QDir dir(QCoreApplication::applicationDirPath() + "/../share/opn2_bank_editor/");
+    if(dir.exists())
+        return QCoreApplication::applicationDirPath() + "/../share/opn2_bank_editor/translations";
+    else //For debug purposes, use In-Source translations :-P
+        return QCoreApplication::applicationDirPath() + "/../src/translations";
+#endif
 }

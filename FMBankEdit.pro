@@ -137,6 +137,7 @@ HEADERS += \
     src/importer.h \
     src/latency.h \
     src/ins_names.h \
+    src/main.h \
     src/opl/generator.h \
     src/opl/generator_realtime.h \
     src/opl/measurer.h \
@@ -163,6 +164,9 @@ FORMS += \
 
 RESOURCES += \
     src/resources/resources.qrc
+
+TRANSLATIONS += \
+    src/translations/opn2bankeditor_fr_FR.ts
 
 plots {
     SOURCES += src/delay_analysis.cpp

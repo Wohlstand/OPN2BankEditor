@@ -25,6 +25,7 @@ include(FindPkgConfig)
 
 find_package(Qt5Widgets REQUIRED)
 find_package(Qt5Concurrent REQUIRED)
+find_package(Qt5LinguistTools REQUIRED)
 find_package(Qwt)
 find_package(Threads REQUIRED)
 
@@ -100,7 +101,28 @@ qt5_wrap_ui(FORMS ${UIS})
 qt5_add_resources(RESOURCES
   "src/resources/resources.qrc")
 
-add_executable(OPN2BankEditor WIN32 MACOSX_BUNDLE ${SOURCES} ${FORMS} ${RESOURCES})
+qt5_add_translation(TRANSLATIONS
+  "src/translations/opn2bankeditor_fr_FR.ts")
+add_custom_target(OPN3BankEditor_translations ALL
+  DEPENDS ${TRANSLATIONS})
+install(FILES ${TRANSLATIONS}
+  DESTINATION "share/opn2_bank_editor/translations")
+
+if(NOT CMAKE_SYSTEM_NAME STREQUAL "Windows" AND
+    NOT CMAKE_SYSTEM_NAME STREQUAL "Darwin")
+  install(FILES "src/resources/opn2_bank_editor.desktop"
+    DESTINATION "share/applications")
+  foreach(size 16;32;48)
+    install(FILES "src/resources/opn2_${size}.png"
+      DESTINATION "share/icons/hicolor/${size}x${size}/apps"
+      RENAME "opn2_bank_editor.png")
+  endforeach()
+endif()
+
+add_executable(OPN2BankEditor WIN32 MACOSX_BUNDLE
+  ${SOURCES} ${FORMS} ${RESOURCES})
+set_target_properties(OPN2BankEditor PROPERTIES
+  OUTPUT_NAME "opn2_bank_editor")
 if(ENABLE_PLOTS)
   target_compile_definitions(OPN2BankEditor PRIVATE "-DENABLE_PLOTS")
   target_include_directories(OPN2BankEditor PRIVATE ${QWT_INCLUDE_DIRS})
