@@ -118,12 +118,12 @@ bool Importer::openFile(QString filePath, bool isBank)
             errText = tr("unsupported file format");
             break;
         case FfmtErrCode::ERR_UNKNOWN:
-            errText = tr("unknown error occouped");
+            errText = tr("unknown error occurred");
             break;
         case FfmtErrCode::ERR_OK:
             break;
         }
-        ErrMessageO(this, errText);
+        ErrMessageO(this, errText, isBank);
         return false;
     }
     if(FmBankFormatFactory::isImportOnly(format))
@@ -531,7 +531,7 @@ void Importer::on_doImport_clicked()
 
     if(selected.isEmpty())
     {
-        QMessageBox::warning(this, tr("Nothing to import"), tr("You have no selected instruments to import!\nPlease select something filrst!"));
+        QMessageBox::warning(this, tr("Nothing to import"), tr("You have no selected instruments to import!\nPlease select something first!"));
         return;
     }
 
