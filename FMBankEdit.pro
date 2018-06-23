@@ -166,7 +166,8 @@ RESOURCES += \
     src/resources/resources.qrc
 
 TRANSLATIONS += \
-    src/translations/opn2bankeditor_fr_FR.ts
+    src/translations/opn2bankeditor_fr_FR.ts \
+    src/translations/opn2bankeditor_ru_RU.ts
 
 plots {
     SOURCES += src/delay_analysis.cpp

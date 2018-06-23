@@ -102,7 +102,9 @@ qt5_add_resources(RESOURCES
   "src/resources/resources.qrc")
 
 qt5_add_translation(TRANSLATIONS
-  "src/translations/opn2bankeditor_fr_FR.ts")
+  "src/translations/opn2bankeditor_fr_FR.ts"
+  "src/translations/opn2bankeditor_ru_RU.ts"
+)
 add_custom_target(OPN3BankEditor_translations ALL
   DEPENDS ${TRANSLATIONS})
 install(FILES ${TRANSLATIONS}
