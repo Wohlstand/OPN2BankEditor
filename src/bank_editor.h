@@ -60,6 +60,8 @@ private:
     QString             m_recentPath;
     //! Recently opened bank file
     QString             m_recentBankFilePath;
+    //! Choosen UI language
+    QString             m_language;
     //! Currently using chip
     Generator::OPN_Chips m_currentChip;
     //! Audio latency (ms)
@@ -185,7 +187,7 @@ public:
      * \brief Open Save-As dialog box
      * \return true if file successfuly saved, false on rejecting or on fail
      */
-    bool saveFileAs();
+    bool saveFileAs(const QString &optionalFilePath = QString());
     /*!
      * \brief Open Save-As dialog box for single instrument
      * \return true if file successfuly saved, false on rejecting or on fail
@@ -234,6 +236,21 @@ public:
 
     void reloadBanks();
 
+    /**
+     * @brief Creates the list of available languages
+     */
+    void createLanguageChoices();
+
+private:
+    /**
+     * Path of the file which is currently edited
+     */
+    QString m_currentFilePath;
+    /**
+     * Format of the file which is currently edited
+     */
+    BankFormats m_currentFileFormat;
+
 public slots:
     /**
      * @brief Toggle melodic mode and fill instruments list with melodic instruments names
@@ -277,6 +294,10 @@ private slots:
      */
     void on_actionSave_triggered();
     /**
+     * @brief Save current bank state into the file
+     */
+    void on_actionSaveAs_triggered();
+    /**
      * @brief Save current instrument into the file
      */
     void on_actionSaveInstrument_triggered();
@@ -303,9 +324,21 @@ private slots:
     void on_actionReMeasure_triggered();
 
     /**
+     * @brief Re-calculate sounding delays of the current instrument
+     */
+    void on_actionReMeasureOne_triggered();
+
+    /**
      * @brief Run benchmark of all supported emulators basing on current instrument
      */
     void on_actionChipsBenchmark_triggered();
+
+#if defined(ENABLE_PLOTS)
+    /**
+     * @brief Run the delay analysis of the current instrument
+     */
+    void on_actionDelayAnalysis_triggered();
+#endif
 
     /**
      * @brief Show all supported formats list
@@ -376,6 +409,10 @@ private slots:
      * @brief Opens the latency setting dialog
      */
     void on_actionLatency_triggered();
+    /**
+     * @brief Changes the current language
+     */
+    void onActionLanguageTriggered();
 
 
     /* ***************** Instrument Parameters editing ***************** */
@@ -458,6 +495,12 @@ private slots:
     void onMidiPortTriggered();
     #endif
 
+private:
+    /**
+     * @brief Updates the text to display after a language change
+     */
+    void onLanguageChanged();
+
 protected:
     virtual void pianoKeyPress(QKeyEvent *event);
     virtual void pianoKeyRelease(QKeyEvent *event);
@@ -469,6 +512,7 @@ protected:
     virtual void keyPressEvent(QKeyEvent *event);
     virtual void keyReleaseEvent(QKeyEvent *event);
     void showEvent(QShowEvent *event);
+    void changeEvent(QEvent *event);
     bool eventFilter(QObject *watched, QEvent *event);
 
 private:

@@ -32,6 +32,10 @@
 #include "ui_bank_editor.h"
 #include "latency.h"
 #include "ins_names.h"
+#include "main.h"
+#if defined(ENABLE_PLOTS)
+#include "delay_analysis.h"
+#endif
 
 #include "FileFormats/ffmt_factory.h"
 
@@ -71,6 +75,7 @@ BankEditor::BankEditor(QWidget *parent) :
     m_curInstBackup = nullptr;
     m_lock = false;
     m_recentFormat = BankFormats::FORMAT_WOHLSTAND_OPN2;
+    m_currentFileFormat = BankFormats::FORMAT_UNKNOWN;
     m_recentNum     = -1;
     m_recentPerc    = false;
     ui->setupUi(this);
@@ -114,6 +119,8 @@ BankEditor::BankEditor(QWidget *parent) :
 
     ui->pitchBendSlider->setTracking(true);
 
+    connect(ui->actionLanguageDefault, SIGNAL(triggered()), this, SLOT(onActionLanguageTriggered()));
+
     loadSettings();
     initAudio();
 #ifdef ENABLE_MIDI
@@ -125,6 +132,14 @@ BankEditor::BankEditor(QWidget *parent) :
 #else
     ui->midiIn_zone->hide();
 #endif
+
+#if !defined(ENABLE_PLOTS)
+    ui->actionDelayAnalysis->setVisible(false);
+#endif
+
+    createLanguageChoices();
+
+    Application::instance()->translate(m_language);
 }
 
 BankEditor::~BankEditor()
@@ -151,6 +166,7 @@ void BankEditor::loadSettings()
     QSettings setup;
     m_recentPath = setup.value("recent-path").toString();
     m_currentChip = (Generator::OPN_Chips)setup.value("chip-emulator", 0).toInt();
+    m_language = setup.value("language").toString();
     m_audioLatency = setup.value("audio-latency", audioDefaultLatency).toDouble();
 
     if (m_audioLatency < audioMinimumLatency)
@@ -185,6 +201,7 @@ void BankEditor::saveSettings()
     QSettings setup;
     setup.setValue("recent-path", m_recentPath);
     setup.setValue("chip-emulator", (int)m_currentChip);
+    setup.setValue("language", m_language);
     setup.setValue("audio-latency", m_audioLatency);
 }
 
@@ -226,6 +243,13 @@ void BankEditor::showEvent(QShowEvent *event)
     QTimer::singleShot(0, this, SLOT(onBankEditorShown()));
 }
 
+void BankEditor::changeEvent(QEvent *event)
+{
+    if (event->type() == QEvent::LanguageChange)
+        onLanguageChanged();
+    QMainWindow::changeEvent(event);
+}
+
 bool BankEditor::eventFilter(QObject *watched, QEvent *event)
 {
     if (watched == ui->instruments)
@@ -257,6 +281,15 @@ void BankEditor::onBankEditorShown()
     adjustSize();
 }
 
+void BankEditor::onLanguageChanged()
+{
+    ui->retranslateUi(this);
+    ui->currentFile->setText(m_currentFilePath);
+    ui->version->setText(QString("%1, v.%2").arg(PROGRAM_NAME).arg(VERSION));
+    reloadBanks();
+    //displayDebugDelaysInfo();
+}
+
 void BankEditor::initFileData(QString &filePath)
 {
     m_recentPath = QFileInfo(filePath).absoluteDir().absolutePath();
@@ -286,6 +319,7 @@ void BankEditor::initFileData(QString &filePath)
         on_instruments_currentItemChanged(NULL, NULL);
 
     ui->currentFile->setText(filePath);
+    m_currentFilePath = filePath;
     m_bankBackup = m_bank;
 
     //Set global flags and states
@@ -302,6 +336,7 @@ void BankEditor::initFileData(QString &filePath)
 void BankEditor::reInitFileDataAfterSave(QString &filePath)
 {
     ui->currentFile->setText(filePath);
+    m_currentFilePath = filePath;
     m_recentPath = QFileInfo(filePath).absoluteDir().absolutePath();
     m_recentBankFilePath = filePath;
     m_bankBackup = m_bank;
@@ -309,7 +344,9 @@ void BankEditor::reInitFileDataAfterSave(QString &filePath)
 
 bool BankEditor::openFile(QString filePath)
 {
-    FfmtErrCode err = FmBankFormatFactory::OpenBankFile(filePath, m_bank, &m_recentFormat);
+    BankFormats format;
+    FfmtErrCode err = FmBankFormatFactory::OpenBankFile(filePath, m_bank, &format);
+    m_recentFormat = format;
     if(err != FfmtErrCode::ERR_OK)
     {
         QString errText;
@@ -328,7 +365,7 @@ bool BankEditor::openFile(QString filePath)
             errText = tr("unsupported file format");
             break;
         case FfmtErrCode::ERR_UNKNOWN:
-            errText = tr("unknown error occouped");
+            errText = tr("unknown error occurred");
             break;
         case FfmtErrCode::ERR_OK:
             break;
@@ -338,6 +375,7 @@ bool BankEditor::openFile(QString filePath)
     }
     else
     {
+        m_currentFileFormat = format;
         initFileData(filePath);
         statusBar()->showMessage(tr("Bank '%1' has been loaded!").arg(filePath), 5000);
         return true;
@@ -372,7 +410,7 @@ bool BankEditor::saveBankFile(QString filePath, BankFormats format)
             errText = tr("unsupported file format, please define file name extension to choice target file format");
             break;
         case FfmtErrCode::ERR_UNKNOWN:
-            errText = tr("unknown error occouped");
+            errText = tr("unknown error occurred");
             break;
         case FfmtErrCode::ERR_OK:
             break;
@@ -412,7 +450,7 @@ bool BankEditor::saveInstrumentFile(QString filePath, InstFormats format)
             errText = tr("unsupported file format, please define file name extension to choice target file format");
             break;
         case FfmtErrCode::ERR_UNKNOWN:
-            errText = tr("unknown error occouped");
+            errText = tr("unknown error occurred");
             break;
         case FfmtErrCode::ERR_OK:
             break;
@@ -427,16 +465,40 @@ bool BankEditor::saveInstrumentFile(QString filePath, InstFormats format)
     }
 }
 
-bool BankEditor::saveFileAs()
+bool BankEditor::saveFileAs(const QString &optionalFilePath)
 {
-    QString filters         = FmBankFormatFactory::getSaveFiltersList();
-    QString selectedFilter  = FmBankFormatFactory::getFilterFromFormat(m_recentFormat, (int)FormatCaps::FORMAT_CAPS_SAVE);
-    QString fileToSave      = QFileDialog::getSaveFileName(this, "Save bank file",
-                                                           m_recentBankFilePath, filters, &selectedFilter,
-                                                           FILE_OPEN_DIALOG_OPTIONS);
+    QString fileToSave;
+    bool canSaveDirectly = false;
+    BankFormats saveFormat;
+
+    if(!optionalFilePath.isEmpty())
+    {
+        saveFormat = m_currentFileFormat;
+        canSaveDirectly =
+            saveFormat != BankFormats::FORMAT_UNKNOWN /* &&
+            !FmBankFormatFactory::hasCaps(saveFormat, (int)FormatCaps::FORMAT_CAPS_MELODIC_ONLY) &&
+            !FmBankFormatFactory::hasCaps(saveFormat, (int)FormatCaps::FORMAT_CAPS_PERCUSSION_ONLY) &&
+            !FmBankFormatFactory::hasCaps(saveFormat, (int)FormatCaps::FORMAT_CAPS_GM_BANK) */;
+    }
+
+    if(canSaveDirectly)
+        fileToSave = optionalFilePath;
+    else
+    {
+        QString filters         = FmBankFormatFactory::getSaveFiltersList();
+        QString selectedFilter  = FmBankFormatFactory::getFilterFromFormat(m_recentFormat, (int)FormatCaps::FORMAT_CAPS_SAVE);
+        fileToSave      = QFileDialog::getSaveFileName(this, "Save bank file",
+                                                       m_recentBankFilePath, filters, &selectedFilter,
+                                                       FILE_OPEN_DIALOG_OPTIONS);
+        saveFormat = FmBankFormatFactory::getFormatFromFilter(selectedFilter);
+    }
     if(fileToSave.isEmpty())
         return false;
-    return saveBankFile(fileToSave, FmBankFormatFactory::getFormatFromFilter(selectedFilter));
+
+    if(!saveBankFile(fileToSave, saveFormat))
+       return false;
+    m_currentFileFormat = saveFormat;
+    return true;
 }
 
 bool BankEditor::saveInstFileAs()
@@ -502,6 +564,8 @@ void BankEditor::on_actionNew_triggered()
         return;
     m_recentFormat = BankFormats::FORMAT_WOHLSTAND_OPN2;
     ui->currentFile->setText(tr("<Untitled>"));
+    m_currentFilePath.clear();
+    m_currentFileFormat = BankFormats::FORMAT_UNKNOWN;
     ui->instruments->clearSelection();
     m_bank.reset();
     m_bankBackup.reset();
@@ -525,6 +589,11 @@ void BankEditor::on_actionOpen_triggered()
 }
 
 void BankEditor::on_actionSave_triggered()
+{
+    saveFileAs(m_currentFilePath);
+}
+
+void BankEditor::on_actionSaveAs_triggered()
 {
     saveFileAs();
 }
@@ -561,9 +630,9 @@ void BankEditor::on_actionReset_current_instrument_triggered()
         return; //Nothing to do
     if(QMessageBox::Yes == QMessageBox::question(this,
             tr("Reset instrument to initial state"),
-            tr("This instrument will be reseted to initial state "
-               "(sice this file loaded or saved).\n"
-               "Are you wish to continue?"),
+            tr("This instrument will be reset to initial state "
+               "(since this file was loaded or saved).\n"
+               "Do you wish to continue?"),
             QMessageBox::Yes | QMessageBox::No))
     {
         memcpy(m_curInst, m_curInstBackup, sizeof(FmBank::Instrument));
@@ -586,6 +655,33 @@ void BankEditor::on_actionReMeasure_triggered()
             statusBar()->showMessage(tr("Sounding delays calculation has been completed!"), 5000);
         else
             statusBar()->showMessage(tr("Sounding delays calculation was canceled!"), 5000);
+    }
+}
+
+void BankEditor::on_actionReMeasureOne_triggered()
+{
+    FmBank::Instrument *inst = m_curInst;
+    FmBank::Instrument *instBackup = m_curInstBackup;
+    if(!inst)
+    {
+        QMessageBox::information(this,
+                                 tr("Nothing to measure"),
+                                 tr("No selected instrument to measure. Please select an instrument first!"));
+        return;
+    }
+
+    FmBank::Instrument workInst = *inst;
+    workInst.is_blank = false;
+
+    const FmBank::Instrument blankInst = FmBank::emptyInst();
+    if(memcmp(&workInst, &blankInst, sizeof(FmBank::Instrument)) == 0)
+        return;
+
+    if(m_measurer->doMeasurement(workInst))
+    {
+        *instBackup = *inst;
+        *inst = workInst;
+        loadInstrument();
     }
 }
 
@@ -612,6 +708,32 @@ void BankEditor::on_actionChipsBenchmark_triggered()
                                  tr("Please select any instrument to begin the benchmark of emulators!"));
     }
 }
+
+#if defined(ENABLE_PLOTS)
+void BankEditor::on_actionDelayAnalysis_triggered()
+{
+    FmBank::Instrument *inst = m_curInst;
+    if(!inst)
+    {
+        QMessageBox::information(this,
+                                 tr("Nothing to measure"),
+                                 tr("No selected instrument to measure. Please select an instrument first!"));
+        return;
+    }
+
+    FmBank::Instrument workInst = *inst;
+    workInst.is_blank = false;
+
+    const FmBank::Instrument blankInst = FmBank::emptyInst();
+    if(memcmp(&workInst, &blankInst, sizeof(FmBank::Instrument)) == 0)
+        return;
+
+    DelayAnalysisDialog dialog(this);
+    if (!dialog.computeResult(*inst))
+        return;
+    dialog.exec();
+}
+#endif
 
 void BankEditor::on_actionFormatsSup_triggered()
 {
@@ -718,6 +840,7 @@ void BankEditor::loadInstrument()
         m_lock = true;
         ui->insName->setEnabled(false);
         ui->insName->clear();
+        ui->debugDelaysInfo->setText(tr("Delays on: %1, off: %2").arg("--").arg("--"));
         m_lock = false;
         return;
     }
@@ -732,6 +855,9 @@ void BankEditor::loadInstrument()
     ui->lfoFrequency->setCurrentIndex(m_bank.lfo_frequency);
 
     ui->insName->setText(m_curInst->name);
+    ui->debugDelaysInfo->setText(tr("Delays on: %1, off: %2")
+                                 .arg(m_curInst->ms_sound_kon)
+                                 .arg(m_curInst->ms_sound_koff));
     ui->perc_noteNum->setValue(m_curInst->percNoteNum);
     ui->noteOffset1->setValue(m_curInst->note_offset1);
 
@@ -841,6 +967,61 @@ void BankEditor::reloadBanks()
     }
 }
 
+void BankEditor::createLanguageChoices()
+{
+    QDir dir(Application::instance()->getAppTranslationDir());
+
+    const QString prefix = "opn2bankeditor_";
+    const QString suffix = ".qm";
+
+#if defined(Q_OS_WIN)
+    const Qt::CaseSensitivity cs = Qt::CaseInsensitive;
+#else
+    const Qt::CaseSensitivity cs = Qt::CaseSensitive;
+#endif
+
+    QStringList languages;
+    languages.push_back("en");  // generic english
+    foreach (const QString &entry, dir.entryList()) {
+        if (entry.startsWith(prefix, cs) && entry.endsWith(suffix, cs)) {
+            QString lang = entry.mid(
+                prefix.size(), entry.size() - prefix.size() - suffix.size());
+            languages << lang;
+        }
+    }
+
+    QMenu *menuLanguage = ui->menuLanguage;
+
+    foreach (const QString &lang, languages) {
+        QLocale loc(lang);
+
+        QString name;
+        if(lang == "en")
+            name = "English";  // generic english with UK flag icon
+        else
+        {
+#if QT_VERSION >= 0x040800
+            name = QString("%1 (%2)")
+                .arg(loc.nativeLanguageName())
+                .arg(loc.nativeCountryName());
+#else
+            name = QLocale::languageToString(loc.language());
+#endif
+            if(!name.isEmpty())
+                name[0] = name[0].toUpper();
+        }
+
+        QString languageCode = loc.name();
+        languageCode = languageCode.left(languageCode.indexOf('_'));
+
+        QAction *act = new QAction(name, menuLanguage);
+        menuLanguage->addAction(act);
+        act->setData(lang);
+        act->setIcon(QIcon(":/languages/" + languageCode + ".png"));
+        connect(act, SIGNAL(triggered()), this, SLOT(onActionLanguageTriggered()));
+    }
+}
+
 void BankEditor::on_actionAdLibBnkMode_triggered(bool checked)
 {
     ui->bankListFrame->setHidden(checked);
@@ -868,6 +1049,14 @@ void BankEditor::on_actionLatency_triggered()
     dlg->exec();
     m_audioLatency = dlg->latency();
     delete dlg;
+}
+
+void BankEditor::onActionLanguageTriggered()
+{
+    QAction *act = static_cast<QAction *>(sender());
+    QString language = act->data().toString();
+    m_language = language;
+    Application::instance()->translate(language);
 }
 
 void BankEditor::on_bankRename_clicked()
@@ -1149,7 +1338,7 @@ void BankEditor::on_actionAddBank_triggered()
     {
         QMessageBox::information(this,
                                  tr("Add bank error"),
-                                 tr("AdLib bank mode is turned on. "
+                                 tr("United bank mode is turned on. "
                                     "Disable it to be able add or remove banks."));
         return;
     }
@@ -1187,7 +1376,7 @@ void BankEditor::on_actionCloneBank_triggered()
     {
         QMessageBox::information(this,
                                  tr("Clone bank error"),
-                                 tr("AdLib bank mode is turned on. "
+                                 tr("United bank mode is turned on. "
                                     "Disable it to be able add or remove banks."));
         return;
     }
@@ -1234,14 +1423,14 @@ void BankEditor::on_actionClearBank_triggered()
     {
         QMessageBox::information(this,
                                  tr("Clear bank error"),
-                                 tr("AdLib bank mode is turned on. "
+                                 tr("United bank mode is turned on. "
                                     "Disable it to be able clear banks."));
         return;
     }
     int reply = QMessageBox::question(this,
-                                      tr("128-instrument bank clearing"),
+                                      tr("128-instrument bank erasure"),
                                       tr("All instruments in this bank will be cleared. "
-                                         "Do you want continue deletion?"), QMessageBox::Yes | QMessageBox::No);
+                                         "Do you want continue erasure?"), QMessageBox::Yes | QMessageBox::No);
 
     if(reply == QMessageBox::Yes)
     {
@@ -1276,7 +1465,7 @@ void BankEditor::on_actionDeleteBank_triggered()
     {
         QMessageBox::information(this,
                                  tr("Delete bank error"),
-                                 tr("AdLib bank mode is turned on. "
+                                 tr("United bank mode is turned on. "
                                     "Disable it to be able add or remove banks."));
         return;
     }
@@ -1342,7 +1531,7 @@ void BankEditor::updateMidiInMenu()
 
     if(midiin->canOpenVirtual())
     {
-        QAction *act = new QAction("Virtual port", menu);
+        QAction *act = new QAction(tr("Virtual port"), menu);
         menu->addAction(act);
         act->setData((unsigned)-1);
         if(!ports.isEmpty())
@@ -1361,7 +1550,7 @@ void BankEditor::updateMidiInMenu()
     }
 
     menu->addSeparator();
-    QAction *act = new QAction("Disable", menu);
+    QAction *act = new QAction(tr("Disable"), menu);
     menu->addAction(act);
     act->setData((unsigned)-2);
     connect(act, SIGNAL(triggered()),

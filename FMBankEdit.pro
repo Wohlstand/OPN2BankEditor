@@ -38,8 +38,17 @@ greaterThan(QT_MAJOR_VERSION, 4):{
         INCLUDEPATH += $$PWD/src/audio/for-mingw-9x
     }
 }
+win32 {
+    DEFINES += _USE_MATH_DEFINES
+}
+
 CONFIG += rtmidi
 CONFIG += rtaudio
+#CONFIG += plots
+
+!macx:{
+QMAKE_CXXFLAGS += -fopenmp
+}
 
 TEMPLATE = app
 TARGET = opn2_bank_editor
@@ -128,6 +137,7 @@ HEADERS += \
     src/importer.h \
     src/latency.h \
     src/ins_names.h \
+    src/main.h \
     src/opl/generator.h \
     src/opl/generator_realtime.h \
     src/opl/measurer.h \
@@ -154,3 +164,15 @@ FORMS += \
 
 RESOURCES += \
     src/resources/resources.qrc
+
+TRANSLATIONS += \
+    src/translations/opn2bankeditor_fr_FR.ts \
+    src/translations/opn2bankeditor_ru_RU.ts
+
+plots {
+    SOURCES += src/delay_analysis.cpp
+    HEADERS += src/delay_analysis.h
+    FORMS += src/delay_analysis.ui
+    CONFIG += qwt
+    DEFINES += ENABLE_PLOTS
+}

@@ -1,0 +1,43 @@
++------------------------------------------------------------------------------+
+|           GEMS instrument file specification (reverse-engineering)           |
++------------------------------------------------------------------------------+
+
+### Bank (BNK file)
+
+Bank name           - 64 bytes
+Instrument entries  - 128 * 80 bytes  see "Instrument"
+Footer              - ???
+
+### Instrument (PAT file)
+
+Type     - 2 bytes (MSB first)  $00=FM, $01=DIG, $02=PSG Tone, $03=PSG Noise, $63=Blank
+Payload  - 78 bytes             Type=$00 see "FM instrument"
+
+### FM instrument
+
+Type                   - 2 bytes (MSB first)   $00=FM
+Instrument name        - 28 bytes
+LFO on, LFO freq       - 1 byte                4 ??? bits, 1 "LFO on" bit, 3 "LFO freq" bits
+CH3 on                 - 1 byte                1 ??? bit, 1 "CH3 on" bit, 6 ??? bits
+Feedback, Algorithm    - 1 byte                2 ??? bits, 3 "Feedback" bits, 3 "Algorithm" bits
+AMS, PMS, Left, Right  - 1 byte                1 "Left" bit, 1 "Right" bit, 2 "AMS" bits, 1 ??? bit, 3 "PMS" bits
+FM OP1 block           - 6 bytes               see "FM operator block"
+FM OP3 block           - 6 bytes               see "FM operator block"
+FM OP2 block           - 6 bytes               see "FM operator block"
+FM OP4 block           - 6 bytes               see "FM operator block"
+OP4 "CH3 f"            - 2 bytes (MSB first)
+OP3 "CH3 f"            - 2 bytes (MSB first)
+OP1 "CH3 f"            - 2 bytes (MSB first)
+OP2 "CH3 f"            - 2 bytes (MSB first)
+OP enable              - 1 byte                4 ??? bits, 1 "OP4 enable" bit, 1 "OP3 enable" bit, 1 "OP2 enable" bit, 1 "OP1 enable" bit
+Unknown                - 1 byte                $00
+Unused                 - 12 bytes
+
+### FM operator block
+
+Detune, Mult     - 1 ??? bit, 1 "Detune" sign bit (0/1=+/-), 2 "Detune" significand bits, 4 "Mult" bits
+TLevel           - 1 ??? bit, 7 "TLevel" bits
+KScale, Attack   - 2 "KScale" bits, 1 ??? bit, 5 "Attack" bits
+AM, Decay        - 1 "AM on" bit, 2 ??? bits, 5 "Decay" bits
+Sustain          - 3 ??? bits, 5 "Sustain" bits
+SLevel, Release  - 4 "SLevel" bits, 4 "Release" bits

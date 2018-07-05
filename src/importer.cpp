@@ -118,12 +118,12 @@ bool Importer::openFile(QString filePath, bool isBank)
             errText = tr("unsupported file format");
             break;
         case FfmtErrCode::ERR_UNKNOWN:
-            errText = tr("unknown error occouped");
+            errText = tr("unknown error occurred");
             break;
         case FfmtErrCode::ERR_OK:
             break;
         }
-        ErrMessageO(this, errText);
+        ErrMessageO(this, errText, isBank);
         return false;
     }
     if(FmBankFormatFactory::isImportOnly(format))
@@ -531,7 +531,7 @@ void Importer::on_doImport_clicked()
 
     if(selected.isEmpty())
     {
-        QMessageBox::warning(this, tr("Nothing to import"), tr("You have no selected instruments to import!\nPlease select something filrst!"));
+        QMessageBox::warning(this, tr("Nothing to import"), tr("You have no selected instruments to import!\nPlease select something first!"));
         return;
     }
 
@@ -574,4 +574,22 @@ void Importer::on_doImport_clicked()
 
     m_main->reloadInstrumentNames();
     m_main->loadInstrument();
+}
+
+void Importer::onLanguageChanged()
+{
+    ui->retranslateUi(this);
+
+    const QString &filePath = m_recentPath;
+    if (!filePath.isEmpty())
+        ui->openedBank->setText(filePath);
+    else
+        ui->openedBank->setText(tr("<No opened files>"));
+}
+
+void Importer::changeEvent(QEvent *event)
+{
+    if (event->type() == QEvent::LanguageChange)
+        onLanguageChanged();
+    QDialog::changeEvent(event);
 }

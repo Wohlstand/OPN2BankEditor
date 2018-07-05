@@ -1,0 +1,12 @@
+[Desktop Entry]
+Version=1.0
+Name=OPN2 Bank Editor
+Name[fr]=Éditeur de banque OPN2
+Name[ru]=Редактор банков OPN2
+Comment=Edit OPN2 FM banks
+Comment[fr]=Édite les banques FM OPN2
+Comment[ru]=Редактор FM-банков для OPN2
+Icon=opn2_bank_editor
+Exec=opn2_bank_editor
+Categories=AudioVideo;Audio
+Type=Application
