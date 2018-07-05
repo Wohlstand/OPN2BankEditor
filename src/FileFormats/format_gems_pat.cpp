@@ -79,7 +79,7 @@ FfmtErrCode GEMS_PAT::loadFile(QString filePath, FmBank &bank)
 
 int GEMS_PAT::formatCaps() const
 {
-    return (int)FormatCaps::FORMAT_CAPS_OPEN;
+    return (int)FormatCaps::FORMAT_CAPS_OPEN|(int)FormatCaps::FORMAT_CAPS_IMPORT;
 }
 
 QString GEMS_PAT::formatName() const
@@ -113,6 +113,8 @@ bool GEMS_PAT::detectInst(const QString &filePath, char * /*magic*/)
 
 FfmtErrCode GEMS_PAT::loadFileInst(QString filePath, FmBank::Instrument &inst, bool *isDrum)
 {
+    Q_UNUSED(isDrum);
+
     uint8_t idata[80];
     QFile file(filePath);
 
@@ -134,7 +136,7 @@ FfmtErrCode GEMS_PAT::loadFileInst(QString filePath, FmBank::Instrument &inst, b
 
 int GEMS_PAT::formatInstCaps() const
 {
-    return (int)FormatCaps::FORMAT_CAPS_OPEN;
+    return (int)FormatCaps::FORMAT_CAPS_OPEN|(int)FormatCaps::FORMAT_CAPS_IMPORT;
 }
 
 QString GEMS_PAT::formatInstName() const
