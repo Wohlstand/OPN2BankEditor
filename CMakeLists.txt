@@ -58,6 +58,7 @@ set(SOURCES
   "src/bank_editor.cpp"
   "src/common.cpp"
   "src/controlls.cpp"
+  "src/proxystyle.cpp"
   "src/FileFormats/ffmt_base.cpp"
   "src/FileFormats/ffmt_factory.cpp"
   "src/FileFormats/format_deflemask_dmp.cpp"
