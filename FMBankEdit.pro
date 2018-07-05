@@ -101,6 +101,7 @@ SOURCES += \
     src/FileFormats/ffmt_factory.cpp \
     src/FileFormats/format_deflemask_dmp.cpp \
     src/FileFormats/format_tfi.cpp \
+    src/FileFormats/format_gems_pat.cpp \
     src/FileFormats/format_vgm_import.cpp \
     src/FileFormats/format_wohlstand_opn2.cpp \
     src/formats_sup.cpp \
@@ -131,6 +132,7 @@ HEADERS += \
     src/FileFormats/ffmt_factory.h \
     src/FileFormats/format_deflemask_dmp.h \
     src/FileFormats/format_tfi.h \
+    src/FileFormats/format_gems_pat.h \
     src/FileFormats/format_vgm_import.h \
     src/FileFormats/format_wohlstand_opn2.h \
     src/formats_sup.h \

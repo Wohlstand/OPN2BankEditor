@@ -24,9 +24,10 @@
  */
 enum BankFormats
 {
-    FORMAT_UNKNOWN = -1,
-    FORMAT_WOHLSTAND_OPN2 =   0,
-    FORMAT_VGM_IMPORTER =   1,
+    FORMAT_UNKNOWN        = -1,
+    FORMAT_WOHLSTAND_OPN2 = 0,
+    FORMAT_VGM_IMPORTER   = 1,
+    FORMAT_GEMS_BNK       = 2,
 
     FORMATS_END,
     FORMATS_BEGIN = FORMAT_WOHLSTAND_OPN2,
@@ -34,10 +35,11 @@ enum BankFormats
 
 enum InstFormats
 {
-    FORMAT_INST_UNKNOWN = -1,
-    FORMAT_INST_WOPN2   = 0,
-    FORMAT_INST_TFI_MM  = 1,
-    FORMAT_INST_DM_DMP  = 2,
+    FORMAT_INST_UNKNOWN  = -1,
+    FORMAT_INST_WOPN2    = 0,
+    FORMAT_INST_TFI_MM   = 1,
+    FORMAT_INST_DM_DMP   = 2,
+    FORMAT_INST_GEMS_PAT = 3,
 };
 
 enum class FormatCaps

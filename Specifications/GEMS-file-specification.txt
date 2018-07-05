@@ -4,7 +4,7 @@
 
 ### Bank (BNK file)
 
-Bank name           - 64 bytes
+Bank name           - 100 bytes
 Instrument entries  - 128 * 80 bytes  see "Instrument"
 Footer              - ???
 
