@@ -188,23 +188,25 @@ FfmtErrCode GEMS_PAT::loadMemInst(const uint8_t idata[80], FmBank::Instrument &i
     {
         const unsigned opnum[] = {OPERATOR1_HR, OPERATOR3_HR, OPERATOR2_HR, OPERATOR4_HR};
         const unsigned op = opnum[i];
-
-        //inst.OP[op].fmult = idata[34 + i * 6] & 15;
-        //inst.OP[op].detune = (idata[34 + i * 6] >> 4) & 7;
+#if 0
+        inst.OP[op].fmult = idata[34 + i * 6] & 15;
+        inst.OP[op].detune = (idata[34 + i * 6] >> 4) & 7;
+        inst.OP[op].level = idata[35 + i * 6] & 127;
+        inst.OP[op].ratescale = idata[36 + i * 6] >> 6;
+        inst.OP[op].attack = idata[36 + i * 6] & 31;
+        inst.OP[op].am_enable = idata[37 + i * 6] >> 7;
+        inst.OP[op].decay1 = idata[37 + i * 6] & 31;
+        inst.OP[op].decay2 = idata[38 + i * 6] & 31;
+        inst.OP[op].release = idata[39 + i * 6] & 15;
+        inst.OP[op].sustain = (idata[39 + i * 6] >> 4) & 15;
+#else
         inst.setRegDUMUL(op, idata[34 + i * 6]);
-        //inst.OP[op].level = idata[35 + i * 6] & 127;
         inst.setRegLevel(op, idata[35 + i * 6]);
-        //inst.OP[op].ratescale = idata[36 + i * 6] >> 6;
-        //inst.OP[op].attack = idata[36 + i * 6] & 31;
         inst.setRegRSAt(op, idata[36 + i * 6]);
-        //inst.OP[op].am_enable = idata[37 + i * 6] >> 7;
-        //inst.OP[op].decay1 = idata[37 + i * 6] & 31;
         inst.setRegAMD1(op, idata[37 + i * 6]);
-        //inst.OP[op].decay2 = idata[38 + i * 6] & 31;
         inst.setRegD2(op, idata[38 + i * 6]);
-        //inst.OP[op].release = idata[39 + i * 6] & 15;
-        //inst.OP[op].sustain = (idata[39 + i * 6] >> 4) & 15;
         inst.setRegSysRel(op, idata[39 + i * 6]);
+#endif
     }
 
     for(unsigned i = 0; i < 4; ++i)
