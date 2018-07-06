@@ -16,15 +16,15 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef FORMAT_GEMS_PAT_H
-#define FORMAT_GEMS_PAT_H
+#ifndef FORMAT_M2V_GYB_H
+#define FORMAT_M2V_GYB_H
 
 #include "ffmt_base.h"
 
 /**
- * @brief Reader and Writer of the GEMS File Format
+ * @brief Reader and Writer of the GYB File Format
  */
-class GEMS_PAT final : public FmBankFormatBase
+class M2V_GYB final : public FmBankFormatBase
 {
 public:
     bool        detect(const QString &filePath, char* magic) override;
@@ -33,16 +33,6 @@ public:
     QString     formatName() const override;
     QString     formatExtensionMask() const override;
     BankFormats formatId() const override;
-
-    bool        detectInst(const QString &filePath, char* magic) override;
-    FfmtErrCode loadFileInst(QString filePath, FmBank::Instrument &inst, bool *isDrum = 0) override;
-    int         formatInstCaps() const override;
-    QString     formatInstName() const override;
-    QString     formatInstExtensionMask() const override;
-    InstFormats formatInstId() const override;
-
-private:
-    FfmtErrCode loadMemInst(const uint8_t idata[80], FmBank::Instrument &inst);
 };
 
-#endif // FORMAT_GEMS_PAT_H
+#endif // FORMAT_M2V_GYB_H

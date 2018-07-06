@@ -28,6 +28,7 @@
 #include "format_tfi.h"
 #include "format_deflemask_dmp.h"
 #include "format_gems_pat.h"
+#include "format_m2v_gyb.h"
 
 typedef std::unique_ptr<FmBankFormatBase> FmBankFormatBase_uptr;
 typedef std::list<FmBankFormatBase_uptr>  FmBankFormatsL;
@@ -58,6 +59,7 @@ void FmBankFormatFactory::registerAllFormats()
     registerInstFormat(new DefleMask());
     registerBankFormat(new GEMS_PAT());
     registerInstFormat(new GEMS_PAT());
+    registerBankFormat(new M2V_GYB());
 }
 
 
