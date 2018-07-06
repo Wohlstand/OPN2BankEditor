@@ -131,7 +131,7 @@ FfmtErrCode M2V_GYB::loadFile(QString filePath, FmBank &bank)
         ins->setRegLfoSens(idata[30]);
     }
 
-    if (file.skip(1) != 1)
+    if (!file.seek(file.pos() + 1))
         return FfmtErrCode::ERR_BADFORMAT;
 
     for(unsigned ins_index = 0; ins_index < total_count; ++ins_index)
@@ -160,7 +160,7 @@ FfmtErrCode M2V_GYB::loadFile(QString filePath, FmBank &bank)
         // if cannot be assigned, drop
         if(gm == ~0u)
         {
-            if(file.skip(text_size) != text_size)
+            if (!file.seek(file.pos() + text_size))
                 return FfmtErrCode::ERR_BADFORMAT;
             continue;  // not assigned
         }
@@ -178,7 +178,7 @@ FfmtErrCode M2V_GYB::loadFile(QString filePath, FmBank &bank)
         if(file.read(ins->name, text_size) != text_size)
             return FfmtErrCode::ERR_BADFORMAT;
 
-        if(file.skip(text_skip) != text_skip)
+        if (!file.seek(file.pos() + text_skip))
             return FfmtErrCode::ERR_BADFORMAT;
     }
 
