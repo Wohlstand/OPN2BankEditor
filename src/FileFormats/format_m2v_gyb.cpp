@@ -83,9 +83,21 @@ FfmtErrCode M2V_GYB::loadFile(QString filePath, FmBank &bank)
             return FfmtErrCode::ERR_BADFORMAT;
 
         unsigned gm = ~0u;
+        // search for GM assignment in map
         for(unsigned map_index = 0; gm == ~0u && map_index < 128; ++map_index)
+        {
             if(ins_map[2 * map_index + isdrum] == ((!isdrum) ? ins_index : (ins_index - melo_count)))
                 gm = map_index;
+        }
+        // if not assigned, use index but only if it's a free GM slot
+        if(gm == ~0u)
+        {
+            unsigned candidate_gm = ((!isdrum) ? ins_index : (ins_index - melo_count));
+            bool is_free = ins_map[2 * candidate_gm + isdrum] >= 128;
+            if(is_free)
+                gm = candidate_gm;
+        }
+        // if cannot be assigned, drop
         if(gm == ~0u)
             continue;  // not assigned
 
@@ -131,9 +143,21 @@ FfmtErrCode M2V_GYB::loadFile(QString filePath, FmBank &bank)
             return FfmtErrCode::ERR_BADFORMAT;
 
         unsigned gm = ~0u;
+        // search for GM assignment in map
         for(unsigned map_index = 0; gm == ~0u && map_index < 128; ++map_index)
+        {
             if(ins_map[2 * map_index + isdrum] == ((!isdrum) ? ins_index : (ins_index - melo_count)))
                 gm = map_index;
+        }
+        // if not assigned, use index but only if it's a free GM slot
+        if(gm == ~0u)
+        {
+            unsigned candidate_gm = ((!isdrum) ? ins_index : (ins_index - melo_count));
+            bool is_free = ins_map[2 * candidate_gm + isdrum] >= 128;
+            if(is_free)
+                gm = candidate_gm;
+        }
+        // if cannot be assigned, drop
         if(gm == ~0u)
         {
             if(file.skip(text_size) != text_size)
