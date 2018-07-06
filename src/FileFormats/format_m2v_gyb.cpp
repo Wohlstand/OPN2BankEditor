@@ -185,9 +185,131 @@ FfmtErrCode M2V_GYB::loadFile(QString filePath, FmBank &bank)
     return FfmtErrCode::ERR_OK;
 }
 
+FfmtErrCode M2V_GYB::saveFile(QString filePath, FmBank &bank)
+{
+    QFile file(filePath);
+
+    if(!file.open(QIODevice::WriteOnly))
+        return FfmtErrCode::ERR_NOFILE;
+
+    FmBank::Instrument blank_ins = FmBank::emptyInst();
+    blank_ins.is_blank = true;
+    FmBank::Instrument blank_ins_list[128];
+    std::fill(blank_ins_list, blank_ins_list + 128, blank_ins);
+
+    // find GM 1:1 melodics and drums
+    const FmBank::Instrument *melo_ins_list = nullptr;
+    const FmBank::Instrument *drum_ins_list = nullptr;
+    for(size_t i = 0, n = bank.Banks_Melodic.size(); !melo_ins_list && i < n; ++i)
+    {
+        const FmBank::MidiBank &b = bank.Banks_Melodic[i];
+        if(b.msb == 0 && b.lsb == 0)
+            melo_ins_list = &bank.Ins_Melodic[i * 128];
+    }
+    for(size_t i = 0, n = bank.Banks_Percussion.size(); !drum_ins_list && i < n; ++i)
+    {
+        const FmBank::MidiBank &b = bank.Banks_Percussion[i];
+        if(b.msb == 0 && b.lsb == 0)
+            drum_ins_list = &bank.Ins_Percussion[i * 128];
+    }
+    if(!melo_ins_list)
+        melo_ins_list = blank_ins_list;
+    if(!drum_ins_list)
+        drum_ins_list = blank_ins_list;
+
+    // collect the non-blank entries
+    const FmBank::Instrument *melo_entry[128], *drum_entry[128];
+    unsigned melo_entry_count = 0, drum_entry_count = 0;
+    for(unsigned i = 0; i < 128; ++i)
+    {
+        if(!melo_ins_list[i].is_blank)
+            melo_entry[melo_entry_count++] = &melo_ins_list[i];
+        if(!drum_ins_list[i].is_blank)
+            drum_entry[drum_entry_count++] = &drum_ins_list[i];
+    }
+    unsigned total_count = melo_entry_count + drum_entry_count;
+
+    // write file header
+    const uint8_t header[5] =
+        { 0x1a, 0x0c, 0x02,
+          (uint8_t)melo_entry_count, (uint8_t)drum_entry_count };
+    file.write(char_p(header), sizeof(header));
+
+    // write GM map
+    for(unsigned i = 0, jm = 0, jp = 0; i < 128; ++i)
+    {
+        uint8_t m = (uint8_t)(melo_ins_list[i].is_blank ? 0xff : jm++);
+        file.write(char_p(&m), 1);
+        uint8_t p = (uint8_t)(drum_ins_list[i].is_blank ? 0xff : jp++);
+        file.write(char_p(&p), 1);
+    }
+
+    // write instruments
+    for(unsigned i = 0; i < total_count; ++i)
+    {
+        uint8_t idata[32];
+        bool isdrum = i >= melo_entry_count;
+
+        idata[0] = (i == 0) ? bank.getRegLFO() : 0;
+
+        const FmBank::Instrument *ins = (!isdrum) ?
+            melo_entry[i] : drum_entry[i - melo_entry_count];
+
+        if(isdrum)
+            idata[31] = ins->percNoteNum;
+        else
+            idata[31] = ins->note_offset1;
+
+        for (unsigned op_index = 0; op_index < 4; ++op_index)
+        {
+            const unsigned opnum[4] = {OPERATOR1_HR, OPERATOR3_HR, OPERATOR2_HR, OPERATOR4_HR};
+            unsigned op = opnum[op_index];
+
+            idata[1 + op_index] = ins->getRegDUMUL(op);
+            idata[5 + op_index] = ins->getRegLevel(op);
+            idata[9 + op_index] = ins->getRegRSAt(op);
+            idata[13 + op_index] = ins->getRegAMD1(op);
+            idata[17 + op_index] = ins->getRegD2(op);
+            idata[21 + op_index] = ins->getRegSysRel(op);
+            idata[25 + op_index] = ins->getRegSsgEg(op);
+        }
+        idata[29] = ins->getRegFbAlg();
+        idata[30] = ins->getRegLfoSens();
+
+        file.write(char_p(idata), 32);
+    }
+
+    // write ???
+    uint8_t mystery_data[1] = {0};
+    file.write(char_p(mystery_data), sizeof(mystery_data));
+
+    // write names
+    for(unsigned i = 0; i < total_count; ++i)
+    {
+        bool isdrum = i >= melo_entry_count;
+
+        const char *name = (!isdrum) ?
+            melo_entry[i]->name : drum_entry[i - melo_entry_count]->name;
+
+        uint8_t size = (uint8_t)strlen(name);
+
+        file.write(char_p(&size), 1);
+        file.write(name, size);
+    }
+
+    // write fake checksum
+    uint8_t cs[4] = {0, 0, 0, 0};
+    file.write(char_p(cs), sizeof(cs));
+
+    if(!file.flush())
+        return FfmtErrCode::ERR_NOFILE;
+
+    return FfmtErrCode::ERR_OK;
+}
+
 int M2V_GYB::formatCaps() const
 {
-    return (int)FormatCaps::FORMAT_CAPS_OPEN|(int)FormatCaps::FORMAT_CAPS_IMPORT;
+    return (int)FormatCaps::FORMAT_CAPS_EVERYTHING;
 }
 
 QString M2V_GYB::formatName() const
