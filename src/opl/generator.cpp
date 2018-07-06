@@ -227,8 +227,17 @@ void Generator::Touch_Real(uint32_t c, uint32_t volume)
     uint8_t alg = m_patch.fbalg & 0x07;
     for(uint8_t op = 0; op < 4; op++)
     {
+        bool do_op = alg_do[alg][op];
         uint8_t x = op_vol[op];
-        uint8_t vol_res = (alg_do[alg][op]) ? uint8_t(127 - (volume * (volume - (x&127)))/127) : x;
+        uint32_t vol_res = do_op ? (127 - (static_cast<uint32_t>(volume) * (127 - (x & 127)))/127) : x;
+        /* TODO: implement brightness
+        if(brightness != 127)
+        {
+            brightness = static_cast<uint32_t>(::round(127.0 * ::sqrt((static_cast<double>(brightness)) * (1.0 / 127.0))));
+            if(!do_op)
+                vol_res = (127 - (brightness * (127 - (static_cast<uint32_t>(vol_res) & 127))) / 127);
+        }
+        */
         WriteReg(port, 0x40 + cc + (4 * op), vol_res);
     }
     // Correct formula (ST3, AdPlug):
