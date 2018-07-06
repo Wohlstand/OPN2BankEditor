@@ -1,1 +1,29 @@
-<WIP>
+1.3
+- First version where changelog was added first time
+- Added Real-Time MIDI support
+- Voice management has been improved
+- Reworked audio output support
+- Added support of a quick save for some of formats
+- Windows 9x build now allowed to use emulators together with the real chip emulator
+- Added localization support (Translated into French and Russian)
+- Added pitch bend controller and pedal hold support
+- Piano widget now allows sliding between keys while mouse button is held
+- Added ability to test notes and volume model with a different volume level
+- Reworked sounding delay calculation algorithm which now fixes several channel management issues on ADLMIDI
+- Rewritten the benchmark which is now fair and does same job on all testing emulators
+- Added optional sounding delay analytics feauture (Qwt library is required https://sourceforge.net/projects/qwt/)
+- Added support for GEMS BNK and PAT formats. Now it's possible to import and use offical Sega GEMS's patches
+
+??? (all previous versions)
+- Added MAME and Nuked OPN2 emulators to replace legacy and inaccurate GENS emulator
+- Added ability to toggle emulation cores
+- Added TFI instruments support
+- Added DefleMask instruments support
+- Added ability to re-calculate sounding delays for entire instruments set
+- Added status bar notifications
+- Added ability to set bank names
+- Fixed missing filename while saving bank
+- Added supported formats list dialog (can be found in the "Help" menu)
+- Fixed instruments filter
+- etc...
+
