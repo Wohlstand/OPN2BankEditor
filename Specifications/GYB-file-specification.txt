@@ -11,6 +11,7 @@ $04      percussion instrument count
 >        instrument data[total instrument count]
 >        1 ??? byte
 >        name entry[total instrument count]
+>        4 checksum bytes ($00000000 to ignore check)
 
 ### Instrument mapping entry
 
