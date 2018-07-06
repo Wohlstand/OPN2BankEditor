@@ -13,6 +13,7 @@
 - Rewritten the benchmark which is now fair and does same job on all testing emulators
 - Added optional sounding delay analytics feauture (Qwt library is required https://sourceforge.net/projects/qwt/)
 - Added support for GEMS BNK and PAT formats. Now it's possible to import and use offical Sega GEMS's patches
+- Added GYB bank format for Nineko's MIDI2VGM converter
 
 ??? (all previous versions)
 - Added MAME and Nuked OPN2 emulators to replace legacy and inaccurate GENS emulator
