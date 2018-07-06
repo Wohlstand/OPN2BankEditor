@@ -112,7 +112,7 @@ FfmtErrCode M2V_GYB::loadFile(QString filePath, FmBank &bank)
         if(isdrum)
             ins->percNoteNum = idata[31] & 127;
         else
-            ins->note_offset1 = idata[31] & 127;
+            ins->note_offset1 = static_cast<int16_t>(-static_cast<int8_t>(idata[31]));
 
         for (unsigned op_index = 0; op_index < 4; ++op_index)
         {
@@ -258,7 +258,7 @@ FfmtErrCode M2V_GYB::saveFile(QString filePath, FmBank &bank)
         if(isdrum)
             idata[31] = ins->percNoteNum;
         else
-            idata[31] = ins->note_offset1;
+            idata[31] = static_cast<uint8_t>(static_cast<int8_t>(-ins->note_offset1));
 
         for (unsigned op_index = 0; op_index < 4; ++op_index)
         {
