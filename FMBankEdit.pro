@@ -165,7 +165,8 @@ HEADERS += \
     src/opl/chips/gx_opn2.h \
     src/opl/chips/mame/mamedef.h \
     src/opl/chips/mame/mame_ym2612fm.h \
-    src/opl/chips/gx/gx_ym2612.h
+    src/opl/chips/gx/gx_ym2612.h \
+    src/FileFormats/ym2612_to_wopi.hpp
 
 FORMS += \
     src/bank_editor.ui \
