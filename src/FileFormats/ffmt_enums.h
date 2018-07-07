@@ -29,6 +29,8 @@ enum BankFormats
     FORMAT_VGM_IMPORTER   = 1,
     FORMAT_GEMS_BNK       = 2,
     FORMAT_M2V_GYB        = 3,
+    FORMAT_TOMSOFT_GIN    = 4,
+    FORMAT_GYM_IMPORTER   = 5,
 
     FORMATS_END,
     FORMATS_BEGIN = FORMAT_WOHLSTAND_OPN2,

@@ -25,10 +25,12 @@
 
 #include "format_wohlstand_opn2.h"
 #include "format_vgm_import.h"
+#include "format_gym_import.h"
 #include "format_tfi.h"
 #include "format_deflemask_dmp.h"
 #include "format_gems_pat.h"
 #include "format_m2v_gyb.h"
+#include "format_tomsoft_gin.h"
 
 typedef std::unique_ptr<FmBankFormatBase> FmBankFormatBase_uptr;
 typedef std::list<FmBankFormatBase_uptr>  FmBankFormatsL;
@@ -55,11 +57,13 @@ void FmBankFormatFactory::registerAllFormats()
     registerBankFormat(new WohlstandOPN2());
     registerInstFormat(new WohlstandOPN2());
     registerBankFormat(new VGM_Importer());
+    registerBankFormat(new GYM_Importer());
     registerInstFormat(new TFI_MM());
     registerInstFormat(new DefleMask());
     registerBankFormat(new GEMS_PAT());
     registerInstFormat(new GEMS_PAT());
     registerBankFormat(new M2V_GYB());
+    registerBankFormat(new Tomsoft_GIN());
 }
 
 
