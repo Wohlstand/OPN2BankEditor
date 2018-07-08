@@ -33,7 +33,8 @@ bool GEMS_PAT::detect(const QString &filePath, char * /*magic*/)
 
     //By file size :-P
     QFileInfo f(filePath);
-    if(f.size() == 10852)
+    uint64_t size = f.size();
+    if(size == 10852 || size == 21604)
         return true;
 
     return false;
@@ -41,34 +42,47 @@ bool GEMS_PAT::detect(const QString &filePath, char * /*magic*/)
 
 FfmtErrCode GEMS_PAT::loadFile(QString filePath, FmBank &bank)
 {
-    uint8_t idata[10852];
     QFile file(filePath);
 
     if(!file.open(QIODevice::ReadOnly))
         return FfmtErrCode::ERR_NOFILE;
 
-    if(file.size() != 10852)
+    uint64_t filesize = file.size();
+    if(filesize < 100 || (filesize - 100) % (80 + 4) != 0)
         return FfmtErrCode::ERR_BADFORMAT;
 
-    if(file.read(char_p(idata), 10852) != 10852)
+    char bankName[100];
+    if(file.read(bankName, 100) != 100)
         return FfmtErrCode::ERR_BADFORMAT;
 
-    bank.reset(1, 0);
+    unsigned insCount = (unsigned)((filesize - 100) / (80 + 4));
+    unsigned bankCount = (insCount + 127) / 128;
+    if(bankCount > (128 * 128))
+        return FfmtErrCode::ERR_BADFORMAT;
 
-    FmBank::MidiBank &bankMeta = bank.Banks_Melodic[0];
+    bank.reset(bankCount, 0);
 
-    memset(bankMeta.name, 0, sizeof(bankMeta.name));
-    memcpy(bankMeta.name, idata, strnlen((const char *)idata, 32));
+    for(unsigned i = 0; i < bankCount; ++i)
+    {
+        FmBank::MidiBank &bankMeta = bank.Banks_Melodic[i];
 
-    bankMeta.msb = 0;
-    bankMeta.lsb = 0;
+        memset(bankMeta.name, 0, sizeof(bankMeta.name));
+        memcpy(bankMeta.name, bankName, strnlen(bankName, 100));
 
-    for(unsigned i = 0; i < 128; ++i)
+        bankMeta.msb = i / 128;
+        bankMeta.lsb = i % 128;
+    }
+
+    for(unsigned i = 0; i < insCount; ++i)
     {
         FmBank::Instrument &ins = bank.Ins_Melodic[i];
         memset(&ins, 0, sizeof(ins));
 
-        FfmtErrCode err = loadMemInst(&idata[100 + i * 80], ins);
+        uint8_t idata[80];
+        if(file.read(char_p(idata), 80) != 80)
+            return FfmtErrCode::ERR_BADFORMAT;
+
+        FfmtErrCode err = loadMemInst(idata, ins);
         if(err != FfmtErrCode::ERR_OK)
             ins.is_blank = true;
     }
