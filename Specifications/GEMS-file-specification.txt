@@ -5,8 +5,8 @@
 ### Bank (BNK file)
 
 Bank name           - 100 bytes
-Instrument entries  - 128 * 80 bytes  see "Instrument"
-Footer              - ???
+Instrument entries  - Instrument Count * 80 bytes     see "Instrument"
+Footer              - Instrument Count * 4 ??? bytes
 
 ### Instrument (PAT file)
 
