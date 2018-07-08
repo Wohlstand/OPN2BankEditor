@@ -341,6 +341,11 @@ private slots:
 #endif
 
     /**
+     * @brief Run the register editor
+     */
+    void on_actionEditRegisters_triggered();
+
+    /**
      * @brief Show all supported formats list
      */
     void on_actionFormatsSup_triggered();

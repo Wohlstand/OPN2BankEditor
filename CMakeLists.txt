@@ -72,6 +72,7 @@ set(SOURCES
   "src/formats_sup.cpp"
   "src/importer.cpp"
   "src/latency.cpp"
+  "src/register_editor.cpp"
   "src/ins_names.cpp"
   "src/main.cpp"
   "src/opl/generator.cpp"
@@ -95,7 +96,8 @@ endif()
 set(UIS
   "src/bank_editor.ui"
   "src/formats_sup.ui"
-  "src/importer.ui")
+  "src/importer.ui"
+  "src/register_editor.ui")
 if(ENABLE_PLOTS)
   list(APPEND UIS
     "src/delay_analysis.ui")

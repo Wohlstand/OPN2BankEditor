@@ -36,6 +36,7 @@
 #if defined(ENABLE_PLOTS)
 #include "delay_analysis.h"
 #endif
+#include "register_editor.h"
 
 #include "FileFormats/ffmt_factory.h"
 
@@ -734,6 +735,28 @@ void BankEditor::on_actionDelayAnalysis_triggered()
     dialog.exec();
 }
 #endif
+
+void BankEditor::on_actionEditRegisters_triggered()
+{
+    FmBank::Instrument *inst = m_curInst;
+    if(!inst)
+    {
+        QMessageBox::information(this,
+                                 tr("Nothing to edit"),
+                                 tr("No selected instrument to edit. Please select an instrument first!"));
+        return;
+    }
+
+    FmBank::Instrument workInst = *inst;
+    workInst.is_blank = false;
+
+    RegisterEditorDialog dialog(&workInst, this);
+    if(dialog.exec() == QDialog::Accepted)
+    {
+        *m_curInst = workInst;
+        flushInstrument();
+    }
+}
 
 void BankEditor::on_actionFormatsSup_triggered()
 {

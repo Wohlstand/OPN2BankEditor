@@ -3512,6 +3512,7 @@ Available from 0 to 127</string>
     <addaction name="separator"/>
     <addaction name="actionReset_current_instrument"/>
     <addaction name="separator"/>
+    <addaction name="actionEditRegisters"/>
     <addaction name="actionReMeasureOne"/>
     <addaction name="actionReMeasure"/>
     <addaction name="actionDelayAnalysis"/>
@@ -3734,6 +3735,11 @@ Available from 0 to 127</string>
   <action name="actionSaveAs">
    <property name="text">
     <string>Save bank as...</string>
+   </property>
+  </action>
+  <action name="actionEditRegisters">
+   <property name="text">
+    <string>Edit registers</string>
    </property>
   </action>
  </widget>
