@@ -694,46 +694,6 @@ de la deuxième voix</translation>
         <translation>Algorithme :</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="437"/>
-        <source>0 - [1⇒2⇒3⇒4]</source>
-        <translation></translation>
-    </message>
-    <message>
-        <location filename="../bank_editor.ui" line="442"/>
-        <source>1 - [(1 + 2)⇒3⇒4]</source>
-        <translation></translation>
-    </message>
-    <message>
-        <location filename="../bank_editor.ui" line="447"/>
-        <source>2 - [(1 + (2⇒3))⇒4]</source>
-        <translation></translation>
-    </message>
-    <message>
-        <location filename="../bank_editor.ui" line="452"/>
-        <source>3 - [((1⇒2) + 3)⇒4]</source>
-        <translation></translation>
-    </message>
-    <message>
-        <location filename="../bank_editor.ui" line="457"/>
-        <source>4 - [(1⇒2) + (3⇒4)]</source>
-        <translation></translation>
-    </message>
-    <message>
-        <location filename="../bank_editor.ui" line="462"/>
-        <source>5 - [1⇒(2 + 3 + 4)]</source>
-        <translation></translation>
-    </message>
-    <message>
-        <location filename="../bank_editor.ui" line="467"/>
-        <source>6 - [(1⇒2) + 3 + 4]</source>
-        <translation></translation>
-    </message>
-    <message>
-        <location filename="../bank_editor.ui" line="472"/>
-        <source>7 - [1 + 2 + 3 + 4]</source>
-        <translation></translation>
-    </message>
-    <message>
         <location filename="../bank_editor.ui" line="480"/>
         <location filename="../bank_editor.ui" line="496"/>
         <source>Amplitude modulation sensitivity (LFO)</source>
@@ -743,12 +703,6 @@ de la deuxième voix</translation>
         <location filename="../bank_editor.ui" line="483"/>
         <source>AM Sensitivity</source>
         <translation>Sensibilité AM</translation>
-    </message>
-    <message>
-        <location filename="../bank_editor.ui" line="500"/>
-        <location filename="../bank_editor.ui" line="543"/>
-        <source>0</source>
-        <translation></translation>
     </message>
     <message>
         <location filename="../bank_editor.ui" line="505"/>
@@ -775,41 +729,6 @@ de la deuxième voix</translation>
         <location filename="../bank_editor.ui" line="526"/>
         <source>FM Sensitivity</source>
         <translation>Sensibilité FM</translation>
-    </message>
-    <message>
-        <location filename="../bank_editor.ui" line="548"/>
-        <source>1 - ±3.4</source>
-        <translation></translation>
-    </message>
-    <message>
-        <location filename="../bank_editor.ui" line="553"/>
-        <source>2 - ±6.7</source>
-        <translation></translation>
-    </message>
-    <message>
-        <location filename="../bank_editor.ui" line="558"/>
-        <source>3 - ±10</source>
-        <translation></translation>
-    </message>
-    <message>
-        <location filename="../bank_editor.ui" line="563"/>
-        <source>4 - ±14</source>
-        <translation></translation>
-    </message>
-    <message>
-        <location filename="../bank_editor.ui" line="568"/>
-        <source>5 - ±20</source>
-        <translation></translation>
-    </message>
-    <message>
-        <location filename="../bank_editor.ui" line="573"/>
-        <source>6 - ±40</source>
-        <translation></translation>
-    </message>
-    <message>
-        <location filename="../bank_editor.ui" line="578"/>
-        <source>7 - ±80</source>
-        <translation></translation>
     </message>
     <message>
         <location filename="../bank_editor.ui" line="662"/>
@@ -946,54 +865,6 @@ de la deuxième voix</translation>
         <translation>Inchangé</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="1080"/>
-        <location filename="../bank_editor.ui" line="1638"/>
-        <location filename="../bank_editor.ui" line="2140"/>
-        <location filename="../bank_editor.ui" line="2642"/>
-        <source>×(1+ε)</source>
-        <translation></translation>
-    </message>
-    <message>
-        <location filename="../bank_editor.ui" line="1085"/>
-        <location filename="../bank_editor.ui" line="1643"/>
-        <location filename="../bank_editor.ui" line="2145"/>
-        <location filename="../bank_editor.ui" line="2647"/>
-        <source>×(1+2ε)</source>
-        <translation></translation>
-    </message>
-    <message>
-        <location filename="../bank_editor.ui" line="1090"/>
-        <location filename="../bank_editor.ui" line="1648"/>
-        <location filename="../bank_editor.ui" line="2150"/>
-        <location filename="../bank_editor.ui" line="2652"/>
-        <source>×(1+3ε)</source>
-        <translation></translation>
-    </message>
-    <message>
-        <location filename="../bank_editor.ui" line="1100"/>
-        <location filename="../bank_editor.ui" line="1658"/>
-        <location filename="../bank_editor.ui" line="2160"/>
-        <location filename="../bank_editor.ui" line="2662"/>
-        <source>×(1-ε)</source>
-        <translation></translation>
-    </message>
-    <message>
-        <location filename="../bank_editor.ui" line="1105"/>
-        <location filename="../bank_editor.ui" line="1663"/>
-        <location filename="../bank_editor.ui" line="2165"/>
-        <location filename="../bank_editor.ui" line="2667"/>
-        <source>×(1-2ε)</source>
-        <translation></translation>
-    </message>
-    <message>
-        <location filename="../bank_editor.ui" line="1110"/>
-        <location filename="../bank_editor.ui" line="1668"/>
-        <location filename="../bank_editor.ui" line="2170"/>
-        <location filename="../bank_editor.ui" line="2672"/>
-        <source>×(1-3ε)</source>
-        <translation></translation>
-    </message>
-    <message>
         <location filename="../bank_editor.ui" line="1118"/>
         <location filename="../bank_editor.ui" line="1140"/>
         <location filename="../bank_editor.ui" line="1676"/>
@@ -1038,123 +909,8 @@ de la deuxième voix</translation>
         <translation>Désactivé</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="1172"/>
-        <location filename="../bank_editor.ui" line="1730"/>
         <location filename="../bank_editor.ui" line="2232"/>
-        <location filename="../bank_editor.ui" line="2734"/>
         <source>0001</source>
-        <translation></translation>
-    </message>
-    <message>
-        <location filename="../bank_editor.ui" line="1177"/>
-        <location filename="../bank_editor.ui" line="1735"/>
-        <location filename="../bank_editor.ui" line="2237"/>
-        <location filename="../bank_editor.ui" line="2739"/>
-        <source>0010</source>
-        <translation></translation>
-    </message>
-    <message>
-        <location filename="../bank_editor.ui" line="1182"/>
-        <location filename="../bank_editor.ui" line="1740"/>
-        <location filename="../bank_editor.ui" line="2242"/>
-        <location filename="../bank_editor.ui" line="2744"/>
-        <source>0011</source>
-        <translation></translation>
-    </message>
-    <message>
-        <location filename="../bank_editor.ui" line="1187"/>
-        <location filename="../bank_editor.ui" line="1745"/>
-        <location filename="../bank_editor.ui" line="2247"/>
-        <location filename="../bank_editor.ui" line="2749"/>
-        <source>0100</source>
-        <translation></translation>
-    </message>
-    <message>
-        <location filename="../bank_editor.ui" line="1192"/>
-        <location filename="../bank_editor.ui" line="1750"/>
-        <location filename="../bank_editor.ui" line="2252"/>
-        <location filename="../bank_editor.ui" line="2754"/>
-        <source>0101</source>
-        <translation></translation>
-    </message>
-    <message>
-        <location filename="../bank_editor.ui" line="1197"/>
-        <location filename="../bank_editor.ui" line="1755"/>
-        <location filename="../bank_editor.ui" line="2257"/>
-        <location filename="../bank_editor.ui" line="2759"/>
-        <source>0110</source>
-        <translation></translation>
-    </message>
-    <message>
-        <location filename="../bank_editor.ui" line="1202"/>
-        <location filename="../bank_editor.ui" line="1760"/>
-        <location filename="../bank_editor.ui" line="2262"/>
-        <location filename="../bank_editor.ui" line="2764"/>
-        <source>0111</source>
-        <translation></translation>
-    </message>
-    <message>
-        <location filename="../bank_editor.ui" line="1207"/>
-        <location filename="../bank_editor.ui" line="1765"/>
-        <location filename="../bank_editor.ui" line="2267"/>
-        <location filename="../bank_editor.ui" line="2769"/>
-        <source>1000 \|\|\|\|</source>
-        <translation></translation>
-    </message>
-    <message>
-        <location filename="../bank_editor.ui" line="1212"/>
-        <location filename="../bank_editor.ui" line="1770"/>
-        <location filename="../bank_editor.ui" line="2272"/>
-        <location filename="../bank_editor.ui" line="2774"/>
-        <source>1001 \_____</source>
-        <translation></translation>
-    </message>
-    <message>
-        <location filename="../bank_editor.ui" line="1217"/>
-        <location filename="../bank_editor.ui" line="1775"/>
-        <location filename="../bank_editor.ui" line="2277"/>
-        <location filename="../bank_editor.ui" line="2779"/>
-        <source>1010 \/\/\/\/</source>
-        <translation></translation>
-    </message>
-    <message>
-        <location filename="../bank_editor.ui" line="1222"/>
-        <location filename="../bank_editor.ui" line="1780"/>
-        <location filename="../bank_editor.ui" line="2282"/>
-        <location filename="../bank_editor.ui" line="2784"/>
-        <source>1011 \|¯¯¯¯</source>
-        <translation></translation>
-    </message>
-    <message>
-        <location filename="../bank_editor.ui" line="1227"/>
-        <location filename="../bank_editor.ui" line="1785"/>
-        <location filename="../bank_editor.ui" line="2287"/>
-        <location filename="../bank_editor.ui" line="2789"/>
-        <source>1100 /|/|/|/|</source>
-        <translation></translation>
-    </message>
-    <message>
-        <location filename="../bank_editor.ui" line="1232"/>
-        <location filename="../bank_editor.ui" line="1790"/>
-        <location filename="../bank_editor.ui" line="2292"/>
-        <location filename="../bank_editor.ui" line="2794"/>
-        <source>1101 /¯¯¯¯</source>
-        <translation></translation>
-    </message>
-    <message>
-        <location filename="../bank_editor.ui" line="1237"/>
-        <location filename="../bank_editor.ui" line="1795"/>
-        <location filename="../bank_editor.ui" line="2297"/>
-        <location filename="../bank_editor.ui" line="2799"/>
-        <source>1110 /\/\/\/\</source>
-        <translation></translation>
-    </message>
-    <message>
-        <location filename="../bank_editor.ui" line="1242"/>
-        <location filename="../bank_editor.ui" line="1800"/>
-        <location filename="../bank_editor.ui" line="2302"/>
-        <location filename="../bank_editor.ui" line="2804"/>
-        <source>1111 /|____</source>
         <translation></translation>
     </message>
     <message>
@@ -2008,75 +1764,6 @@ Si des problèmes audio se produisent, réassignez à ce paramètre à une valeu
         <location filename="../register_editor.ui" line="14"/>
         <source>Register Editor</source>
         <translation>Éditeur de Registres</translation>
-    </message>
-    <message>
-        <location filename="../register_editor.ui" line="22"/>
-        <source>$30</source>
-        <translation></translation>
-    </message>
-    <message>
-        <location filename="../register_editor.ui" line="41"/>
-        <location filename="../register_editor.ui" line="63"/>
-        <location filename="../register_editor.ui" line="85"/>
-        <location filename="../register_editor.ui" line="107"/>
-        <location filename="../register_editor.ui" line="136"/>
-        <location filename="../register_editor.ui" line="158"/>
-        <location filename="../register_editor.ui" line="180"/>
-        <location filename="../register_editor.ui" line="202"/>
-        <location filename="../register_editor.ui" line="231"/>
-        <location filename="../register_editor.ui" line="253"/>
-        <location filename="../register_editor.ui" line="275"/>
-        <location filename="../register_editor.ui" line="297"/>
-        <location filename="../register_editor.ui" line="326"/>
-        <location filename="../register_editor.ui" line="348"/>
-        <location filename="../register_editor.ui" line="370"/>
-        <location filename="../register_editor.ui" line="392"/>
-        <location filename="../register_editor.ui" line="421"/>
-        <location filename="../register_editor.ui" line="443"/>
-        <location filename="../register_editor.ui" line="465"/>
-        <location filename="../register_editor.ui" line="487"/>
-        <location filename="../register_editor.ui" line="516"/>
-        <location filename="../register_editor.ui" line="538"/>
-        <location filename="../register_editor.ui" line="560"/>
-        <location filename="../register_editor.ui" line="582"/>
-        <location filename="../register_editor.ui" line="611"/>
-        <location filename="../register_editor.ui" line="633"/>
-        <location filename="../register_editor.ui" line="655"/>
-        <location filename="../register_editor.ui" line="677"/>
-        <location filename="../register_editor.ui" line="716"/>
-        <location filename="../register_editor.ui" line="764"/>
-        <source>FF</source>
-        <translation></translation>
-    </message>
-    <message>
-        <location filename="../register_editor.ui" line="117"/>
-        <source>$40</source>
-        <translation></translation>
-    </message>
-    <message>
-        <location filename="../register_editor.ui" line="212"/>
-        <source>$50</source>
-        <translation></translation>
-    </message>
-    <message>
-        <location filename="../register_editor.ui" line="307"/>
-        <source>$60</source>
-        <translation></translation>
-    </message>
-    <message>
-        <location filename="../register_editor.ui" line="402"/>
-        <source>$70</source>
-        <translation></translation>
-    </message>
-    <message>
-        <location filename="../register_editor.ui" line="497"/>
-        <source>$80</source>
-        <translation></translation>
-    </message>
-    <message>
-        <location filename="../register_editor.ui" line="592"/>
-        <source>$90</source>
-        <translation></translation>
     </message>
     <message>
         <location filename="../register_editor.ui" line="697"/>
