@@ -39,7 +39,7 @@
     <message>
         <location filename="../bank_editor.ui" line="195"/>
         <source>MSB</source>
-        <translation type="unfinished"></translation>
+        <translation>СБ</translation>
     </message>
     <message>
         <location filename="../bank_editor.ui" line="208"/>
@@ -49,7 +49,7 @@
     <message>
         <location filename="../bank_editor.ui" line="231"/>
         <source>LSB</source>
-        <translation type="unfinished"></translation>
+        <translation>МБ</translation>
     </message>
     <message>
         <location filename="../bank_editor.ui" line="244"/>
@@ -166,7 +166,7 @@
     <message>
         <location filename="../bank_editor.ui" line="662"/>
         <source>Note number:</source>
-        <translation type="unfinished"></translation>
+        <translation>Номер ноты:</translation>
     </message>
     <message>
         <location filename="../bank_editor.ui" line="709"/>
@@ -298,7 +298,7 @@
         <location filename="../bank_editor.ui" line="2042"/>
         <location filename="../bank_editor.ui" line="2544"/>
         <source>Enable amplitude modulation</source>
-        <translation type="unfinished"></translation>
+        <translation>Вкл. амплитудную модуляцию</translation>
     </message>
     <message>
         <location filename="../bank_editor.ui" line="991"/>
@@ -326,7 +326,7 @@
         <location filename="../bank_editor.ui" line="2086"/>
         <location filename="../bank_editor.ui" line="2588"/>
         <source>Frequency multiplication</source>
-        <translation type="unfinished"></translation>
+        <translation>Умножение частоты</translation>
     </message>
     <message>
         <location filename="../bank_editor.ui" line="1055"/>
@@ -566,7 +566,7 @@ Available from 0 to 127</source>
     <message>
         <location filename="../bank_editor.ui" line="3161"/>
         <source>Major chord</source>
-        <translation type="unfinished"></translation>
+        <translation>Маж. аккорд</translation>
     </message>
     <message>
         <location filename="../bank_editor.ui" line="3174"/>
@@ -576,7 +576,7 @@ Available from 0 to 127</source>
     <message>
         <location filename="../bank_editor.ui" line="3177"/>
         <source>Minor chord</source>
-        <translation type="unfinished"></translation>
+        <translation>Мин. аккорд</translation>
     </message>
     <message>
         <location filename="../bank_editor.ui" line="3190"/>
@@ -586,7 +586,7 @@ Available from 0 to 127</source>
     <message>
         <location filename="../bank_editor.ui" line="3193"/>
         <source>Augmented chord</source>
-        <translation type="unfinished"></translation>
+        <translation>Увл. аккорд</translation>
     </message>
     <message>
         <location filename="../bank_editor.ui" line="3206"/>
@@ -596,7 +596,7 @@ Available from 0 to 127</source>
     <message>
         <location filename="../bank_editor.ui" line="3209"/>
         <source>Diminished chord</source>
-        <translation type="unfinished"></translation>
+        <translation>Умен. аккорд</translation>
     </message>
     <message>
         <location filename="../bank_editor.ui" line="3222"/>
@@ -606,7 +606,7 @@ Available from 0 to 127</source>
     <message>
         <location filename="../bank_editor.ui" line="3225"/>
         <source>Major 7-chord</source>
-        <translation type="unfinished"></translation>
+        <translation>Маж. септаккорд</translation>
     </message>
     <message>
         <location filename="../bank_editor.ui" line="3238"/>
@@ -616,17 +616,17 @@ Available from 0 to 127</source>
     <message>
         <location filename="../bank_editor.ui" line="3241"/>
         <source>Minor 7-chord</source>
-        <translation type="unfinished"></translation>
+        <translation>Мин. септаккорд</translation>
     </message>
     <message>
         <location filename="../bank_editor.ui" line="3267"/>
         <source>Mute all playing/sustaining notes in all channels</source>
-        <translation type="unfinished"></translation>
+        <translation>Загружить все играемые/зависшие ноты по всем каналам</translation>
     </message>
     <message>
         <location filename="../bank_editor.ui" line="3270"/>
         <source>Shut up!</source>
-        <translation type="unfinished"></translation>
+        <translation>Заткнись!</translation>
     </message>
     <message>
         <location filename="../bank_editor.ui" line="3372"/>
@@ -821,7 +821,7 @@ Available from 0 to 127</source>
     <message>
         <location filename="../bank_editor.ui" line="3732"/>
         <source>System default</source>
-        <translation>Системна</translation>
+        <translation>Системный</translation>
     </message>
     <message>
         <location filename="../bank_editor.ui" line="3737"/>
@@ -893,7 +893,7 @@ Available from 0 to 127</source>
     <message>
         <location filename="../bank_editor.cpp" line="464"/>
         <source>Instrument file &apos;%1&apos; has been saved!</source>
-        <translation type="unfinished"></translation>
+        <translation>Файл инструмента &quot;%1&quot; успешно сохранён!</translation>
     </message>
     <message>
         <location filename="../bank_editor.cpp" line="510"/>
@@ -913,7 +913,7 @@ Available from 0 to 127</source>
     <message>
         <location filename="../bank_editor.cpp" line="528"/>
         <source>File is modified and not saved. Do you want to save it?</source>
-        <translation type="unfinished"></translation>
+        <translation>Файл был изменён и пока ещё не сохранён... Хотите его сохранить?</translation>
     </message>
     <message>
         <location filename="../bank_editor.cpp" line="633"/>
@@ -950,7 +950,7 @@ Do you wish to continue?</source>
         <location filename="../bank_editor.cpp" line="669"/>
         <location filename="../bank_editor.cpp" line="720"/>
         <source>Nothing to measure</source>
-        <translation type="unfinished"></translation>
+        <translation>Нечего измерять</translation>
     </message>
     <message>
         <location filename="../bank_editor.cpp" line="670"/>
@@ -975,7 +975,7 @@ Do you wish to continue?</source>
         <location filename="../bank_editor.cpp" line="1289"/>
         <location filename="../bank_editor.cpp" line="1305"/>
         <source>Instrument is not selected</source>
-        <translation type="unfinished"></translation>
+        <translation>Инструмент не выбран</translation>
     </message>
     <message>
         <location filename="../bank_editor.cpp" line="709"/>
@@ -985,7 +985,7 @@ Do you wish to continue?</source>
     <message>
         <location filename="../bank_editor.cpp" line="745"/>
         <source>Nothing to edit</source>
-        <translation type="unfinished"></translation>
+        <translation>Нечего править</translation>
     </message>
     <message>
         <location filename="../bank_editor.cpp" line="746"/>
