@@ -7,6 +7,8 @@ SET SEVENZIP=C:\Program Files\7-Zip
 IF NOT EXIST "%SEVENZIP%\7z.exe" SET SEVENZIP=%ProgramFiles(x86)%\7-Zip
 IF NOT EXIST "%SEVENZIP%\7z.exe" SET SEVENZIP=%ProgramFiles%\7-Zip
 
+lrelease FMBankEdit.pro
+
 qmake FMBankEdit.pro CONFIG+=release CONFIG-=debug
 IF ERRORLEVEL 1 goto error
 
@@ -16,6 +18,7 @@ IF ERRORLEVEL 1 goto error
 md opn2-bank-editor
 cd bin-release
 windeployqt opn2_bank_editor.exe
+copy "..\src\translations\*.qm" translations
 IF ERRORLEVEL 1 goto error
 cd ..
 
@@ -25,3 +28,4 @@ goto quit
 :error
 echo ==============BUILD ERRORED!===============
 :quit
+
