@@ -1,3 +1,23 @@
+/*
+ * Interfaces over Yamaha OPN2 (YM2612) chip emulators
+ *
+ * Copyright (C) 2017-2018 Vitaly Novichkov (Wohlstand)
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2.1 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this library; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
+ */
+
 #include "gens_opn2.h"
 #include <cstring>
 
@@ -17,7 +37,8 @@ GensOPN2::~GensOPN2()
 void GensOPN2::setRate(uint32_t rate, uint32_t clock)
 {
     OPNChipBaseBufferedT::setRate(rate, clock);
-    chip->set_rate(53267, clock);  // implies reset()
+    uint32_t chipRate = isRunningAtPcmRate() ? rate : static_cast<uint32_t>(nativeRate);
+    chip->set_rate(chipRate, clock);  // implies reset()
 }
 
 void GensOPN2::reset()

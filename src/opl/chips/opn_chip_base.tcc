@@ -5,9 +5,22 @@
 #include <zita-resampler/vresampler.h>
 #endif
 
+#if !defined(LIKELY) && defined(__GNUC__)
+#define LIKELY(x) __builtin_expect((x), 1)
+#elif !defined(LIKELY)
+#define LIKELY(x) (x)
+#endif
+
+#if !defined(UNLIKELY) && defined(__GNUC__)
+#define UNLIKELY(x) __builtin_expect((x), 0)
+#elif !defined(UNLIKELY)
+#define UNLIKELY(x) (x)
+#endif
+
 /* OPNChipBase */
 
 inline OPNChipBase::OPNChipBase() :
+    m_id(0),
     m_rate(44100),
     m_clock(7670454)
 {
@@ -21,7 +34,12 @@ inline OPNChipBase::~OPNChipBase()
 
 template <class T>
 OPNChipBaseT<T>::OPNChipBaseT()
-    : OPNChipBase()
+    : OPNChipBase(),
+      m_runningAtPcmRate(false)
+#if defined(OPNMIDI_AUDIO_TICK_HANDLER)
+    ,
+      m_audioTickHandlerInstance(NULL)
+#endif
 {
 #if defined(OPNMIDI_ENABLE_HQ_RESAMPLER)
     m_resampler = new VResampler;
@@ -38,6 +56,33 @@ OPNChipBaseT<T>::~OPNChipBaseT()
 }
 
 template <class T>
+bool OPNChipBaseT<T>::isRunningAtPcmRate() const
+{
+    return m_runningAtPcmRate;
+}
+
+template <class T>
+bool OPNChipBaseT<T>::setRunningAtPcmRate(bool r)
+{
+    if(r != m_runningAtPcmRate)
+    {
+        if(r && !static_cast<T *>(this)->canRunAtPcmRate())
+            return false;
+        m_runningAtPcmRate = r;
+        static_cast<T *>(this)->setRate(m_rate, m_clock);
+    }
+    return true;
+}
+
+#if defined(OPNMIDI_AUDIO_TICK_HANDLER)
+template <class T>
+void OPNChipBaseT<T>::setAudioTickHandlerInstance(void *instance)
+{
+    m_audioTickHandlerInstance = instance;
+}
+#endif
+
+template <class T>
 void OPNChipBaseT<T>::setRate(uint32_t rate, uint32_t clock)
 {
     uint32_t oldRate = m_rate;
@@ -47,6 +92,12 @@ void OPNChipBaseT<T>::setRate(uint32_t rate, uint32_t clock)
         setupResampler(rate);
     else
         resetResampler();
+}
+
+template <class T>
+uint32_t OPNChipBaseT<T>::effectiveRate() const
+{
+    return m_runningAtPcmRate ? m_rate : (uint32_t)nativeRate;
 }
 
 template <class T>
@@ -121,6 +172,15 @@ void OPNChipBaseT<T>::generateAndMix32(int32_t *output, size_t frames)
 }
 
 template <class T>
+void OPNChipBaseT<T>::nativeTick(int16_t *frame)
+{
+#if defined(OPNMIDI_AUDIO_TICK_HANDLER)
+    opn2_audioTickHandler(m_audioTickHandlerInstance, m_id, effectiveRate());
+#endif
+    static_cast<T *>(this)->nativeGenerate(frame);
+}
+
+template <class T>
 void OPNChipBaseT<T>::setupResampler(uint32_t rate)
 {
 #if defined(OPNMIDI_ENABLE_HQ_RESAMPLER)
@@ -149,6 +209,15 @@ void OPNChipBaseT<T>::resetResampler()
 template <class T>
 void OPNChipBaseT<T>::resampledGenerate(int32_t *output)
 {
+    if(UNLIKELY(m_runningAtPcmRate))
+    {
+        int16_t in[2];
+        static_cast<T *>(this)->nativeTick(in);
+        output[0] = (int32_t)in[0] * T::resamplerPreAmplify / T::resamplerPostAttenuate;
+        output[1] = (int32_t)in[1] * T::resamplerPreAmplify / T::resamplerPostAttenuate;
+        return;
+    }
+
     VResampler *rsm = m_resampler;
     float scale = (float)T::resamplerPreAmplify /
         (float)T::resamplerPostAttenuate;
@@ -161,7 +230,7 @@ void OPNChipBaseT<T>::resampledGenerate(int32_t *output)
     while(rsm->process(), rsm->out_count != 0)
     {
         int16_t in[2];
-        static_cast<T *>(this)->nativeGenerate(in);
+        static_cast<T *>(this)->nativeTick(in);
         f_in[0] = scale * (float)in[0];
         f_in[1] = scale * (float)in[1];
         rsm->inp_count = 1;
@@ -169,13 +238,22 @@ void OPNChipBaseT<T>::resampledGenerate(int32_t *output)
         rsm->out_count = 1;
         rsm->out_data = f_out;
     }
-    output[0] = std::lround(f_out[0]);
-    output[1] = std::lround(f_out[1]);
+    output[0] = static_cast<int32_t>(std::lround(f_out[0]));
+    output[1] = static_cast<int32_t>(std::lround(f_out[1]));
 }
 #else
 template <class T>
 void OPNChipBaseT<T>::resampledGenerate(int32_t *output)
 {
+    if(UNLIKELY(m_runningAtPcmRate))
+    {
+        int16_t in[2];
+        static_cast<T *>(this)->nativeTick(in);
+        output[0] = (int32_t)in[0] * T::resamplerPreAmplify / T::resamplerPostAttenuate;
+        output[1] = (int32_t)in[1] * T::resamplerPreAmplify / T::resamplerPostAttenuate;
+        return;
+    }
+
     int32_t samplecnt = m_samplecnt;
     const int32_t rateratio = m_rateratio;
     while(samplecnt >= rateratio)
@@ -183,7 +261,7 @@ void OPNChipBaseT<T>::resampledGenerate(int32_t *output)
         m_oldsamples[0] = m_samples[0];
         m_oldsamples[1] = m_samples[1];
         int16_t buffer[2];
-        static_cast<T *>(this)->nativeGenerate(buffer);
+        static_cast<T *>(this)->nativeTick(buffer);
         m_samples[0] = buffer[0] * T::resamplerPreAmplify;
         m_samples[1] = buffer[1] * T::resamplerPreAmplify;
         samplecnt -= rateratio;
