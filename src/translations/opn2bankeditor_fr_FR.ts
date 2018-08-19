@@ -821,16 +821,8 @@ de la deuxième voix</translation>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Niveau Total&lt;/span&gt;&lt;/p&gt;&lt;p&gt;TL (niveau total) représente le plus haut niveau de l&apos;amplitude de l&apos;envelope, 0 étant le plus élevé et 127 (décimal) étant le plus faible. Un changement d&apos;une unité correspond environ à 0.75 dB.&lt;/p&gt;&lt;p&gt;Atténue le niveau de sortie de l&apos;opérateur. &lt;span style=&quot; font-weight:600;&quot;&gt;0&lt;/span&gt; est le niveau le plus élevé, &lt;span style=&quot; font-weight:600;&quot;&gt;127&lt;/span&gt; est le niveau le plus faible. Selon l&apos;algorithme, faire varier le niveau de sortie d&apos;un opérateur peut fait varier le volume du canal correspondant. En synthèse FM, faire varier le niveau de sortie de la porteuse fait varier le volume du canal. Faire varier le niveau de la modulatrice modifie le spectre du signal produit par la porteuse.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="1023"/>
-        <location filename="../bank_editor.ui" line="1045"/>
-        <location filename="../bank_editor.ui" line="1581"/>
-        <location filename="../bank_editor.ui" line="1603"/>
-        <location filename="../bank_editor.ui" line="2083"/>
-        <location filename="../bank_editor.ui" line="2105"/>
-        <location filename="../bank_editor.ui" line="2585"/>
-        <location filename="../bank_editor.ui" line="2607"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Frequency Multiplication Factor (MUL)&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Operator&apos;s frequency is set to F-Number*Factor.&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; text-decoration: underline;&quot;&gt;In simple words, increases operator&apos;s frequency to number of octaves.&lt;/span&gt;&lt;br/&gt;&lt;br/&gt;Where F-Number is:&lt;/p&gt;&lt;p&gt;F-Number = Music Frequency * 2^(20-Block) / 49716 Hz&lt;/p&gt;&lt;p&gt;Where Block is a Block Number. Roughly determines the octave.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Facteur de Multiplication de Fréquence (MUL)&lt;/span&gt;&lt;/p&gt;&lt;p&gt;La fréquence de l&apos;opérateur est définie par F-Number*Facteur.&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; text-decoration: underline;&quot;&gt;Pour faire simple, ceci augmente la fréquence de l&apos;opérateur par le nombre donné d&apos;octaves.&lt;/span&gt;&lt;br/&gt;&lt;br/&gt;F-Number est défini par la relation :&lt;/p&gt;&lt;p&gt;F-Number = Fréquence Musicale * 2^(20-Block) / 49716 Hz&lt;/p&gt;&lt;p&gt;Où Block est un identifiant de bloc, qui détermine approximativement l&apos;octave.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+        <translation type="vanished">&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Facteur de Multiplication de Fréquence (MUL)&lt;/span&gt;&lt;/p&gt;&lt;p&gt;La fréquence de l&apos;opérateur est définie par F-Number*Facteur.&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; text-decoration: underline;&quot;&gt;Pour faire simple, ceci augmente la fréquence de l&apos;opérateur par le nombre donné d&apos;octaves.&lt;/span&gt;&lt;br/&gt;&lt;br/&gt;F-Number est défini par la relation :&lt;/p&gt;&lt;p&gt;F-Number = Fréquence Musicale * 2^(20-Block) / 49716 Hz&lt;/p&gt;&lt;p&gt;Où Block est un identifiant de bloc, qui détermine approximativement l&apos;octave.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="../bank_editor.ui" line="1055"/>
@@ -917,6 +909,18 @@ de la deuxième voix</translation>
         <location filename="../bank_editor.ui" line="1317"/>
         <source>Operator 2</source>
         <translation>Opérateur 2</translation>
+    </message>
+    <message>
+        <location filename="../bank_editor.ui" line="1023"/>
+        <location filename="../bank_editor.ui" line="1045"/>
+        <location filename="../bank_editor.ui" line="1581"/>
+        <location filename="../bank_editor.ui" line="1603"/>
+        <location filename="../bank_editor.ui" line="2083"/>
+        <location filename="../bank_editor.ui" line="2105"/>
+        <location filename="../bank_editor.ui" line="2585"/>
+        <location filename="../bank_editor.ui" line="2607"/>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Frequency Multiplication Factor (MUL)&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Operator&apos;s frequency is set to F-Number*Factor.&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; text-decoration: underline;&quot;&gt;In simple words, increases operator&apos;s frequency to number of octaves.&lt;/span&gt;&lt;br/&gt;&lt;br/&gt;Where F-Number is:&lt;/p&gt;&lt;p&gt;F-Number = Music Frequency * 2^(20-Block) / 53267 Hz&lt;/p&gt;&lt;p&gt;Where Block is a Block Number. Roughly determines the octave.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Facteur de Multiplication de Fréquence (MUL)&lt;/span&gt;&lt;/p&gt;&lt;p&gt;La fréquence de l&apos;opérateur est définie par F-Number*Facteur.&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; text-decoration: underline;&quot;&gt;Pour faire simple, ceci augmente la fréquence de l&apos;opérateur par le nombre donné d&apos;octaves.&lt;/span&gt;&lt;br/&gt;&lt;br/&gt;F-Number est défini par la relation :&lt;/p&gt;&lt;p&gt;F-Number = Fréquence Musicale * 2^(20-Block) / 53267 Hz&lt;/p&gt;&lt;p&gt;Où Block est un identifiant de bloc, qui détermine approximativement l&apos;octave.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="../bank_editor.ui" line="1819"/>

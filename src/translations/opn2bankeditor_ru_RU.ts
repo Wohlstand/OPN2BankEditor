@@ -321,18 +321,6 @@
         <translation>Уровень</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="1023"/>
-        <location filename="../bank_editor.ui" line="1045"/>
-        <location filename="../bank_editor.ui" line="1581"/>
-        <location filename="../bank_editor.ui" line="1603"/>
-        <location filename="../bank_editor.ui" line="2083"/>
-        <location filename="../bank_editor.ui" line="2105"/>
-        <location filename="../bank_editor.ui" line="2585"/>
-        <location filename="../bank_editor.ui" line="2607"/>
-        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Frequency Multiplication Factor (MUL)&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Operator&apos;s frequency is set to F-Number*Factor.&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; text-decoration: underline;&quot;&gt;In simple words, increases operator&apos;s frequency to number of octaves.&lt;/span&gt;&lt;br/&gt;&lt;br/&gt;Where F-Number is:&lt;/p&gt;&lt;p&gt;F-Number = Music Frequency * 2^(20-Block) / 49716 Hz&lt;/p&gt;&lt;p&gt;Where Block is a Block Number. Roughly determines the octave.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <location filename="../bank_editor.ui" line="1026"/>
         <location filename="../bank_editor.ui" line="1584"/>
         <location filename="../bank_editor.ui" line="2086"/>
@@ -419,12 +407,24 @@
     <message>
         <location filename="../bank_editor.ui" line="2232"/>
         <source>0001</source>
-        <translation type="unfinished">0001</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../bank_editor.ui" line="1282"/>
         <source>Custom instrument name:</source>
         <translation>Пользовательское имя инструмента:</translation>
+    </message>
+    <message>
+        <location filename="../bank_editor.ui" line="1023"/>
+        <location filename="../bank_editor.ui" line="1045"/>
+        <location filename="../bank_editor.ui" line="1581"/>
+        <location filename="../bank_editor.ui" line="1603"/>
+        <location filename="../bank_editor.ui" line="2083"/>
+        <location filename="../bank_editor.ui" line="2105"/>
+        <location filename="../bank_editor.ui" line="2585"/>
+        <location filename="../bank_editor.ui" line="2607"/>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Frequency Multiplication Factor (MUL)&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Operator&apos;s frequency is set to F-Number*Factor.&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; text-decoration: underline;&quot;&gt;In simple words, increases operator&apos;s frequency to number of octaves.&lt;/span&gt;&lt;br/&gt;&lt;br/&gt;Where F-Number is:&lt;/p&gt;&lt;p&gt;F-Number = Music Frequency * 2^(20-Block) / 53267 Hz&lt;/p&gt;&lt;p&gt;Where Block is a Block Number. Roughly determines the octave.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../bank_editor.ui" line="1298"/>
@@ -495,42 +495,42 @@
     <message>
         <location filename="../bank_editor.ui" line="3042"/>
         <source>3.98 Hz</source>
-        <translation type="unfinished"></translation>
+        <translation>3.98 Гц</translation>
     </message>
     <message>
         <location filename="../bank_editor.ui" line="3047"/>
         <source>5.56 Hz</source>
-        <translation type="unfinished"></translation>
+        <translation>5.56 Гц</translation>
     </message>
     <message>
         <location filename="../bank_editor.ui" line="3052"/>
         <source>6.02 Hz</source>
-        <translation type="unfinished"></translation>
+        <translation>6.02 Гц</translation>
     </message>
     <message>
         <location filename="../bank_editor.ui" line="3057"/>
         <source>6.37 Hz</source>
-        <translation type="unfinished"></translation>
+        <translation>6.37 Гц</translation>
     </message>
     <message>
         <location filename="../bank_editor.ui" line="3062"/>
         <source>6.88 Hz</source>
-        <translation type="unfinished"></translation>
+        <translation>6.88 Гц</translation>
     </message>
     <message>
         <location filename="../bank_editor.ui" line="3067"/>
         <source>9.63 Hz</source>
-        <translation type="unfinished"></translation>
+        <translation>9.63 Гц</translation>
     </message>
     <message>
         <location filename="../bank_editor.ui" line="3072"/>
         <source>48.1 Hz</source>
-        <translation type="unfinished"></translation>
+        <translation>48.1 Гц</translation>
     </message>
     <message>
         <location filename="../bank_editor.ui" line="3077"/>
         <source>72.2 Hz</source>
-        <translation type="unfinished"></translation>
+        <translation>72.2 Гц</translation>
     </message>
     <message>
         <location filename="../bank_editor.ui" line="3088"/>
