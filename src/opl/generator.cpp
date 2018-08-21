@@ -178,13 +178,14 @@ void Generator::NoteOn(uint32_t c, double hertz) // Hertz range: 0..131071
     uint8_t  port   = (c <= 2) ? 0 : 1;
     uint16_t x2 = 0x0000;
 
-    if(hertz < 0 || hertz > 262143) // Avoid infinite loop
+    if(hertz < 0) // Avoid infinite loop
         return;
 
-    while((hertz >= 1023.75) && (x2 < 0x3800))
+    while(hertz >= 1023.75)
     {
         hertz /= 2.0;    // Calculate octave
-        x2 += 0x800;
+        if(x2 < 0x3800)
+            x2 += 0x800;
     }
     x2 += static_cast<uint32_t>(hertz + 0.5);
     WriteReg(port, 0xA4 + cc, (x2>>8) & 0xFF);//Set frequency and octave
