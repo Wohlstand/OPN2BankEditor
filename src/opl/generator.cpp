@@ -174,22 +174,48 @@ void Generator::NoteOff(uint32_t c)
 
 void Generator::NoteOn(uint32_t c, double hertz) // Hertz range: 0..131071
 {
-    uint8_t  cc     = c % 3;
-    uint8_t  port   = (c <= 2) ? 0 : 1;
-    uint16_t x2 = 0x0000;
+    uint8_t  cc     = uint8_t(c % 3);
+    uint8_t  port   = uint8_t((c <= 2) ? 0 : 1);
+    uint32_t octave = 0, ftone = 0;
+    uint32_t mul_offset = 0;
 
     if(hertz < 0) // Avoid infinite loop
         return;
 
-    while(hertz >= 1023.75)
+    //Basic range until max of octaves reaching
+    while((hertz >= 1023.75) && (octave < 0x3800))
     {
         hertz /= 2.0;    // Calculate octave
-        if(x2 < 0x3800)
-            x2 += 0x800;
+        octave += 0x800;
     }
-    x2 += static_cast<uint32_t>(hertz + 0.5);
-    WriteReg(port, 0xA4 + cc, (x2>>8) & 0xFF);//Set frequency and octave
-    WriteReg(port, 0xA0 + cc,  x2 & 0xFF);
+    //Extended range, rely on frequency multiplication increment
+    while(hertz >= 2036.75)
+    {
+        hertz /= 2.0;    // Calculate octave
+        mul_offset++;
+    }
+    ftone = octave + static_cast<uint32_t>(hertz + 0.5);
+
+    for(size_t op = 0; op < 4; op++)
+    {
+        uint32_t reg = m_patch.OPS[op].data[0];
+        uint16_t address = 0x30 + (op * 4) + cc;
+        if(mul_offset > 0) // Increase frequency multiplication value
+        {
+            uint32_t dt  = reg & 0xF0;
+            uint32_t mul = reg & 0x0F;
+            if((mul + mul_offset) > 0x0F)
+                mul_offset = 0;
+            WriteReg(port, address, uint8_t(dt | (mul + mul_offset)));
+        }
+        else
+        {
+            WriteReg(port, address, uint8_t(reg));
+        }
+    }
+
+    WriteReg(port, 0xA4 + cc, (ftone >> 8) & 0xFF);//Set frequency and octave
+    WriteReg(port, 0xA0 + cc,  ftone & 0xFF);
     WriteReg(0, 0x28, 0xF0 + uint8_t((c <= 2) ? c : c + 1));
 }
 
