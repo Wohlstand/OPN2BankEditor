@@ -49,9 +49,12 @@ Bytes-Lenght  | Description
               |     A) Pseudo-8op
               |     B) Is Blank instrument
               |     C) Enable pitch envelope
-              |     D) Use PCM voice
+              |     D) Is PCM voice
               |     E) PCM chunk has a loop
 -------------------------------------------
+
+----VERSION<=2-OR=when flag D is disabled----
+
 ----[When flag A(Pseudo8op) is set - repeat this block 2 times]-------
     32        | Name of instrument null-terminated string
     2         | Big-Endian 16-bit signed integer, MIDI key offset value
@@ -78,24 +81,38 @@ Bytes-Lenght  | Description
     1         | INT8, Second voice detune
 ----[When flag A(Pseudo8op) is set]-END----
 
+----VERSION<=2-OR-when flag D is disabled-END--
+
 ----VERSION>=3-----------------------------
---------------[Only when flag C is set]-------
+------[Only when flag C is set]-------
     2         | UINT16BE, pitch envelope bend sensitivity
     2         | SINT16BE, pitch envelope bend sustain (+ up, - down)
     2         | UINT16BE, Millisecond pitch attack delay (0 - instant attack)
     2         | UINT16BE, Millisecond pitch decay1 delay (0 - instant decay)
     2         | UINT16BE, Millisecond pitch decay2 delay (0 - instant decay)
     2         | UINT16BE, Millisecond pitch release delay (0 - instant release)
---------------[Only when flag C is set]-END---
+------[Only when flag C is set]-END---
 
---------------[Only when flag D is set]-------
+------[Only when flag D is set]-------
+    1         | UINT8, Count of layers (concurrent streams)
+----------[Layer begin]-------------------
+    1         | UINT8, Count of used chunks
+--------------[Chunk begin]-------------------
+    1         | UINT8, Range begin
+    1         | UINT8, Range end
+    1         | UINT8, flags
+              |     [000000BA]
+              |     A) Loop enabled
+              |     B) Loop bidirectional
     2         | UINT16BE, PCM chunk index (for OPNI it's always 0)
-    2         | UINT16BE, PCM chunk source sample rate
-    2         | UINT16BE, PCM chunk loop start
-    2         | UINT16BE, PCM chunk loop end
+    2         | UINT16BE, PCM chunk custom loop start
+    2         | UINT16BE, PCM chunk custom loop end, 0 - use loop from the chunk
     1         | UINT8, PCM chunk base tone (MIDI key)
     1         | INT8, PCM chunk base tone cents offset
---------------[Only when flag D is set]-END---
+--------------[Chunk end]-------------------
+----------[Layer end]-------------------
+------[Only when flag D is set]-END---
+
 ----VERSION>=3-END-------------------------
 
 --VERSION >= 2---WOPL-Bank-only, OPNI must don't have those fields---
@@ -137,9 +154,7 @@ Bytes-Lenght |  Description
 ----VERSION>=3--Data---------------------
     86       |  [Single-instrument entry], look at top of this text file
 ----VERSION>=3--PCM Chunk---------------
-    32       | Name of the PCM chunk
-    2        | [ChunkLength] Length of PCM chunk in bytes
- ChunkLength | <Unsigned 8-bit raw PCM data>
+    <Same as in botto mof WOPN bank>
 ----------------------------------------
 
 
@@ -212,6 +227,14 @@ Bytes-Lenght |      Description
 --VERSION >= 3---PCM chunks store--------
 (repeat PCMchuns times)
     32            | Name of the PCM chunk
+    1             | UINT8, flags
+                  |     [000000BA]
+                  |     A) Loop enabled
+                  |     B) Loop bidirectional
+    2             | UINT16BE, PCM chunk source sample rate
+    2             | UINT16BE, PCM chunk default loop start
+    2             | UINT16BE, PCM chunk default loop end, 0 - no loop
     2             | [ChunkLength] Length of PCM chunk in bytes
     ChunkLength   | <Unsigned 8-bit raw PCM data>
 -----------------------------------------
+
