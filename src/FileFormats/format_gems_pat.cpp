@@ -60,7 +60,7 @@ FfmtErrCode GEMS_PAT::loadFile(QString filePath, FmBank &bank)
     if(bankCount > (128 * 128))
         return FfmtErrCode::ERR_BADFORMAT;
 
-    bank.reset(bankCount, 0);
+    bank.reset(bankCount, 1);
 
     for(unsigned i = 0; i < bankCount; ++i)
     {
