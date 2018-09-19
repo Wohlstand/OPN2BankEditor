@@ -144,6 +144,7 @@ target_link_libraries(OPN2BankEditor PRIVATE Qt5::Widgets Qt5::Concurrent ${CMAK
 if(ENABLE_PLOTS)
   target_link_libraries(OPN2BankEditor PRIVATE ${QWT_LIBRARIES})
 endif()
+install(TARGETS OPN2BankEditor DESTINATION "bin" RENAME "opn2_bank_editor")
 
 if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
   set(ICON "${CMAKE_SOURCE_DIR}/src/resources/res.rc")
