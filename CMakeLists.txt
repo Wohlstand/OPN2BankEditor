@@ -26,6 +26,7 @@ include(FindPkgConfig)
 find_package(Qt5Widgets REQUIRED)
 find_package(Qt5Concurrent REQUIRED)
 find_package(Qt5LinguistTools REQUIRED)
+set(QWT_NAMES qwt-qt5 qwt) # find versions for Qt5 only
 find_package(Qwt)
 find_package(Threads REQUIRED)
 
@@ -46,6 +47,10 @@ if(USE_RTAUDIO)
     pkg_check_modules(PULSEAUDIO "libpulse-simple")
     message("!!   -- Pulseaudio driver: ${PULSEAUDIO_FOUND}")
   endif()
+endif()
+
+if(ENABLE_PLOTS)
+  message("!!   Qwt: ${QWT_LIBRARY}")
 endif()
 
 message("!!   Plots: ${ENABLE_PLOTS}")
@@ -144,6 +149,7 @@ target_link_libraries(OPN2BankEditor PRIVATE Qt5::Widgets Qt5::Concurrent ${CMAK
 if(ENABLE_PLOTS)
   target_link_libraries(OPN2BankEditor PRIVATE ${QWT_LIBRARIES})
 endif()
+install(TARGETS OPN2BankEditor DESTINATION "bin" RENAME "opn2_bank_editor")
 
 if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
   set(ICON "${CMAKE_SOURCE_DIR}/src/resources/res.rc")

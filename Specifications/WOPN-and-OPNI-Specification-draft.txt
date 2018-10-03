@@ -12,7 +12,11 @@ Versions:
 - Version 1: (April, 30, 2017): First release
 - Version 2: (November, 24, 2017): Added bank meta-data
               and measured sounding delays per each instrument
-- Version 3: (DRAFT): Added pitch envilope options and PCM voices support
+- Version 3: (DRAFT)
+             Added pitch envilope options and PCM voices support
+             Added per-instrument flags
+             Added bank default volume model field
+             Instruments now having variable size in dependence on flags
 
 ===============================================================================
 Contents:
@@ -30,11 +34,28 @@ Contents:
 channel of YM2612 chip to setup the timbre
 
 Lenght of each instrument entry is:
-Version 2: 65 bytes or 69 with sounding delays
-Version 3: 88 bytes or 92 with sounding delays
+Version 2: Fixed size in 65 bytes or 69 with sounding delays
+Version 3: Size is dependent on flags:
+    - base (minimal) size: 66 bytes = 1 + (32+2+1+1+1)+(4*(1+1+1+1+1+1+1))
+    - flag A adds extra 65 bytes = (32+2+1+1+1)+(4*(1+1+1+1+1+1+1))
+    - flag C adds extra 12 bytes = 2+2+2+2+2+2
+    - flag D adds extra 10 bytes = 2+2+2+2+1+1
+    - sounding delays adding extra: 4 bytes = 2+2
 
 Bytes-Lenght  | Description
+----VERSION>=3-----------------------------
+    1         | Instrument flags
+              |     [000EDCBA]
+              |     A) Pseudo-8op
+              |     B) Is Blank instrument
+              |     C) Enable pitch envelope
+              |     D) Is PCM voice
+              |     E) PCM chunk has a loop
 -------------------------------------------
+
+----VERSION<=2-OR=when flag D is disabled----
+
+----[When flag A(Pseudo8op) is set - repeat this block 2 times]-------
     32        | Name of instrument null-terminated string
     2         | Big-Endian 16-bit signed integer, MIDI key offset value
     1         | 8-bit unsigned integer, Percussion instrument key number
@@ -49,25 +70,51 @@ Bytes-Lenght  | Description
     1         | Systain and Release register data
     1         | SSG-EG register data
 -------------------------------------------
+
+----[When flag A(Pseudo8op) is set]--------
+    1         | Pan flags //Allows stereo voices splited by left-right channels
+              |     [0000DCBA]
+              |     A) Left channel of first voice
+              |     B) Right channel of first voice
+              |     C) Left channel of second vocie
+              |     D) Right channel of second voice
+    1         | INT8, Second voice detune
+----[When flag A(Pseudo8op) is set]-END----
+
+----VERSION<=2-OR-when flag D is disabled-END--
+
 ----VERSION>=3-----------------------------
-    1         | Instrument flags
-              |     [00000CBA]
-              |     A) Enable pitch envelope
-              |     B) Use PCM voice
-              |     C) PCM chunk has a loop
+------[Only when flag C is set]-------
     2         | UINT16BE, pitch envelope bend sensitivity
     2         | SINT16BE, pitch envelope bend sustain (+ up, - down)
     2         | UINT16BE, Millisecond pitch attack delay (0 - instant attack)
     2         | UINT16BE, Millisecond pitch decay1 delay (0 - instant decay)
     2         | UINT16BE, Millisecond pitch decay2 delay (0 - instant decay)
     2         | UINT16BE, Millisecond pitch release delay (0 - instant release)
+------[Only when flag C is set]-END---
+
+------[Only when flag D is set]-------
+    1         | UINT8, Count of layers (concurrent streams)
+----------[Layer begin]-------------------
+    1         | UINT8, Count of used chunks
+--------------[Chunk begin]-------------------
+    1         | UINT8, Range begin
+    1         | UINT8, Range end
+    1         | UINT8, flags
+              |     [000000BA]
+              |     A) Loop enabled
+              |     B) Loop bidirectional
     2         | UINT16BE, PCM chunk index (for OPNI it's always 0)
-    2         | UINT16BE, PCM chunk source sample rate
-    2         | UINT16BE, PCM chunk loop start
-    2         | UINT16BE, PCM chunk loop end
-    1         | UINT8, PCM chunk base tone
+    2         | UINT16BE, PCM chunk custom loop start
+    2         | UINT16BE, PCM chunk custom loop end, 0 - use loop from the chunk
+    1         | UINT8, PCM chunk base tone (MIDI key)
     1         | INT8, PCM chunk base tone cents offset
--------------------------------------------
+--------------[Chunk end]-------------------
+----------[Layer end]-------------------
+------[Only when flag D is set]-END---
+
+----VERSION>=3-END-------------------------
+
 --VERSION >= 2---WOPL-Bank-only, OPNI must don't have those fields---
     2         | Big-Endian 16-bit signed integer, Millisecond delay of sound
               | while key is on
@@ -107,9 +154,7 @@ Bytes-Lenght |  Description
 ----VERSION>=3--Data---------------------
     86       |  [Single-instrument entry], look at top of this text file
 ----VERSION>=3--PCM Chunk---------------
-    32       | Name of the PCM chunk
-    2        | [ChunkLength] Length of PCM chunk in bytes
- ChunkLength | <Unsigned 8-bit raw PCM data>
+    <Same as in botto mof WOPN bank>
 ----------------------------------------
 
 
@@ -133,15 +178,19 @@ Total data lenght is sum of (version 3):
 Bytes-Lenght |      Description
 ---------------Header--------------------
 --Header--
+
 ----VERSION==1--------------------------
     11            | Magic number "WOPN2-BANK\0". Where '\0' is a zero byte
                   |     which termiates the string
                   | (Version-1 has no version number entry!!!)
+----VERSION==1-END----------------------
+
 ----VERSION>=2--------------------------
     11            | Magic number "WOPN2-B2NK\0". Where '\0' is a zero byte
                   |     which termiates the string
     2             | Version code Unsigned 16-bit little-endian integer
-----------------------------------------
+----VERSION>=2-END----------------------
+
     2             | [MBanks] UINT16BE, count of melodic banks
                   |     MIDI banks (every bank contains 128 instruments)
     2             | [PBanks] UINT16BE, count of percussion banks
@@ -149,8 +198,14 @@ Bytes-Lenght |      Description
 ----VERSION>=3--------------------------
     2             | [PCMchuns] UINT16BE, Count of PCM chunks stored in the file
     4             | [PCMBankSize] UINT32BE, Total size of all stored PCM chunks
-----------------------------------------
-    1             | Chip global LFO enable flag and frequency register data
+----VERSION>=3-END----------------------
+
+    1             | UINT8, Chip global LFO enable flag and frequency register data
+
+----VERSION>=3--------------------------
+    1             | UINT8, Volume model type
+----VERSION>=3-END----------------------
+
 --VERSION >= 2---Melodic bank meta-data-----
 (repeat MBanks times)
     32            | Name of melodic bank null-terminated string
@@ -161,15 +216,25 @@ Bytes-Lenght |      Description
     32            | Name of melodic bank null-terminated string
     1             | LSB index of bank (unsigned char)
     1             | MSB index of bank (unsigned char)
+
 -----------Melodic Instruments-----------
     65*128*MBanks | 128 [Single-instrument entries] per each bank,
                   |     look at top of this text file
 ---------Percussion Instruments----------
     65*128*PBanks | 128 [Single-instrument entries] per each bank,
                   |     look at top of this text file
+
 --VERSION >= 3---PCM chunks store--------
 (repeat PCMchuns times)
     32            | Name of the PCM chunk
+    1             | UINT8, flags
+                  |     [000000BA]
+                  |     A) Loop enabled
+                  |     B) Loop bidirectional
+    2             | UINT16BE, PCM chunk source sample rate
+    2             | UINT16BE, PCM chunk default loop start
+    2             | UINT16BE, PCM chunk default loop end, 0 - no loop
     2             | [ChunkLength] Length of PCM chunk in bytes
     ChunkLength   | <Unsigned 8-bit raw PCM data>
 -----------------------------------------
+
