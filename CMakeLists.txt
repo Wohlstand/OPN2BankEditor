@@ -57,13 +57,14 @@ message("!!   Plots: ${ENABLE_PLOTS}")
 
 include_directories("src")
 
-set(SOURCES
-  "src/audio.cpp"
-  "src/bank.cpp"
-  "src/bank_editor.cpp"
+set(COMMON_SOURCES
   "src/common.cpp"
-  "src/controlls.cpp"
-  "src/proxystyle.cpp"
+  "src/bank.cpp")
+add_library(Common STATIC ${COMMON_SOURCES})
+target_include_directories(Common PUBLIC "src")
+target_link_libraries(Common PUBLIC Qt5::Widgets)
+
+set(FILEFORMATS_SOURCES
   "src/FileFormats/ffmt_base.cpp"
   "src/FileFormats/ffmt_factory.cpp"
   "src/FileFormats/format_deflemask_dmp.cpp"
@@ -73,7 +74,37 @@ set(SOURCES
   "src/FileFormats/format_tomsoft_gin.cpp"
   "src/FileFormats/format_vgm_import.cpp"
   "src/FileFormats/format_gym_import.cpp"
-  "src/FileFormats/format_wohlstand_opn2.cpp"
+  "src/FileFormats/format_wohlstand_opn2.cpp")
+add_library(FileFormats STATIC ${FILEFORMATS_SOURCES})
+target_include_directories(FileFormats PUBLIC "src")
+target_link_libraries(FileFormats PUBLIC Common)
+
+set(CHIPS_SOURCES
+  "src/opl/chips/gens_opn2.cpp"
+  "src/opl/chips/gens/Ym2612_Emu.cpp"
+  "src/opl/chips/nuked_opn2.cpp"
+  "src/opl/chips/nuked/ym3438.c"
+  "src/opl/chips/mame_opn2.cpp"
+  "src/opl/chips/mame/mame_ym2612fm.c"
+  "src/opl/chips/gx_opn2.cpp"
+  "src/opl/chips/gx/gx_ym2612.c")
+add_library(Chips STATIC ${CHIPS_SOURCES})
+target_include_directories(Chips PUBLIC "src")
+
+set(MEASURER_SOURCES
+  "src/opl/measurer.cpp")
+add_library(Measurer STATIC ${MEASURER_SOURCES})
+target_include_directories(Measurer PUBLIC "src")
+target_link_libraries(Measurer PUBLIC Chips Common Qt5::Concurrent)
+if(NOT MSVC)
+  target_compile_options(Measurer PRIVATE "-fopenmp")
+endif()
+
+set(SOURCES
+  "src/audio.cpp"
+  "src/bank_editor.cpp"
+  "src/controlls.cpp"
+  "src/proxystyle.cpp"
   "src/formats_sup.cpp"
   "src/importer.cpp"
   "src/latency.cpp"
@@ -83,16 +114,7 @@ set(SOURCES
   "src/opl/generator.cpp"
   "src/opl/generator_realtime.cpp"
   "src/opl/realtime/ring_buffer.cpp"
-  "src/piano.cpp"
-  "src/opl/measurer.cpp"
-  "src/opl/chips/gens_opn2.cpp"
-  "src/opl/chips/gens/Ym2612_Emu.cpp"
-  "src/opl/chips/nuked_opn2.cpp"
-  "src/opl/chips/nuked/ym3438.c"
-  "src/opl/chips/mame_opn2.cpp"
-  "src/opl/chips/mame/mame_ym2612fm.c"
-  "src/opl/chips/gx_opn2.cpp"
-  "src/opl/chips/gx/gx_ym2612.c")
+  "src/piano.cpp")
 if(ENABLE_PLOTS)
   list(APPEND SOURCES
     "src/delay_analysis.cpp")
@@ -141,10 +163,8 @@ if(ENABLE_PLOTS)
   target_compile_definitions(OPN2BankEditor PRIVATE "-DENABLE_PLOTS")
   target_include_directories(OPN2BankEditor PRIVATE ${QWT_INCLUDE_DIRS})
 endif()
+target_link_libraries(OPN2BankEditor PRIVATE FileFormats Chips Measurer)
 
-if(NOT MSVC)
-  target_compile_options(OPN2BankEditor PRIVATE "-fopenmp")
-endif()
 target_link_libraries(OPN2BankEditor PRIVATE Qt5::Widgets Qt5::Concurrent ${CMAKE_THREAD_LIBS_INIT})
 if(ENABLE_PLOTS)
   target_link_libraries(OPN2BankEditor PRIVATE ${QWT_LIBRARIES})
@@ -220,3 +240,7 @@ if(USE_RTAUDIO)
   target_compile_definitions(OPN2BankEditor PRIVATE "ENABLE_AUDIO_TESTING")
   target_link_libraries(OPN2BankEditor PRIVATE RtAudio)
 endif()
+
+add_executable(measurer
+  "utils/measurer/measurer.cpp")
+target_link_libraries(measurer PRIVATE FileFormats Measurer)
