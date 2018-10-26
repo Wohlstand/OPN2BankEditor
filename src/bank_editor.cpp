@@ -24,6 +24,7 @@
 #include <QUrl>
 #include <QMimeData>
 #include <QStandardItemModel>
+#include <QClipboard>
 #include <QtDebug>
 
 #include "importer.h"
@@ -71,7 +72,6 @@ BankEditor::BankEditor(QWidget *parent) :
     ui(new Ui::BankEditor)
 {
     FmBankFormatFactory::registerAllFormats();
-    memset(&m_clipboard, 0, sizeof(FmBank::Instrument));
     m_curInst = nullptr;
     m_curInstBackup = nullptr;
     m_lock = false;
@@ -612,13 +612,20 @@ void BankEditor::on_actionExit_triggered()
 void BankEditor::on_actionCopy_triggered()
 {
     if(!m_curInst) return;
-    memcpy(&m_clipboard, m_curInst, sizeof(FmBank::Instrument));
+    QByteArray data((char *)m_curInst, sizeof(FmBank::Instrument));
+    QMimeData *md = new QMimeData;
+    md->setData("application/x-vnd.wohlstand.opn2-fm-instrument", data);
+    QGuiApplication::clipboard()->setMimeData(md);
 }
 
 void BankEditor::on_actionPaste_triggered()
 {
     if(!m_curInst) return;
-    memcpy(m_curInst, &m_clipboard, sizeof(FmBank::Instrument));
+    const QMimeData *md = QGuiApplication::clipboard()->mimeData();
+    if (!md) return;
+    QByteArray data = md->data("application/x-vnd.wohlstand.opn2-fm-instrument");
+    if (data.size() != sizeof(FmBank::Instrument)) return;
+    memcpy(m_curInst, data.data(), sizeof(FmBank::Instrument));
     flushInstrument();
     syncInstrumentName();
 }
