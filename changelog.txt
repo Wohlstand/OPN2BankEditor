@@ -15,6 +15,8 @@
 - Added support for GEMS BNK and PAT formats. Now it's possible to import and use offical Sega GEMS's patches
 - Added GYB bank format for Nineko's MIDI2VGM converter
 - Added support for instruments import from GYM files
+- Added highlighting of piano keys when playing notes via keyboard
+- Clipboard is now global: you can run multiple copies of OPN2-BE and copy instruments between different opened files without of importer usage
 
 ??? (all previous versions)
 - Added MAME and Nuked OPN2 emulators to replace legacy and inaccurate GENS emulator
