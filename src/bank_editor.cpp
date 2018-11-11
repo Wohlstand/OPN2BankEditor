@@ -83,6 +83,8 @@ BankEditor::BankEditor(QWidget *parent) :
     this->setWindowIcon(makeWindowIcon());
     ui->version->setText(QString("%1, v.%2").arg(PROGRAM_NAME).arg(VERSION));
     m_recentMelodicNote = ui->noteToTest->value();
+    m_bank.Ins_Melodic_box.fill(FmBank::blankInst());
+    m_bank.Ins_Percussion_box.fill(FmBank::blankInst());
     setMelodic();
     connect(ui->melodic,    SIGNAL(clicked(bool)),  this,   SLOT(setMelodic()));
     connect(ui->percussion, SIGNAL(clicked(bool)),  this,   SLOT(setDrums()));
@@ -123,6 +125,10 @@ BankEditor::BankEditor(QWidget *parent) :
     connect(ui->actionLanguageDefault, SIGNAL(triggered()), this, SLOT(onActionLanguageTriggered()));
 
     loadSettings();
+    m_bank.lfo_enabled = ui->lfoEnable->isChecked();
+    m_bank.lfo_frequency = ui->lfoFrequency->currentIndex();
+    m_bankBackup = m_bank;
+
     initAudio();
 #ifdef ENABLE_MIDI
     QAction *midiInAction = m_midiInAction = new QAction(
@@ -556,6 +562,17 @@ void BankEditor::syncInstrumentName()
             QString::fromUtf8(m_curInst->name) :
             (m_recentPerc ? getMidiInsNameP(m_recentNum) : getMidiInsNameM(m_recentNum))
         );
+    }
+    syncInstrumentBlankness();
+}
+
+void BankEditor::syncInstrumentBlankness()
+{
+    QListWidgetItem *curInstr = ui->instruments->currentItem();
+    if(m_curInst && curInstr)
+    {
+        curInstr->setForeground(m_curInst->is_blank ?
+                                Qt::gray : Qt::black);
     }
 }
 
@@ -1186,6 +1203,8 @@ void BankEditor::setMelodic()
                       m_bank.Ins_Melodic[i].name : getMidiInsNameM(i));
         setInstrumentMetaInfo(item, i);
         item->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled);
+        item->setForeground(m_bank.Ins_Melodic[i].is_blank ?
+                            Qt::gray : Qt::black);
         ui->instruments->addItem(item);
     }
     on_bank_no_currentIndexChanged(ui->bank_no->currentIndex());
@@ -1203,6 +1222,8 @@ void BankEditor::setDrums()
                       m_bank.Ins_Percussion[i].name : getMidiInsNameP(i));
         setInstrumentMetaInfo(item, i);
         item->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled);
+        item->setForeground(m_bank.Ins_Percussion[i].is_blank ?
+                            Qt::gray : Qt::black);
         ui->instruments->addItem(item);
     }
     on_bank_no_currentIndexChanged(ui->bank_no->currentIndex());
@@ -1224,6 +1245,8 @@ void BankEditor::reloadInstrumentNames()
                 items[i]->setText(m_bank.Ins_Percussion[index].name[0] != '\0' ?
                                   m_bank.Ins_Percussion[index].name :
                                   getMidiInsNameP(index));
+                items[i]->setForeground(m_bank.Ins_Percussion[i].is_blank ?
+                                        Qt::gray : Qt::black);
             }
         }
     }
@@ -1240,6 +1263,8 @@ void BankEditor::reloadInstrumentNames()
                 items[i]->setText(m_bank.Ins_Melodic[index].name[0] != '\0' ?
                                   m_bank.Ins_Melodic[index].name :
                                   getMidiInsNameM(index));
+                items[i]->setForeground(m_bank.Ins_Melodic[i].is_blank ?
+                                        Qt::gray : Qt::black);
             }
         }
     }
@@ -1261,7 +1286,6 @@ void BankEditor::on_actionAddInst_triggered()
     }
     else
     {
-        FmBank::Instrument ins = FmBank::emptyInst();
         m_bank.Ins_Percussion_box.push_back(ins);
         m_bank.Ins_Percussion = m_bank.Ins_Percussion_box.data();
         ins = m_bank.Ins_Percussion_box.last();
@@ -1298,7 +1322,7 @@ void BankEditor::on_actionClearInstrument_triggered()
         return;
     }
 
-    memset(m_curInst, 0, sizeof(FmBank::Instrument));
+    *m_curInst = FmBank::blankInst();
     loadInstrument();
     syncInstrumentName();
 }
@@ -1472,17 +1496,17 @@ void BankEditor::on_actionClearBank_triggered()
         {
             if(needToShoot_end >= m_bank.Ins_Percussion_box.size())
                 needToShoot_end = m_bank.Ins_Percussion_box.size();
-            memset(m_bank.Ins_Percussion + needToShoot_begin,
-                   0,
-                   sizeof(FmBank::Instrument) * size_t(needToShoot_end - needToShoot_begin));
+            std::fill(m_bank.Ins_Percussion + needToShoot_begin,
+                      m_bank.Ins_Percussion + needToShoot_end,
+                      FmBank::blankInst());
         }
         else
         {
             if(needToShoot_end >= m_bank.Ins_Melodic_box.size())
                 needToShoot_end = m_bank.Ins_Melodic_box.size();
-            memset(m_bank.Ins_Melodic + needToShoot_begin,
-                   0,
-                   sizeof(FmBank::Instrument) * size_t(needToShoot_end - needToShoot_begin));
+            std::fill(m_bank.Ins_Melodic + needToShoot_begin,
+                      m_bank.Ins_Melodic + needToShoot_end,
+                      FmBank::blankInst());
         }
         reloadInstrumentNames();
         loadInstrument();
