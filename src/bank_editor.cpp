@@ -127,6 +127,7 @@ BankEditor::BankEditor(QWidget *parent) :
     loadSettings();
     m_bank.lfo_enabled = ui->lfoEnable->isChecked();
     m_bank.lfo_frequency = ui->lfoFrequency->currentIndex();
+    m_bank.opna_mode = (ui->chipType->currentIndex() > 0);
     m_bankBackup = m_bank;
 
     initAudio();
@@ -331,8 +332,20 @@ void BankEditor::initFileData(QString &filePath)
 
     //Set global flags and states
     m_lock = true;
+
+    //TODO: Make a signal "lockSetup(bool)" and connect all those things to it
+    ui->lfoEnable->blockSignals(true);
+    ui->lfoFrequency->blockSignals(true);
+    ui->chipType->blockSignals(true);
+
     ui->lfoEnable->setChecked(m_bank.lfo_enabled);
     ui->lfoFrequency->setCurrentIndex(m_bank.lfo_frequency);
+    ui->chipType->setCurrentIndex(m_bank.opna_mode ? 1 : 0);
+
+    ui->lfoEnable->blockSignals(false);
+    ui->lfoFrequency->blockSignals(false);
+    ui->chipType->blockSignals(false);
+
     m_lock = false;
 
     reloadInstrumentNames();
@@ -900,6 +913,7 @@ void BankEditor::loadInstrument()
 
     ui->lfoEnable->setChecked(m_bank.lfo_enabled);
     ui->lfoFrequency->setCurrentIndex(m_bank.lfo_frequency);
+    ui->chipType->setCurrentIndex(m_bank.opna_mode ? 1 : 0);
 
     ui->insName->setText(m_curInst->name);
     ui->debugDelaysInfo->setText(tr("Delays on: %1, off: %2")

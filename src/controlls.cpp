@@ -20,17 +20,28 @@
 #include "ui_bank_editor.h"
 #include <cmath>
 
+/**
+ TODO: Replace everything here with one huge function that adds lambdas as signals
+       and adds "blockSignal(bool)" call into the signal
+       that will replace `m_lock` workaround crap
+ */
+
+void BankEditor::on_chipType_currentIndexChanged(int index)
+{
+    if(m_lock) return;
+    m_bank.opna_mode = (index > 0);
+    // TODO: Add into the chipset a switch of the frequency mode
+}
+
 void BankEditor::on_lfoEnable_clicked(bool checked)
 {
     if(m_lock) return;
-    if(!m_curInst) return;
     m_bank.lfo_enabled = checked;
 }
 
 void BankEditor::on_lfoFrequency_currentIndexChanged(int index)
 {
     if(m_lock) return;
-    if(!m_curInst) return;
     m_bank.lfo_frequency = uint8_t(index);
 }
 

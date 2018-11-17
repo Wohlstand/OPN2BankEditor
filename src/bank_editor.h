@@ -435,6 +435,7 @@ private slots:
 
     void on_noteOffset1_valueChanged(int arg1);
 
+    void on_chipType_currentIndexChanged(int index);
     void on_lfoEnable_clicked(bool checked);
     void on_lfoFrequency_currentIndexChanged(int index);
 

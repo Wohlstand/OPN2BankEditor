@@ -241,10 +241,14 @@ public:
 
     bool    lfo_enabled     = false;
     uint8_t lfo_frequency   = 0;
+    bool    opna_mode       = false;
 
     //Global chip LFO parameter
     uint8_t getRegLFO() const;
     void setRegLFO(uint8_t lfo_reg);
+
+    uint8_t getBankFlags() const;
+    void setBankFlags(uint8_t bank_flags);
 
     /**
      * @brief Get empty instrument entry

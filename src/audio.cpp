@@ -74,11 +74,13 @@ void BankEditor::initAudio()
             m_generator,        &IRealtimeControl::ctl_changeLFO);
     connect(ui->lfoFrequency,   static_cast<void(QComboBox::*)(int)>(&QComboBox::currentIndexChanged),
             m_generator,        &IRealtimeControl::ctl_changeLFOfreq);
+    //TODO: Add OPNx chip frequency toggling
 #else
     connect(ui->lfoEnable,      SIGNAL(toggled(bool)),
             m_generator,        SLOT(ctl_changeLFO(bool)));
     connect(ui->lfoFrequency,   SIGNAL(currentIndexChanged(int)),
             m_generator,        SLOT(ctl_changeLFOfreq(int)));
+    //TODO: Add OPNx chip frequency toggling
 #endif
 
     //Generator's debug info

@@ -2988,9 +2988,9 @@
            </widget>
           </item>
           <item>
-           <widget class="QGroupBox" name="groupBox_3">
+           <widget class="QGroupBox" name="globalChipFlags">
             <property name="title">
-             <string>Global OPN2 flags</string>
+             <string>Global chip flags</string>
             </property>
             <property name="alignment">
              <set>Qt::AlignCenter</set>
@@ -3008,6 +3008,23 @@
              <property name="bottomMargin">
               <number>0</number>
              </property>
+             <item>
+              <widget class="QComboBox" name="chipType">
+               <property name="toolTip">
+                <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Defines a type of the chip and frequency to run emulators:&lt;/p&gt;&lt;ul style=&quot;margin-top: 0px; margin-bottom: 0px; margin-left: 0px; margin-right: 0px; -qt-list-indent: 1;&quot;&gt;&lt;li style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;OPN2&lt;/span&gt; - YM2612, YM3438 - running in &lt;span style=&quot; font-family:'monospace';&quot;&gt;53267 Hz rate&lt;/span&gt;&lt;/li&gt;&lt;li style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;OPNA&lt;/span&gt; - YM2602 - running in &lt;span style=&quot; font-family:'monospace';&quot;&gt;55466 Hz rate&lt;/span&gt;&lt;/li&gt;&lt;/ul&gt;&lt;/body&gt;&lt;/html&gt;</string>
+               </property>
+               <item>
+                <property name="text">
+                 <string>OPN2</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>OPNA</string>
+                </property>
+               </item>
+              </widget>
+             </item>
              <item>
               <widget class="QCheckBox" name="lfoEnable">
                <property name="font">

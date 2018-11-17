@@ -36,6 +36,7 @@ FmBank::FmBank(const FmBank &fb)
     Ins_Percussion      = Ins_Percussion_box.data();
     Banks_Melodic       = fb.Banks_Melodic;
     Banks_Percussion    = fb.Banks_Percussion;
+    opna_mode           = fb.opna_mode;
     lfo_enabled         = fb.lfo_enabled;
     lfo_frequency       = fb.lfo_frequency;
 }
@@ -52,6 +53,7 @@ FmBank &FmBank::operator=(const FmBank &fb)
     Ins_Percussion      = Ins_Percussion_box.data();
     Banks_Melodic       = fb.Banks_Melodic;
     Banks_Percussion    = fb.Banks_Percussion;
+    opna_mode           = fb.opna_mode;
     lfo_enabled         = fb.lfo_enabled;
     lfo_frequency       = fb.lfo_frequency;
     return *this;
@@ -60,6 +62,7 @@ FmBank &FmBank::operator=(const FmBank &fb)
 bool FmBank::operator==(const FmBank &fb)
 {
     bool res = true;
+    res &= (opna_mode == fb.opna_mode);
     res &= (lfo_enabled == fb.lfo_enabled);
     res &= (lfo_frequency == fb.lfo_frequency);
     res &= (Ins_Melodic_box.size() == fb.Ins_Melodic_box.size());
@@ -87,6 +90,7 @@ bool FmBank::operator!=(const FmBank &fb)
 
 void FmBank::reset()
 {
+    // FIXME: Remove this and call reset(1, 1) instead of this damned duplicate
     size_t insnum = 128;
     size_t banksnum = insnum / 128;
     size_t size = sizeof(Instrument) * insnum;
@@ -101,6 +105,7 @@ void FmBank::reset()
     size = sizeof(MidiBank) * banksnum;
     memset(Banks_Melodic.data(), 0, size);
     memset(Banks_Percussion.data(), 0, size);
+    opna_mode       = false;
     lfo_enabled     = false;
     lfo_frequency   = 0;
 }
@@ -121,6 +126,7 @@ void FmBank::reset(uint16_t melodic_banks, uint16_t percussion_banks)
     memset(Banks_Melodic.data(), 0, size);
     size = sizeof(MidiBank) * percussion_banks;
     memset(Banks_Percussion.data(), 0, size);
+    opna_mode       = false;
     lfo_enabled     = false;
     lfo_frequency   = 0;
 }
@@ -137,6 +143,22 @@ void FmBank::setRegLFO(uint8_t lfo_reg)
 {
     lfo_enabled     = ((lfo_reg & 0x08) >> 3);
     lfo_frequency   = 0x07 & lfo_reg;
+}
+
+uint8_t FmBank::getBankFlags() const
+{
+    uint8_t out = 0;
+    out |= 0x10 & (uint8_t(opna_mode) << 4);
+    out |= 0x08 & (uint8_t(lfo_enabled) << 3);
+    out |= 0x07 & uint8_t(lfo_frequency);
+    return out;
+}
+
+void FmBank::setBankFlags(uint8_t bank_flags)
+{
+    opna_mode       = ((bank_flags & 0x10) >> 4);
+    lfo_enabled     = ((bank_flags & 0x08) >> 3);
+    lfo_frequency   = 0x07 & bank_flags;
 }
 
 FmBank::Instrument FmBank::emptyInst()
@@ -167,7 +189,7 @@ bool FmBank::getBank(uint8_t msb, uint8_t lsb, bool percussive,
                      MidiBank **pBank, Instrument **pIns)
 {
     Instrument *Ins = percussive ? Ins_Percussion : Ins_Melodic;
-    QVector<Instrument> &Ins_Box = percussive ? Ins_Percussion_box : Ins_Melodic_box;
+    // QVector<Instrument> &Ins_Box = percussive ? Ins_Percussion_box : Ins_Melodic_box;
     QVector<MidiBank> &Banks = percussive ? Banks_Percussion : Banks_Melodic;
 
     for(size_t index = 0, count = Banks.size(); index < count; ++index)

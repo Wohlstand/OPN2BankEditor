@@ -166,7 +166,7 @@ FfmtErrCode WohlstandOPN2::loadFile(QString filePath, FmBank &bank)
 
     bank.reset(count_melodic_banks, count_percusive_banks);
 
-    bank.setRegLFO(head[4]);
+    bank.setBankFlags(head[4]);
 
     if(version >= 2)//Read bank meta-entries
     {
@@ -273,7 +273,7 @@ FfmtErrCode WohlstandOPN2::saveFile(QString filePath, FmBank &bank)
     uint8_t head[5];
     fromUint16BE(count_melodic_banks, head);
     fromUint16BE(count_percusive_banks, head + 2);
-    head[4] = bank.getRegLFO();
+    head[4] = bank.getBankFlags();
     file.write(char_p(head), 5);
 
     //For Version 2: BEGIN
