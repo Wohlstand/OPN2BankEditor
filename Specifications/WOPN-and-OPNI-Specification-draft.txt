@@ -13,7 +13,7 @@ Versions:
 - Version 2: (November, 24, 2017): Added bank meta-data
               and measured sounding delays per each instrument
 - Version 3: (DRAFT)
-             Added pitch envilope options and PCM voices support
+             Added pitch envelope options and sample instrument support
              Added per-instrument flags
              Added bank default volume model field
              Instruments now having variable size in dependence on flags
@@ -33,7 +33,7 @@ Contents:
     Each instrument file contains a set of data for single
 channel of YM2612 chip to setup the timbre
 
-Lenght of each instrument entry is:
+Length of each instrument entry is:
 Version 2: Fixed size in 65 bytes or 69 with sounding delays
 Version 3: Size is dependent on flags:
     - base (minimal) size: 66 bytes = 1 + (32+2+1+1+1)+(4*(1+1+1+1+1+1+1))
@@ -42,15 +42,14 @@ Version 3: Size is dependent on flags:
     - flag D adds extra 10 bytes = 2+2+2+2+1+1
     - sounding delays adding extra: 4 bytes = 2+2
 
-Bytes-Lenght  | Description
+Bytes-Length  | Description
 ----VERSION>=3-----------------------------
     1         | Instrument flags
-              |     [000EDCBA]
+              |     [0000DCBA]
               |     A) Pseudo-8op
               |     B) Is Blank instrument
               |     C) Enable pitch envelope
-              |     D) Is PCM voice
-              |     E) PCM chunk has a loop
+              |     D) Is non-FM voice
 -------------------------------------------
 
 ----VERSION<=2-OR=when flag D is disabled----
@@ -59,15 +58,15 @@ Bytes-Lenght  | Description
     32        | Name of instrument null-terminated string
     2         | Big-Endian 16-bit signed integer, MIDI key offset value
     1         | 8-bit unsigned integer, Percussion instrument key number
-    1         | Feedback and Algirithm register data
+    1         | Feedback and Algorithm register data
     1         | LFO sensitivity register data
 --- Operators 1/2/3/4 (repeats 4 times) ---
     1         | Detune and frequency multiplication register data
     1         | Total level register data
     1         | Rate scale and attack register data
-    1         | Amplitude mudulation enable and Decay-1 register data
+    1         | Amplitude modulation enable and Decay-1 register data
     1         | Decay-2 register data
-    1         | Systain and Release register data
+    1         | Sustain and Release register data
     1         | SSG-EG register data
 -------------------------------------------
 
@@ -92,30 +91,17 @@ Bytes-Lenght  | Description
     2         | UINT16BE, Millisecond pitch decay2 delay (0 - instant decay)
     2         | UINT16BE, Millisecond pitch release delay (0 - instant release)
 ------[Only when flag C is set]-END---
-
-------[Only when flag D is set]-------
     1         | UINT8, Count of layers (concurrent streams)
 ----------[Layer begin]-------------------
     1         | UINT8, Count of used chunks
 --------------[Chunk begin]-------------------
-    1         | UINT8, Range begin
-    1         | UINT8, Range end
-    1         | UINT8, flags
-              |     [000000BA]
-              |     A) Loop enabled
-              |     B) Loop bidirectional
-    2         | UINT16BE, PCM chunk index (for OPNI it's always 0)
-    2         | UINT16BE, PCM chunk custom loop start
-    2         | UINT16BE, PCM chunk custom loop end, 0 - use loop from the chunk
-    1         | UINT8, PCM chunk base tone (MIDI key)
-    1         | INT8, PCM chunk base tone cents offset
+    2         | UINT16BE, Index into LayeredInstruments
 --------------[Chunk end]-------------------
 ----------[Layer end]-------------------
-------[Only when flag D is set]-END---
 
 ----VERSION>=3-END-------------------------
 
---VERSION >= 2---WOPL-Bank-only, OPNI must don't have those fields---
+--VERSION >= 2---WOPN-Bank-only, OPNI must don't have those fields---
     2         | Big-Endian 16-bit signed integer, Millisecond delay of sound
               | while key is on
     2         | Big-Endian 16-bit signed integer, Millisecond delay of sound
@@ -130,14 +116,14 @@ Bytes-Lenght  | Description
     Each instrument file contains a set of data for single
 channel of YM2612 chip to setup the timbre on it.
 
-Total data lenght:
+Total data length:
     Version 1: 77 bytes
     Version 2: 79 bytes
     Version 3:
         102 bytes (with disabled PCM chunk)
         136+[ChunkLength] bytes (with PCM chunk)
 
-Bytes-Lenght |  Description
+Bytes-Length |  Description
 ---------------Header--------------------
 ----VERSION==1--------------------------
     11       |  Magic number "WOPN2-INST\0". Where '\0' is a zero byte which
@@ -154,7 +140,7 @@ Bytes-Lenght |  Description
 ----VERSION>=3--Data---------------------
     86       |  [Single-instrument entry], look at top of this text file
 ----VERSION>=3--PCM Chunk---------------
-    <Same as in botto mof WOPN bank>
+    <Same as in bottom of WOPN bank>
 ----------------------------------------
 
 
@@ -168,14 +154,14 @@ multiple sets with 128-instruments which is needed to store
 GS and XG instrument sets which are have more than standard 128
 instruments with a single bank.
 
-Total data lenght is sum of (version 1):
+Total data length is sum of (version 1):
         16 + (65*128*MBanks) + (65*128*PBanks) bytes
-Total data lenght is sum of (version 2):
+Total data length is sum of (version 2):
         18 + (69*128*MBanks) + (69*128*PBanks) bytes
-Total data lenght is sum of (version 3):
+Total data length is sum of (version 3):
         24 + (92*128*MBanks) + (92*128*PBanks) + (PCMBankSize) bytes
 
-Bytes-Lenght |      Description
+Bytes-Length |      Description
 ---------------Header--------------------
 --Header--
 
@@ -196,8 +182,8 @@ Bytes-Lenght |      Description
     2             | [PBanks] UINT16BE, count of percussion banks
                   |     MIDI banks (every bank contains 128 instruments)
 ----VERSION>=3--------------------------
-    2             | [PCMchuns] UINT16BE, Count of PCM chunks stored in the file
-    4             | [PCMBankSize] UINT32BE, Total size of all stored PCM chunks
+    2             | [SampleChunks] UINT16BE, Count of sample chunks stored in the file
+    2             | [LayeredInstruments] UINT16BE, Count of layered instruments stored in the file
 ----VERSION>=3-END----------------------
 
     1             | UINT8, Chip global LFO enable flag and frequency register data
@@ -224,17 +210,50 @@ Bytes-Lenght |      Description
     65*128*PBanks | 128 [Single-instrument entries] per each bank,
                   |     look at top of this text file
 
---VERSION >= 3---PCM chunks store--------
-(repeat PCMchuns times)
-    32            | Name of the PCM chunk
-    1             | UINT8, flags
-                  |     [000000BA]
-                  |     A) Loop enabled
-                  |     B) Loop bidirectional
-    2             | UINT16BE, PCM chunk source sample rate
-    2             | UINT16BE, PCM chunk default loop start
-    2             | UINT16BE, PCM chunk default loop end, 0 - no loop
-    2             | [ChunkLength] Length of PCM chunk in bytes
-    ChunkLength   | <Unsigned 8-bit raw PCM data>
------------------------------------------
+--VERSION >= 3---Sample chunk--------
+(repeat SampleChunks times)
+    4             | UINT32BE, Sample name, as byte index into the string segment
+    4             | UINT32BE, Sound data, as byte index into the data segment
+    4             | UINT32BE, Length of sound data in bytes
+    4             | UINT32BE, Sampling rate of the sound data
+    1             | UINT8, Number of channels in interleaved sample data
+    1             | UINT8, Coding of sample data.
+                  |        0 - UINT8 PCM data
+                  |        1 - INT16BE PCM data
+                  |        Reserved - (Float, Compressed audio...)
+----VERSION>=3-END----------------------
 
+--VERSION >= 3---LayeredInstrument chunk----
+(repeat LayeredInstruments times)
+    1             | UINT8, [Tag] Type of instrument
+                  |        0 - Sampled instrument based of SFZ specification
+                  |        Reserved - (PSG instrument...)
+    4             | UINT32BE, Size of this entire chunk in bytes
+-[if Tag=0 for SFZ instrument]-
+    2             | UINT16BE, [AttrCount] Count of SFZ attributes as key-value pairs
+(repeat AttrCount times)
+    1             | UINT8, Number of region on which an attribute is applied
+                  |        if $FF, applies to the whole group (all regions)
+    4             | UINT32BE, [Opcode] Opcode as index into the string segment
+                  |                    The SFZ opcode "sample" references one of the
+                  |                    sample chunks by its stored name.
+    1             | UINT8, [ValueType] Type of value to follow
+                  |        0 - String:  UINT32BE, index into string table
+                  |        1 - Integer: INT32BE, integer
+                  |        2 - Real:    FLOAT32BE, IEEE754 single precision
+                  |        Reserved
+    4             | VAR32, Value encoded as indicated by ValueType
+(end repeat)
+-[/if Tag=0 for SFZ instrument]-
+----VERSION>=3-END----------------------
+
+----VERSION>=3---String segment---------
+    4            | [StrSize] Segment size expressed in bytes
+    StrSize      | UINT8, Concatenation of UTF-8 strings, using a zero byte as
+                 |        separator of entries.
+----VERSION>=3-END----------------------
+
+----VERSION>=3---Data segment---------
+    4            | [DataSize] Segment size expressed in bytes
+    DataSize     | UINT8, Data as concatenated sequence of bytes.
+----VERSION>=3-END----------------------
