@@ -12,6 +12,7 @@ Versions:
 - Version 1: (April, 30, 2017): First release
 - Version 2: (November, 24, 2017): Added bank meta-data
               and measured sounding delays per each instrument
+             (November, 18, 2018): Added OPN2/OPNA global chip flag
 - Version 3: (DRAFT)
              Added pitch envelope options and sample instrument support
              Added per-instrument flags
@@ -59,7 +60,11 @@ Bytes-Length  | Description
     2         | Big-Endian 16-bit signed integer, MIDI key offset value
     1         | 8-bit unsigned integer, Percussion instrument key number
     1         | Feedback and Algorithm register data
-    1         | LFO sensitivity register data
+    1         | Global bank flags
+              |     [000CBAAA]
+              |     A) LFO sensitivity frequency
+              |     B) LFO is enabled
+              |     C) Chip type: 0:OPN2, 1:OPNA
 --- Operators 1/2/3/4 (repeats 4 times) ---
     1         | Detune and frequency multiplication register data
     1         | Total level register data
