@@ -694,7 +694,7 @@
         </sizepolicy>
        </property>
        <property name="text">
-        <string>$B0</string>
+        <string notr="true">$B0</string>
        </property>
       </widget>
      </item>
@@ -742,7 +742,7 @@
         </sizepolicy>
        </property>
        <property name="text">
-        <string>$B4</string>
+        <string notr="true">$B4</string>
        </property>
       </widget>
      </item>

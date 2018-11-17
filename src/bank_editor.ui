@@ -2229,7 +2229,7 @@
                     </item>
                     <item>
                      <property name="text">
-                      <string>0001</string>
+                      <string notr="true">0001</string>
                      </property>
                     </item>
                     <item>
@@ -2963,7 +2963,7 @@
                 </size>
                </property>
                <property name="text">
-                <string>...</string>
+                <string notr="true">...</string>
                </property>
                <property name="icon">
                 <iconset resource="resources/resources.qrc">
@@ -3015,12 +3015,12 @@
                </property>
                <item>
                 <property name="text">
-                 <string>OPN2</string>
+                 <string notr="true">OPN2</string>
                 </property>
                </item>
                <item>
                 <property name="text">
-                 <string>OPNA</string>
+                 <string notr="true">OPNA</string>
                 </property>
                </item>
               </widget>
