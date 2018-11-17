@@ -549,17 +549,17 @@ de la deuxième voix</translation>
     <message>
         <location filename="../bank_editor.ui" line="3389"/>
         <source>Hold</source>
-        <translation type="unfinished"></translation>
+        <translation>Maintien</translation>
     </message>
     <message>
         <location filename="../bank_editor.ui" line="3392"/>
         <source>H</source>
-        <translation type="unfinished"></translation>
+        <translation>H</translation>
     </message>
     <message>
         <location filename="../bank_editor.ui" line="3436"/>
         <source>Pitch bend</source>
-        <translation type="unfinished"></translation>
+        <translation>Modulation de hauteur tonale</translation>
     </message>
     <message>
         <location filename="../bank_editor.ui" line="3495"/>
@@ -618,7 +618,7 @@ de la deuxième voix</translation>
     <message>
         <location filename="../bank_editor.ui" line="3014"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Defines a type of the chip and frequency to run emulators:&lt;/p&gt;&lt;ul style=&quot;margin-top: 0px; margin-bottom: 0px; margin-left: 0px; margin-right: 0px; -qt-list-indent: 1;&quot;&gt;&lt;li style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;OPN2&lt;/span&gt; - YM2612, YM3438 - running in &lt;span style=&quot; font-family:&apos;monospace&apos;;&quot;&gt;53267 Hz rate&lt;/span&gt;&lt;/li&gt;&lt;li style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;OPNA&lt;/span&gt; - YM2608 - running in &lt;span style=&quot; font-family:&apos;monospace&apos;;&quot;&gt;55466 Hz rate&lt;/span&gt;&lt;/li&gt;&lt;/ul&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Définit le type de circuit et la fréquence d&apos;horloge des émulateurs :&lt;/p&gt;&lt;ul style=&quot;margin-top: 0px; margin-bottom: 0px; margin-left: 0px; margin-right: 0px; -qt-list-indent: 1;&quot;&gt;&lt;li style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;OPN2&lt;/span&gt; - YM2612, YM3438 - échantillonnage en &lt;span style=&quot; font-family:&apos;monospace&apos;;&quot;&gt;53267 Hz&lt;/span&gt;&lt;/li&gt;&lt;li style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;OPNA&lt;/span&gt; - YM2608 - échantillonnage en &lt;span style=&quot; font-family:&apos;monospace&apos;;&quot;&gt;55466 Hz&lt;/span&gt;&lt;/li&gt;&lt;/ul&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="../bank_editor.ui" line="3597"/>
