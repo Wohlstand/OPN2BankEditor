@@ -87,7 +87,14 @@ set(CHIPS_SOURCES
   "src/opl/chips/mame_opn2.cpp"
   "src/opl/chips/mame/mame_ym2612fm.c"
   "src/opl/chips/gx_opn2.cpp"
-  "src/opl/chips/gx/gx_ym2612.c")
+  "src/opl/chips/gx/gx_ym2612.c"
+  "src/opl/chips/np2_opna.cpp"
+  "src/opl/chips/np2/fmgen_file.cpp"
+  "src/opl/chips/np2/fmgen_fmgen.cpp"
+  "src/opl/chips/np2/fmgen_fmtimer.cpp"
+  "src/opl/chips/np2/fmgen_opna.cpp"
+  "src/opl/chips/np2/fmgen_psg.cpp"
+)
 add_library(Chips STATIC ${CHIPS_SOURCES})
 target_include_directories(Chips PUBLIC "src")
 
