@@ -40,6 +40,7 @@
 #include "chips/mame_opn2.h"
 #include "chips/gens_opn2.h"
 #include "chips/gx_opn2.h"
+#include "chips/np2_opna.h"
 
 //typedef NukedOPN2 DefaultOPN2;
 typedef MameOPN2 DefaultOPN2;
@@ -643,7 +644,7 @@ static void ComputeDurations(const FmBank::Instrument *in_p, DurationInfo *resul
 
 static void ComputeDurationsDefault(const FmBank::Instrument *in, DurationInfo *result)
 {
-    DefaultOPN2 chip;
+    DefaultOPN2 chip(OPNChip_OPN2);
     ComputeDurations(in, result, &chip);
 }
 
@@ -659,7 +660,7 @@ static void MeasureDurations(FmBank::Instrument *in_p, OPNChipBase *chip)
 
 static void MeasureDurationsDefault(FmBank::Instrument *in_p)
 {
-    DefaultOPN2 chip;
+    DefaultOPN2 chip(OPNChip_OPN2);
     MeasureDurations(in_p, &chip);
 }
 
@@ -677,12 +678,14 @@ static void MeasureDurationsBenchmark(FmBank::Instrument *in_p, OPNChipBase *chi
 
 static void MeasureDurationsBenchmarkRunner(FmBank::Instrument *in_p, QVector<Measurer::BenchmarkResult> *result)
 {
+    OPNFamily family = OPNChip_OPN2;
     std::vector<std::shared_ptr<OPNChipBase > > emuls =
     {
-        std::shared_ptr<OPNChipBase>(new NukedOPN2),
-        std::shared_ptr<OPNChipBase>(new MameOPN2),
-        std::shared_ptr<OPNChipBase>(new GXOPN2),
-        std::shared_ptr<OPNChipBase>(new GensOPN2)
+        std::shared_ptr<OPNChipBase>(new NukedOPN2(family)),
+        std::shared_ptr<OPNChipBase>(new MameOPN2(family)),
+        std::shared_ptr<OPNChipBase>(new GXOPN2(family)),
+        std::shared_ptr<OPNChipBase>(new GensOPN2(family)),
+        std::shared_ptr<OPNChipBase>(new NP2OPNA<>(family))
     };
     for(std::shared_ptr<OPNChipBase> &p : emuls)
         MeasureDurationsBenchmark(in_p, p.get(), result);

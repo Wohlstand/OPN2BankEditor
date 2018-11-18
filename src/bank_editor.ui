@@ -3558,6 +3558,7 @@ Available from 0 to 127</string>
      <addaction name="actionEmulatorMame"/>
      <addaction name="actionEmulatorGX"/>
      <addaction name="actionEmulatorGens"/>
+     <addaction name="actionEmulatorNP2"/>
     </widget>
     <addaction name="menuChoose_chip_emulator"/>
     <addaction name="actionLatency"/>
@@ -3757,6 +3758,17 @@ Available from 0 to 127</string>
   <action name="actionEditRegisters">
    <property name="text">
     <string>Edit registers</string>
+   </property>
+  </action>
+  <action name="actionEmulatorNP2">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string notr="true">Neko Project II Kai OPNA</string>
+   </property>
+   <property name="toolTip">
+    <string notr="true">Neko Project II Kai OPNA</string>
    </property>
   </action>
  </widget>

@@ -24,6 +24,7 @@
 #include "chips/nuked_opn2.h"
 #include "chips/mame_opn2.h"
 #include "chips/gx_opn2.h"
+#include "chips/np2_opna.h"
 
 #define BEND_COEFFICIENT 321.88557
 
@@ -131,7 +132,7 @@ void Generator::initChip()
         m_pan_lfo[ch] = 0xC0;
         WriteReg(port, 0xB4 + ch, m_pan_lfo[ch]);   //Panorame (toggle on both speakers)
 
-        WriteReg(port, 0x28 + ch, 0x00);   //Key off to channel
+        WriteReg(port, 0x28, 0x00 + ch);   //Key off to channel
 
         WriteReg(port, 0xA4 + ch, 0x68);   //Set frequency and octave
         WriteReg(port, 0xA0 + ch, 0xFF);
@@ -141,21 +142,24 @@ void Generator::initChip()
     Silence();
 }
 
-void Generator::switchChip(Generator::OPN_Chips chipId)
+void Generator::switchChip(Generator::OPN_Chips chipId, OPNFamily family)
 {
     switch(chipId)
     {
     case CHIP_GENS:
-        chip.reset(new GensOPN2());
+        chip.reset(new GensOPN2(family));
         break;
     case CHIP_Nuked:
-        chip.reset(new NukedOPN2());
+        chip.reset(new NukedOPN2(family));
         break;
     case CHIP_MAME:
-        chip.reset(new MameOPN2());
+        chip.reset(new MameOPN2(family));
         break;
     case CHIP_GX:
-        chip.reset(new GXOPN2());
+        chip.reset(new GXOPN2(family));
+        break;
+    case CHIP_NP2:
+        chip.reset(new NP2OPNA<>(family));
         break;
     }
     initChip();

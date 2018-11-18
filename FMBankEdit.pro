@@ -126,7 +126,13 @@ SOURCES += \
     src/opl/chips/mame_opn2.cpp \
     src/opl/chips/mame/mame_ym2612fm.c \
     src/opl/chips/gx_opn2.cpp \
-    src/opl/chips/gx/gx_ym2612.c
+    src/opl/chips/gx/gx_ym2612.c \
+    src/opl/chips/np2_opna.cpp \
+    src/opl/chips/np2/fmgen_file.cpp \
+    src/opl/chips/np2/fmgen_fmgen.cpp \
+    src/opl/chips/np2/fmgen_fmtimer.cpp \
+    src/opl/chips/np2/fmgen_opna.cpp \
+    src/opl/chips/np2/fmgen_psg.cpp
 
 HEADERS += \
     src/bank_editor.h \
@@ -155,12 +161,12 @@ HEADERS += \
     src/opl/measurer.h \
     src/opl/realtime/ring_buffer.h \
     src/opl/realtime/ring_buffer.tcc \
-    src/opl/chips/gens/Ym2612_Emu.h \
     src/piano.h \
     src/version.h \
     src/opl/chips/gens_opn2.h \
     src/opl/chips/opn_chip_base.h \
     src/opl/chips/opn_chip_base.tcc \
+    src/opl/chips/opn_chip_family.h \
     src/opl/chips/nuked_opn2.h \
     src/opl/chips/nuked/ym3438.h \
     src/opl/chips/mame_opn2.h \
@@ -168,7 +174,20 @@ HEADERS += \
     src/opl/chips/mame/mamedef.h \
     src/opl/chips/mame/mame_ym2612fm.h \
     src/opl/chips/gx/gx_ym2612.h \
-    src/FileFormats/ym2612_to_wopi.hpp
+    src/FileFormats/ym2612_to_wopi.hpp \
+    src/opl/chips/gens/Ym2612_Emu.h \
+    src/opl/chips/np2/compiler.h \
+    src/opl/chips/np2/fmgen_diag.h \
+    src/opl/chips/np2/fmgen_file.h \
+    src/opl/chips/np2/fmgen_fmgen.h \
+    src/opl/chips/np2/fmgen_fmgeninl.h \
+    src/opl/chips/np2/fmgen_fmtimer.h \
+    src/opl/chips/np2/fmgen_headers.h \
+    src/opl/chips/np2/fmgen_misc.h \
+    src/opl/chips/np2/fmgen_opna.h \
+    src/opl/chips/np2/fmgen_psg.h \
+    src/opl/chips/np2/fmgen_types.h \
+    src/opl/chips/np2_opna.h
 
 FORMS += \
     src/bank_editor.ui \

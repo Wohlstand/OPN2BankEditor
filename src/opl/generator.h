@@ -64,13 +64,14 @@ public:
         CHIP_Nuked = 0,
         CHIP_GENS,
         CHIP_MAME,
-        CHIP_GX
+        CHIP_GX,
+        CHIP_NP2
     };
     Generator(uint32_t sampleRate, OPN_Chips initialChip);
     ~Generator();
 
     void initChip();
-    void switchChip(OPN_Chips chipId);
+    void switchChip(OPN_Chips chipId, OPNFamily family = OPNChip_OPN2);
 
     void generate(int16_t *frames, unsigned nframes);
 
