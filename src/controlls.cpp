@@ -30,7 +30,8 @@ void BankEditor::on_chipType_currentIndexChanged(int index)
 {
     if(m_lock) return;
     m_bank.opna_mode = (index > 0);
-    // TODO: Add into the chipset a switch of the frequency mode
+    m_currentChipFamily = m_bank.opna_mode ? OPNChip_OPNA : OPNChip_OPN2;
+    m_generator->ctl_switchChip(m_currentChip, static_cast<int>(m_currentChipFamily));
 }
 
 void BankEditor::on_lfoEnable_clicked(bool checked)

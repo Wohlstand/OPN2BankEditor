@@ -64,6 +64,8 @@ private:
     QString             m_language;
     //! Currently using chip
     Generator::OPN_Chips m_currentChip;
+    //! Current chip family
+    OPNFamily           m_currentChipFamily = OPNChip_OPN2;
     //! Audio latency (ms)
     double m_audioLatency;
 

@@ -71,7 +71,7 @@ public:
     ~Generator();
 
     void initChip();
-    void switchChip(OPN_Chips chipId, OPNFamily family = OPNChip_OPN2);
+    void switchChip(OPN_Chips chipId, int family = static_cast<int>(OPNChip_OPN2));
 
     void generate(int16_t *frames, unsigned nframes);
 
@@ -163,6 +163,7 @@ private:
     uint8_t     lfo_enable = 0x00;
     uint8_t     lfo_freq   = 0x00;
     uint8_t     lfo_reg    = 0x00;
+    OPNFamily   m_chipFamily = OPNChip_OPN2;
 
     OPN_PatchSetup m_patch;
 

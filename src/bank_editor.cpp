@@ -345,6 +345,7 @@ void BankEditor::initFileData(QString &filePath)
 
     ui->lfoEnable->setChecked(m_bank.lfo_enabled);
     ui->lfoFrequency->setCurrentIndex(m_bank.lfo_frequency);
+    ui->lfoFrequency->setEnabled(m_bank.lfo_enabled);
     ui->chipType->setCurrentIndex(m_bank.opna_mode ? 1 : 0);
 
     ui->lfoEnable->blockSignals(false);
@@ -352,6 +353,12 @@ void BankEditor::initFileData(QString &filePath)
     ui->chipType->blockSignals(false);
 
     m_lock = false;
+
+    // Apply chip mode
+    on_chipType_currentIndexChanged(ui->chipType->currentIndex());
+    // Apply LFO setup
+    m_generator->ctl_changeLFO(m_bank.lfo_enabled);
+    m_generator->ctl_changeLFOfreq(m_bank.lfo_frequency);
 
     reloadInstrumentNames();
     reloadBanks();
@@ -850,35 +857,35 @@ void BankEditor::toggleEmulator()
     {
         ui->actionEmulatorNuked->setChecked(true);
         m_currentChip = Generator::CHIP_Nuked;
-        m_generator->ctl_switchChip(m_currentChip);
+        m_generator->ctl_switchChip(m_currentChip, static_cast<int>(m_currentChipFamily));
     }
     else
     if(menuItem == ui->actionEmulatorGens)
     {
         ui->actionEmulatorGens->setChecked(true);
         m_currentChip = Generator::CHIP_GENS;
-        m_generator->ctl_switchChip(m_currentChip);
+        m_generator->ctl_switchChip(m_currentChip, static_cast<int>(m_currentChipFamily));
     }
     else
     if(menuItem == ui->actionEmulatorMame)
     {
         ui->actionEmulatorMame->setChecked(true);
         m_currentChip = Generator::CHIP_MAME;
-        m_generator->ctl_switchChip(m_currentChip);
+        m_generator->ctl_switchChip(m_currentChip, static_cast<int>(m_currentChipFamily));
     }
     else
     if(menuItem == ui->actionEmulatorGX)
     {
         ui->actionEmulatorGX->setChecked(true);
         m_currentChip = Generator::CHIP_GX;
-        m_generator->ctl_switchChip(m_currentChip);
+        m_generator->ctl_switchChip(m_currentChip, static_cast<int>(m_currentChipFamily));
     }
     else
     if(menuItem == ui->actionEmulatorNP2)
     {
         ui->actionEmulatorNP2->setChecked(true);
         m_currentChip = Generator::CHIP_NP2;
-        m_generator->ctl_switchChip(m_currentChip);
+        m_generator->ctl_switchChip(m_currentChip, static_cast<int>(m_currentChipFamily));
     }
 }
 

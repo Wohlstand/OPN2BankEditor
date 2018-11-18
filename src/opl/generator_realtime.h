@@ -45,7 +45,7 @@ class IRealtimeControl : public QObject
 public:
     IRealtimeControl(QObject *parent = nullptr);
     virtual ~IRealtimeControl() {}
-    virtual void ctl_switchChip(int chipId) = 0;
+    virtual void ctl_switchChip(int chipId, int family) = 0;
 
 public slots:
     void changeNote(int note) { m_note = note; }
@@ -116,7 +116,7 @@ private:
 
 public:
     /* Control */
-    void ctl_switchChip(int chipId) override;
+    void ctl_switchChip(int chipId, int family) override;
     void ctl_silence() override;
     void ctl_noteOffAllChans() override;
     void ctl_playNote() override;

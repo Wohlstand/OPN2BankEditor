@@ -104,11 +104,12 @@ RealtimeGenerator::~RealtimeGenerator()
 {}
 
 /* Control */
-void RealtimeGenerator::ctl_switchChip(int chipId)
+void RealtimeGenerator::ctl_switchChip(int chipId, int family)
 {
     // non-RT, hence lock and processing in control thread
     std::unique_lock<mutex_type> lock(m_generator_mutex);
-    m_gen->switchChip((Generator::OPN_Chips)chipId);
+    Q_UNUSED(lock);
+    m_gen->switchChip((Generator::OPN_Chips)chipId, family);
 }
 
 void RealtimeGenerator::ctl_silence()

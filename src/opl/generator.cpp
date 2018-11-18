@@ -26,8 +26,6 @@
 #include "chips/gx_opn2.h"
 #include "chips/np2_opna.h"
 
-#define BEND_COEFFICIENT 321.88557
-
 #define USED_CHANNELS_4OP       6
 
 QString GeneratorDebugInfo::toStr()
@@ -73,7 +71,7 @@ Generator::~Generator()
 void Generator::initChip()
 {
     //Init chip //7670454
-    chip->setRate(m_rate, 7670454);
+    chip->setRate(m_rate, chip->nativeClockRate());
     WriteReg(0, 0x22, lfo_reg);   //LFO off
     WriteReg(0, 0x27, 0x0 );   //Channel 3 mode normal
 
@@ -142,24 +140,26 @@ void Generator::initChip()
     Silence();
 }
 
-void Generator::switchChip(Generator::OPN_Chips chipId, OPNFamily family)
+void Generator::switchChip(Generator::OPN_Chips chipId, int family)
 {
+    m_chipFamily = static_cast<OPNFamily>(family);
+
     switch(chipId)
     {
     case CHIP_GENS:
-        chip.reset(new GensOPN2(family));
+        chip.reset(new GensOPN2(m_chipFamily));
         break;
     case CHIP_Nuked:
-        chip.reset(new NukedOPN2(family));
+        chip.reset(new NukedOPN2(m_chipFamily));
         break;
     case CHIP_MAME:
-        chip.reset(new MameOPN2(family));
+        chip.reset(new MameOPN2(m_chipFamily));
         break;
     case CHIP_GX:
-        chip.reset(new GXOPN2(family));
+        chip.reset(new GXOPN2(m_chipFamily));
         break;
     case CHIP_NP2:
-        chip.reset(new NP2OPNA<>(family));
+        chip.reset(new NP2OPNA<>(m_chipFamily));
         break;
     }
     initChip();
@@ -185,6 +185,16 @@ void Generator::NoteOn(uint32_t c, double hertz) // Hertz range: 0..131071
 
     if(hertz < 0) // Avoid infinite loop
         return;
+
+    double coef;
+    switch(m_chipFamily)
+    {
+    case OPNChip_OPN2: default:
+        coef = 321.88557; break;
+    case OPNChip_OPNA:
+        coef = 309.12412; break;
+    }
+    hertz *= coef;
 
     //Basic range until max of octaves reaching
     while((hertz >= 1023.75) && (octave < 0x3800))
@@ -367,7 +377,7 @@ void Generator::PlayNoteCh(int ch, uint32_t volume, bool patch)
     Touch_Real(ch, getChipVolume(volume, 127, 127));
 
     bend  = m_bend + m_patch.finetune;
-    NoteOn(ch, BEND_COEFFICIENT * std::exp(0.057762265 * (tone + bend + phase)));
+    NoteOn(ch, std::exp(0.057762265 * (tone + bend + phase)));
 }
 
 void Generator::StopNoteF(int noteID)
@@ -435,7 +445,7 @@ void Generator::PlayDrum(uint8_t drum, int noteID)
     double bend = 0.0;
     double phase = 0.0;
     bend  = m_bend + m_patch.finetune;
-    NoteOn(adlchannel, BEND_COEFFICIENT * std::exp(0.057762265 * (tone + bend + phase)));
+    NoteOn(adlchannel, std::exp(0.057762265 * (tone + bend + phase)));
 }
 
 void Generator::Silence()
