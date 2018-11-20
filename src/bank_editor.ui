@@ -422,7 +422,7 @@
              <item row="4" column="0" colspan="2">
               <widget class="QTabWidget" name="synthType">
                <property name="currentIndex">
-                <number>0</number>
+                <number>1</number>
                </property>
                <property name="documentMode">
                 <bool>false</bool>
@@ -2870,7 +2870,7 @@
                  </property>
                  <layout class="QVBoxLayout" name="verticalLayout_13">
                   <item>
-                   <widget class="QRadioButton" name="radioButton">
+                   <widget class="QRadioButton" name="insModeFM">
                     <property name="text">
                      <string>FM only</string>
                     </property>
@@ -2880,35 +2880,35 @@
                    </widget>
                   </item>
                   <item>
-                   <widget class="QRadioButton" name="radioButton_2">
+                   <widget class="QRadioButton" name="insModePSG">
                     <property name="text">
                      <string>PSG-only</string>
                     </property>
                    </widget>
                   </item>
                   <item>
-                   <widget class="QRadioButton" name="radioButton_3">
+                   <widget class="QRadioButton" name="insModeFMPSG">
                     <property name="text">
                      <string>Both FM and PSG</string>
                     </property>
                    </widget>
                   </item>
                   <item>
-                   <widget class="QRadioButton" name="radioButton_4">
+                   <widget class="QRadioButton" name="insModeOPNAR">
                     <property name="text">
                      <string>OPNA Rhythm</string>
                     </property>
                    </widget>
                   </item>
                   <item>
-                   <widget class="QRadioButton" name="radioButton_5">
+                   <widget class="QRadioButton" name="insModePCM">
                     <property name="text">
                      <string>PCM voice</string>
                     </property>
                    </widget>
                   </item>
                   <item>
-                   <widget class="QCheckBox" name="checkBox">
+                   <widget class="QCheckBox" name="enableDualPSG">
                     <property name="text">
                      <string>Enable PSG Dual</string>
                     </property>
@@ -2953,7 +2953,7 @@
                    </widget>
                   </item>
                   <item>
-                   <widget class="QComboBox" name="comboBox">
+                   <widget class="QComboBox" name="rhythmIns">
                     <item>
                      <property name="text">
                       <string>Bass drum</string>
@@ -3007,7 +3007,7 @@
                  </property>
                  <property name="geometry">
                   <rect>
-                   <x>170</x>
+                   <x>160</x>
                    <y>10</y>
                    <width>171</width>
                    <height>301</height>
@@ -3018,14 +3018,14 @@
                  </property>
                  <layout class="QGridLayout" name="gridLayout_9">
                   <item row="7" column="0" colspan="2">
-                   <widget class="QCheckBox" name="checkBox_6">
+                   <widget class="QCheckBox" name="psgHld1">
                     <property name="text">
                      <string>HLD</string>
                     </property>
                    </widget>
                   </item>
                   <item row="1" column="1">
-                   <widget class="QSpinBox" name="spinBox">
+                   <widget class="QSpinBox" name="psgLevel1">
                     <property name="maximum">
                      <number>15</number>
                     </property>
@@ -3035,7 +3035,7 @@
                    </widget>
                   </item>
                   <item row="8" column="1" colspan="2">
-                   <widget class="QSpinBox" name="spinBox_3">
+                   <widget class="QSpinBox" name="psgNoteOffset1">
                     <property name="minimum">
                      <number>-127</number>
                     </property>
@@ -3045,14 +3045,14 @@
                    </widget>
                   </item>
                   <item row="6" column="0" colspan="2">
-                   <widget class="QCheckBox" name="checkBox_5">
+                   <widget class="QCheckBox" name="psgAlt1">
                     <property name="text">
                      <string>ALT</string>
                     </property>
                    </widget>
                   </item>
                   <item row="9" column="1" colspan="2">
-                   <widget class="QSpinBox" name="spinBox_4">
+                   <widget class="QSpinBox" name="psgDetune1">
                     <property name="minimum">
                      <number>-1000</number>
                     </property>
@@ -3069,7 +3069,7 @@
                    </widget>
                   </item>
                   <item row="5" column="0" colspan="2">
-                   <widget class="QCheckBox" name="checkBox_4">
+                   <widget class="QCheckBox" name="psgAtt1">
                     <property name="text">
                      <string>ATT</string>
                     </property>
@@ -3083,7 +3083,7 @@
                    </widget>
                   </item>
                   <item row="4" column="0" colspan="2">
-                   <widget class="QCheckBox" name="checkBox_3">
+                   <widget class="QCheckBox" name="psgC1">
                     <property name="text">
                      <string>C</string>
                     </property>
@@ -3097,7 +3097,7 @@
                    </widget>
                   </item>
                   <item row="3" column="1">
-                   <widget class="QSpinBox" name="spinBox_2">
+                   <widget class="QSpinBox" name="psgEgFreq1">
                     <property name="maximum">
                      <number>65535</number>
                     </property>
@@ -3114,7 +3114,7 @@
                    </widget>
                   </item>
                   <item row="2" column="0" colspan="3">
-                   <widget class="QCheckBox" name="checkBox_2">
+                   <widget class="QCheckBox" name="psgEnvEn1">
                     <property name="text">
                      <string>Enable envelope</string>
                     </property>
@@ -3122,140 +3122,6 @@
                   </item>
                   <item row="10" column="0" colspan="2">
                    <spacer name="verticalSpacer_7">
-                    <property name="orientation">
-                     <enum>Qt::Vertical</enum>
-                    </property>
-                    <property name="sizeHint" stdset="0">
-                     <size>
-                      <width>20</width>
-                      <height>40</height>
-                     </size>
-                    </property>
-                   </spacer>
-                  </item>
-                 </layout>
-                </widget>
-                <widget class="QGroupBox" name="groupPSG2">
-                 <property name="enabled">
-                  <bool>true</bool>
-                 </property>
-                 <property name="geometry">
-                  <rect>
-                   <x>350</x>
-                   <y>10</y>
-                   <width>171</width>
-                   <height>301</height>
-                  </rect>
-                 </property>
-                 <property name="title">
-                  <string>PSG - voice 2</string>
-                 </property>
-                 <layout class="QGridLayout" name="gridLayout_10">
-                  <item row="7" column="0" colspan="2">
-                   <widget class="QCheckBox" name="checkBox_7">
-                    <property name="text">
-                     <string>HLD</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item row="1" column="1">
-                   <widget class="QSpinBox" name="spinBox_5">
-                    <property name="maximum">
-                     <number>15</number>
-                    </property>
-                    <property name="value">
-                     <number>15</number>
-                    </property>
-                   </widget>
-                  </item>
-                  <item row="8" column="1" colspan="2">
-                   <widget class="QSpinBox" name="spinBox_6">
-                    <property name="minimum">
-                     <number>-127</number>
-                    </property>
-                    <property name="maximum">
-                     <number>127</number>
-                    </property>
-                   </widget>
-                  </item>
-                  <item row="6" column="0" colspan="2">
-                   <widget class="QCheckBox" name="checkBox_8">
-                    <property name="text">
-                     <string>ALT</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item row="9" column="1" colspan="2">
-                   <widget class="QSpinBox" name="spinBox_7">
-                    <property name="minimum">
-                     <number>-1000</number>
-                    </property>
-                    <property name="maximum">
-                     <number>1000</number>
-                    </property>
-                   </widget>
-                  </item>
-                  <item row="3" column="0">
-                   <widget class="QLabel" name="label_56">
-                    <property name="text">
-                     <string>EG frequency</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item row="5" column="0" colspan="2">
-                   <widget class="QCheckBox" name="checkBox_9">
-                    <property name="text">
-                     <string>ATT</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item row="9" column="0">
-                   <widget class="QLabel" name="label_57">
-                    <property name="text">
-                     <string>Detune</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item row="4" column="0" colspan="2">
-                   <widget class="QCheckBox" name="checkBox_10">
-                    <property name="text">
-                     <string>C</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item row="1" column="0">
-                   <widget class="QLabel" name="label_58">
-                    <property name="text">
-                     <string>Level</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item row="3" column="1">
-                   <widget class="QSpinBox" name="spinBox_8">
-                    <property name="maximum">
-                     <number>65535</number>
-                    </property>
-                    <property name="value">
-                     <number>32767</number>
-                    </property>
-                   </widget>
-                  </item>
-                  <item row="8" column="0">
-                   <widget class="QLabel" name="label_59">
-                    <property name="text">
-                     <string>Note offset:</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item row="2" column="0" colspan="3">
-                   <widget class="QCheckBox" name="checkBox_11">
-                    <property name="text">
-                     <string>Enable envelope</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item row="10" column="0" colspan="2">
-                   <spacer name="verticalSpacer_8">
                     <property name="orientation">
                      <enum>Qt::Vertical</enum>
                     </property>
@@ -3286,28 +3152,28 @@
                  </property>
                  <layout class="QGridLayout" name="gridLayout_11">
                   <item row="0" column="0" colspan="3">
-                   <widget class="QLabel" name="label_60">
+                   <widget class="QLabel" name="pcmStatus">
                     <property name="text">
                      <string>&lt;Status and characteristics of preloaded voice&gt;</string>
                     </property>
                    </widget>
                   </item>
                   <item row="1" column="0">
-                   <widget class="QPushButton" name="pushButton">
+                   <widget class="QPushButton" name="pcmLoad">
                     <property name="text">
                      <string>Load</string>
                     </property>
                    </widget>
                   </item>
                   <item row="1" column="2">
-                   <widget class="QPushButton" name="pushButton_2">
+                   <widget class="QPushButton" name="pcmClear">
                     <property name="text">
                      <string>Clear</string>
                     </property>
                    </widget>
                   </item>
                   <item row="1" column="1">
-                   <widget class="QPushButton" name="pushButton_3">
+                   <widget class="QPushButton" name="pcmSetup">
                     <property name="text">
                      <string>Setup</string>
                     </property>
@@ -3315,6 +3181,140 @@
                   </item>
                   <item row="2" column="1">
                    <spacer name="verticalSpacer_9">
+                    <property name="orientation">
+                     <enum>Qt::Vertical</enum>
+                    </property>
+                    <property name="sizeHint" stdset="0">
+                     <size>
+                      <width>20</width>
+                      <height>40</height>
+                     </size>
+                    </property>
+                   </spacer>
+                  </item>
+                 </layout>
+                </widget>
+                <widget class="QGroupBox" name="groupPSG1_2">
+                 <property name="enabled">
+                  <bool>true</bool>
+                 </property>
+                 <property name="geometry">
+                  <rect>
+                   <x>350</x>
+                   <y>10</y>
+                   <width>171</width>
+                   <height>301</height>
+                  </rect>
+                 </property>
+                 <property name="title">
+                  <string>PSG - voice 2</string>
+                 </property>
+                 <layout class="QGridLayout" name="gridLayout_10">
+                  <item row="7" column="0" colspan="2">
+                   <widget class="QCheckBox" name="psgHld2">
+                    <property name="text">
+                     <string>HLD</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="1" column="1">
+                   <widget class="QSpinBox" name="psgLevel2">
+                    <property name="maximum">
+                     <number>15</number>
+                    </property>
+                    <property name="value">
+                     <number>15</number>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="8" column="1" colspan="2">
+                   <widget class="QSpinBox" name="psgNoteOffset2">
+                    <property name="minimum">
+                     <number>-127</number>
+                    </property>
+                    <property name="maximum">
+                     <number>127</number>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="6" column="0" colspan="2">
+                   <widget class="QCheckBox" name="psgAlt2">
+                    <property name="text">
+                     <string>ALT</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="9" column="1" colspan="2">
+                   <widget class="QSpinBox" name="psgDetune2">
+                    <property name="minimum">
+                     <number>-1000</number>
+                    </property>
+                    <property name="maximum">
+                     <number>1000</number>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="3" column="0">
+                   <widget class="QLabel" name="label_56">
+                    <property name="text">
+                     <string>EG frequency</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="5" column="0" colspan="2">
+                   <widget class="QCheckBox" name="psgAtt2">
+                    <property name="text">
+                     <string>ATT</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="9" column="0">
+                   <widget class="QLabel" name="label_57">
+                    <property name="text">
+                     <string>Detune</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="4" column="0" colspan="2">
+                   <widget class="QCheckBox" name="psgC2">
+                    <property name="text">
+                     <string>C</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="1" column="0">
+                   <widget class="QLabel" name="label_58">
+                    <property name="text">
+                     <string>Level</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="3" column="1">
+                   <widget class="QSpinBox" name="psgEgFreq2">
+                    <property name="maximum">
+                     <number>65535</number>
+                    </property>
+                    <property name="value">
+                     <number>32767</number>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="8" column="0">
+                   <widget class="QLabel" name="label_59">
+                    <property name="text">
+                     <string>Note offset:</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="2" column="0" colspan="3">
+                   <widget class="QCheckBox" name="psgEnvEn2">
+                    <property name="text">
+                     <string>Enable envelope</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="10" column="0" colspan="2">
+                   <spacer name="verticalSpacer_8">
                     <property name="orientation">
                      <enum>Qt::Vertical</enum>
                     </property>
