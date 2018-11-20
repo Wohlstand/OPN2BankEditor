@@ -489,6 +489,20 @@ private slots:
     void on_op4_ratescale_valueChanged(int arg1);
     void on_op4_ssgeg_currentIndexChanged(int index);
 
+    void on_instrumentType_radioChanged();
+    void on_enableDualPSG_clicked(bool checked);
+
+    void on_psgLevel1_valueChanged(int arg1);
+    void on_psgEnvEn1_clicked(bool checked);
+    void on_psgEgFreq1_valueChanged(int arg1);
+    void on_psgC1_clicked(bool checked);
+    void on_psgAtt1_clicked(bool checked);
+    void on_psgAlt1_clicked(bool checked);
+    void on_psgHld1_clicked(bool checked);
+    void on_psgNoteOffset1_valueChanged(int arg1);
+    void on_psgDetune1_valueChanged(int arg1);
+    void on_rhythmIns_currentIndexChanged(int index);
+
     void on_pitchBendSlider_valueChanged(int value);
     void on_pitchBendSlider_sliderReleased();
 

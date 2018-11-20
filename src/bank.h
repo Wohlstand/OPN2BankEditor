@@ -169,12 +169,66 @@ public:
     };
 
     /**
+     * @brief PSG voice specs
+     */
+    struct PsgVoice
+    {
+        //! Tone or noise
+        uint8_t voiceType;
+        //! Play only this note number independent from a requested key
+        uint8_t percNoteNum;
+        //! Note offset (first operator pair)
+        int16_t note_offset;
+        //! Detune (tone cents offset)
+        int16_t detune;
+        /*
+         * M/Lebel: $08-$0A
+         *    bits 7-3 - unused
+         *    bit 4    - Mode
+         *    bits 3-0 - Output level
+         */
+        //! Mode: 0 - fixed level output, 1 - Envelope-controlled
+        uint8_t mode;
+        //! Tone level (0-15)
+        uint8_t level;
+
+        //! Frequency of the envelope generator
+        uint16_t envFreq;
+
+        /*
+         * C/ATT/ALT/HLD: $0D
+         *      bits 7-4 - unused
+         *      bit 3    - C
+         *      bit 2    - ATT
+         *      bit 1    - ALT
+         *      bit 0    - HLD
+         */
+        uint8_t egC;
+        uint8_t egAtt;
+        uint8_t egAlt;
+        uint8_t egHld;
+    };
+
+    /**
      * @brief Instrument specs
      */
     struct Instrument
     {
+        enum Type
+        {
+            InsType_FM = 0,
+            InsType_PSG,
+            InsType_FM_PSG,
+            InsType_OPNA_Rhythm,
+            InsType_PCM
+        };
+
+        //! Instrument type
+        uint8_t instType;
         //! Custom instrument name
         char name[33];
+
+        /* ********** OPN2/OPNA FM voice *********** */
         //! FM operators
         Operator OP[4];
         //! Feedback
@@ -196,6 +250,18 @@ public:
         uint8_t fm;
         //! Amplitude modulation sensitivity (0...3)
         uint8_t am;
+
+        /* ********** OPNA SSG (PSG) voice *********** */
+        //! Two-voice PSG
+        uint8_t  psgDualVoice;
+        //! PSG data (two voices max)
+        PsgVoice psg[2];
+
+        /* ********** OPNA Rhythm Mode *********** */
+        //! OPNA Rhythm index
+        uint8_t  opnaRhythmId;
+
+        /* ********** Misc. functions *********** */
 
         bool operator==(const Instrument &fb);
         bool operator!=(const Instrument &fb);
@@ -227,6 +293,13 @@ public:
 
         uint8_t getRegLfoSens() const;
         void    setRegLfoSens(uint8_t reg_lfosens);
+
+        /* ******** OPNA SSG merged values ******** */
+        uint8_t getPsgMLevel(int voice) const;
+        void    setPsgMLevel(int voice, uint8_t reg_mlevel);
+
+        uint8_t getPsgEG(int voice) const;
+        void    setPsgEG(int voice, uint8_t reg_eg);
     };
 
     struct MidiBank

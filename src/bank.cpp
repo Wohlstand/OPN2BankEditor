@@ -245,6 +245,14 @@ bool FmBank::Instrument::operator==(const FmBank::Instrument &fb)
 {
     if(memcmp(OP, fb.OP, sizeof(Operator)*4) != 0)
         return false;
+    if(memcmp(psg, fb.psg, sizeof(PsgVoice) * 2) != 0)
+        return false;
+    if(instType != fb.instType)
+        return false;
+    if(psgDualVoice != fb.psgDualVoice)
+        return false;
+    if(opnaRhythmId != fb.opnaRhythmId)
+        return false;
     if(feedback != fb.feedback)
         return false;
     if(algorithm != fb.algorithm)
@@ -383,6 +391,37 @@ void FmBank::Instrument::setRegLfoSens(uint8_t reg_lfosens)
 {
     am = (reg_lfosens >> 4) & 0x03;
     fm = (reg_lfosens) & 0x07;
+}
+
+uint8_t FmBank::Instrument::getPsgMLevel(int voice) const
+{
+    const PsgVoice &p = psg[voice];
+    return (p.level & 0x0F) | ((p.mode << 4) & 0x10);
+}
+
+void FmBank::Instrument::setPsgMLevel(int voice, uint8_t reg_mlevel)
+{
+    PsgVoice &p = psg[voice];
+    p.level = (reg_mlevel & 0x0F);
+    p.mode = (reg_mlevel >> 4) & 0x01;
+}
+
+uint8_t FmBank::Instrument::getPsgEG(int voice) const
+{
+    const PsgVoice &p = psg[voice];
+    return ((p.egC << 3) & 0x08) |
+           ((p.egAtt << 2) & 0x04) |
+           ((p.egAlt << 1) & 0x02) |
+           ((p.egHld << 0) & 0x01);
+}
+
+void FmBank::Instrument::setPsgEG(int voice, uint8_t reg_eg)
+{
+    PsgVoice &p = psg[voice];
+    p.egC   = (reg_eg >> 3) && 0x01;
+    p.egAtt = (reg_eg >> 2) && 0x01;
+    p.egAlt = (reg_eg >> 1) && 0x01;
+    p.egHld = (reg_eg >> 0) && 0x01;
 }
 
 TmpBank::TmpBank(FmBank &bank, int minMelodic, int minPercusive)

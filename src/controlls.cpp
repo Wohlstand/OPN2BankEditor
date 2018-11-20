@@ -481,6 +481,123 @@ void BankEditor::on_op4_ssgeg_currentIndexChanged(int index)
     afterChangeControlValue();
 }
 
+/* ***************** Instrument Type ***************** */
+
+void BankEditor::on_instrumentType_radioChanged()
+{
+    if(m_lock) return;
+    if(!m_curInst) return;
+
+    QObject *menuItem = sender();
+
+    if(menuItem == ui->insModeFM)
+        m_curInst->instType = FmBank::Instrument::InsType_FM;
+    else if(menuItem == ui->insModePSG)
+        m_curInst->instType = FmBank::Instrument::InsType_PSG;
+    else if(menuItem == ui->insModeFMPSG)
+        m_curInst->instType = FmBank::Instrument::InsType_FM_PSG;
+    else if(menuItem == ui->insModeOPNAR)
+        m_curInst->instType = FmBank::Instrument::InsType_OPNA_Rhythm;
+    else if(menuItem == ui->insModePCM)
+        m_curInst->instType = FmBank::Instrument::InsType_PCM;
+
+    afterChangeControlValue();
+}
+
+void BankEditor::on_enableDualPSG_clicked(bool checked)
+{
+    if(m_lock) return;
+    if(!m_curInst) return;
+    m_curInst->psgDualVoice = checked ? 0x01 : 0x00;
+    afterChangeControlValue();
+}
+
+/* ***************** PSG ***************** */
+
+void BankEditor::on_psgLevel1_valueChanged(int arg1)
+{
+    if(m_lock) return;
+    if(!m_curInst) return;
+    m_curInst->psg[0].level = static_cast<uint8_t>(arg1);
+    afterChangeControlValue();
+}
+
+void BankEditor::on_psgEnvEn1_clicked(bool checked)
+{
+    if(m_lock) return;
+    if(!m_curInst) return;
+    m_curInst->psg[0].mode = checked ? 0x01 : 0x00;
+    afterChangeControlValue();
+}
+
+void BankEditor::on_psgEgFreq1_valueChanged(int arg1)
+{
+    if(m_lock) return;
+    if(!m_curInst) return;
+    m_curInst->psg[0].envFreq = static_cast<uint16_t>(arg1);
+    afterChangeControlValue();
+}
+
+void BankEditor::on_psgC1_clicked(bool checked)
+{
+    if(m_lock) return;
+    if(!m_curInst) return;
+    m_curInst->psg[0].egC = checked ? 0x01 : 0x00;
+    afterChangeControlValue();
+}
+
+void BankEditor::on_psgAtt1_clicked(bool checked)
+{
+    if(m_lock) return;
+    if(!m_curInst) return;
+    m_curInst->psg[0].egAtt = checked ? 0x01 : 0x00;
+    afterChangeControlValue();
+}
+
+void BankEditor::on_psgAlt1_clicked(bool checked)
+{
+    if(m_lock) return;
+    if(!m_curInst) return;
+    m_curInst->psg[0].egAlt = checked ? 0x01 : 0x00;
+    afterChangeControlValue();
+}
+
+void BankEditor::on_psgHld1_clicked(bool checked)
+{
+    if(m_lock) return;
+    if(!m_curInst) return;
+    m_curInst->psg[0].egHld = checked ? 0x01 : 0x00;
+    afterChangeControlValue();
+}
+
+void BankEditor::on_psgNoteOffset1_valueChanged(int arg1)
+{
+    if(m_lock) return;
+    if(!m_curInst) return;
+    m_curInst->psg[0].note_offset = static_cast<int16_t>(arg1);
+    afterChangeControlValue();
+}
+
+void BankEditor::on_psgDetune1_valueChanged(int arg1)
+{
+    if(m_lock) return;
+    if(!m_curInst) return;
+    m_curInst->psg[0].detune = static_cast<int16_t>(arg1);
+    afterChangeControlValue();
+}
+
+
+/* ***************** OPNA Rhythm ***************** */
+
+void BankEditor::on_rhythmIns_currentIndexChanged(int index)
+{
+    if(m_lock) return;
+    if(!m_curInst) return;
+    m_curInst->opnaRhythmId = static_cast<uint8_t>(index);
+    afterChangeControlValue();
+}
+
+
 /* ***************** All ***************** */
 
 void BankEditor::afterChangeControlValue()
@@ -509,3 +626,7 @@ void BankEditor::on_holdButton_toggled(bool checked)
 {
     m_generator->ctl_hold(checked);
 }
+
+
+
+

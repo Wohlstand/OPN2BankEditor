@@ -105,6 +105,12 @@ BankEditor::BankEditor(QWidget *parent) :
     connect(ui->actionEmulatorGens, SIGNAL(triggered()), this, SLOT(toggleEmulator()));
     connect(ui->actionEmulatorNP2, SIGNAL(triggered()), this, SLOT(toggleEmulator()));
 
+    connect(ui->insModeFM, SIGNAL(clicked()), this, SLOT(on_instrumentType_radioChanged()));
+    connect(ui->insModePSG, SIGNAL(clicked()), this, SLOT(on_instrumentType_radioChanged()));
+    connect(ui->insModeFMPSG, SIGNAL(clicked()), this, SLOT(on_instrumentType_radioChanged()));
+    connect(ui->insModeOPNAR, SIGNAL(clicked()), this, SLOT(on_instrumentType_radioChanged()));
+    connect(ui->insModePCM, SIGNAL(clicked()), this, SLOT(on_instrumentType_radioChanged()));
+
     /* Hide first 7 SSG-EG items */
     {
         QComboBox *ssgegs[4] = {ui->op1_ssgeg, ui->op2_ssgeg, ui->op3_ssgeg, ui->op4_ssgeg};

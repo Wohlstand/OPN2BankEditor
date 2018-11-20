@@ -248,7 +248,7 @@ struct TinySynth
         }
         patch.fbalg    = in.getRegFbAlg();
         patch.lfosens  = 0;//Disable LFO sensitivity for clear measure
-        patch.finetune = static_cast<int8_t>(in.note_offset1);
+        patch.noteOffset = static_cast<int8_t>(in.note_offset1);
         patch.tone     = 0;
 
         m_c = 0;

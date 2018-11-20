@@ -26,7 +26,10 @@
 #include "chips/gx_opn2.h"
 #include "chips/np2_opna.h"
 
+#include <QtDebug>
+
 #define USED_CHANNELS_4OP       6
+#define USED_CHANNELS_PSG       3
 
 QString GeneratorDebugInfo::toStr()
 {
@@ -42,6 +45,7 @@ Generator::Generator(uint32_t sampleRate, OPN_Chips initialChip)
     lfo_reg = 0x00;
     m_patch =
     {
+        0x00,
         {
             { {0x71, 0x23, 0x5F, 0x05, 0x02, 0x11, 0x00} },
             { {0x0D, 0x2D, 0x99, 0x05, 0x02, 0x11, 0x00} },
@@ -52,11 +56,22 @@ Generator::Generator(uint32_t sampleRate, OPN_Chips initialChip)
         0x00,
         +12,
         60,
+
+        0x00,
+        {
+            {0x00,0x00,0x00,0x00,0x00},
+            {0x00,0x00,0x00,0x00,0x00},
+        },
+
+        0x00,
     };
 
     memset(m_ins, 0, sizeof(uint16_t) * NUM_OF_CHANNELS);
     memset(m_pit, 0, sizeof(uint8_t) * NUM_OF_CHANNELS);
     memset(m_pan_lfo, 0, sizeof(uint8_t) * NUM_OF_CHANNELS);
+
+    m_regPsg[0] = 0xFF;
+    m_regPsg[1] = 0xFF;
 
     switchChip(initialChip);
 
@@ -176,6 +191,16 @@ void Generator::NoteOff(uint32_t c)
     WriteReg(0, 0x28, (c <= 2) ? cc : cc + 1);
 }
 
+void Generator::NotePsgOff(uint32_t c)
+{
+    uint8_t cc = static_cast<uint8_t>(c % 3);
+    //m_regPsg[0] |= 0xC0;
+    //m_regPsg[0] |= 0x38;
+    m_regPsg[0] |= (1 << cc);
+    WriteReg(0, 0x07, m_regPsg[0]);
+    qDebug() << QString("%1").arg(int(m_regPsg[0]), 8, 2);
+}
+
 void Generator::NoteOn(uint32_t c, double hertz) // Hertz range: 0..131071
 {
     uint8_t  cc     = uint8_t(c % 3);
@@ -233,7 +258,53 @@ void Generator::NoteOn(uint32_t c, double hertz) // Hertz range: 0..131071
 
     WriteReg(port, 0xA4 + cc, (ftone >> 8) & 0xFF);//Set frequency and octave
     WriteReg(port, 0xA0 + cc,  ftone & 0xFF);
+
     WriteReg(0, 0x28, 0xF0 + uint8_t((c <= 2) ? c : c + 1));
+}
+
+void Generator::NotePsgOn(uint32_t c, double hertz)
+{
+    uint8_t  cc     = uint8_t(c % 3);
+    uint32_t octave = 0, ftone = 0;
+    uint32_t mul_offset = 0;
+
+    if(hertz < 0) // Avoid infinite loop
+        return;
+
+    double coef;
+    switch(m_chipFamily)
+    {
+    case OPNChip_OPN2: default:
+        coef = 321.88557; break;
+    case OPNChip_OPNA:
+        coef = 309.12412; break;
+    }
+    hertz *= coef;
+
+    //Basic range until max of octaves reaching
+    while((hertz >= 1023.75) && (octave < 0x3800))
+    {
+        hertz /= 2.0;    // Calculate octave
+        octave += 0x800;
+    }
+    //Extended range, rely on frequency multiplication increment
+    while(hertz >= 2036.75)
+    {
+        hertz /= 2.0;    // Calculate octave
+        mul_offset++;
+    }
+    ftone = octave + static_cast<uint32_t>(hertz + 0.5);
+
+    WriteReg(0, 0x00 + cc * 2, 0x00);
+    WriteReg(0, 0x01 + cc * 2, static_cast<uint8_t>((hertz / 1000.0) * 255.0));
+
+    //m_regPsg[0] |= 0xC0;
+    //m_regPsg[0] |= 0x38;
+    //m_regPsg[0] &= 0xF8;
+    // m_regPsg[0] = 0xFF;
+    m_regPsg[0] &= ~(1 << cc);
+    WriteReg(0, 0x07, m_regPsg[0]);
+    qDebug() << QString("%1").arg(int(m_regPsg[0]), 8, 2);
 }
 
 void Generator::Touch_Real(uint32_t c, uint32_t volume)
@@ -292,14 +363,41 @@ void Generator::Touch_Real(uint32_t c, uint32_t volume)
     //   63 + chanvol * (instrvol / 63.0 - 1)
 }
 
-void Generator::Touch(uint32_t c, uint32_t volume) // Volume maxes at 127*127*127
+void Generator::Touch_RealPSG(uint32_t c, uint32_t volume)
 {
-    // The formula below: SOLVE(V=127^3 * 2^( (A-63.49999) / 8), A)
-    //Touch_Real(c, static_cast<uint32_t>(volume > 8725  ? std::log(volume) * 11.541561 + (0.5 - 104.22845) : 0));
-    Touch_Real(c, volume);
-    // The incorrect formula below: SOLVE(V=127^3 * (2^(A/63)-1), A)
-    //Touch_Real(c, volume>11210 ? 91.61112 * std::log(4.8819E-7*volume + 1.0)+0.5 : 0);
+    if(volume > 15)
+        volume = 15;
+
+    uint8_t cc   = c % 3;
+    WriteReg(0, 0x08 + cc, m_patch.psg[0].dataMLevel);
+//    uint8_t op_vol[2] =
+//    {
+//        m_patch.psg[0].dataMLevel & 0x0F,
+//        m_patch.psg[1].dataMLevel & 0x0F,
+//    };
+
+//    uint8_t opMax = m_patch.psgDual ? 2 : 1;
+//    for(uint8_t op = 0; op < opMax; op++)
+//    {
+//        uint8_t x = op_vol[op];
+//        uint32_t vol_res = 15 - (15 - (static_cast<uint32_t>(volume) * (15 - (x & 15)))/15);
+//        WriteReg(0, 0x08 + cc, (m_patch.psg[0].dataMLevel & 0xF0) | vol_res);
+//    }
 }
+
+void Generator::Touch_RealRhythm(uint32_t volume)
+{
+    WriteReg(0, 0x11, volume & 0x3F);
+}
+
+//void Generator::Touch(uint32_t c, uint32_t volume) // Volume maxes at 127*127*127
+//{
+//    // The formula below: SOLVE(V=127^3 * 2^( (A-63.49999) / 8), A)
+//    //Touch_Real(c, static_cast<uint32_t>(volume > 8725  ? std::log(volume) * 11.541561 + (0.5 - 104.22845) : 0));
+//    Touch_Real(c, volume);
+//    // The incorrect formula below: SOLVE(V=127^3 * (2^(A/63)-1), A)
+//    //Touch_Real(c, volume>11210 ? 91.61112 * std::log(4.8819E-7*volume + 1.0)+0.5 : 0);
+//}
 
 void Generator::Patch(uint32_t c)
 {
@@ -320,6 +418,12 @@ void Generator::Patch(uint32_t c)
     WriteReg(port, 0xB4 + cc, m_pan_lfo[c]);
 }
 
+void Generator::PatchPSG(uint32_t c)
+{
+    uint8_t cc   = c % 3;
+    WriteReg(0, 0x0D + cc, m_patch.psg[0].dataEG);
+}
+
 void Generator::Pan(uint32_t c, uint8_t value)
 {
     uint8_t cc = c % 3;
@@ -334,15 +438,30 @@ void Generator::PlayNoteF(int noteID, uint32_t volume)
         return;//Deny playing notes without instrument loaded
 
     bool replace;
-    int ch = m_noteManager.noteOn(noteID, volume, &replace);
-
-    if(replace) {
-        //if it replaces an old note, shut up the old one first
-        //this lets the sustain take over with a fresh envelope
-        NoteOff(ch);
+    int ch = 0;
+    if(m_patch.instType == FmBank::Instrument::InsType_FM || m_patch.instType == FmBank::Instrument::InsType_FM_PSG)
+    {
+        ch = m_noteManager.noteOn(noteID, volume, &replace);
+        if(replace)
+        {
+            //if it replaces an old note, shut up the old one first
+            //this lets the sustain take over with a fresh envelope
+            NoteOff(ch);
+        }
+        PlayNoteCh(ch, volume);
     }
 
-    PlayNoteCh(ch, volume);
+    if(m_patch.instType == FmBank::Instrument::InsType_PSG || m_patch.instType == FmBank::Instrument::InsType_FM_PSG)
+    {
+        ch = m_noteManagerPsg.noteOn(noteID, volume, &replace);
+        if(replace)
+        {
+            //if it replaces an old note, shut up the old one first
+            //this lets the sustain take over with a fresh envelope
+            NotePsgOff(ch);
+        }
+        PlayNotePsgCh(ch, volume);
+    }
 }
 
 void Generator::PlayNoteCh(int ch, uint32_t volume, bool patch)
@@ -376,8 +495,41 @@ void Generator::PlayNoteCh(int ch, uint32_t volume, bool patch)
 
     Touch_Real(ch, getChipVolume(volume, 127, 127));
 
-    bend  = m_bend + m_patch.finetune;
+    bend  = m_bend + m_patch.noteOffset;
     NoteOn(ch, std::exp(0.057762265 * (tone + bend + phase)));
+}
+
+void Generator::PlayNotePsgCh(int ch, uint32_t volume, bool patch)
+{
+    if(!m_isInstrumentLoaded)
+        return;//Deny playing notes without instrument loaded
+
+    int tone;
+
+    if(m_patch.tone)
+    {
+        tone = m_patch.psg[0].noteOffset;
+        if(tone > 128)
+            tone -= 128;
+    }
+    else
+    {
+        tone = m_noteManagerPsg.channel(ch).note;
+    }
+
+    double bend = 0.0;
+    double phase = 0.0;
+
+    if(patch)
+    {
+        Patch(ch);
+        Pan(ch, 0xC0);
+    }
+
+    Touch_RealPSG(ch, (getChipVolume(volume, 127, 127) * 15) / 127);
+
+    bend  = m_bend + m_patch.noteOffset;
+    NotePsgOn(ch, std::exp(0.057762265 * (tone + bend + phase)));
 }
 
 void Generator::StopNoteF(int noteID)
@@ -385,11 +537,35 @@ void Generator::StopNoteF(int noteID)
     if(!m_isInstrumentLoaded)
         return;//Deny playing notes without instrument loaded
 
-    int ch = m_noteManager.findNoteOffChannel(noteID);
-    if (ch == -1)
-        return;
+    if(m_patch.instType == FmBank::Instrument::InsType_FM || m_patch.instType == FmBank::Instrument::InsType_FM_PSG)
+    {
+        int ch = m_noteManager.findNoteOffChannel(noteID);
+        if(ch != -1)
+            StopNoteCh(ch);
+    }
 
-    StopNoteCh(ch);
+    if(m_patch.instType == FmBank::Instrument::InsType_PSG || m_patch.instType == FmBank::Instrument::InsType_FM_PSG)
+    {
+        int ch = m_noteManagerPsg.findNoteOffChannel(noteID);
+        if(ch != -1)
+            StopNotePsgCh(ch);
+    }
+}
+
+void Generator::StopNotePsgCh(int ch)
+{
+    if(!m_isInstrumentLoaded)
+        return;//Deny playing notes without instrument loaded
+
+    if(m_hold)
+    {
+        m_noteManagerPsg.hold(ch, true);  // stop later after hold is over
+        return;
+    }
+
+    m_noteManagerPsg.channelOff(ch);
+
+    NotePsgOff(ch);
 }
 
 void Generator::StopNoteCh(int ch)
@@ -444,7 +620,7 @@ void Generator::PlayDrum(uint8_t drum, int noteID)
     Touch_Real(adlchannel, 127);
     double bend = 0.0;
     double phase = 0.0;
-    bend  = m_bend + m_patch.finetune;
+    bend  = m_bend + m_patch.noteOffset;
     NoteOn(adlchannel, std::exp(0.057762265 * (tone + bend + phase)));
 }
 
@@ -578,6 +754,9 @@ void Generator::changePatch(const FmBank::Instrument &instrument, bool isDrum)
     m_bendsense = 2.0 / 8192;
     //m_hold = false;
     {
+        m_patch.instType = instrument.instType;
+
+        /* FM voice */
         for(int op = 0; op < 4; op++)
         {
             m_patch.OPS[op].data[0] = instrument.getRegDUMUL(op);
@@ -590,14 +769,29 @@ void Generator::changePatch(const FmBank::Instrument &instrument, bool isDrum)
         }
         m_patch.fbalg    = instrument.getRegFbAlg();
         m_patch.lfosens  = instrument.getRegLfoSens();
-        m_patch.finetune = static_cast<int8_t>(instrument.note_offset1);
+        m_patch.noteOffset = static_cast<int8_t>(instrument.note_offset1);
         m_patch.tone     = 0;
+
+        /* PSG voice */
+        m_patch.psgDual = instrument.psgDualVoice;
+        for(int v = 0; v < 2; v++)
+        {
+            m_patch.psg[v].dataMLevel = instrument.getPsgMLevel(v);
+            m_patch.psg[v].dataEG = instrument.getPsgEG(v);
+            m_patch.psg[v].dataEgFreq = instrument.psg[v].envFreq;
+            m_patch.psg[v].noteOffset = instrument.psg[v].note_offset;
+            m_patch.psg[v].detune = instrument.psg[v].detune;
+        }
+
+        /* ONPA Rhythm voice */
+        m_patch.opnaRhythmId = instrument.opnaRhythmId;
 
         if(isDrum)
             m_patch.tone = instrument.percNoteNum;
     }
 
     m_noteManager.allocateChannels(USED_CHANNELS_4OP);
+    m_noteManagerPsg.allocateChannels(USED_CHANNELS_PSG);
 
     m_isInstrumentLoaded = true;//Mark instrument as loaded
 }

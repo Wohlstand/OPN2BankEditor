@@ -30,6 +30,7 @@
 #include <QObject>
 
 #define NUM_OF_CHANNELS         6
+#define NUM_OF_PSG_CHANNELS     3
 #define MAX_OPLGEN_BUFFER_SIZE  4096
 
 struct OPN_Operator
@@ -38,16 +39,37 @@ struct OPN_Operator
     uint8_t     data[7];
 };
 
+struct PSG_Voice
+{
+    //! Raw register data
+    uint8_t     dataMLevel;
+    uint8_t     dataEG;
+    uint16_t    dataEgFreq;
+    int16_t     noteOffset;
+    int16_t     detune;
+};
+
 struct OPN_PatchSetup
 {
+    uint8_t         instType;
+
+    /* FM voice */
     //! Operators prepared for sending to OPL chip emulator
     OPN_Operator    OPS[4];
     uint8_t         fbalg;
     uint8_t         lfosens;
-    //! Fine tuning
-    int8_t          finetune;
+    //! MIDI ket offset
+    int8_t          noteOffset;
     //! Single note (for percussion instruments)
     uint8_t         tone;
+
+    /* PSG voice */
+    uint8_t         psgDual;
+    PSG_Voice       psg[2];
+
+    /* OPNA-Rhythm voice */
+    //! OPNA rhythm ID (0-5)
+    uint8_t         opnaRhythmId;
 };
 
 struct GeneratorDebugInfo
@@ -76,15 +98,22 @@ public:
     void generate(int16_t *frames, unsigned nframes);
 
     void NoteOn(uint32_t c, double hertz);
+    void NotePsgOn(uint32_t c, double hertz);
     void NoteOff(uint32_t c);
+    void NotePsgOff(uint32_t c);
     void Touch_Real(uint32_t c, uint32_t volume);
-    void Touch(uint32_t c, uint32_t volume);
+    void Touch_RealPSG(uint32_t c, uint32_t volume);
+    void Touch_RealRhythm(uint32_t volume);
+    // void Touch(uint32_t c, uint32_t volume);
     void Patch(uint32_t c);
+    void PatchPSG(uint32_t c);
     void Pan(uint32_t c, uint8_t value);
     void PlayNoteF(int noteID, uint32_t volume = 127);
     void PlayNoteCh(int channelID, uint32_t volume = 127, bool patch = true);
+    void PlayNotePsgCh(int channelID, uint32_t volume = 127, bool patch = true);
     void StopNoteF(int noteID);
     void StopNoteCh(int channelID);
+    void StopNotePsgCh(int channelID);
     void PlayDrum(uint8_t drum, int noteID);
 
 public:
@@ -153,7 +182,11 @@ private:
             { return channels.at(ch); }
         int channelCount() const
             { return (int)channels.size(); }
-    } m_noteManager;
+    };
+    //! Notes manager for FM channels
+    NotesManager m_noteManager;
+    //! Notes manager for PSG channels
+    NotesManager m_noteManagerPsg;
 
     int32_t     note;
     double      m_bend = 0.0;
@@ -177,6 +210,8 @@ private:
     uint8_t     m_pit[NUM_OF_CHANNELS];
     //! LFO and panning value cached
     uint8_t     m_pan_lfo[NUM_OF_CHANNELS];
+
+    uint8_t     m_regPsg[2];
 };
 
 #endif // GENERATOR_H
