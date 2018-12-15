@@ -25,6 +25,7 @@
 #include "chips/mame_opn2.h"
 #include "chips/gx_opn2.h"
 #include "chips/np2_opna.h"
+#include "chips/mame_opna.h"
 
 #include <QtDebug>
 
@@ -175,6 +176,9 @@ void Generator::switchChip(Generator::OPN_Chips chipId, int family)
         break;
     case CHIP_NP2:
         chip.reset(new NP2OPNA<>(m_chipFamily));
+        break;
+    case CHIP_MAMEOPNA:
+        chip.reset(new MameOPNA(m_chipFamily));
         break;
     }
     initChip();

@@ -18,20 +18,18 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifndef NP2_OPNA_H
-#define NP2_OPNA_H
+#ifndef MAME_OPNA_H
+#define MAME_OPNA_H
 
 #include "opn_chip_base.h"
 
-namespace FM { class OPN2; class OPNA; class OPNB; }
-template <class ChipType = FM::OPNA>
-class NP2OPNA final : public OPNChipBaseBufferedT<NP2OPNA<ChipType > >
+class MameOPNA final : public OPNChipBaseBufferedT<MameOPNA>
 {
-    typedef OPNChipBaseBufferedT<NP2OPNA<ChipType > > ChipBase;
-    ChipType *chip;
+    struct Impl;
+    Impl *impl;
 public:
-    explicit NP2OPNA(OPNFamily f);
-    ~NP2OPNA() override;
+    explicit MameOPNA(OPNFamily f);
+    ~MameOPNA() override;
 
     bool canRunAtPcmRate() const override { return true; }
     void setRate(uint32_t rate, uint32_t clock) override;
@@ -42,7 +40,6 @@ public:
     void nativePostGenerate() override {}
     void nativeGenerateN(int16_t *output, size_t frames) override;
     const char *emulatorName() override;
-    enum { resamplerPostAttenuate = 2 };
 };
 
 #endif
