@@ -3559,6 +3559,7 @@ Available from 0 to 127</string>
      <addaction name="actionEmulatorGX"/>
      <addaction name="actionEmulatorGens"/>
      <addaction name="actionEmulatorNP2"/>
+     <addaction name="actionEmulatorMameOPNA"/>
     </widget>
     <addaction name="menuChoose_chip_emulator"/>
     <addaction name="actionLatency"/>
@@ -3769,6 +3770,14 @@ Available from 0 to 127</string>
    </property>
    <property name="toolTip">
     <string notr="true">Neko Project II Kai OPNA</string>
+   </property>
+  </action>
+  <action name="actionEmulatorMameOPNA">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Mame YM2608</string>
    </property>
   </action>
  </widget>

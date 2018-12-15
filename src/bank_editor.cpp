@@ -104,6 +104,8 @@ BankEditor::BankEditor(QWidget *parent) :
     connect(ui->actionEmulatorGX, SIGNAL(triggered()), this, SLOT(toggleEmulator()));
     connect(ui->actionEmulatorGens, SIGNAL(triggered()), this, SLOT(toggleEmulator()));
     connect(ui->actionEmulatorNP2, SIGNAL(triggered()), this, SLOT(toggleEmulator()));
+    connect(ui->actionEmulatorMameOPNA, SIGNAL(triggered()), this, SLOT(toggleEmulator()));
+
 
     /* Hide first 7 SSG-EG items */
     {
@@ -188,6 +190,7 @@ void BankEditor::loadSettings()
     ui->actionEmulatorGens->setChecked(false);
     ui->actionEmulatorGX->setChecked(false);
     ui->actionEmulatorNP2->setChecked(false);
+    ui->actionEmulatorMameOPNA->setChecked(false);
 
     switch(m_currentChip)
     {
@@ -205,6 +208,9 @@ void BankEditor::loadSettings()
         break;
     case Generator::CHIP_NP2:
         ui->actionEmulatorNP2->setChecked(true);
+        break;
+    case Generator::CHIP_MAMEOPNA:
+        ui->actionEmulatorMameOPNA->setChecked(true);
         break;
     }
 }
@@ -853,6 +859,7 @@ void BankEditor::toggleEmulator()
     ui->actionEmulatorGens->setChecked(false);
     ui->actionEmulatorGX->setChecked(false);
     ui->actionEmulatorNP2->setChecked(false);
+    ui->actionEmulatorMameOPNA->setChecked(false);
     if(menuItem == ui->actionEmulatorNuked)
     {
         ui->actionEmulatorNuked->setChecked(true);
@@ -885,6 +892,13 @@ void BankEditor::toggleEmulator()
     {
         ui->actionEmulatorNP2->setChecked(true);
         m_currentChip = Generator::CHIP_NP2;
+        m_generator->ctl_switchChip(m_currentChip, static_cast<int>(m_currentChipFamily));
+    }
+    else
+    if(menuItem == ui->actionEmulatorMameOPNA)
+    {
+        ui->actionEmulatorMameOPNA->setChecked(true);
+        m_currentChip = Generator::CHIP_MAMEOPNA;
         m_generator->ctl_switchChip(m_currentChip, static_cast<int>(m_currentChipFamily));
     }
 }
