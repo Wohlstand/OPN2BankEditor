@@ -72,6 +72,7 @@ set(FILEFORMATS_SOURCES
   "src/FileFormats/format_gems_pat.cpp"
   "src/FileFormats/format_m2v_gyb.cpp"
   "src/FileFormats/format_tomsoft_gin.cpp"
+  "src/FileFormats/format_saxman_ymx.cpp"
   "src/FileFormats/format_vgm_import.cpp"
   "src/FileFormats/format_gym_import.cpp"
   "src/FileFormats/format_wohlstand_opn2.cpp")

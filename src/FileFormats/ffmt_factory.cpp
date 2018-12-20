@@ -31,6 +31,7 @@
 #include "format_gems_pat.h"
 #include "format_m2v_gyb.h"
 #include "format_tomsoft_gin.h"
+#include "format_saxman_ymx.h"
 
 typedef std::unique_ptr<FmBankFormatBase> FmBankFormatBase_uptr;
 typedef std::list<FmBankFormatBase_uptr>  FmBankFormatsL;
@@ -66,6 +67,7 @@ void FmBankFormatFactory::registerAllFormats()
 #ifdef DEBUG_BUILD // Experimental and unfinished format support. Disable it in release builds
     registerBankFormat(new Tomsoft_GIN());
 #endif
+    registerBankFormat(new Saxman_YMX());
 }
 
 

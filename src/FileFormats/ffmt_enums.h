@@ -31,6 +31,7 @@ enum BankFormats
     FORMAT_M2V_GYB        = 3,
     FORMAT_TOMSOFT_GIN    = 4,
     FORMAT_GYM_IMPORTER   = 5,
+    FORMAT_SAXMAN_YMX     = 6,
 
     FORMATS_END,
     FORMATS_BEGIN = FORMAT_WOHLSTAND_OPN2,
