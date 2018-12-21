@@ -30,6 +30,7 @@ class Saxman_YMX final : public FmBankFormatBase
 public:
     bool        detect(const QString &filePath, char *magic) override;
     FfmtErrCode loadFile(QString filePath, FmBank &bank) override;
+    FfmtErrCode saveFile(QString filePath, FmBank &bank) override;
     int         formatCaps() const override;
     QString     formatName() const override;
     QString     formatExtensionMask() const override;

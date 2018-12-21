@@ -104,8 +104,7 @@ FfmtErrCode Saxman_YMX::loadRevision0(QFile &file, FmBank &bank)
         strcpy(inst.name, voices[j].name);
 
         const uint8_t *idata = voices[j].idata;
-        inst.feedback = (idata[0] >> 3) & 7;
-        inst.algorithm = idata[0] & 7;
+        inst.setRegFbAlg(idata[0]);
 
         for(unsigned i = 0; i < 4; ++i)
         {
@@ -124,9 +123,76 @@ FfmtErrCode Saxman_YMX::loadRevision0(QFile &file, FmBank &bank)
     return FfmtErrCode::ERR_OK;
 }
 
+FfmtErrCode Saxman_YMX::saveFile(QString filePath, FmBank &bank)
+{
+    QFile file(filePath);
+
+    if(!file.open(QIODevice::WriteOnly))
+        return FfmtErrCode::ERR_NOFILE;
+
+    uint8_t revision = 0;
+    file.write("YM2612", 6);
+    file.write((char *)&revision, 1);
+
+    // store up to the 128 first instruments
+    uint8_t instCount = 0;
+    const FmBank::Instrument *insts[128];
+    for(unsigned i = 0, n = bank.countMelodic(); i < n && instCount < 128; ++i)
+    {
+        if(!bank.Ins_Melodic[i].is_blank)
+            insts[instCount++] = &bank.Ins_Melodic[i];
+    }
+    for(unsigned i = 0, n = bank.countDrums(); i < n && instCount < 128; ++i)
+    {
+        if(!bank.Ins_Percussion[i].is_blank)
+            insts[instCount++] = &bank.Ins_Percussion[i];
+    }
+
+    uint8_t instCountStored = instCount - 1;
+    file.write((char *)&instCountStored, 1);
+
+    for(unsigned i = 0; i < instCount; ++i)
+    {
+        const FmBank::Instrument &inst = *insts[i];
+
+        uint8_t idata[25];
+        idata[0] = inst.getRegFbAlg();
+
+        for(unsigned i = 0; i < 4; ++i)
+        {
+            const unsigned opnum[] = {OPERATOR1_HR, OPERATOR3_HR, OPERATOR2_HR, OPERATOR4_HR};
+            const unsigned op = opnum[i];
+
+            idata[i + 1] = inst.getRegDUMUL(op);
+            idata[i + 1 + 4] = inst.getRegRSAt(op);
+            idata[i + 1 + 8] = inst.getRegAMD1(op);
+            idata[i + 1 + 12] = inst.getRegD2(op);
+            idata[i + 1 + 16] = inst.getRegSysRel(op);
+            idata[i + 1 + 20] = inst.getRegLevel(op);
+        }
+
+        file.write((char *)idata, 25);
+
+        char name[11];
+        memcpy(name, inst.name, 10);
+        name[10] = '\0';
+        for(size_t n = strlen(name); n < 10; ++n)
+            name[n] = ' ';
+
+        file.write(name, 10);
+    }
+
+    if(!file.flush()) {
+        file.remove();
+        return FfmtErrCode::ERR_NOFILE;
+    }
+
+    return FfmtErrCode::ERR_OK;
+}
+
 int Saxman_YMX::formatCaps() const
 {
-    return (int)FormatCaps::FORMAT_CAPS_OPEN|(int)FormatCaps::FORMAT_CAPS_IMPORT;
+    return (int)FormatCaps::FORMAT_CAPS_EVERYTHING;
 }
 
 QString Saxman_YMX::formatName() const
