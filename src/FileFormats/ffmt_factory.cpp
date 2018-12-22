@@ -26,6 +26,7 @@
 #include "format_wohlstand_opn2.h"
 #include "format_vgm_import.h"
 #include "format_gym_import.h"
+#include "format_s98_import.h"
 #include "format_tfi.h"
 #include "format_deflemask_dmp.h"
 #include "format_gems_pat.h"
@@ -59,6 +60,7 @@ void FmBankFormatFactory::registerAllFormats()
     registerInstFormat(new WohlstandOPN2());
     registerBankFormat(new VGM_Importer());
     registerBankFormat(new GYM_Importer());
+    registerBankFormat(new S98_Importer());
     registerInstFormat(new TFI_MM());
     registerInstFormat(new DefleMask());
     registerBankFormat(new GEMS_PAT());
