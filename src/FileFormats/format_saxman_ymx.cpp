@@ -20,7 +20,7 @@
 #include "../common.h"
 #include <QDebug>
 
-bool Saxman_YMX::detect(const QString &filePath, char *magic)
+bool Saxman_YMX::detect(const QString & /*filePath*/ , char *magic)
 {
     return !memcmp(magic, "YM2612", 6);
 }
@@ -65,7 +65,7 @@ FfmtErrCode Saxman_YMX::loadRevision0(QFile &file, FmBank &bank)
     std::vector<RawVoice> voices;
     voices.reserve(voiceCount);
 
-    for(unsigned i = 0; i < voiceCount + 1; ++i)
+    for(unsigned i = 0; i < static_cast<unsigned>(voiceCount + 1); ++i)
     {
         file.seek(8 + i * 35);
 
