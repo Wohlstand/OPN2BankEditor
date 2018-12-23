@@ -20,7 +20,7 @@
 #include "../common.h"
 #include <math.h>
 
-bool TX81Z_Importer::detect(const QString &filePath, char *magic)
+bool TX81Z_Importer::detect(const QString & /*filePath*/, char *magic)
 {
     return (uint8_t)magic[0] == 0xf0 && (uint8_t)magic[1] == 0x43 &&
         (uint8_t)magic[3] == 0x04;
