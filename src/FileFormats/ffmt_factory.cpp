@@ -26,11 +26,14 @@
 #include "format_wohlstand_opn2.h"
 #include "format_vgm_import.h"
 #include "format_gym_import.h"
+#include "format_s98_import.h"
 #include "format_tfi.h"
 #include "format_deflemask_dmp.h"
 #include "format_gems_pat.h"
 #include "format_m2v_gyb.h"
 #include "format_tomsoft_gin.h"
+#include "format_saxman_ymx.h"
+#include "format_tx81z_import.h"
 
 typedef std::unique_ptr<FmBankFormatBase> FmBankFormatBase_uptr;
 typedef std::list<FmBankFormatBase_uptr>  FmBankFormatsL;
@@ -58,6 +61,7 @@ void FmBankFormatFactory::registerAllFormats()
     registerInstFormat(new WohlstandOPN2());
     registerBankFormat(new VGM_Importer());
     registerBankFormat(new GYM_Importer());
+    registerBankFormat(new S98_Importer());
     registerInstFormat(new TFI_MM());
     registerInstFormat(new DefleMask());
     registerBankFormat(new GEMS_PAT());
@@ -66,6 +70,8 @@ void FmBankFormatFactory::registerAllFormats()
 #ifdef DEBUG_BUILD // Experimental and unfinished format support. Disable it in release builds
     registerBankFormat(new Tomsoft_GIN());
 #endif
+    registerBankFormat(new Saxman_YMX());
+    registerBankFormat(new TX81Z_Importer());
 }
 
 

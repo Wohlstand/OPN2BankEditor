@@ -105,8 +105,11 @@ SOURCES += \
     src/FileFormats/format_gems_pat.cpp \
     src/FileFormats/format_m2v_gyb.cpp \
     src/FileFormats/format_tomsoft_gin.cpp \
+    src/FileFormats/format_saxman_ymx.cpp \
     src/FileFormats/format_vgm_import.cpp \
     src/FileFormats/format_gym_import.cpp \
+    src/FileFormats/format_s98_import.cpp \
+    src/FileFormats/format_tx81z_import.cpp \
     src/FileFormats/format_wohlstand_opn2.cpp \
     src/formats_sup.cpp \
     src/importer.cpp \
@@ -150,8 +153,11 @@ HEADERS += \
     src/FileFormats/format_gems_pat.h \
     src/FileFormats/format_m2v_gyb.h \
     src/FileFormats/format_tomsoft_gin.h \
+    src/FileFormats/format_saxman_ymx.h \
     src/FileFormats/format_vgm_import.h \
     src/FileFormats/format_gym_import.h \
+    src/FileFormats/format_s98_import.h \
+    src/FileFormats/format_tx81z_import.h \
     src/FileFormats/format_wohlstand_opn2.h \
     src/formats_sup.h \
     src/importer.h \
