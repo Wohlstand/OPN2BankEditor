@@ -21,7 +21,7 @@
 #include "../common.h"
 #include <memory>
 
-bool S98_Importer::detect(const QString &filePath, char* magic)
+bool S98_Importer::detect(const QString & /*filePath*/, char* magic)
 {
     return !memcmp(magic, "S98", 3);
 }
