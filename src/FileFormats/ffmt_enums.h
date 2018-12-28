@@ -46,6 +46,7 @@ enum InstFormats
     FORMAT_INST_TFI_MM   = 1,
     FORMAT_INST_DM_DMP   = 2,
     FORMAT_INST_GEMS_PAT = 3,
+    FORMAT_INST_Y12      = 4,
 };
 
 enum class FormatCaps
