@@ -23,6 +23,8 @@
 
 bool Gens_Y12::detectInst(const QString &filePath, char *magic)
 {
+    (void)magic;
+
     //By name extension
     if(filePath.endsWith(".y12", Qt::CaseInsensitive))
         return true;
