@@ -77,6 +77,7 @@ set(FILEFORMATS_SOURCES
   "src/FileFormats/format_gym_import.cpp"
   "src/FileFormats/format_s98_import.cpp"
   "src/FileFormats/format_tx81z_import.cpp"
+  "src/FileFormats/format_gens_y12.cpp"
   "src/FileFormats/format_wohlstand_opn2.cpp")
 add_library(FileFormats STATIC ${FILEFORMATS_SOURCES})
 target_include_directories(FileFormats PUBLIC "src")

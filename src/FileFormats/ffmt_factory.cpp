@@ -34,6 +34,7 @@
 #include "format_tomsoft_gin.h"
 #include "format_saxman_ymx.h"
 #include "format_tx81z_import.h"
+#include "format_gens_y12.h"
 
 typedef std::unique_ptr<FmBankFormatBase> FmBankFormatBase_uptr;
 typedef std::list<FmBankFormatBase_uptr>  FmBankFormatsL;
@@ -72,6 +73,7 @@ void FmBankFormatFactory::registerAllFormats()
 #endif
     registerBankFormat(new Saxman_YMX());
     registerBankFormat(new TX81Z_Importer());
+    registerInstFormat(new Gens_Y12());
 }
 
 
