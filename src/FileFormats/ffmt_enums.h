@@ -34,6 +34,7 @@ enum BankFormats
     FORMAT_SAXMAN_YMX     = 6,
     FORMAT_S98_IMPORTER   = 7,
     FORMAT_TX81Z_IMPORTER = 8,
+    FORMAT_OPM            = 9,
 
     FORMATS_END,
     FORMATS_BEGIN = FORMAT_WOHLSTAND_OPN2,
