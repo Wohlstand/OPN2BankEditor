@@ -1,6 +1,6 @@
 /*
  * OPN2 Bank Editor by Wohlstand, a free tool for music bank editing
- * Copyright (c) 2017-2018 Vitaly Novichkov <admin@wohlnet.ru>
+ * Copyright (c) 2017-2019 Vitaly Novichkov <admin@wohlnet.ru>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -34,6 +34,7 @@ enum BankFormats
     FORMAT_SAXMAN_YMX     = 6,
     FORMAT_S98_IMPORTER   = 7,
     FORMAT_TX81Z_IMPORTER = 8,
+    FORMAT_OPM            = 9,
 
     FORMATS_END,
     FORMATS_BEGIN = FORMAT_WOHLSTAND_OPN2,
@@ -46,6 +47,7 @@ enum InstFormats
     FORMAT_INST_TFI_MM   = 1,
     FORMAT_INST_DM_DMP   = 2,
     FORMAT_INST_GEMS_PAT = 3,
+    FORMAT_INST_Y12      = 4,
 };
 
 enum class FormatCaps

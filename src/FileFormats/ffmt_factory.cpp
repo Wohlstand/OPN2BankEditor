@@ -1,6 +1,6 @@
 /*
  * OPN2 Bank Editor by Wohlstand, a free tool for music bank editing
- * Copyright (c) 2017-2018 Vitaly Novichkov <admin@wohlnet.ru>
+ * Copyright (c) 2017-2019 Vitaly Novichkov <admin@wohlnet.ru>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -34,6 +34,8 @@
 #include "format_tomsoft_gin.h"
 #include "format_saxman_ymx.h"
 #include "format_tx81z_import.h"
+#include "format_gens_y12.h"
+#include "format_opm.h"
 
 typedef std::unique_ptr<FmBankFormatBase> FmBankFormatBase_uptr;
 typedef std::list<FmBankFormatBase_uptr>  FmBankFormatsL;
@@ -72,6 +74,8 @@ void FmBankFormatFactory::registerAllFormats()
 #endif
     registerBankFormat(new Saxman_YMX());
     registerBankFormat(new TX81Z_Importer());
+    registerInstFormat(new Gens_Y12());
+    registerBankFormat(new OPM());
 }
 
 

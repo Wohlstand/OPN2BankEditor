@@ -77,6 +77,8 @@ set(FILEFORMATS_SOURCES
   "src/FileFormats/format_gym_import.cpp"
   "src/FileFormats/format_s98_import.cpp"
   "src/FileFormats/format_tx81z_import.cpp"
+  "src/FileFormats/format_gens_y12.cpp"
+  "src/FileFormats/format_opm.cpp"
   "src/FileFormats/format_wohlstand_opn2.cpp")
 add_library(FileFormats STATIC ${FILEFORMATS_SOURCES})
 target_include_directories(FileFormats PUBLIC "src")
@@ -207,7 +209,7 @@ if(USE_RTMIDI)
     target_link_libraries(RtMidi PUBLIC "winmm")
   elseif(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
     target_compile_definitions(RtMidi PUBLIC "__MACOSX_CORE__")
-    find_library(COREMIDI_LIBRARY "CoreMidi")
+    find_library(COREMIDI_LIBRARY "CoreMIDI")
     target_link_libraries(RtMidi PUBLIC "${COREMIDI_LIBRARY}")
   endif()
   target_sources(OPN2BankEditor PRIVATE "src/midi/midi_rtmidi.cpp")
