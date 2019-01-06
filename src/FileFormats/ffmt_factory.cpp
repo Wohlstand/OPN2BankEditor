@@ -36,6 +36,7 @@
 #include "format_tx81z_import.h"
 #include "format_gens_y12.h"
 #include "format_opm.h"
+#include "format_mucom88_dat.h"
 
 typedef std::unique_ptr<FmBankFormatBase> FmBankFormatBase_uptr;
 typedef std::list<FmBankFormatBase_uptr>  FmBankFormatsL;
@@ -76,6 +77,7 @@ void FmBankFormatFactory::registerAllFormats()
     registerBankFormat(new TX81Z_Importer());
     registerInstFormat(new Gens_Y12());
     registerBankFormat(new OPM());
+    registerBankFormat(new Mucom88_DAT());
 }
 
 
