@@ -91,6 +91,8 @@ rtmidi {
     include("src/midi/midi_rtmidi.pri")
 }
 
+include(src/opl/chips/chipset.pri)
+
 SOURCES += \
     src/audio.cpp \
     src/bank.cpp \
@@ -112,6 +114,7 @@ SOURCES += \
     src/FileFormats/format_tx81z_import.cpp \
     src/FileFormats/format_gens_y12.cpp \
     src/FileFormats/format_opm.cpp \
+    src/FileFormats/format_mucom88_dat.cpp \
     src/FileFormats/format_wohlstand_opn2.cpp \
     src/formats_sup.cpp \
     src/importer.cpp \
@@ -123,24 +126,7 @@ SOURCES += \
     src/opl/generator_realtime.cpp \
     src/opl/realtime/ring_buffer.cpp \
     src/opl/measurer.cpp \
-    src/opl/chips/gens/Ym2612_Emu.cpp \
-    src/piano.cpp \
-    src/opl/chips/gens_opn2.cpp \
-    src/opl/chips/nuked_opn2.cpp \
-    src/opl/chips/nuked/ym3438.c \
-    src/opl/chips/mame_opn2.cpp \
-    src/opl/chips/mame_opna.cpp \
-    src/opl/chips/mamefm/fm.cpp \
-    src/opl/chips/mamefm/ymdeltat.cpp \
-    src/opl/chips/gx_opn2.cpp \
-    src/opl/chips/gx/gx_ym2612.c \
-    src/opl/chips/np2_opna.cpp \
-    src/opl/chips/np2/fmgen_file.cpp \
-    src/opl/chips/np2/fmgen_fmgen.cpp \
-    src/opl/chips/np2/fmgen_fmtimer.cpp \
-    src/opl/chips/np2/fmgen_opna.cpp \
-    src/opl/chips/np2/fmgen_psg.cpp \
-    src/opl/chips/mame/mame_ym2612fm.c
+    src/piano.cpp
 
 HEADERS += \
     src/bank_editor.h \
@@ -162,6 +148,7 @@ HEADERS += \
     src/FileFormats/format_tx81z_import.h \
     src/FileFormats/format_gens_y12.h \
     src/FileFormats/format_opm.h \
+    src/FileFormats/format_mucom88_dat.h \
     src/FileFormats/format_wohlstand_opn2.h \
     src/formats_sup.h \
     src/importer.h \
@@ -176,31 +163,7 @@ HEADERS += \
     src/opl/realtime/ring_buffer.tcc \
     src/piano.h \
     src/version.h \
-    src/opl/chips/gens_opn2.h \
-    src/opl/chips/opn_chip_base.h \
-    src/opl/chips/opn_chip_base.tcc \
-    src/opl/chips/opn_chip_family.h \
-    src/opl/chips/nuked_opn2.h \
-    src/opl/chips/nuked/ym3438.h \
-    src/opl/chips/mame_opn2.h \
-    src/opl/chips/gx_opn2.h \
-    src/opl/chips/mame/mamedef.h \
-    src/opl/chips/mame/mame_ym2612fm.h \
-    src/opl/chips/gx/gx_ym2612.h \
-    src/FileFormats/ym2612_to_wopi.hpp \
-    src/opl/chips/gens/Ym2612_Emu.h \
-    src/opl/chips/np2/compiler.h \
-    src/opl/chips/np2/fmgen_diag.h \
-    src/opl/chips/np2/fmgen_file.h \
-    src/opl/chips/np2/fmgen_fmgen.h \
-    src/opl/chips/np2/fmgen_fmgeninl.h \
-    src/opl/chips/np2/fmgen_fmtimer.h \
-    src/opl/chips/np2/fmgen_headers.h \
-    src/opl/chips/np2/fmgen_misc.h \
-    src/opl/chips/np2/fmgen_opna.h \
-    src/opl/chips/np2/fmgen_psg.h \
-    src/opl/chips/np2/fmgen_types.h \
-    src/opl/chips/np2_opna.h
+    src/FileFormats/ym2612_to_wopi.hpp
 
 FORMS += \
     src/bank_editor.ui \

@@ -1,0 +1,55 @@
+SOURCES+= \
+    $$PWD/gens/Ym2612_Emu.cpp \
+    $$PWD/mamefm/fm.cpp \
+    $$PWD/mamefm/resampler.cpp \
+    $$PWD/mamefm/ymdeltat.cpp \
+    $$PWD/np2/fmgen_file.cpp \
+    $$PWD/np2/fmgen_fmgen.cpp \
+    $$PWD/np2/fmgen_fmtimer.cpp \
+    $$PWD/np2/fmgen_opna.cpp \
+    $$PWD/np2/fmgen_psg.cpp \
+    $$PWD/gens_opn2.cpp \
+    $$PWD/gx_opn2.cpp \
+    $$PWD/mame_opn2.cpp \
+    $$PWD/mame_opna.cpp \
+    $$PWD/np2_opna.cpp \
+    $$PWD/nuked_opn2.cpp \
+    $$PWD/gx/gx_ym2612.c \
+    $$PWD/mame/mame_ym2612fm.c \
+    $$PWD/mamefm/emu2149.c \
+    $$PWD/nuked/ym3438.c
+
+HEADERS+= \
+    $$PWD/gens/Ym2612_Emu.h \
+    $$PWD/gx/gx_ym2612.h \
+    $$PWD/mame/mame_ym2612fm.h \
+    $$PWD/mame/mamedef.h \
+    $$PWD/mamefm/2608intf.h \
+    $$PWD/mamefm/emu.h \
+    $$PWD/mamefm/emu2149.h \
+    $$PWD/mamefm/emutypes.h \
+    $$PWD/mamefm/fm.h \
+    $$PWD/mamefm/fmopn_2608rom.h \
+    $$PWD/mamefm/resampler.hpp \
+    $$PWD/mamefm/ymdeltat.h \
+    $$PWD/np2/compiler.h \
+    $$PWD/np2/fmgen_diag.h \
+    $$PWD/np2/fmgen_file.h \
+    $$PWD/np2/fmgen_fmgen.h \
+    $$PWD/np2/fmgen_fmgeninl.h \
+    $$PWD/np2/fmgen_fmtimer.h \
+    $$PWD/np2/fmgen_headers.h \
+    $$PWD/np2/fmgen_misc.h \
+    $$PWD/np2/fmgen_opna.h \
+    $$PWD/np2/fmgen_psg.h \
+    $$PWD/np2/fmgen_types.h \
+    $$PWD/nuked/ym3438.h \
+    $$PWD/gens_opn2.h \
+    $$PWD/gx_opn2.h \
+    $$PWD/mame_opn2.h \
+    $$PWD/mame_opna.h \
+    $$PWD/np2_opna.h \
+    $$PWD/nuked_opn2.h \
+    $$PWD/opn_chip_base.h \
+    $$PWD/opn_chip_base.tcc \
+    $$PWD/opn_chip_family.h
