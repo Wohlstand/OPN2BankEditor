@@ -572,12 +572,26 @@ void Generator::PitchBend(int bend)
 
     m_bend = bend * m_bendsense;
 
-    int channels = m_noteManager.channelCount();
-    for(int ch = 0; ch < channels; ++ch)
+    if(m_patch.instType == FmBank::Instrument::InsType_FM || m_patch.instType == FmBank::Instrument::InsType_FM_PSG)
     {
-        const NotesManager::Note &channel = m_noteManager.channel(ch);
-        if(m_noteManager.channel(ch).note != -1)
-            PlayNoteCh(ch, channel.volume, false);
+        int channels = m_noteManager.channelCount();
+        for(int ch = 0; ch < channels; ++ch)
+        {
+            const NotesManager::Note &channel = m_noteManager.channel(ch);
+            if(m_noteManager.channel(ch).note != -1)
+                PlayNoteCh(ch, channel.volume, false);
+        }
+    }
+
+    if(m_patch.instType == FmBank::Instrument::InsType_PSG || m_patch.instType == FmBank::Instrument::InsType_FM_PSG)
+    {
+        int channels = m_noteManagerPsg.channelCount();
+        for(int ch = 0; ch < channels; ++ch)
+        {
+            const NotesManager::Note &channel = m_noteManagerPsg.channel(ch);
+            if(m_noteManagerPsg.channel(ch).note != -1)
+                PlayNotePsgCh(ch, channel.volume, false);
+        }
     }
 }
 
@@ -614,7 +628,14 @@ void Generator::Silence()
         Touch_Real(c, 0);
     }
 
+    for(uint32_t c = 0; c < NUM_OF_PSG_CHANNELS; ++c)
+    {
+        NotePsgOff(c);
+        Touch_RealPSG(c, 0);
+    }
+
     m_noteManager.clearNotes();
+    m_noteManagerPsg.clearNotes();
 }
 
 void Generator::NoteOffAllChans()
@@ -629,13 +650,25 @@ void Generator::NoteOffAllChans()
             if(channel.note != -1)
                 m_noteManager.hold(ch, true);
         }
+
+        // mark all channels held for later key-off
+        channels = m_noteManagerPsg.channelCount();
+        for(int ch = 0; ch < channels; ++ch)
+        {
+            const NotesManager::Note &channel = m_noteManagerPsg.channel(ch);
+            if(channel.note != -1)
+                m_noteManagerPsg.hold(ch, true);
+        }
         return;
     }
 
     for(uint32_t c = 0; c < NUM_OF_CHANNELS; ++c)
         NoteOff(c);
+    for(uint32_t c = 0; c < NUM_OF_PSG_CHANNELS; ++c)
+        NotePsgOff(c);
 
     m_noteManager.clearNotes();
+    m_noteManagerPsg.clearNotes();
 }
 
 
@@ -723,6 +756,14 @@ void Generator::Hold(bool held)
             const NotesManager::Note &channel = m_noteManager.channel(ch);
             if(channel.note != -1 && channel.held)
                 StopNoteCh(ch);
+        }
+
+        channels = m_noteManagerPsg.channelCount();
+        for(int ch = 0; ch < channels; ++ch)
+        {
+            const NotesManager::Note &channel = m_noteManagerPsg.channel(ch);
+            if(channel.note != -1 && channel.held)
+                StopNotePsgCh(ch);
         }
     }
 }
