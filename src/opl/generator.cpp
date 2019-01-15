@@ -268,39 +268,16 @@ void Generator::NoteOn(uint32_t c, double hertz) // Hertz range: 0..131071
 
 void Generator::NotePsgOn(uint32_t c, double hertz)
 {
-    uint8_t  cc     = uint8_t(c % 3);
-    uint32_t octave = 0, ftone = 0;
-    uint32_t mul_offset = 0;
+    uint8_t cc = uint8_t(c % 3);
 
-    if(hertz < 0) // Avoid infinite loop
+    if(hertz <= 0)
         return;
 
-    double coef;
-    switch(m_chipFamily)
-    {
-    case OPNChip_OPN2: default:
-        coef = 321.88557; break;
-    case OPNChip_OPNA:
-        coef = 309.12412; break;
-    }
-    hertz *= coef;
-
-    //Basic range until max of octaves reaching
-    while((hertz >= 1023.75) && (octave < 0x3800))
-    {
-        hertz /= 2.0;    // Calculate octave
-        octave += 0x800;
-    }
-    //Extended range, rely on frequency multiplication increment
-    while(hertz >= 2036.75)
-    {
-        hertz /= 2.0;    // Calculate octave
-        mul_offset++;
-    }
-    ftone = octave + static_cast<uint32_t>(hertz + 0.5);
-
-    WriteReg(0, 0x00 + cc * 2, 0x00);
-    WriteReg(0, 0x01 + cc * 2, static_cast<uint8_t>((hertz / 1000.0) * 255.0));
+    uint32_t clock = chip->clockRate();
+    uint32_t tp = static_cast<uint32_t>(lround(clock / (64.0 * hertz)));
+    tp = (tp < 4096) ? tp : 4095;
+    WriteReg(0, 0x00 + cc * 2, static_cast<uint8_t>(0xff & tp));
+    WriteReg(0, 0x01 + cc * 2, static_cast<uint8_t>(tp >> 8));
 
     //m_regPsg[0] |= 0xC0;
     //m_regPsg[0] |= 0x38;
@@ -533,7 +510,7 @@ void Generator::PlayNotePsgCh(int ch, uint32_t volume, bool patch)
     Touch_RealPSG(ch, (getChipVolume(volume, 127, 127) * 15) / 127);
 
     bend  = m_bend + m_patch.noteOffset;
-    NotePsgOn(ch, std::exp(0.057762265 * (tone + bend + phase)));
+    NotePsgOn(ch, 8.17579891564 * std::exp(0.057762265 * (tone + bend + phase)));
 }
 
 void Generator::StopNoteF(int noteID)
