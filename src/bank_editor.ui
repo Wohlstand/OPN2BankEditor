@@ -3535,9 +3535,9 @@ Available from 0 to 127</string>
       <string>Preferred MIDI standard</string>
      </property>
      <addaction name="actionStandardGM"/>
+     <addaction name="actionStandardGM2"/>
      <addaction name="actionStandardGS"/>
      <addaction name="actionStandardXG"/>
-     <addaction name="actionStandardGM2"/>
     </widget>
     <addaction name="actionCopy"/>
     <addaction name="actionPaste"/>
@@ -3810,7 +3810,7 @@ Available from 0 to 127</string>
     <bool>true</bool>
    </property>
    <property name="text">
-    <string notr="true">GS</string>
+    <string notr="true">Roland GS</string>
    </property>
   </action>
   <action name="actionStandardXG">
@@ -3818,7 +3818,7 @@ Available from 0 to 127</string>
     <bool>true</bool>
    </property>
    <property name="text">
-    <string notr="true">XG</string>
+    <string notr="true">Yamaha XG</string>
    </property>
   </action>
   <action name="actionStandardGM2">
