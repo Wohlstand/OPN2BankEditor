@@ -1247,10 +1247,12 @@ void BankEditor::on_bank_no_currentIndexChanged(int index)
     QList<QListWidgetItem *> selected = ui->instruments->selectedItems();
     if(!selected.isEmpty())
         ui->instruments->scrollToItem(selected.front());
+    QMetaObject::invokeMethod(this, "reloadInstrumentNames", Qt::QueuedConnection);
 }
 
-void BankEditor::on_bank_msb_editingFinished()
+void BankEditor::on_bank_msb_valueChanged(int value)
 {
+    Q_UNUSED(value);
     if(m_lock)
         return;
     int index = ui->bank_no->currentIndex();
@@ -1261,10 +1263,12 @@ void BankEditor::on_bank_msb_editingFinished()
         else
             m_bank.Banks_Melodic[index].msb = uint8_t(ui->bank_msb->value());
     }
+    QMetaObject::invokeMethod(this, "reloadInstrumentNames", Qt::QueuedConnection);
 }
 
-void BankEditor::on_bank_lsb_editingFinished()
+void BankEditor::on_bank_lsb_valueChanged(int value)
 {
+    Q_UNUSED(value);
     if(m_lock)
         return;
     int index = ui->bank_no->currentIndex();
@@ -1275,6 +1279,7 @@ void BankEditor::on_bank_lsb_editingFinished()
         else
             m_bank.Banks_Melodic[index].lsb = uint8_t(ui->bank_lsb->value());
     }
+    QMetaObject::invokeMethod(this, "reloadInstrumentNames", Qt::QueuedConnection);
 }
 
 
