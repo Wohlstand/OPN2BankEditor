@@ -3530,6 +3530,15 @@ Available from 0 to 127</string>
     <property name="title">
      <string>Edit</string>
     </property>
+    <widget class="QMenu" name="menuPreferred_MIDI_standard">
+     <property name="title">
+      <string>Preferred MIDI standard</string>
+     </property>
+     <addaction name="actionStandardGM"/>
+     <addaction name="actionStandardGS"/>
+     <addaction name="actionStandardXG"/>
+     <addaction name="actionStandardGM2"/>
+    </widget>
     <addaction name="actionCopy"/>
     <addaction name="actionPaste"/>
     <addaction name="separator"/>
@@ -3551,6 +3560,8 @@ Available from 0 to 127</string>
     <addaction name="actionDelInst"/>
     <addaction name="separator"/>
     <addaction name="actionAdLibBnkMode"/>
+    <addaction name="separator"/>
+    <addaction name="menuPreferred_MIDI_standard"/>
    </widget>
    <widget class="QMenu" name="menuSettings">
     <property name="title">
@@ -3784,6 +3795,38 @@ Available from 0 to 127</string>
    </property>
    <property name="text">
     <string>Mame YM2608</string>
+   </property>
+  </action>
+  <action name="actionStandardGM">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string notr="true">General MIDI</string>
+   </property>
+  </action>
+  <action name="actionStandardGS">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string notr="true">GS</string>
+   </property>
+  </action>
+  <action name="actionStandardXG">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string notr="true">XG</string>
+   </property>
+  </action>
+  <action name="actionStandardGM2">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string notr="true">General MIDI 2</string>
    </property>
   </action>
  </widget>
