@@ -26,6 +26,7 @@
 #include "chips/gx_opn2.h"
 #include "chips/np2_opna.h"
 #include "chips/mame_opna.h"
+#include "chips/pmdwin_opna.h"
 
 #define USED_CHANNELS_4OP       6
 
@@ -164,6 +165,9 @@ void Generator::switchChip(Generator::OPN_Chips chipId, int family)
         break;
     case CHIP_MAMEOPNA:
         chip.reset(new MameOPNA(m_chipFamily));
+        break;
+    case CHIP_PMDWIN:
+        chip.reset(new PMDWinOPNA(m_chipFamily));
         break;
     }
     initChip();

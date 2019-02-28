@@ -3577,6 +3577,7 @@ Available from 0 to 127</string>
      <addaction name="actionEmulatorGens"/>
      <addaction name="actionEmulatorNP2"/>
      <addaction name="actionEmulatorMameOPNA"/>
+     <addaction name="actionEmulatorPMDWinOPNA"/>
     </widget>
     <addaction name="menuChoose_chip_emulator"/>
     <addaction name="actionLatency"/>
@@ -3795,6 +3796,14 @@ Available from 0 to 127</string>
    </property>
    <property name="text">
     <string>Mame YM2608</string>
+   </property>
+  </action>
+  <action name="actionEmulatorPMDWinOPNA">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>PMDWin YM2608</string>
    </property>
   </action>
   <action name="actionStandardGM">

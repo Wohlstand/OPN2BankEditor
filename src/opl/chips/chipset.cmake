@@ -18,4 +18,7 @@ set(CHIPS_SOURCES
     "src/opl/chips/mame/mame_ym2612fm.c"
     "src/opl/chips/mamefm/emu2149.c"
     "src/opl/chips/nuked/ym3438.c"
-)
+    "src/opl/chips/pmdwin_opna.cpp"
+    "src/opl/chips/pmdwin/opna.c"
+    "src/opl/chips/pmdwin/psg.c"
+    "src/opl/chips/pmdwin/rhythmdata.c")
