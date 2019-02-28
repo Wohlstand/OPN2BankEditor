@@ -71,8 +71,6 @@ void PMDWinOPNA::writePan(uint16_t chan, uint8_t data)
 
 void PMDWinOPNA::nativeGenerateN(int16_t *output, size_t frames)
 {
-    std::memset(output, 0, 2 * frames * sizeof(output[0]));
-
     // be cautious to avoid overflowing stack buffer on PMDWin side!
     // (on OPNChipBaseBuffered it's fine)
     assert(frames < 16384);
