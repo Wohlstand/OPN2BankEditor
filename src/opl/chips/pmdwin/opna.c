@@ -1125,7 +1125,8 @@ static inline void MixSubS(Channel4 ch[6], int activech, int32_t *dest)
 // to the user-specified samplerate. It is an open problem as to determining
 // if one of these sounds better than the other.
 */
-#define IStoSample(s)   (Limit16((s) >> 2))
+/*#define IStoSample(s)   (Limit16((s) >> 2))*/
+#define IStoSample(s)   (Limit16((s) >> 3)) /* libOPNMIDI: prevent FM channel clipping (TODO: also adjust PSG and rhythm) */
 
 static void Mix6(OPNA *opna, int32_t *buffer, uint32_t nsamples, int activech)
 {
