@@ -144,7 +144,7 @@ void Importer::setMelodic()
     {
         QListWidgetItem *item = new QListWidgetItem();
         item->setText(m_bank.Ins_Melodic[i].name[0] != '\0' ?
-                      m_bank.Ins_Melodic[i].name : getInstrumentName(i, false, false));
+                      QString::fromUtf8(m_bank.Ins_Melodic[i].name) : getInstrumentName(i, false, false));
         item->setData(Qt::UserRole, i);
         item->setToolTip(QString("ID: %1").arg(i));
         item->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled);
@@ -160,7 +160,7 @@ void Importer::setDrums()
     {
         QListWidgetItem *item = new QListWidgetItem();
         item->setText(m_bank.Ins_Percussion[i].name[0] != '\0' ?
-                      m_bank.Ins_Percussion[i].name : getInstrumentName(i, false, true));
+                      QString::fromUtf8(m_bank.Ins_Percussion[i].name) : getInstrumentName(i, false, true));
         item->setData(Qt::UserRole, i);
         item->setToolTip(QString("ID: %1").arg(i));
         item->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled);
@@ -506,7 +506,7 @@ void Importer::reloadInstrumentNames()
         {
             int index = items[i]->data(Qt::UserRole).toInt();
             items[i]->setText(m_bank.Ins_Percussion[index].name[0] != '\0' ?
-                              m_bank.Ins_Percussion[index].name :
+                              QString::fromUtf8(m_bank.Ins_Percussion[index].name) :
                               getInstrumentName(index, false, true));
         }
     }
@@ -516,7 +516,7 @@ void Importer::reloadInstrumentNames()
         {
             int index = items[i]->data(Qt::UserRole).toInt();
             items[i]->setText(m_bank.Ins_Melodic[index].name[0] != '\0' ?
-                              m_bank.Ins_Melodic[index].name :
+                              QString::fromUtf8(m_bank.Ins_Melodic[index].name) :
                               getInstrumentName(index, false, false));
         }
     }
