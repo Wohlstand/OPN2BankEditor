@@ -39,9 +39,15 @@ static inline int16_t Limit16(int a)
     else                      return a;
 }
 
+/*  ------------------------------------------------------------------------- */
+struct _OPNA;
+struct Channel4;
+
 /*  Operator ---------------------------------------------------------------- */
 typedef struct _FMOperator
 {
+    struct Channel4 *master;
+
     int32_t out, out2;
 
     /*  Phase Generator ----------------------------------------------------- */
@@ -93,6 +99,7 @@ typedef struct _FMOperator
 /*  4-op Channel ------------------------------------------------------------ */
 typedef struct Channel4
 {
+    struct _OPNA *master;
     uint32_t fb;
     int     buf[4];
     uint8_t idx[6];
@@ -122,8 +129,7 @@ extern "C" {
 
 /* --------------------------------------------------------------------------
 // Miscellaneous and probably irrelevant function prototypes. */
-void MakeTable(void);
-void OperatorInit(FMOperator *op);
+void OperatorInit(Channel4 *ch4, FMOperator *op);
 void OperatorReset(FMOperator *op);
 void OperatorPrepare(FMOperator *op);
 

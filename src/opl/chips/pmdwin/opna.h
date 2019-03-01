@@ -47,9 +47,16 @@ typedef struct _OPNA
 
     uint32_t lfocount;
     uint32_t lfodcount;
+    uint32_t lfotab[8];
 
     uint32_t fnum[6];
     uint32_t fnum3[3];
+
+    uint8_t aml;
+
+    uint32_t currentratio;
+    float rr;
+    uint32_t ratetable[64];
 } OPNA;
 
 #ifdef __cplusplus
