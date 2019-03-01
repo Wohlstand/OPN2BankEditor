@@ -38,6 +38,7 @@ typedef struct _OPNA
     uint8_t rhythmkey;
 
     int32_t mixl, mixl1;
+    int32_t mixr, mixr1;
     uint8_t fnum2[9];
 
     uint8_t reg22;
@@ -62,8 +63,9 @@ void OPNASetVolumeRhythm(OPNA *opna, int index, int db);
 uint8_t OPNASetRate(OPNA *opna, uint32_t r, uint8_t ipflag);
 void OPNASetChannelMask(OPNA *opna, uint32_t mask);
 void OPNASetReg(OPNA *opna, uint32_t addr, uint32_t data);
+void OPNASetPan(OPNA *opna, uint32_t chan, uint32_t data);
 uint8_t OPNATimerCount(OPNA *opna, int32_t us);
-void OPNAMix(OPNA *opna, int16_t *buffer, uint32_t nsamples);
+void OPNAMix(OPNA *opna, int16_t *buffer, uint32_t nframes);
 
 /* --------------------------------------------------------------------------- */
 static inline uint32_t OPNAReadStatus(OPNA *opna) { return opna->status & 0x03; }

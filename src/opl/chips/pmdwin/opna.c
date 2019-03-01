@@ -28,6 +28,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 #include <stdarg.h>
 #include <math.h>
 #include <unistd.h>
+#include <assert.h>
 #include "op.h"
 #include "psg.h"
 #include "opna.h"
@@ -174,6 +175,28 @@ static const uint8_t fbtab[8] = { 31, 7, 6, 5, 4, 3, 2, 1 };
 static const uint8_t amt[4] = { 29, 4, 2, 1 }; /* OPNA */
 #pragma message("libOPNMIDI: global variable here")
 uint8_t aml;
+
+// libOPNMIDI: pan law table
+static const uint16_t panlawtable[] = {
+  65535, 65529, 65514, 65489, 65454, 65409, 65354, 65289,
+  65214, 65129, 65034, 64929, 64814, 64689, 64554, 64410,
+  64255, 64091, 63917, 63733, 63540, 63336, 63123, 62901,
+  62668, 62426, 62175, 61914, 61644, 61364, 61075, 60776,
+  60468, 60151, 59825, 59489, 59145, 58791, 58428, 58057,
+  57676, 57287, 56889, 56482, 56067, 55643, 55211, 54770,
+  54320, 53863, 53397, 52923, 52441, 51951, 51453, 50947,
+  50433, 49912, 49383, 48846, 48302, 47750, 47191,
+  46340, /* Center left */
+  46340, /* Center right */
+  45472, 44885, 44291, 43690, 43083, 42469, 41848, 41221,
+  40588, 39948, 39303, 38651, 37994, 37330, 36661, 35986,
+  35306, 34621, 33930, 33234, 32533, 31827, 31116, 30400,
+  29680, 28955, 28225, 27492, 26754, 26012, 25266, 24516,
+  23762, 23005, 22244, 21480, 20713, 19942, 19169, 18392,
+  17613, 16831, 16046, 15259, 14469, 13678, 12884, 12088,
+  11291, 10492, 9691, 8888, 8085, 7280, 6473, 5666,
+  4858, 4050, 3240, 2431, 1620, 810, 0
+};
 
 /* --------------------------------------------------------------------------- */
 static inline void LFO(OPNA *opna)
@@ -718,6 +741,7 @@ uint8_t OPNAInit(OPNA *opna, uint32_t c, uint32_t r, uint8_t ipflag)
     opna->prescale = 0;
     opna->rate = 44100;
     opna->mixl = 0;
+    opna->mixr = 0;
     opna->mixdelta = 16383;
     opna->interpolation = 0;
 
@@ -781,6 +805,8 @@ void OPNAReset(OPNA *opna)
     for (i=0x100; i<0x110; i++) OPNASetReg(opna, i, 0);
     for (i=0x10; i<0x20; i++) OPNASetReg(opna, i, 0);
     for (i=0; i<6; i++) {
+        opna->ch[i].panl = 46340;
+        opna->ch[i].panr = 46340;
         for(j=0; j<4; j++)
             OperatorReset(&opna->ch[i].op[j]);
     }
@@ -1093,6 +1119,15 @@ void OPNASetReg(OPNA *opna, uint32_t addr, uint32_t data)
     }
 }
 
+/* libOPNMIDI: soft panning */
+void OPNASetPan(OPNA *opna, uint32_t chan, uint32_t data)
+{
+    assert(chan >= 0 && chan < 6);
+    assert(data < 128);
+    opna->ch[chan].panl = panlawtable[data & 0x7F];
+    opna->ch[chan].panr = panlawtable[0x7F - (data & 0x7F)];
+}
+
 /* ---------------------------------------------------------------------------
 // Read OPNA register. Pointless. Only SSG registers can be read, and of those
 // the only one anyone seems to be interested in reading is register 7,
@@ -1111,12 +1146,21 @@ uint32_t OPNAGetReg(OPNA *opna, uint32_t addr)
 
 static inline void MixSubS(Channel4 ch[6], int activech, int32_t *dest)
 {
-    if (activech & 0x001) (*dest  = Ch4Calc(&ch[0]));
-    if (activech & 0x004) (*dest += Ch4Calc(&ch[1]));
-    if (activech & 0x010) (*dest += Ch4Calc(&ch[2]));
-    if (activech & 0x040) (*dest += Ch4Calc(&ch[3]));
-    if (activech & 0x100) (*dest += Ch4Calc(&ch[4]));
-    if (activech & 0x400) (*dest += Ch4Calc(&ch[5]));
+    unsigned int c;
+    int32_t l = 0;
+    int32_t r = 0;
+
+    for (c = 0; c < 6; ++c) {
+        if (activech & (1 << (c << 1))) {
+            int32_t s = Ch4Calc(&ch[c]);
+            s >>= 2; /* libOPNMIDI: prevent FM channel clipping (TODO: also adjust PSG and rhythm) */
+            l += s * ch[c].panl / 65536;
+            r += s * ch[c].panr / 65536;
+        }
+    }
+
+    dest[0] = l;
+    dest[1] = r;
 }
 
 /* ---------------------------------------------------------------------------
@@ -1125,22 +1169,23 @@ static inline void MixSubS(Channel4 ch[6], int activech, int32_t *dest)
 // to the user-specified samplerate. It is an open problem as to determining
 // if one of these sounds better than the other.
 */
-/*#define IStoSample(s)   (Limit16((s) >> 2))*/
-#define IStoSample(s)   (Limit16((s) >> 3)) /* libOPNMIDI: prevent FM channel clipping (TODO: also adjust PSG and rhythm) */
+#define IStoSample(s)   (Limit16((s)))
 
 static void Mix6(OPNA *opna, int32_t *buffer, uint32_t nsamples, int activech)
 {
     /* Mix */
-    int32_t ibuf;
+    int32_t ibuf[2];
     unsigned int i;
 
     for (i = 0; i < nsamples; i++) {
-        ibuf = 0;
+        ibuf[0] = 0;
+        ibuf[1] = 0;
         if (activech & 0xaaa)
-            LFO(opna), MixSubS(opna->ch, activech, &ibuf);
+            LFO(opna), MixSubS(opna->ch, activech, ibuf);
         else
-            MixSubS(opna->ch, activech, &ibuf);
-        buffer[i] += IStoSample(ibuf);
+            MixSubS(opna->ch, activech, ibuf);
+        buffer[i * 2 + 0] += IStoSample(ibuf[0]);
+        buffer[i * 2 + 1] += IStoSample(ibuf[1]);
     }
 }
 
@@ -1150,46 +1195,56 @@ static void Mix6(OPNA *opna, int32_t *buffer, uint32_t nsamples, int activech)
 static void Mix6I(OPNA *opna, int32_t *buffer, uint32_t nsamples, int activech)
 {
     /* Mix */
-    int32_t ibuf, delta = opna->mixdelta;
+    int32_t ibuf[2], delta = opna->mixdelta;
     unsigned int i;
 
     if (opna->mpratio < 16384) {
         for (i = 0; i < nsamples; i++) {
-            int32_t l, d;
+            int32_t l, r, d;
             while (delta > 0) {
-                ibuf = 0;
+                ibuf[0] = 0;
+                ibuf[1] = 0;
                 if (activech & 0xaaa)
-                    LFO(opna), MixSubS(opna->ch, activech, &ibuf);
+                    LFO(opna), MixSubS(opna->ch, activech, ibuf);
                 else
-                    MixSubS(opna->ch, activech, &ibuf);
+                    MixSubS(opna->ch, activech, ibuf);
 
-                l = IStoSample(ibuf);
+                l = IStoSample(ibuf[0]);
+                r = IStoSample(ibuf[1]);
                 d = Min(opna->mpratio, delta);
                 opna->mixl += l * d;
+                opna->mixr += r * d;
                 delta -= opna->mpratio;
             }
-            buffer[i] += (opna->mixl >> 14);
+            buffer[i * 2 + 0] += opna->mixl >> 14;
+            buffer[i * 2 + 1] += opna->mixr >> 14;
             opna->mixl = l * (16384-d);
+            opna->mixr = r * (16384-d);
             delta += 16384;
         }
     } else {
         int impr = 16384 * 16384 / opna->mpratio;
         for (i = 0; i < nsamples; i++) {
-            int32_t l;
+            int32_t l, r;
             if (delta < 0) {
                 delta += 16384;
                 opna->mixl = opna->mixl1;
+                opna->mixr = opna->mixr1;
 
-                ibuf = 0;
+                ibuf[0] = 0;
+                ibuf[1] = 0;
                 if (activech & 0xaaa)
-                    LFO(opna), MixSubS(opna->ch, activech, &ibuf);
+                    LFO(opna), MixSubS(opna->ch, activech, ibuf);
                 else
-                    MixSubS(opna->ch, activech, &ibuf);
+                    MixSubS(opna->ch, activech, ibuf);
 
-                opna->mixl1 = IStoSample(ibuf);
+                opna->mixl1 = IStoSample(ibuf[0]);
+                opna->mixr1 = IStoSample(ibuf[1]);
             }
             l = (delta * opna->mixl + (16384 - delta) * opna->mixl1) / 16384;
-            buffer[i] += l;
+            r = (delta * opna->mixr + (16384 - delta) * opna->mixr1) / 16384;
+            buffer[i * 2 + 0] += l;
+            buffer[i * 2 + 1] += r;
             delta -= impr;
         }
     }
@@ -1235,7 +1290,7 @@ static void FMMix(OPNA *opna, int32_t *buffer, uint32_t nsamples)
             else
                 Mix6(opna, buffer, nsamples, act);
         } else {
-            opna->mixl = 0, opna->mixdelta = 16383;
+            opna->mixl = 0, opna->mixr = 0, opna->mixdelta = 16383;
         }
     }
 }
@@ -1259,7 +1314,8 @@ static void RhythmMix(OPNA *opna, int32_t *buffer, uint32_t count)
                 for (j = 0; j < count && r->pos < r->size; j++) {
                     int sample = Limit16(((r->sample[r->pos >> 10] << 8) * vol) >> 10);
                     r->pos += r->step;
-                    buffer[j] += sample;
+                    buffer[j * 2 + 0] += sample;
+                    buffer[j * 2 + 1] += sample;
                 }
             }
         }
@@ -1270,15 +1326,15 @@ static void RhythmMix(OPNA *opna, int32_t *buffer, uint32_t count)
 // Main OPNA output routine. See FMMix(), RhythmMix() above and PSGMix()
 // in psg.c for details.
 */
-void OPNAMix(OPNA *opna, int16_t *buf, uint32_t nsamples)
+void OPNAMix(OPNA *opna, int16_t *buf, uint32_t nframes)
 {
     int32_t buffer[16384];
     unsigned int i, clips = 0;
-    for (i = 0; i < nsamples; i++) buffer[i] = 0;
-    if(opna->devmask & 1) FMMix(opna, buffer, nsamples);
-    if(opna->devmask & 2) PSGMix(&opna->psg, buffer, nsamples);
-    if(opna->devmask & 4) RhythmMix(opna, buffer, nsamples);
-    for (i = 0; i < nsamples; i++) {
+    for (i = 0; i < 2 * nframes; i++) buffer[i] = 0;
+    if(opna->devmask & 1) FMMix(opna, buffer, nframes);
+    if(opna->devmask & 2) PSGMix(&opna->psg, buffer, nframes);
+    if(opna->devmask & 4) RhythmMix(opna, buffer, nframes);
+    for (i = 0; i < 2 * nframes; i++) {
         int32_t k = (buffer[i] >> 2);
         if (k > 32767 || k < -32767) clips++;
         buf[i] = Limit16(k);

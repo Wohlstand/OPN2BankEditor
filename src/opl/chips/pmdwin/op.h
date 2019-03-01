@@ -97,6 +97,8 @@ typedef struct Channel4
     int     buf[4];
     uint8_t idx[6];
     int *pms;
+    uint16_t panl;
+    uint16_t panr;
     FMOperator op[4];
 } Channel4;
 

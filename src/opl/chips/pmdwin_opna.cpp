@@ -64,25 +64,18 @@ void PMDWinOPNA::writeReg(uint32_t port, uint16_t addr, uint8_t data)
 
 void PMDWinOPNA::writePan(uint16_t chan, uint8_t data)
 {
-#pragma message("libOPNMIDI: implement PMDWin panning")
-    (void)chan;
-    (void)data;
+    OPNA *opn = reinterpret_cast<OPNA *>(chip);
+    OPNASetPan(opn, chan, data);
 }
 
 void PMDWinOPNA::nativeGenerateN(int16_t *output, size_t frames)
 {
     // be cautious to avoid overflowing stack buffer on PMDWin side!
     // (on OPNChipBaseBuffered it's fine)
-    assert(frames < 16384);
+    assert(frames < 16384 / 2);
 
     OPNA *opn = reinterpret_cast<OPNA *>(chip);
     OPNAMix(opn, output, static_cast<uint32_t>(frames));
-
-    for(uint32_t i = frames; i-- > 0;)
-    {
-        // convert mono sound generation to stereo
-        output[2 * i] = output[2 * i + 1] = output[i];
-    }
 }
 
 const char *PMDWinOPNA::emulatorName()
