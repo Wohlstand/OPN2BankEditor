@@ -100,10 +100,6 @@
         <translation>Чувств. к АМ</translation>
     </message>
     <message>
-        <source>0</source>
-        <translation type="vanished">0</translation>
-    </message>
-    <message>
         <location filename="../bank_editor.ui" line="505"/>
         <source>1 - 1.4 dB</source>
         <translation>1 - 1.4 дБ</translation>
@@ -128,34 +124,6 @@
         <location filename="../bank_editor.ui" line="526"/>
         <source>FM Sensitivity</source>
         <translation>Чувств. к ЧМ</translation>
-    </message>
-    <message>
-        <source>1 - ±3.4</source>
-        <translation type="vanished">1 - ±3.4</translation>
-    </message>
-    <message>
-        <source>2 - ±6.7</source>
-        <translation type="vanished">2 - ±6.7</translation>
-    </message>
-    <message>
-        <source>3 - ±10</source>
-        <translation type="vanished">3 - ±10</translation>
-    </message>
-    <message>
-        <source>4 - ±14</source>
-        <translation type="vanished">4 - ±14</translation>
-    </message>
-    <message>
-        <source>5 - ±20</source>
-        <translation type="vanished">5 - ±20</translation>
-    </message>
-    <message>
-        <source>6 - ±40</source>
-        <translation type="vanished">6 - ±40</translation>
-    </message>
-    <message>
-        <source>7 - ±80</source>
-        <translation type="vanished">7 - ±80</translation>
     </message>
     <message>
         <location filename="../bank_editor.ui" line="659"/>
@@ -405,10 +373,6 @@
         <translation>Отключено</translation>
     </message>
     <message>
-        <source>0001</source>
-        <translation type="obsolete">0001</translation>
-    </message>
-    <message>
         <location filename="../bank_editor.ui" line="1282"/>
         <source>Custom instrument name:</source>
         <translation>Пользовательское имя инструмента:</translation>
@@ -447,529 +411,533 @@
     </message>
     <message>
         <location filename="../bank_editor.ui" line="2823"/>
-        <location filename="../bank_editor.cpp" line="597"/>
+        <location filename="../bank_editor.cpp" line="666"/>
         <source>&lt;Untitled&gt;</source>
         <translation>&lt;Безымянный&gt;</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="2883"/>
+        <location filename="../bank_editor.ui" line="2889"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Recently used channel ID&lt;/span&gt;&lt;br/&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;(from 0 to N-1)&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Totally 6 four-operator channels available on OPN2 chip in regular mode. When DAC is turned on, the sixth FM channel is disabled, and it&apos;s port is used for DAC input.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Индекс недавно использованного канала чипа&lt;/span&gt;&lt;br/&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;(от 0 до N-1)&lt;/span&gt;&lt;/p&gt;&lt;p&gt;На чипе OPN2 всего 6 четырёх-операторных каналов в обычном режиме. Когда ЦАП-канал включён, шестой ЧМ-канал будет выключен, и его порт будет использоваться в качестве ЦАП-выхода.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="2919"/>
+        <location filename="../bank_editor.ui" line="2925"/>
         <source>MIDI input</source>
         <translation>MIDI-вход</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="2953"/>
+        <location filename="../bank_editor.ui" line="2959"/>
         <source>Select port:</source>
         <translation>Выбор порта:</translation>
     </message>
     <message>
-        <source>Global OPN2 flags</source>
-        <translation type="vanished">Общие флаги OPN2</translation>
-    </message>
-    <message>
-        <location filename="../bank_editor.ui" line="2993"/>
+        <location filename="../bank_editor.ui" line="2999"/>
         <source>Global chip flags</source>
         <translation>Общие флаги чипа</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="3014"/>
+        <location filename="../bank_editor.ui" line="3020"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Defines a type of the chip and frequency to run emulators:&lt;/p&gt;&lt;ul style=&quot;margin-top: 0px; margin-bottom: 0px; margin-left: 0px; margin-right: 0px; -qt-list-indent: 1;&quot;&gt;&lt;li style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;OPN2&lt;/span&gt; - YM2612, YM3438 - running in &lt;span style=&quot; font-family:&apos;monospace&apos;;&quot;&gt;53267 Hz rate&lt;/span&gt;&lt;/li&gt;&lt;li style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;OPNA&lt;/span&gt; - YM2608 - running in &lt;span style=&quot; font-family:&apos;monospace&apos;;&quot;&gt;55466 Hz rate&lt;/span&gt;&lt;/li&gt;&lt;/ul&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Определяет тип чипа и частоту, на которой будут работать эмуляторы:&lt;/p&gt;&lt;ul style=&quot;margin-top: 0px; margin-bottom: 0px; margin-left: 0px; margin-right: 0px; -qt-list-indent: 1;&quot;&gt;&lt;li style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;OPN2&lt;/span&gt; - YM2612, YM3438 - работает на частоте &lt;span style=&quot; font-family:&apos;monospace&apos;;&quot;&gt;53267 Гц&lt;/span&gt;&lt;/li&gt;&lt;li style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;OPNA&lt;/span&gt; - YM2608 - работает на частоте &lt;span style=&quot; font-family:&apos;monospace&apos;;&quot;&gt;55466 Гц&lt;/span&gt;&lt;/li&gt;&lt;/ul&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="3036"/>
+        <location filename="../bank_editor.ui" line="3042"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;The LFO (Low frequency Oscillator)&lt;/span&gt; is used to distort the FM sound&apos;s amplitude and phase.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;НЧГ (Низко-Частотный Генератор)&lt;/span&gt; используется для изменения амплитуды и фазы ЧМ-генерируемого звука.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="3039"/>
+        <location filename="../bank_editor.ui" line="3045"/>
         <source>Enable LFO</source>
         <translation>Включить НЧГ</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="3055"/>
+        <location filename="../bank_editor.ui" line="3061"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;LFO frequency&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Частота НЧГ&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="3059"/>
+        <location filename="../bank_editor.ui" line="3065"/>
         <source>3.98 Hz</source>
         <translation>3.98 Гц</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="3064"/>
+        <location filename="../bank_editor.ui" line="3070"/>
         <source>5.56 Hz</source>
         <translation>5.56 Гц</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="3069"/>
+        <location filename="../bank_editor.ui" line="3075"/>
         <source>6.02 Hz</source>
         <translation>6.02 Гц</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="3074"/>
+        <location filename="../bank_editor.ui" line="3080"/>
         <source>6.37 Hz</source>
         <translation>6.37 Гц</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="3079"/>
+        <location filename="../bank_editor.ui" line="3085"/>
         <source>6.88 Hz</source>
         <translation>6.88 Гц</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="3084"/>
+        <location filename="../bank_editor.ui" line="3090"/>
         <source>9.63 Hz</source>
         <translation>9.63 Гц</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="3089"/>
+        <location filename="../bank_editor.ui" line="3095"/>
         <source>48.1 Hz</source>
         <translation>48.1 Гц</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="3094"/>
+        <location filename="../bank_editor.ui" line="3100"/>
         <source>72.2 Hz</source>
         <translation>72.2 Гц</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="3105"/>
+        <location filename="../bank_editor.ui" line="3111"/>
         <source>Testing</source>
         <translation>Тестирование</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="3126"/>
+        <location filename="../bank_editor.ui" line="3132"/>
         <source>Test note #(0...127)</source>
         <translation>Тест ноты №(0...127)</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="3139"/>
+        <location filename="../bank_editor.ui" line="3145"/>
         <source>Current note position (60 is a C of a first octave).
 Available from 0 to 127</source>
         <translation>Текущая позиция ноты (60 это До (C) первой октавы).
 Возможные значения между от 0 до 127</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="3159"/>
+        <location filename="../bank_editor.ui" line="3165"/>
         <source>Play a single note. Hold button to play sound, release button to off note.</source>
         <translation>Сыграть одиночную ноту. Зажмите кнопку, чтобы сыграть звук, отпустите чтобы погасить.</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="3162"/>
+        <location filename="../bank_editor.ui" line="3168"/>
         <source>Play Note</source>
         <translation>Сыграть ноту</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="3175"/>
+        <location filename="../bank_editor.ui" line="3181"/>
         <source>Play a major triad chord relative to selected note. Hold button to play sound, release button to off note.</source>
         <translation>Сыграть мажорный аккорд относительно выбранной ноты. Зажмите кнопку, чтобы сыграть звук, отпустите чтобы погасить.</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="3178"/>
+        <location filename="../bank_editor.ui" line="3184"/>
         <source>Major chord</source>
         <translation>Маж. аккорд</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="3191"/>
+        <location filename="../bank_editor.ui" line="3197"/>
         <source>Play a minor triad chord relative to selected note. Hold button to play sound, release button to off note.</source>
         <translation>Сыграть минорный аккорд относительно выбранной ноты. Зажмите кнопку, чтобы сыграть звук, отпустите чтобы погасить.</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="3194"/>
+        <location filename="../bank_editor.ui" line="3200"/>
         <source>Minor chord</source>
         <translation>Мин. аккорд</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="3207"/>
+        <location filename="../bank_editor.ui" line="3213"/>
         <source>Play a augmented triad chord relative to selected note. Hold button to play sound, release button to off note.</source>
         <translation>Сыграть увеличенный аккорд относительно выбранной ноты. Зажмите кнопку, чтобы сыграть звук, отпустите чтобы погасить.</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="3210"/>
+        <location filename="../bank_editor.ui" line="3216"/>
         <source>Augmented chord</source>
         <translation>Увл. аккорд</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="3223"/>
+        <location filename="../bank_editor.ui" line="3229"/>
         <source>Play a diminished triad chord relative to selected note. Hold button to play sound, release button to off note.</source>
         <translation>Сыграть уменьшенный аккорд относительно выбранной ноты. Зажмите кнопку, чтобы сыграть звук, отпустите чтобы погасить.</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="3226"/>
+        <location filename="../bank_editor.ui" line="3232"/>
         <source>Diminished chord</source>
         <translation>Умен. аккорд</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="3239"/>
+        <location filename="../bank_editor.ui" line="3245"/>
         <source>Play a major seventh chord relative to selected note. Hold button to play sound, release button to off note.</source>
         <translation>Сыграть мажорный септаккорд относительно выбранной ноты. Зажмите кнопку, чтобы сыграть звук, отпустите чтобы погасить.</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="3242"/>
+        <location filename="../bank_editor.ui" line="3248"/>
         <source>Major 7-chord</source>
         <translation>Маж. септаккорд</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="3255"/>
+        <location filename="../bank_editor.ui" line="3261"/>
         <source>Play a minor seventh chord relative to selected note. Hold button to play sound, release button to off note.</source>
         <translation>Сыграть минорный септаккорд относительно выбранной ноты. Зажмите кнопку, чтобы сыграть звук, отпустите чтобы погасить.</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="3258"/>
+        <location filename="../bank_editor.ui" line="3264"/>
         <source>Minor 7-chord</source>
         <translation>Мин. септаккорд</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="3284"/>
+        <location filename="../bank_editor.ui" line="3290"/>
         <source>Mute all playing/sustaining notes in all channels</source>
         <translation>Загружить все играемые/зависшие ноты по всем каналам</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="3287"/>
+        <location filename="../bank_editor.ui" line="3293"/>
         <source>Shut up!</source>
         <translation>Заткнись!</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="3389"/>
+        <location filename="../bank_editor.ui" line="3395"/>
         <source>Hold</source>
         <translation>Зажать педаль</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="3392"/>
+        <location filename="../bank_editor.ui" line="3398"/>
         <source>H</source>
         <translation>П</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="3436"/>
+        <location filename="../bank_editor.ui" line="3442"/>
         <source>Pitch bend</source>
         <translation>Смещение высоты тона (Pitch bend)</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="3495"/>
+        <location filename="../bank_editor.ui" line="3501"/>
         <source>File</source>
         <translation>Файл</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="3509"/>
+        <location filename="../bank_editor.ui" line="3515"/>
         <source>Help</source>
         <translation>Справка</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="3513"/>
+        <location filename="../bank_editor.ui" line="3519"/>
         <source>Language</source>
         <translation>Язык</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="3525"/>
+        <location filename="../bank_editor.ui" line="3531"/>
         <source>Edit</source>
         <translation>Правка</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="3551"/>
+        <location filename="../bank_editor.ui" line="3535"/>
+        <source>Preferred MIDI standard</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../bank_editor.ui" line="3568"/>
         <source>Settings</source>
         <translation>Настройки</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="3555"/>
+        <location filename="../bank_editor.ui" line="3572"/>
         <source>Choose chip emulator</source>
         <translation>Выбрать эмулятор чипа</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="3573"/>
+        <location filename="../bank_editor.ui" line="3593"/>
         <source>Open</source>
         <translation>Открыть</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="3581"/>
+        <location filename="../bank_editor.ui" line="3601"/>
         <source>Save bank...</source>
         <translation>Сохранить банк...</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="3589"/>
+        <location filename="../bank_editor.ui" line="3609"/>
         <source>Exit</source>
         <translation>Выйти</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="3597"/>
+        <location filename="../bank_editor.ui" line="3617"/>
         <source>About</source>
         <translation>О программе</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="3602"/>
+        <location filename="../bank_editor.ui" line="3622"/>
         <source>New</source>
         <translation>Новый</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="3607"/>
+        <location filename="../bank_editor.ui" line="3627"/>
         <source>Copy</source>
         <translation>Копировать</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="3615"/>
+        <location filename="../bank_editor.ui" line="3635"/>
         <source>Paste</source>
         <translation>Вставить</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="3623"/>
+        <location filename="../bank_editor.ui" line="3643"/>
         <source>Reset current instrument</source>
         <translation>Сбросить текущий инструмент</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="3631"/>
+        <location filename="../bank_editor.ui" line="3651"/>
         <source>Import instruments...</source>
         <translation>Импортировать инструменты...</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="3636"/>
+        <location filename="../bank_editor.ui" line="3656"/>
         <source>Add instrument</source>
         <translation>Добавить инструмент</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="3641"/>
+        <location filename="../bank_editor.ui" line="3661"/>
         <source>Delete current instrument</source>
         <translation>Удалить выбранный инструмент</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="3646"/>
+        <location filename="../bank_editor.ui" line="3666"/>
         <source>Save current instrument as...</source>
         <translation>Сохранить текущий инструмент как...</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="3651"/>
+        <location filename="../bank_editor.ui" line="3671"/>
         <source>Add bank</source>
         <translation>Добавить банк</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="3656"/>
+        <location filename="../bank_editor.ui" line="3676"/>
         <source>Clone bank</source>
         <translation>Клонировать банк</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="3661"/>
+        <location filename="../bank_editor.ui" line="3681"/>
         <source>Clear bank</source>
         <translation>Очистить банк</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="3666"/>
+        <location filename="../bank_editor.ui" line="3686"/>
         <source>Delete bank</source>
         <translation>Удалить банк</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="3671"/>
+        <location filename="../bank_editor.ui" line="3691"/>
         <source>Clear instrument</source>
         <translation>Очистить инструмент</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="3679"/>
+        <location filename="../bank_editor.ui" line="3699"/>
         <source>United view of all banks</source>
         <translation>Объединённый вид всех банков</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="3682"/>
+        <location filename="../bank_editor.ui" line="3702"/>
         <source>Show all instruments without separating them into 128-instrument banks</source>
         <translation>Показать все инструменты без разделения на наборы по 128 инструментов</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="3687"/>
+        <location filename="../bank_editor.ui" line="3707"/>
         <source>Supported formats...</source>
         <translation>Поддерживаемые форматы...</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="3692"/>
+        <location filename="../bank_editor.ui" line="3712"/>
         <source>Re-Calculate all sounding delays</source>
         <translation>Пересчитать все длительности звучания</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="3700"/>
+        <location filename="../bank_editor.ui" line="3720"/>
         <source>Nuked OPN2 (very accurate)</source>
         <translation>Nuked OPN2 (Высокоточный)</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="3708"/>
+        <location filename="../bank_editor.ui" line="3728"/>
         <source>Mame YM2612</source>
         <translation>Mame YM2612</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="3716"/>
+        <location filename="../bank_editor.ui" line="3736"/>
         <source>GENS 2.10 (for slow CPUs, legacy)</source>
         <translation>GENS 2.10 (Для медленных процессоров, устаревший)</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="3721"/>
+        <location filename="../bank_editor.ui" line="3741"/>
         <source>Run emulators benchmark</source>
         <translation>Запустить тест эмуляторов</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="3726"/>
+        <location filename="../bank_editor.ui" line="3746"/>
         <source>Audio &amp;latency...</source>
         <translation>&amp;Задержка аудио...</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="3734"/>
+        <location filename="../bank_editor.ui" line="3754"/>
         <source>Genesis Plus GX</source>
         <translation>Genesis Plus GX</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="3739"/>
+        <location filename="../bank_editor.ui" line="3759"/>
         <source>Re-Calculate sounding delays of instrument</source>
         <translation>Пересчитать длительности звучания инструмента</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="3744"/>
+        <location filename="../bank_editor.ui" line="3764"/>
         <source>Run delay analysis</source>
         <translation>Запустить анализ длительностей</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="3749"/>
+        <location filename="../bank_editor.ui" line="3769"/>
         <source>System default</source>
         <translation>Системный</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="3754"/>
+        <location filename="../bank_editor.ui" line="3774"/>
         <source>Save bank as...</source>
         <translation>Сохранить банк как...</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="3759"/>
+        <location filename="../bank_editor.ui" line="3779"/>
         <source>Edit registers</source>
         <translation>Редактировать регистры</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="376"/>
-        <location filename="../bank_editor.cpp" line="421"/>
-        <location filename="../bank_editor.cpp" line="461"/>
+        <location filename="../bank_editor.ui" line="3798"/>
+        <source>Mame YM2608</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../bank_editor.ui" line="3806"/>
+        <source>PMDWin YM2608</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../bank_editor.cpp" line="441"/>
+        <location filename="../bank_editor.cpp" line="481"/>
         <source>bad file format</source>
         <translation>неверный формат файла</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="379"/>
-        <source>can&apos;t open file</source>
-        <translation>невозможно открыть файл</translation>
-    </message>
-    <message>
-        <location filename="../bank_editor.cpp" line="382"/>
-        <source>reading of this format is not implemented yet</source>
-        <translation>чтение этого формата пока не реализовано</translation>
-    </message>
-    <message>
-        <location filename="../bank_editor.cpp" line="385"/>
-        <source>unsupported file format</source>
-        <translation>неподдерживаемый тип файла</translation>
-    </message>
-    <message>
-        <location filename="../bank_editor.cpp" line="388"/>
-        <location filename="../bank_editor.cpp" line="433"/>
-        <location filename="../bank_editor.cpp" line="473"/>
+        <location filename="../bank_editor.cpp" line="453"/>
+        <location filename="../bank_editor.cpp" line="493"/>
         <source>unknown error occurred</source>
         <translation>произошла неизвестная ошибка</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="400"/>
+        <location filename="../bank_editor.cpp" line="420"/>
         <source>Bank &apos;%1&apos; has been loaded!</source>
         <translation>Загружен банк &quot;%1&quot;!</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="424"/>
-        <location filename="../bank_editor.cpp" line="464"/>
+        <location filename="../bank_editor.cpp" line="444"/>
+        <location filename="../bank_editor.cpp" line="484"/>
         <source>can&apos;t open file for write</source>
         <translation>невозможно открыть файл для записи</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="427"/>
-        <location filename="../bank_editor.cpp" line="467"/>
+        <location filename="../bank_editor.cpp" line="447"/>
+        <location filename="../bank_editor.cpp" line="487"/>
         <source>writing into this format is not implemented yet</source>
         <translation>записть в этот формат пока ещё не реализован</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="430"/>
-        <location filename="../bank_editor.cpp" line="470"/>
+        <location filename="../bank_editor.cpp" line="450"/>
+        <location filename="../bank_editor.cpp" line="490"/>
         <source>unsupported file format, please define file name extension to choice target file format</source>
         <translation>неподдерживаемый формат файла, пожалуйста, укажите расширение имени файла чтобы выбрать целевой формат</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="446"/>
+        <location filename="../bank_editor.cpp" line="466"/>
         <source>Bank file &apos;%1&apos; has been saved!</source>
         <translation>Банк &quot;%1&quot; успешно сохранён!</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="483"/>
+        <location filename="../bank_editor.cpp" line="503"/>
         <source>Instrument file &apos;%1&apos; has been saved!</source>
         <translation>Файл инструмента &quot;%1&quot; успешно сохранён!</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="529"/>
+        <location filename="../bank_editor.cpp" line="549"/>
         <source>Nothing to save</source>
         <translation>Нечего сохранять</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="530"/>
+        <location filename="../bank_editor.cpp" line="550"/>
         <source>No selected instrument to save. Please select an instrument first!</source>
         <translation>Инструменты для сохранеиня не выбраны. Пожалуйста, выберите инструмент!</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="547"/>
+        <location filename="../bank_editor.cpp" line="567"/>
         <source>File is not saved</source>
         <translation>Файл не сохранён</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="547"/>
+        <location filename="../bank_editor.cpp" line="567"/>
         <source>File is modified and not saved. Do you want to save it?</source>
         <translation>Файл был изменён и пока ещё не сохранён... Хотите его сохранить?</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="670"/>
+        <location filename="../bank_editor.cpp" line="583"/>
+        <source>&lt;Unknown&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../bank_editor.cpp" line="595"/>
+        <source>&lt;Reserved %1&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../bank_editor.cpp" line="739"/>
         <source>Reset instrument to initial state</source>
         <translation>Сбросить инструмент в исходное состояние</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="671"/>
+        <location filename="../bank_editor.cpp" line="740"/>
         <source>This instrument will be reset to initial state (since this file was loaded or saved).
 Do you wish to continue?</source>
         <translation>Текущий инструмент будет сброшен в исходное состояние (начиная от момента открытия или сохранения файла).
 Хотите продолжить?</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="685"/>
+        <location filename="../bank_editor.cpp" line="754"/>
         <source>Are you sure?</source>
         <translation>Вы уверены?</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="686"/>
+        <location filename="../bank_editor.cpp" line="755"/>
         <source>All sounding delays measures will be re-calculated. This operation may take a while. Do you want to continue? You may cancel operation in any moment.</source>
         <translation>Все измеренные длительности звучания будут перерассчитаны. Данная операция может продлиться очень долго. Хотите продолжить? Операцию можно будет отменить в любой момент.</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="693"/>
+        <location filename="../bank_editor.cpp" line="762"/>
         <source>Sounding delays calculation has been completed!</source>
         <translation>Рассчёт длительностей звучания завершён!</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="695"/>
+        <location filename="../bank_editor.cpp" line="764"/>
         <source>Sounding delays calculation was canceled!</source>
         <translation>Рассчёт длительностей звучания отменён!</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="706"/>
-        <location filename="../bank_editor.cpp" line="757"/>
+        <location filename="../bank_editor.cpp" line="775"/>
+        <location filename="../bank_editor.cpp" line="826"/>
         <source>Nothing to measure</source>
         <translation>Нечего измерять</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="707"/>
-        <location filename="../bank_editor.cpp" line="758"/>
+        <location filename="../bank_editor.cpp" line="776"/>
+        <location filename="../bank_editor.cpp" line="827"/>
         <source>No selected instrument to measure. Please select an instrument first!</source>
         <translation>Не выбран инструмент для измерения. Пожалуйста, выберите инструмент!</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="736"/>
+        <location filename="../bank_editor.cpp" line="805"/>
         <source>Benchmark result</source>
         <translation>Результат теста</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="737"/>
+        <location filename="../bank_editor.cpp" line="806"/>
         <source>Result of emulators benchmark based on &apos;%1&apos; instrument:
 
 %2</source>
@@ -978,34 +946,34 @@ Do you wish to continue?</source>
 %2</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="745"/>
-        <location filename="../bank_editor.cpp" line="1334"/>
-        <location filename="../bank_editor.cpp" line="1350"/>
+        <location filename="../bank_editor.cpp" line="814"/>
+        <location filename="../bank_editor.cpp" line="1445"/>
+        <location filename="../bank_editor.cpp" line="1461"/>
         <source>Instrument is not selected</source>
         <translation>Инструмент не выбран</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="746"/>
+        <location filename="../bank_editor.cpp" line="815"/>
         <source>Please select any instrument to begin the benchmark of emulators!</source>
         <translation>Пожалуйста, выберите любой инструмент, чтобы начать тест эмуляторов!</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="782"/>
+        <location filename="../bank_editor.cpp" line="851"/>
         <source>Nothing to edit</source>
         <translation>Нечего править</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="783"/>
+        <location filename="../bank_editor.cpp" line="852"/>
         <source>No selected instrument to edit. Please select an instrument first!</source>
         <translation>Не выбран инструмент для редактирования. Пожалуйста, выберите инструмент!</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="807"/>
+        <location filename="../bank_editor.cpp" line="876"/>
         <source>About bank editor</source>
         <translation>О редакторе банков</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="808"/>
+        <location filename="../bank_editor.cpp" line="877"/>
         <source>FM Bank Editor for Yamaha OPN2 chip, Version %1
 
 %2
@@ -1024,116 +992,116 @@ Source code available on GitHub:
 %3</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="903"/>
-        <location filename="../bank_editor.cpp" line="919"/>
+        <location filename="../bank_editor.cpp" line="996"/>
+        <location filename="../bank_editor.cpp" line="1012"/>
         <source>Delays on: %1, off: %2</source>
         <translation>Длит. нажат.: %1, отпуск.: %2</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="1132"/>
+        <location filename="../bank_editor.cpp" line="1227"/>
         <source>Change name of bank</source>
         <translation>Изменить имя банка</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="1132"/>
+        <location filename="../bank_editor.cpp" line="1227"/>
         <source>Please type name of current bank (32 characters max):</source>
         <translation>Пожалуйста, наберите имя текущего банка (максимум 32 символа):</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="1335"/>
+        <location filename="../bank_editor.cpp" line="1446"/>
         <source>Select instrument to clear please</source>
         <translation>Пожалуйста, выберите инструмент для очистки</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="1351"/>
+        <location filename="../bank_editor.cpp" line="1462"/>
         <source>Select instrument to remove please</source>
         <translation>Пожалуйста, выберите инструмент для удаления</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="1356"/>
+        <location filename="../bank_editor.cpp" line="1467"/>
         <source>Single instrument deletion</source>
         <translation>Удаление одного инструмента</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="1357"/>
+        <location filename="../bank_editor.cpp" line="1468"/>
         <source>Deletion of instrument will cause offset of all next instrument indexes. Suggested to use &apos;Clear instrument&apos; action instead. Do you want continue deletion?</source>
         <translation>Удаление инструмента спровоцирует смещение индексов всех следующих инструментов. Вместо этого, желательно применить &quot;Очистить инструмент&quot;. Вы хотите продолжить удаление?</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="1408"/>
+        <location filename="../bank_editor.cpp" line="1519"/>
         <source>Add bank error</source>
         <translation>Ошибка добавления банка</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="1409"/>
-        <location filename="../bank_editor.cpp" line="1447"/>
-        <location filename="../bank_editor.cpp" line="1536"/>
+        <location filename="../bank_editor.cpp" line="1520"/>
+        <location filename="../bank_editor.cpp" line="1556"/>
+        <location filename="../bank_editor.cpp" line="1643"/>
         <source>United bank mode is turned on. Disable it to be able add or remove banks.</source>
         <translation>Включён режим объединённого банка. Отключите его, чтобы можно было добавлять или удалять банки.</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="1446"/>
+        <location filename="../bank_editor.cpp" line="1555"/>
         <source>Clone bank error</source>
         <translation>Ошибка клонирования банка</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="1493"/>
+        <location filename="../bank_editor.cpp" line="1600"/>
         <source>Clear bank error</source>
         <translation>Ошибка очистки банка</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="1494"/>
+        <location filename="../bank_editor.cpp" line="1601"/>
         <source>United bank mode is turned on. Disable it to be able clear banks.</source>
         <translation>Включён режим объединённого банка. Отключите его, чтобы можно было чистить банки.</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="1499"/>
+        <location filename="../bank_editor.cpp" line="1606"/>
         <source>128-instrument bank erasure</source>
         <translation>Очистка 128-инструментного банка</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="1500"/>
+        <location filename="../bank_editor.cpp" line="1607"/>
         <source>All instruments in this bank will be cleared. Do you want continue erasure?</source>
         <translation>Все инструменты в этом банке будут очищены. Вы хотите продолжить?</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="1535"/>
-        <location filename="../bank_editor.cpp" line="1544"/>
+        <location filename="../bank_editor.cpp" line="1642"/>
+        <location filename="../bank_editor.cpp" line="1651"/>
         <source>Delete bank error</source>
         <translation>Ошибка удаления банка</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="1545"/>
+        <location filename="../bank_editor.cpp" line="1652"/>
         <source>Removing of last bank is not allowed!</source>
         <translation>Удаление последнего банка не позволено!</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="1550"/>
+        <location filename="../bank_editor.cpp" line="1657"/>
         <source>128-instrument bank deletion</source>
         <translation>Удаление 128-инструментного банка</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="1551"/>
+        <location filename="../bank_editor.cpp" line="1658"/>
         <source>Deletion of bank will cause offset of all next bank indexes. Suggested to use &apos;Clear bank&apos; action instead. Do you want continue deletion?</source>
         <translation>Удаление банка спровоцирует смещение индексов всех следующих инструментов. Вместо этого, желательно использовать &quot;Очистить банк&quot;. Хотите продолжить удаление?</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="1602"/>
+        <location filename="../bank_editor.cpp" line="1709"/>
         <source>Virtual port</source>
         <translation>Виртуальный порт</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="1621"/>
+        <location filename="../bank_editor.cpp" line="1728"/>
         <source>Disable</source>
         <translation>Отключить</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="1662"/>
+        <location filename="../bank_editor.cpp" line="1769"/>
         <source>Error</source>
         <translation>Ошибка</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="1663"/>
+        <location filename="../bank_editor.cpp" line="1770"/>
         <source>Cannot open the MIDI port.</source>
         <translation>Невозможно открыть MIDI-порт.</translation>
     </message>
@@ -1177,6 +1145,34 @@ Amplitude at breaking point: %3</source>
         <translation>Длительность: %1 мс
 Пиковая амплитуда: %2
 Амплитуда на точке обрыва: %3</translation>
+    </message>
+</context>
+<context>
+    <name>FileFormats</name>
+    <message>
+        <location filename="../FileFormats/ffmt_enums.cpp" line="29"/>
+        <source>bad file format</source>
+        <translation>неверный формат файла</translation>
+    </message>
+    <message>
+        <location filename="../FileFormats/ffmt_enums.cpp" line="33"/>
+        <source>can&apos;t open file</source>
+        <translation>невозможно открыть файл</translation>
+    </message>
+    <message>
+        <location filename="../FileFormats/ffmt_enums.cpp" line="37"/>
+        <source>reading of this format is not implemented yet</source>
+        <translation>чтение этого формата пока не реализовано</translation>
+    </message>
+    <message>
+        <location filename="../FileFormats/ffmt_enums.cpp" line="41"/>
+        <source>unsupported file format</source>
+        <translation>неподдерживаемый тип файла</translation>
+    </message>
+    <message>
+        <location filename="../FileFormats/ffmt_enums.cpp" line="45"/>
+        <source>unknown error occurred</source>
+        <translation>произошла неизвестная ошибка</translation>
     </message>
 </context>
 <context>
@@ -1268,7 +1264,7 @@ Amplitude at breaking point: %3</source>
     </message>
     <message>
         <location filename="../importer.ui" line="39"/>
-        <location filename="../importer.cpp" line="603"/>
+        <location filename="../importer.cpp" line="600"/>
         <source>&lt;No opened files&gt;</source>
         <translation>&lt;Нет открытых файлов&gt;</translation>
     </message>
@@ -1283,63 +1279,44 @@ Amplitude at breaking point: %3</source>
         <translation>Открыть инструмент</translation>
     </message>
     <message>
-        <location filename="../importer.cpp" line="110"/>
-        <source>bad file format</source>
-        <translation>неверный формат файла</translation>
+        <location filename="../importer.cpp" line="464"/>
+        <source>&lt;Unknown&gt;</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../importer.cpp" line="113"/>
-        <source>can&apos;t open file</source>
-        <translation>невозможно открыть файл</translation>
+        <location filename="../importer.cpp" line="474"/>
+        <source>&lt;Reserved %1&gt;</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../importer.cpp" line="116"/>
-        <source>reading of this format is not implemented yet</source>
-        <translation>чтение этого формата пока не реализовано</translation>
-    </message>
-    <message>
-        <location filename="../importer.cpp" line="119"/>
-        <source>unsupported file format</source>
-        <translation>неподдерживаемый тип файла</translation>
-    </message>
-    <message>
-        <location filename="../importer.cpp" line="122"/>
-        <source>unknown error occurred</source>
-        <translation>произошла неизвестная ошибка</translation>
-    </message>
-    <message>
-        <location filename="../importer.cpp" line="527"/>
+        <location filename="../importer.cpp" line="524"/>
         <source>Nothing to import</source>
         <translation>Нечего импортировать</translation>
     </message>
     <message>
-        <location filename="../importer.cpp" line="527"/>
+        <location filename="../importer.cpp" line="524"/>
         <source>You have no selected instruments to import!
 Please select something first!</source>
         <translation>Не выбра ни один инструмент!
 Сначала нужно что-нибудь выбрать!</translation>
     </message>
     <message>
-        <location filename="../importer.cpp" line="563"/>
+        <location filename="../importer.cpp" line="560"/>
         <source>%1 instruments have been imported!</source>
         <translation>%1 инструмент(ов) успешно импортировано!</translation>
     </message>
     <message>
-        <source>%1 instruments has been imported!</source>
-        <translation type="vanished">Успешно импортировано %1 инструментов!</translation>
-    </message>
-    <message>
-        <location filename="../importer.cpp" line="579"/>
+        <location filename="../importer.cpp" line="576"/>
         <source>Instrument #%1 has been imported!</source>
         <translation>Инструмент &quot;%1&quot; импортирован!</translation>
     </message>
     <message>
-        <location filename="../importer.cpp" line="583"/>
+        <location filename="../importer.cpp" line="580"/>
         <source>No target</source>
         <translation>Нет назначения</translation>
     </message>
     <message>
-        <location filename="../importer.cpp" line="583"/>
+        <location filename="../importer.cpp" line="580"/>
         <source>No target instrument selected.
 Please select target instrument in the main window and retry again!</source>
         <translation>Не выбран целевой инструмент.
@@ -1369,22 +1346,22 @@ If audio glitches occur, you should reset this setting to a higher value.</sourc
 <context>
     <name>Measurer</name>
     <message>
-        <location filename="../opl/measurer.cpp" line="743"/>
-        <location filename="../opl/measurer.cpp" line="799"/>
-        <location filename="../opl/measurer.cpp" line="826"/>
+        <location filename="../opl/measurer.cpp" line="750"/>
+        <location filename="../opl/measurer.cpp" line="806"/>
+        <location filename="../opl/measurer.cpp" line="833"/>
         <source>Sounding delay calculation</source>
         <translation>Измерение длительности звучания</translation>
     </message>
     <message>
-        <location filename="../opl/measurer.cpp" line="744"/>
-        <location filename="../opl/measurer.cpp" line="800"/>
-        <location filename="../opl/measurer.cpp" line="827"/>
-        <location filename="../opl/measurer.cpp" line="854"/>
+        <location filename="../opl/measurer.cpp" line="751"/>
+        <location filename="../opl/measurer.cpp" line="807"/>
+        <location filename="../opl/measurer.cpp" line="834"/>
+        <location filename="../opl/measurer.cpp" line="861"/>
         <source>Please wait...</source>
         <translation>Пожалуйста, подождите...</translation>
     </message>
     <message>
-        <location filename="../opl/measurer.cpp" line="853"/>
+        <location filename="../opl/measurer.cpp" line="860"/>
         <source>Benchmarking emulators</source>
         <translation>Тестирование эмуляторов</translation>
     </message>
@@ -1422,6 +1399,11 @@ If audio glitches occur, you should reset this setting to a higher value.</sourc
         <location filename="../common.cpp" line="187"/>
         <source>Can&apos;t save %1 file because %2.</source>
         <translation>Невозможно сохранить файл &quot;%1&quot; потому что &quot;%2&quot;.</translation>
+    </message>
+    <message>
+        <location filename="../ins_names.cpp" line="135"/>
+        <source>&lt;Reserved %1&gt;</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
