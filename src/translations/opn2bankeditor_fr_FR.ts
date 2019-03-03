@@ -547,12 +547,12 @@ Valeurs entre 0 et 127</translation>
     <message>
         <location filename="../bank_editor.ui" line="3798"/>
         <source>Mame YM2608</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../bank_editor.ui" line="3806"/>
         <source>PMDWin YM2608</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../bank_editor.ui" line="1055"/>
@@ -720,7 +720,7 @@ Valeurs entre 0 et 127</translation>
     <message>
         <location filename="../bank_editor.ui" line="3535"/>
         <source>Preferred MIDI standard</source>
-        <translation type="unfinished"></translation>
+        <translation>Standard MIDI préféré</translation>
     </message>
     <message>
         <location filename="../bank_editor.ui" line="3627"/>
@@ -874,12 +874,12 @@ Valeurs entre 0 et 127</translation>
     <message>
         <location filename="../bank_editor.cpp" line="583"/>
         <source>&lt;Unknown&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;Inconnu&gt;</translation>
     </message>
     <message>
         <location filename="../bank_editor.cpp" line="595"/>
         <source>&lt;Reserved %1&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;Réservé %1&gt;</translation>
     </message>
     <message>
         <location filename="../bank_editor.cpp" line="739"/>
@@ -1298,12 +1298,12 @@ Veuillez d&apos;abord sélectionner quelque chose !</translation>
     <message>
         <location filename="../importer.cpp" line="464"/>
         <source>&lt;Unknown&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;Inconnu&gt;</translation>
     </message>
     <message>
         <location filename="../importer.cpp" line="474"/>
         <source>&lt;Reserved %1&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;Réservé %1&gt;</translation>
     </message>
     <message>
         <location filename="../importer.cpp" line="576"/>
@@ -1402,7 +1402,7 @@ Si des problèmes audio se produisent, réassignez à ce paramètre à une valeu
     <message>
         <location filename="../ins_names.cpp" line="135"/>
         <source>&lt;Reserved %1&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;Réservé %1&gt;</translation>
     </message>
 </context>
 <context>
