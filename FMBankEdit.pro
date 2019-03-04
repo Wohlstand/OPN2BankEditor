@@ -101,6 +101,7 @@ SOURCES += \
     src/controlls.cpp \
     src/proxystyle.cpp \
     src/FileFormats/ffmt_base.cpp \
+    src/FileFormats/ffmt_enums.cpp \
     src/FileFormats/ffmt_factory.cpp \
     src/FileFormats/format_deflemask_dmp.cpp \
     src/FileFormats/format_tfi.cpp \

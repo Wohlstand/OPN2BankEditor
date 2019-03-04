@@ -402,35 +402,19 @@ void BankEditor::reInitFileDataAfterSave(QString &filePath)
     m_bankBackup = m_bank;
 }
 
-bool BankEditor::openFile(QString filePath)
+bool BankEditor::openFile(QString filePath, FfmtErrCode *errp)
 {
     BankFormats format;
     FfmtErrCode err = FmBankFormatFactory::OpenBankFile(filePath, m_bank, &format);
     m_recentFormat = format;
     if(err != FfmtErrCode::ERR_OK)
     {
-        QString errText;
-        switch(err)
-        {
-        case FfmtErrCode::ERR_BADFORMAT:
-            errText = tr("bad file format");
-            break;
-        case FfmtErrCode::ERR_NOFILE:
-            errText = tr("can't open file");
-            break;
-        case FfmtErrCode::ERR_NOT_IMLEMENTED:
-            errText = tr("reading of this format is not implemented yet");
-            break;
-        case FfmtErrCode::ERR_UNSUPPORTED_FORMAT:
-            errText = tr("unsupported file format");
-            break;
-        case FfmtErrCode::ERR_UNKNOWN:
-            errText = tr("unknown error occurred");
-            break;
-        case FfmtErrCode::ERR_OK:
-            break;
+        if (!errp) {
+            QString errText = FileFormats::getErrorText(err);
+            ErrMessageO(this, errText);
         }
-        ErrMessageO(this, errText);
+        else
+            *errp = err;
         return false;
     }
     else
@@ -440,6 +424,26 @@ bool BankEditor::openFile(QString filePath)
         statusBar()->showMessage(tr("Bank '%1' has been loaded!").arg(filePath), 5000);
         return true;
     }
+}
+
+bool BankEditor::openOrImportFile(QString filePath)
+{
+    FfmtErrCode openErr;
+    if (openFile(filePath, &openErr))
+        return true;
+
+    Importer &importer = *m_importer;
+    FfmtErrCode importErr;
+    if(!importer.openFile(filePath, true, &importErr) &&
+       !importer.openFile(filePath, false, &importErr))
+    {
+        QString errText = FileFormats::getErrorText(openErr);
+        ErrMessageO(this, errText);
+        return false;
+    }
+
+    importer.show();
+    return true;
 }
 
 bool BankEditor::saveBankFile(QString filePath, BankFormats format)

@@ -57,7 +57,7 @@ Importer::~Importer()
     delete ui;
 }
 
-bool Importer::openFile(QString filePath, bool isBank)
+bool Importer::openFile(QString filePath, bool isBank, FfmtErrCode *errp)
 {
     FfmtErrCode err = FfmtErrCode::ERR_UNKNOWN;
     BankFormats format = BankFormats::FORMAT_UNKNOWN;
@@ -103,28 +103,13 @@ bool Importer::openFile(QString filePath, bool isBank)
 
     if(err != FfmtErrCode::ERR_OK)
     {
-        QString errText;
-        switch(err)
+        if(!errp)
         {
-        case FfmtErrCode::ERR_BADFORMAT:
-            errText = tr("bad file format");
-            break;
-        case FfmtErrCode::ERR_NOFILE:
-            errText = tr("can't open file");
-            break;
-        case FfmtErrCode::ERR_NOT_IMLEMENTED:
-            errText = tr("reading of this format is not implemented yet");
-            break;
-        case FfmtErrCode::ERR_UNSUPPORTED_FORMAT:
-            errText = tr("unsupported file format");
-            break;
-        case FfmtErrCode::ERR_UNKNOWN:
-            errText = tr("unknown error occurred");
-            break;
-        case FfmtErrCode::ERR_OK:
-            break;
+            QString errText = FileFormats::getErrorText(err);
+            ErrMessageO(this, errText, isBank);
         }
-        ErrMessageO(this, errText, isBank);
+        else
+            *errp = err;
         return false;
     }
     if(FmBankFormatFactory::isImportOnly(format))

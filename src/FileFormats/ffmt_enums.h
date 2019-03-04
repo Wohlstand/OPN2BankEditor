@@ -79,4 +79,13 @@ enum class FfmtErrCode
     ERR_UNKNOWN
 };
 
+class QString;
+namespace FileFormats
+{
+    /**
+     * @brief Obtain a translated text from an error code.
+     */
+    QString getErrorText(FfmtErrCode err);
+}
+
 #endif // FFMT_ENUMS_H
