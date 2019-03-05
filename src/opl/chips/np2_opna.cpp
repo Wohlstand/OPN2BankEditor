@@ -31,7 +31,7 @@ NP2OPNA<ChipType>::NP2OPNA(OPNFamily f)
 {
     ChipType *opn = (ChipType *)std::calloc(1, sizeof(ChipType));
     chip = new(opn) ChipType;
-    opn->Init(ChipBase::m_clock, ChipBase::m_rate, false, "/home/vitaly/.config/np2kai/");
+    opn->Init(ChipBase::m_clock, ChipBase::m_rate);
     opn->SetReg(0x29, 0x9f);  // enable channels 4-6
 }
 

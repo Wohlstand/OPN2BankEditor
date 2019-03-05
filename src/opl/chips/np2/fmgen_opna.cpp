@@ -28,6 +28,7 @@
 
 #ifdef BUILD_OPNA
 #include "fmgen_file.h"
+#include "np2_rhythm.h"
 #endif
 
 namespace FM
@@ -1462,15 +1463,93 @@ bool OPNA::SetRate(uint c, uint r, bool ipflag)
 //
 bool OPNA::LoadRhythmSample(const char* path)
 {
+	bool is_mem = !path;
+
 	static const char* rhythmname[6] =
 	{
 		"bd", "sd", "top", "hh", "tom", "rim",
+	};
+
+	static const unsigned char* const rhythm_mem[6] =
+	{
+		np2_2608_bd,
+		np2_2608_sd,
+		np2_2608_top,
+		np2_2608_hh,
+		np2_2608_tom,
+		np2_2608_rim
 	};
 
 	int i;
 	for (i=0; i<6; i++)
 		rhythm[i].pos = ~0u;
 
+	if(is_mem)
+	{
+		for (i=0; i<6; i++)
+		{
+			int32 fsize = 0;
+			const unsigned char *file = rhythm_mem[i];
+			const unsigned char *file_cur = file;
+			struct
+			{
+				uint32 chunksize;
+				uint16 tag;
+				uint16 nch;
+				uint32 rate;
+				uint32 avgbytes;
+				uint16 align;
+				uint16 bps;
+				uint16 size;
+			} whdr;
+
+			file_cur = file + 0x10;
+			whdr.chunksize = (file_cur[0] << 0) | (file_cur[1] << 8) | (file_cur[2] << 16) | (file_cur[3] << 24);
+			file_cur += 4;
+			whdr.tag = (file_cur[0] << 0) | (file_cur[1] << 8);
+			file_cur += 2;
+			whdr.nch = (file_cur[0] << 0) | (file_cur[1] << 8);
+			file_cur += 2;
+			whdr.rate = (file_cur[0] << 0) | (file_cur[1] << 8) | (file_cur[2] << 16) | (file_cur[3] << 24);
+			file_cur += 4;
+			whdr.avgbytes = (file_cur[0] << 0) | (file_cur[1] << 8) | (file_cur[2] << 16) | (file_cur[3] << 24);
+			file_cur += 4;
+			whdr.align = (file_cur[0] << 0) | (file_cur[1] << 8);
+			file_cur += 2;
+			whdr.bps = (file_cur[0] << 0) | (file_cur[1] << 8);
+			file_cur += 2;
+			whdr.size = (file_cur[0] << 0) | (file_cur[1] << 8);
+			file_cur += 2;
+
+			uint8 subchunkname[4];
+			fsize = 4 + whdr.chunksize - 22;
+			do
+			{
+				file_cur += fsize;
+				memcpy(&subchunkname, file_cur, 4);
+				file_cur += 4;
+				memcpy(&fsize, file_cur, 4);
+				file_cur += 4;
+			} while (memcmp("data", subchunkname, 4));
+
+			fsize /= 2;
+			if (fsize >= 0x100000 || whdr.tag != 1 || whdr.nch != 1)
+				break;
+			fsize = Max(fsize, (1<<31)/1024);
+
+			if(!rhythm[i].sample)
+				delete rhythm[i].sample;
+			rhythm[i].sample = new int16[fsize];
+			if (!rhythm[i].sample)
+				break;
+			memcpy(rhythm[i].sample, file_cur, fsize * 2);
+
+			rhythm[i].rate = whdr.rate;
+			rhythm[i].step = rhythm[i].rate * 1024 / rate;
+			rhythm[i].pos = rhythm[i].size = fsize * 1024;
+		}
+	}
+	else
 	for (i=0; i<6; i++)
 	{
 		FileIO file;
