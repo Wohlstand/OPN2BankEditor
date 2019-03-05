@@ -302,9 +302,9 @@ void Generator::NoteRhythmOn(uint32_t c, uint32_t level)
 {
     uint8_t rhy = (0x01 << c) & 0x3F;
     // Global rhythm volume
-    Touch_RealRhythm(level);
+    Touch_RealRhythm(level);//0 to 63
     // Volume On
-    WriteReg(0, 0x18 + c, 0x1F);
+    WriteReg(0, 0x18 + c, 0xC0 + 31);/*0 to 31*/
     // Note On
     WriteReg(0, 0x10, rhy);
 }
@@ -455,7 +455,7 @@ void Generator::PlayNoteF(int noteID, uint32_t volume)
 
     if(m_patch.instType == FmBank::Instrument::InsType_OPNA_Rhythm)
     {
-        NoteRhythmOn(m_patch.opnaRhythmId, 0);
+        NoteRhythmOn(m_patch.opnaRhythmId, 63);
     }
 
     if(m_patch.instType == FmBank::Instrument::InsType_PSG || m_patch.instType == FmBank::Instrument::InsType_FM_PSG)
