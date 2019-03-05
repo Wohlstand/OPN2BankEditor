@@ -101,8 +101,10 @@ public:
 
     void NoteOn(uint32_t c, double hertz);
     void NotePsgOn(uint32_t c, double hertz);
+    void NoteRhythmOn(uint32_t c, uint32_t level);
     void NoteOff(uint32_t c);
     void NotePsgOff(uint32_t c);
+    void NoteRhythmOff(uint32_t c);
     void Touch_Real(uint32_t c, uint32_t volume);
     void Touch_RealPSG(uint32_t c, uint32_t volume);
     void Touch_RealRhythm(uint32_t volume);

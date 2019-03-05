@@ -209,6 +209,12 @@ void Generator::NotePsgOff(uint32_t c)
     qDebug() << QString("%1").arg(int(m_regPsg[0]), 8, 2);
 }
 
+void Generator::NoteRhythmOff(uint32_t c)
+{
+    uint8_t rhy = (0x01 << c) & 0x3F;
+    WriteReg(0, 0x10, 0x80 + rhy);
+}
+
 void Generator::NoteOn(uint32_t c, double hertz) // Hertz range: 0..131071
 {
     uint8_t  cc     = uint8_t(c % 3);
@@ -290,6 +296,17 @@ void Generator::NotePsgOn(uint32_t c, double hertz)
     m_regPsg[0] &= ~(1 << cc);
     WriteReg(0, 0x07, m_regPsg[0]);
     qDebug() << QString("%1").arg(int(m_regPsg[0]), 8, 2);
+}
+
+void Generator::NoteRhythmOn(uint32_t c, uint32_t level)
+{
+    uint8_t rhy = (0x01 << c) & 0x3F;
+    // Global rhythm volume
+    Touch_RealRhythm(level);
+    // Volume On
+    WriteReg(0, 0x18 + c, 0x1F);
+    // Note On
+    WriteReg(0, 0x10, rhy);
 }
 
 void Generator::Touch_Real(uint32_t c, uint32_t volume)
@@ -436,6 +453,11 @@ void Generator::PlayNoteF(int noteID, uint32_t volume)
         PlayNoteCh(ch, volume);
     }
 
+    if(m_patch.instType == FmBank::Instrument::InsType_OPNA_Rhythm)
+    {
+        NoteRhythmOn(m_patch.opnaRhythmId, 0);
+    }
+
     if(m_patch.instType == FmBank::Instrument::InsType_PSG || m_patch.instType == FmBank::Instrument::InsType_FM_PSG)
     {
         ch = m_noteManagerPsg.noteOn(noteID, volume, &replace);
@@ -527,6 +549,11 @@ void Generator::StopNoteF(int noteID)
         int ch = m_noteManager.findNoteOffChannel(noteID);
         if(ch != -1)
             StopNoteCh(ch);
+    }
+
+    if(m_patch.instType == FmBank::Instrument::InsType_OPNA_Rhythm)
+    {
+        NoteRhythmOff(m_patch.opnaRhythmId);
     }
 
     if(m_patch.instType == FmBank::Instrument::InsType_PSG || m_patch.instType == FmBank::Instrument::InsType_FM_PSG)
