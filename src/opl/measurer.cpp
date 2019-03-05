@@ -42,6 +42,7 @@
 #include "chips/gx_opn2.h"
 #include "chips/np2_opna.h"
 #include "chips/mame_opna.h"
+#include "chips/pmdwin_opna.h"
 
 //typedef NukedOPN2 DefaultOPN2;
 typedef MameOPN2 DefaultOPN2;
@@ -687,7 +688,8 @@ static void MeasureDurationsBenchmarkRunner(FmBank::Instrument *in_p, QVector<Me
         std::shared_ptr<OPNChipBase>(new GXOPN2(family)),
         std::shared_ptr<OPNChipBase>(new GensOPN2(family)),
         std::shared_ptr<OPNChipBase>(new NP2OPNA<>(family)),
-        std::shared_ptr<OPNChipBase>(new MameOPNA(family))
+        std::shared_ptr<OPNChipBase>(new MameOPNA(family)),
+        std::shared_ptr<OPNChipBase>(new PMDWinOPNA(family))
     };
     for(std::shared_ptr<OPNChipBase> &p : emuls)
         MeasureDurationsBenchmark(in_p, p.get(), result);

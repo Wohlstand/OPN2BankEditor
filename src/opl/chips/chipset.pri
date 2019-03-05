@@ -14,10 +14,14 @@ SOURCES+= \
     $$PWD/mame_opna.cpp \
     $$PWD/np2_opna.cpp \
     $$PWD/nuked_opn2.cpp \
+    $$PWD/pmdwin_opna.cpp \
     $$PWD/gx/gx_ym2612.c \
     $$PWD/mame/mame_ym2612fm.c \
     $$PWD/mamefm/emu2149.c \
-    $$PWD/nuked/ym3438.c
+    $$PWD/nuked/ym3438.c \
+    $$PWD/pmdwin/opna.c \
+    $$PWD/pmdwin/psg.c \
+    $$PWD/pmdwin/rhythmdata.c
 
 HEADERS+= \
     $$PWD/gens/Ym2612_Emu.h \
@@ -44,12 +48,17 @@ HEADERS+= \
     $$PWD/np2/fmgen_psg.h \
     $$PWD/np2/fmgen_types.h \
     $$PWD/nuked/ym3438.h \
+    $$PWD/pmdwin/op.h \
+    $$PWD/pmdwin/opna.h \
+    $$PWD/pmdwin/psg.h \
+    $$PWD/pmdwin/rhythmdata.h \
     $$PWD/gens_opn2.h \
     $$PWD/gx_opn2.h \
     $$PWD/mame_opn2.h \
     $$PWD/mame_opna.h \
     $$PWD/np2_opna.h \
     $$PWD/nuked_opn2.h \
+    $$PWD/pmdwin_opna.h \
     $$PWD/opn_chip_base.h \
     $$PWD/opn_chip_base.tcc \
     $$PWD/opn_chip_family.h

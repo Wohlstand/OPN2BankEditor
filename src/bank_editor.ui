@@ -208,7 +208,7 @@
                    <string>MIDI bank MSB index alias. Means which MSB bank index will refer this bank.</string>
                   </property>
                   <property name="maximum">
-                   <number>255</number>
+                   <number>127</number>
                   </property>
                  </widget>
                 </item>
@@ -244,7 +244,7 @@
                    <string>MIDI bank LSB index alias. Means which LSB bank index will refer this bank.</string>
                   </property>
                   <property name="maximum">
-                   <number>255</number>
+                   <number>127</number>
                   </property>
                  </widget>
                 </item>
@@ -4050,6 +4050,15 @@ Available from 0 to 127</string>
     <property name="title">
      <string>Edit</string>
     </property>
+    <widget class="QMenu" name="menuPreferred_MIDI_standard">
+     <property name="title">
+      <string>Preferred MIDI standard</string>
+     </property>
+     <addaction name="actionStandardGM"/>
+     <addaction name="actionStandardGM2"/>
+     <addaction name="actionStandardGS"/>
+     <addaction name="actionStandardXG"/>
+    </widget>
     <addaction name="actionCopy"/>
     <addaction name="actionPaste"/>
     <addaction name="separator"/>
@@ -4071,6 +4080,8 @@ Available from 0 to 127</string>
     <addaction name="actionDelInst"/>
     <addaction name="separator"/>
     <addaction name="actionAdLibBnkMode"/>
+    <addaction name="separator"/>
+    <addaction name="menuPreferred_MIDI_standard"/>
    </widget>
    <widget class="QMenu" name="menuSettings">
     <property name="title">
@@ -4086,6 +4097,7 @@ Available from 0 to 127</string>
      <addaction name="actionEmulatorGens"/>
      <addaction name="actionEmulatorNP2"/>
      <addaction name="actionEmulatorMameOPNA"/>
+     <addaction name="actionEmulatorPMDWinOPNA"/>
     </widget>
     <addaction name="menuChoose_chip_emulator"/>
     <addaction name="actionLatency"/>
@@ -4304,6 +4316,46 @@ Available from 0 to 127</string>
    </property>
    <property name="text">
     <string>Mame YM2608</string>
+   </property>
+  </action>
+  <action name="actionEmulatorPMDWinOPNA">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>PMDWin YM2608</string>
+   </property>
+  </action>
+  <action name="actionStandardGM">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string notr="true">General MIDI</string>
+   </property>
+  </action>
+  <action name="actionStandardGS">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string notr="true">Roland GS</string>
+   </property>
+  </action>
+  <action name="actionStandardXG">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string notr="true">Yamaha XG</string>
+   </property>
+  </action>
+  <action name="actionStandardGM2">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string notr="true">General MIDI 2</string>
    </property>
   </action>
  </widget>

@@ -88,7 +88,8 @@ public:
         CHIP_MAME,
         CHIP_GX,
         CHIP_NP2,
-        CHIP_MAMEOPNA
+        CHIP_MAMEOPNA,
+        CHIP_PMDWIN,
     };
     Generator(uint32_t sampleRate, OPN_Chips initialChip);
     ~Generator();

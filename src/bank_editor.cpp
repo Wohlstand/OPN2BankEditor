@@ -85,6 +85,24 @@ BankEditor::BankEditor(QWidget *parent) :
     m_recentMelodicNote = ui->noteToTest->value();
     m_bank.Ins_Melodic_box.fill(FmBank::blankInst());
     m_bank.Ins_Percussion_box.fill(FmBank::blankInst());
+
+    QActionGroup *actionGroupStandard = new QActionGroup(this);
+    m_actionGroupStandard = actionGroupStandard;
+    ui->actionStandardGM->setData(kMidiSpecGM1);
+    ui->actionStandardGM2->setData(kMidiSpecGM2|kMidiSpecGM1);
+    ui->actionStandardGS->setData(kMidiSpecGS|kMidiSpecSC|kMidiSpecGM1);
+    ui->actionStandardXG->setData(kMidiSpecXG|kMidiSpecGM1);
+    actionGroupStandard->addAction(ui->actionStandardGM);
+    actionGroupStandard->addAction(ui->actionStandardGM2);
+    actionGroupStandard->addAction(ui->actionStandardGS);
+    actionGroupStandard->addAction(ui->actionStandardXG);
+    actionGroupStandard->setExclusive(true);
+    ui->actionStandardXG->setChecked(true);
+    connect(actionGroupStandard, SIGNAL(triggered(QAction *)),
+            this, SLOT(reloadInstrumentNames()));
+    connect(actionGroupStandard, SIGNAL(triggered(QAction *)),
+            this, SLOT(reloadBankNames()));
+
     setMelodic();
     connect(ui->melodic,    SIGNAL(clicked(bool)),  this,   SLOT(setMelodic()));
     connect(ui->percussion, SIGNAL(clicked(bool)),  this,   SLOT(setDrums()));
@@ -105,7 +123,7 @@ BankEditor::BankEditor(QWidget *parent) :
     connect(ui->actionEmulatorGens, SIGNAL(triggered()), this, SLOT(toggleEmulator()));
     connect(ui->actionEmulatorNP2, SIGNAL(triggered()), this, SLOT(toggleEmulator()));
     connect(ui->actionEmulatorMameOPNA, SIGNAL(triggered()), this, SLOT(toggleEmulator()));
-
+    connect(ui->actionEmulatorPMDWinOPNA, SIGNAL(triggered()), this, SLOT(toggleEmulator()));
 
     connect(ui->insModeFM, SIGNAL(clicked()), this, SLOT(on_instrumentType_radioChanged()));
     connect(ui->insModePSG, SIGNAL(clicked()), this, SLOT(on_instrumentType_radioChanged()));
@@ -197,6 +215,7 @@ void BankEditor::loadSettings()
     ui->actionEmulatorGX->setChecked(false);
     ui->actionEmulatorNP2->setChecked(false);
     ui->actionEmulatorMameOPNA->setChecked(false);
+    ui->actionEmulatorPMDWinOPNA->setChecked(false);
 
     switch(m_currentChip)
     {
@@ -217,6 +236,9 @@ void BankEditor::loadSettings()
         break;
     case Generator::CHIP_MAMEOPNA:
         ui->actionEmulatorMameOPNA->setChecked(true);
+        break;
+    case Generator::CHIP_PMDWIN:
+        ui->actionEmulatorPMDWinOPNA->setChecked(true);
         break;
     }
 }
@@ -386,35 +408,19 @@ void BankEditor::reInitFileDataAfterSave(QString &filePath)
     m_bankBackup = m_bank;
 }
 
-bool BankEditor::openFile(QString filePath)
+bool BankEditor::openFile(QString filePath, FfmtErrCode *errp)
 {
     BankFormats format;
     FfmtErrCode err = FmBankFormatFactory::OpenBankFile(filePath, m_bank, &format);
     m_recentFormat = format;
     if(err != FfmtErrCode::ERR_OK)
     {
-        QString errText;
-        switch(err)
-        {
-        case FfmtErrCode::ERR_BADFORMAT:
-            errText = tr("bad file format");
-            break;
-        case FfmtErrCode::ERR_NOFILE:
-            errText = tr("can't open file");
-            break;
-        case FfmtErrCode::ERR_NOT_IMLEMENTED:
-            errText = tr("reading of this format is not implemented yet");
-            break;
-        case FfmtErrCode::ERR_UNSUPPORTED_FORMAT:
-            errText = tr("unsupported file format");
-            break;
-        case FfmtErrCode::ERR_UNKNOWN:
-            errText = tr("unknown error occurred");
-            break;
-        case FfmtErrCode::ERR_OK:
-            break;
+        if (!errp) {
+            QString errText = FileFormats::getErrorText(err);
+            ErrMessageO(this, errText);
         }
-        ErrMessageO(this, errText);
+        else
+            *errp = err;
         return false;
     }
     else
@@ -424,6 +430,26 @@ bool BankEditor::openFile(QString filePath)
         statusBar()->showMessage(tr("Bank '%1' has been loaded!").arg(filePath), 5000);
         return true;
     }
+}
+
+bool BankEditor::openOrImportFile(QString filePath)
+{
+    FfmtErrCode openErr;
+    if (openFile(filePath, &openErr))
+        return true;
+
+    Importer &importer = *m_importer;
+    FfmtErrCode importErr;
+    if(!importer.openFile(filePath, true, &importErr) &&
+       !importer.openFile(filePath, false, &importErr))
+    {
+        QString errText = FileFormats::getErrorText(openErr);
+        ErrMessageO(this, errText);
+        return false;
+    }
+
+    importer.show();
+    return true;
 }
 
 bool BankEditor::saveBankFile(QString filePath, BankFormats format)
@@ -581,6 +607,55 @@ bool BankEditor::askForSaving()
     return true;
 }
 
+QString BankEditor::getInstrumentName(int instrument, bool isAuto, bool isPerc) const
+{
+    int index = ui->bank_no->currentIndex();
+    QString name = tr("<Unknown>");
+    if(index >= 0)
+    {
+        if(isAuto)
+            isPerc = isDrumsMode();
+        int lsb = ui->bank_lsb->value();
+        int msb = ui->bank_msb->value();
+        MidiProgramId pr = MidiProgramId(isPerc, msb, lsb, instrument % 128);
+        unsigned spec = getSelectedMidiSpec();
+        unsigned specObtained = kMidiSpecXG;
+        const MidiProgram *p = getMidiProgram(pr, spec, &specObtained);
+        p = p ? p : getFallbackProgram(pr, spec, &specObtained);
+        name = p ? p->patchName : tr("<Reserved %1>").arg(instrument % 128);
+    }
+    return name;
+}
+
+QString BankEditor::getBankName(int bank, bool isAuto, bool isPerc)
+{
+    QString name;
+    if(bank >= 0)
+    {
+        if(isAuto)
+            isPerc = isDrumsMode();
+        FmBank::MidiBank *mb = isPerc ?
+            &m_bank.Banks_Percussion[bank] : &m_bank.Banks_Melodic[bank];
+        if(mb->name[0])
+            name = QString::fromUtf8(mb->name);
+        else
+        {
+            MidiProgramId id(isPerc, mb->msb, mb->lsb, 0);
+            unsigned spec = getSelectedMidiSpec();
+            unsigned specObtained = kMidiSpecXG;
+            if(const MidiProgram *p = getMidiBank(id, spec, &specObtained))
+                name = QString::fromUtf8(p->bankName);
+        }
+    }
+    return name;
+}
+
+unsigned BankEditor::getSelectedMidiSpec() const
+{
+    QAction *act = m_actionGroupStandard->checkedAction();
+    return act ? act->data().toUInt() : unsigned(kMidiSpecAny);
+}
+
 void BankEditor::flushInstrument()
 {
     loadInstrument();
@@ -596,8 +671,8 @@ void BankEditor::syncInstrumentName()
     {
         curInstr->setText(
             m_curInst->name[0] != '\0' ?
-            QString::fromUtf8(m_curInst->name) :
-            (m_recentPerc ? getMidiInsNameP(m_recentNum) : getMidiInsNameM(m_recentNum))
+                    QString::fromUtf8(m_curInst->name) :
+                    getInstrumentName(m_recentNum)
         );
     }
     syncInstrumentBlankness();
@@ -759,7 +834,7 @@ void BankEditor::on_actionChipsBenchmark_triggered()
         QMessageBox::information(this,
                                  tr("Benchmark result"),
                                  tr("Result of emulators benchmark based on '%1' instrument:\n\n%2")
-                                 .arg(m_curInst->name)
+                                 .arg(QString::fromUtf8(m_curInst->name))
                                  .arg(resStr)
                                  );
     }
@@ -866,6 +941,7 @@ void BankEditor::toggleEmulator()
     ui->actionEmulatorGX->setChecked(false);
     ui->actionEmulatorNP2->setChecked(false);
     ui->actionEmulatorMameOPNA->setChecked(false);
+    ui->actionEmulatorPMDWinOPNA->setChecked(false);
     if(menuItem == ui->actionEmulatorNuked)
     {
         ui->actionEmulatorNuked->setChecked(true);
@@ -905,6 +981,13 @@ void BankEditor::toggleEmulator()
     {
         ui->actionEmulatorMameOPNA->setChecked(true);
         m_currentChip = Generator::CHIP_MAMEOPNA;
+        m_generator->ctl_switchChip(m_currentChip, static_cast<int>(m_currentChipFamily));
+    }
+    else
+    if(menuItem == ui->actionEmulatorPMDWinOPNA)
+    {
+        ui->actionEmulatorPMDWinOPNA->setChecked(true);
+        m_currentChip = Generator::CHIP_PMDWIN;
         m_generator->ctl_switchChip(m_currentChip, static_cast<int>(m_currentChipFamily));
     }
 }
@@ -1044,7 +1127,7 @@ void BankEditor::setDrumMode(bool dmode)
     ui->piano->setDisabled(dmode);
 }
 
-bool BankEditor::isDrumsMode()
+bool BankEditor::isDrumsMode() const
 {
     return !ui->melodic->isChecked() || ui->percussion->isChecked();
 }
@@ -1060,12 +1143,17 @@ void BankEditor::reloadBanks()
         countOfBanks = ((m_bank.countMelodic() - 1) / 128) + 1;
     for(int i = 0; i < countOfBanks; i++)
     {
-        const char *label = isDrum ? m_bank.Banks_Percussion[i].name : m_bank.Banks_Melodic[i].name;
-        if(label[0] == 0)
-            ui->bank_no->addItem(QString("Bank %1").arg(i), i);
-        else
-            ui->bank_no->addItem(QString("%1: %2").arg(i).arg(label), i);
+        ui->bank_no->addItem(QString(), i);
+        refreshBankName(i);
     }
+}
+
+void BankEditor::refreshBankName(int index)
+{
+    if(index < 0)
+        return;
+    QString name = getBankName(index, true);
+    ui->bank_no->setItemText(index, QString("%1: %2").arg(index).arg(name));
 }
 
 void BankEditor::createLanguageChoices()
@@ -1164,16 +1252,13 @@ void BankEditor::on_bankRename_clicked()
 {
     int index = ui->bank_no->currentIndex();
     QString label;
-    if(isDrumsMode())
-        label = QString::fromUtf8(m_bank.Banks_Percussion[index].name);
-    else
-        label = QString::fromUtf8(m_bank.Banks_Melodic[index].name);
+    bool isDrum = isDrumsMode();
     bool ok = false;
     label = QInputDialog::getText(this, tr("Change name of bank"), tr("Please type name of current bank (32 characters max):"), QLineEdit::EchoMode::Normal, label, &ok);
     if(ok)
     {
         QByteArray arr = label.toUtf8();
-        if(isDrumsMode())
+        if(isDrum)
         {
             memset(m_bank.Banks_Percussion[index].name, 0, 32);
             memcpy(m_bank.Banks_Percussion[index].name, arr.data(), (size_t)arr.size());
@@ -1183,10 +1268,7 @@ void BankEditor::on_bankRename_clicked()
             memset(m_bank.Banks_Melodic[index].name, 0, 32);
             memcpy(m_bank.Banks_Melodic[index].name, arr.data(), (size_t)arr.size());
         }
-        if(arr.size() == 0)
-            ui->bank_no->setItemText(index, QString("Bank %1").arg(index));
-        else
-            ui->bank_no->setItemText(index, QString("%1: %2").arg(index).arg(label));
+        refreshBankName(index);
     }
 }
 
@@ -1214,10 +1296,12 @@ void BankEditor::on_bank_no_currentIndexChanged(int index)
     QList<QListWidgetItem *> selected = ui->instruments->selectedItems();
     if(!selected.isEmpty())
         ui->instruments->scrollToItem(selected.front());
+    QMetaObject::invokeMethod(this, "reloadInstrumentNames", Qt::QueuedConnection);
 }
 
-void BankEditor::on_bank_msb_editingFinished()
+void BankEditor::on_bank_msb_valueChanged(int value)
 {
+    Q_UNUSED(value);
     if(m_lock)
         return;
     int index = ui->bank_no->currentIndex();
@@ -1228,10 +1312,13 @@ void BankEditor::on_bank_msb_editingFinished()
         else
             m_bank.Banks_Melodic[index].msb = uint8_t(ui->bank_msb->value());
     }
+    refreshBankName(index);
+    QMetaObject::invokeMethod(this, "reloadInstrumentNames", Qt::QueuedConnection);
 }
 
-void BankEditor::on_bank_lsb_editingFinished()
+void BankEditor::on_bank_lsb_valueChanged(int value)
 {
+    Q_UNUSED(value);
     if(m_lock)
         return;
     int index = ui->bank_no->currentIndex();
@@ -1242,6 +1329,8 @@ void BankEditor::on_bank_lsb_editingFinished()
         else
             m_bank.Banks_Melodic[index].lsb = uint8_t(ui->bank_lsb->value());
     }
+    refreshBankName(index);
+    QMetaObject::invokeMethod(this, "reloadInstrumentNames", Qt::QueuedConnection);
 }
 
 
@@ -1254,7 +1343,7 @@ void BankEditor::setMelodic()
     {
         QListWidgetItem *item = new QListWidgetItem();
         item->setText(m_bank.Ins_Melodic[i].name[0] != '\0' ?
-                      m_bank.Ins_Melodic[i].name : getMidiInsNameM(i));
+                      QString::fromUtf8(m_bank.Ins_Melodic[i].name) : getInstrumentName(i, false, false));
         setInstrumentMetaInfo(item, i);
         item->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled);
         item->setForeground(m_bank.Ins_Melodic[i].is_blank ?
@@ -1273,7 +1362,7 @@ void BankEditor::setDrums()
     {
         QListWidgetItem *item = new QListWidgetItem();
         item->setText(m_bank.Ins_Percussion[i].name[0] != '\0' ?
-                      m_bank.Ins_Percussion[i].name : getMidiInsNameP(i));
+                      QString::fromUtf8(m_bank.Ins_Percussion[i].name) : getInstrumentName(i, false, true));
         setInstrumentMetaInfo(item, i);
         item->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled);
         item->setForeground(m_bank.Ins_Percussion[i].is_blank ?
@@ -1297,8 +1386,8 @@ void BankEditor::reloadInstrumentNames()
             {
                 int index = items[i]->data(Qt::UserRole).toInt();
                 items[i]->setText(m_bank.Ins_Percussion[index].name[0] != '\0' ?
-                                  m_bank.Ins_Percussion[index].name :
-                                  getMidiInsNameP(index));
+                                  QString::fromUtf8(m_bank.Ins_Percussion[index].name) :
+                                  getInstrumentName(index, false, true));
                 items[i]->setForeground(m_bank.Ins_Percussion[i].is_blank ?
                                         Qt::gray : Qt::black);
             }
@@ -1315,13 +1404,25 @@ void BankEditor::reloadInstrumentNames()
             {
                 int index = items[i]->data(Qt::UserRole).toInt();
                 items[i]->setText(m_bank.Ins_Melodic[index].name[0] != '\0' ?
-                                  m_bank.Ins_Melodic[index].name :
-                                  getMidiInsNameM(index));
+                                  QString::fromUtf8(m_bank.Ins_Melodic[index].name) :
+                                  getInstrumentName(index, false, false));
                 items[i]->setForeground(m_bank.Ins_Melodic[i].is_blank ?
                                         Qt::gray : Qt::black);
             }
         }
     }
+}
+
+void BankEditor::reloadBankNames()
+{
+    int countOfBanks;
+    bool isDrum = isDrumsMode();
+    if(isDrum)
+        countOfBanks = ((m_bank.countDrums() - 1) / 128) + 1;
+    else
+        countOfBanks = ((m_bank.countMelodic() - 1) / 128) + 1;
+    for(int i = 0; i < countOfBanks; i++)
+        refreshBankName(i);
 }
 
 void BankEditor::on_actionAddInst_triggered()
@@ -1336,7 +1437,7 @@ void BankEditor::on_actionAddInst_triggered()
         m_bank.Ins_Melodic = m_bank.Ins_Melodic_box.data();
         ins = m_bank.Ins_Melodic_box.last();
         id = m_bank.countMelodic() - 1;
-        item->setText(ins.name[0] != '\0' ? ins.name : getMidiInsNameM(id));
+        item->setText(ins.name[0] != '\0' ? QString::fromUtf8(ins.name) : getInstrumentName(id, false, false));
     }
     else
     {
@@ -1344,7 +1445,7 @@ void BankEditor::on_actionAddInst_triggered()
         m_bank.Ins_Percussion = m_bank.Ins_Percussion_box.data();
         ins = m_bank.Ins_Percussion_box.last();
         id = m_bank.countDrums() - 1;
-        item->setText(ins.name[0] != '\0' ? ins.name : getMidiInsNameP(id));
+        item->setText(ins.name[0] != '\0' ? QString::fromUtf8(ins.name) : getInstrumentName(id, false, true));
     }
 
     setInstrumentMetaInfo(item, id);
@@ -1454,23 +1555,21 @@ void BankEditor::on_actionAddBank_triggered()
     if(isDrumsMode())
     {
         int oldSize = m_bank.Ins_Percussion_box.size();
-        size_t addSize = 128 + ((oldSize % 128 == 0) ? 0 : (128 - (oldSize % 128)));
-        size_t size = sizeof(FmBank::Instrument) * addSize;
-        m_bank.Ins_Percussion_box.resize(m_bank.Ins_Percussion_box.size() + int(addSize));
+        int addSize = 128 + ((oldSize % 128 == 0) ? 0 : (128 - (oldSize % 128)));
+        m_bank.Ins_Percussion_box.resize(oldSize + addSize);
         m_bank.Ins_Percussion = m_bank.Ins_Percussion_box.data();
         m_bank.Banks_Percussion.push_back(FmBank::emptyBank(uint16_t(m_bank.Banks_Percussion.count())));
-        memset(m_bank.Ins_Percussion + oldSize, 0, size_t(size));
+        std::fill(m_bank.Ins_Percussion_box.end() - addSize, m_bank.Ins_Percussion_box.end(), FmBank::blankInst());
         setDrums();
     }
     else
     {
         int oldSize = m_bank.Ins_Melodic_box.size();
-        size_t addSize = 128 + ((oldSize % 128 == 0) ? 0 : (128 - (oldSize % 128)));
-        size_t size = sizeof(FmBank::Instrument) * addSize;
-        m_bank.Ins_Melodic_box.resize(m_bank.Ins_Melodic_box.size() + int(addSize));
+        int addSize = 128 + ((oldSize % 128 == 0) ? 0 : (128 - (oldSize % 128)));
+        m_bank.Ins_Melodic_box.resize(oldSize + int(addSize));
         m_bank.Ins_Melodic = m_bank.Ins_Melodic_box.data();
         m_bank.Banks_Melodic.push_back(FmBank::emptyBank(uint16_t(m_bank.Banks_Melodic.count())));
-        memset(m_bank.Ins_Melodic + oldSize, 0, size_t(size));
+        std::fill(m_bank.Ins_Melodic_box.end() - addSize, m_bank.Ins_Melodic_box.end(), FmBank::blankInst());
         setMelodic();
     }
 
@@ -1495,11 +1594,10 @@ void BankEditor::on_actionCloneBank_triggered()
     if(isDrumsMode())
     {
         int oldSize = m_bank.Ins_Percussion_box.size();
-        size_t addSize = 128 + ((oldSize % 128 == 0) ? 0 : (128 - (oldSize % 128)));
-        size_t size = sizeof(FmBank::Instrument) * addSize;
-        m_bank.Ins_Percussion_box.resize(m_bank.Ins_Percussion_box.size() + int(addSize));
+        int addSize = 128 + ((oldSize % 128 == 0) ? 0 : (128 - (oldSize % 128)));
+        m_bank.Ins_Percussion_box.resize(oldSize + addSize);
         m_bank.Ins_Percussion = m_bank.Ins_Percussion_box.data();
-        memset(m_bank.Ins_Percussion + oldSize, 0, size_t(size));
+        std::fill(m_bank.Ins_Percussion_box.end() - addSize, m_bank.Ins_Percussion_box.end(), FmBank::blankInst());
         memcpy(m_bank.Ins_Percussion + (newBank * 128),
                m_bank.Ins_Percussion + (curBank * 128),
                sizeof(FmBank::Instrument) * 128);
@@ -1509,11 +1607,10 @@ void BankEditor::on_actionCloneBank_triggered()
     else
     {
         int oldSize = m_bank.Ins_Melodic_box.size();
-        size_t addSize = 128 + ((oldSize % 128 == 0) ? 0 : (128 - (oldSize % 128)));
-        size_t size = sizeof(FmBank::Instrument) * addSize;
-        m_bank.Ins_Melodic_box.resize(m_bank.Ins_Melodic_box.size() + int(addSize));
+        int addSize = 128 + ((oldSize % 128 == 0) ? 0 : (128 - (oldSize % 128)));
+        m_bank.Ins_Melodic_box.resize(oldSize + addSize);
         m_bank.Ins_Melodic = m_bank.Ins_Melodic_box.data();
-        memset(m_bank.Ins_Melodic + oldSize, 0, size_t(size));
+        std::fill(m_bank.Ins_Melodic_box.end() - addSize, m_bank.Ins_Melodic_box.end(), FmBank::blankInst());
         memcpy(m_bank.Ins_Melodic + (newBank * 128),
                m_bank.Ins_Melodic + (curBank * 128),
                sizeof(FmBank::Instrument) * 128);

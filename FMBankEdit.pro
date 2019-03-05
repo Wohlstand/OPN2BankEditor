@@ -101,6 +101,7 @@ SOURCES += \
     src/controlls.cpp \
     src/proxystyle.cpp \
     src/FileFormats/ffmt_base.cpp \
+    src/FileFormats/ffmt_enums.cpp \
     src/FileFormats/ffmt_factory.cpp \
     src/FileFormats/format_deflemask_dmp.cpp \
     src/FileFormats/format_tfi.cpp \
@@ -155,6 +156,7 @@ HEADERS += \
     src/latency.h \
     src/register_editor.h \
     src/ins_names.h \
+    src/ins_names_data.h \
     src/main.h \
     src/opl/generator.h \
     src/opl/generator_realtime.h \

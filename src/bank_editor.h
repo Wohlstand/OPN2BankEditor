@@ -44,6 +44,7 @@ namespace Ui
 }
 
 class Importer;
+class QActionGroup;
 
 /**
  * @brief Main application window
@@ -60,6 +61,8 @@ private:
     QString             m_recentPath;
     //! Recently opened bank file
     QString             m_recentBankFilePath;
+    //! Action group of MIDI specs
+    QActionGroup       *m_actionGroupStandard;
     //! Choosen UI language
     QString             m_language;
     //! Currently using chip
@@ -164,9 +167,17 @@ public:
     /*!
      * \brief Open file
      * \param filePath absolute path to the file to open
+     * \param errp a location to receive the error code in case of failure
      * \return true if file successfully opened, false if failed
      */
-    bool openFile(QString filePath);
+    bool openFile(QString filePath, FfmtErrCode *errp = nullptr);
+
+    /*!
+     * \brief Open file or import it if it cannot be loaded as bank
+     * \param filePath absolute path to the file to open
+     * \return true if file successfully opened, false if failed
+     */
+    bool openOrImportFile(QString filePath);
 
     /*!
      * \brief Save bank file
@@ -200,6 +211,22 @@ public:
     bool askForSaving();
 
     /* ************** Helpful functions ************** */
+    /**
+     * @brief Get the instrument name by index from off the current bank state
+     * @param instrument id
+     * @return The title of instrument
+     */
+    QString getInstrumentName(int instrument, bool isAuto = true, bool isPerc = false) const;
+    /**
+     * @brief Get the bank name by index from off the current bank state
+     * @param bank id
+     * @return The title of bank
+     */
+    QString getBankName(int bank, bool isAuto = true, bool isPerc = false);
+    /**
+     * @brief Get the selected MIDI specification from GUI
+     */
+    unsigned getSelectedMidiSpec() const;
     /**
      * @brief Loads current instrument into GUI controlls and sends it to generator
      */
@@ -235,9 +262,11 @@ public:
      */
     void setDrumMode(bool dmode);
 
-    bool isDrumsMode();
+    bool isDrumsMode() const;
 
     void reloadBanks();
+
+    void refreshBankName(int index);
 
     /**
      * @brief Creates the list of available languages
@@ -266,9 +295,14 @@ public slots:
     void setDrums();
 
     /**
-     * @brief Reload names lf instruments in the list
+     * @brief Reload names of instruments in the list
      */
     void reloadInstrumentNames();
+
+    /**
+     * @brief Reload names of banks in the list
+     */
+    void reloadBankNames();
 
 private slots:
     /* ***************** Common slots ***************** */
@@ -372,12 +406,12 @@ private slots:
     /**
      * @brief Read value from MSB field and write into bank meta-data entry
      */
-    void on_bank_msb_editingFinished();
+    void on_bank_msb_valueChanged(int value);
 
     /**
      * @brief Read value from LSB field and write into bank meta-data entry
      */
-    void on_bank_lsb_editingFinished();
+    void on_bank_lsb_valueChanged(int value);
 
     /**
      * @brief Add new instrument into end
