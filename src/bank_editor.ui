@@ -3549,6 +3549,7 @@ Available from 0 to 127</string>
     <addaction name="actionReMeasure"/>
     <addaction name="actionDelayAnalysis"/>
     <addaction name="actionChipsBenchmark"/>
+    <addaction name="actionCompareWith"/>
     <addaction name="separator"/>
     <addaction name="actionAddBank"/>
     <addaction name="actionCloneBank"/>
@@ -3836,6 +3837,11 @@ Available from 0 to 127</string>
    </property>
    <property name="text">
     <string notr="true">General MIDI 2</string>
+   </property>
+  </action>
+  <action name="actionCompareWith">
+   <property name="text">
+    <string>Compare with other bank...</string>
    </property>
   </action>
  </widget>
