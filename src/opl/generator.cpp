@@ -151,6 +151,7 @@ void Generator::switchChip(Generator::OPN_Chips chipId, int family)
     case CHIP_GENS:
         chip.reset(new GensOPN2(m_chipFamily));
         break;
+    default:
     case CHIP_Nuked:
         chip.reset(new NukedOPN2(m_chipFamily));
         break;
