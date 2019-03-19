@@ -608,16 +608,6 @@ Valeurs entre 0 et 127</translation>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Niveau Total&lt;/span&gt;&lt;/p&gt;&lt;p&gt;TL (niveau total) représente le plus haut niveau de l&apos;amplitude de l&apos;envelope, 0 étant le plus élevé et 127 (décimal) étant le plus faible. Un changement d&apos;une unité correspond environ à 0.75 dB.&lt;/p&gt;&lt;p&gt;Atténue le niveau de sortie de l&apos;opérateur. &lt;span style=&quot; font-weight:600;&quot;&gt;0&lt;/span&gt; est le niveau le plus élevé, &lt;span style=&quot; font-weight:600;&quot;&gt;127&lt;/span&gt; est le niveau le plus faible. Selon l&apos;algorithme, faire varier le niveau de sortie d&apos;un opérateur peut fait varier le volume du canal correspondant. En synthèse FM, faire varier le niveau de sortie de la porteuse fait varier le volume du canal. Faire varier le niveau de la modulatrice modifie le spectre du signal produit par la porteuse.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="3799"/>
-        <source>Mame YM2608</source>
-        <translation></translation>
-    </message>
-    <message>
-        <location filename="../bank_editor.ui" line="3807"/>
-        <source>PMDWin YM2608</source>
-        <translation></translation>
-    </message>
-    <message>
         <location filename="../bank_editor.ui" line="1055"/>
         <location filename="../bank_editor.ui" line="1071"/>
         <location filename="../bank_editor.ui" line="1613"/>
@@ -811,19 +801,9 @@ Valeurs entre 0 et 127</translation>
         <translation>Nuked OPN2 (très précis)</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="3729"/>
-        <source>Mame YM2612</source>
-        <translation></translation>
-    </message>
-    <message>
         <location filename="../bank_editor.ui" line="3737"/>
         <source>GENS 2.10 (for slow CPUs, legacy)</source>
         <translation>GENS 2.10 (pour processeurs lents, obsolète)</translation>
-    </message>
-    <message>
-        <location filename="../bank_editor.ui" line="3755"/>
-        <source>Genesis Plus GX</source>
-        <translation></translation>
     </message>
     <message>
         <location filename="../bank_editor.ui" line="3780"/>

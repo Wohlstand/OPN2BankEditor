@@ -811,9 +811,8 @@ Available from 0 to 127</source>
         <translation>Nuked OPN2 (Высокоточный)</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="3729"/>
         <source>Mame YM2612</source>
-        <translation>Mame YM2612</translation>
+        <translation type="vanished">Mame YM2612</translation>
     </message>
     <message>
         <location filename="../bank_editor.ui" line="3737"/>
@@ -831,9 +830,8 @@ Available from 0 to 127</source>
         <translation>&amp;Задержка аудио...</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="3755"/>
         <source>Genesis Plus GX</source>
-        <translation>Genesis Plus GX</translation>
+        <translation type="vanished">Genesis Plus GX</translation>
     </message>
     <message>
         <location filename="../bank_editor.ui" line="3760"/>
@@ -861,14 +859,8 @@ Available from 0 to 127</source>
         <translation>Редактировать регистры</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="3799"/>
         <source>Mame YM2608</source>
-        <translation type="unfinished">Mame YM2608</translation>
-    </message>
-    <message>
-        <location filename="../bank_editor.ui" line="3807"/>
-        <source>PMDWin YM2608</source>
-        <translation type="unfinished"></translation>
+        <translation type="obsolete">Mame YM2608</translation>
     </message>
     <message>
         <location filename="../bank_editor.ui" line="3844"/>
@@ -943,12 +935,12 @@ Available from 0 to 127</source>
     <message>
         <location filename="../bank_editor.cpp" line="619"/>
         <source>&lt;Unknown&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;Неизвестный&gt;</translation>
     </message>
     <message>
         <location filename="../bank_editor.cpp" line="631"/>
         <source>&lt;Reserved %1&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;Резерв %1&gt;</translation>
     </message>
     <message>
         <location filename="../bank_editor.cpp" line="775"/>
@@ -1023,7 +1015,7 @@ Do you wish to continue?</source>
     <message>
         <location filename="../bank_editor.cpp" line="859"/>
         <source>Open other bank file</source>
-        <translation type="unfinished"></translation>
+        <translation>Открыть другой банк</translation>
     </message>
     <message>
         <location filename="../bank_editor.cpp" line="911"/>
