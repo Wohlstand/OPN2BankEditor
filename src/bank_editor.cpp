@@ -192,9 +192,19 @@ void BankEditor::loadSettings()
     QApplication::setOrganizationName(COMPANY);
     QApplication::setOrganizationDomain(PGE_URL);
     QApplication::setApplicationName("OPN2 FM Banks Editor");
+
+    int defaultChip = Generator::CHIP_Nuked;
+
     QSettings setup;
     m_recentPath = setup.value("recent-path").toString();
-    m_currentChip = (Generator::OPN_Chips)setup.value("chip-emulator", 0).toInt();
+    {
+        int chipEmulator = setup.value("chip-emulator", defaultChip).toInt();
+        if(chipEmulator >= Generator::CHIP_END)
+            chipEmulator = Generator::CHIP_BEGIN;
+        if(chipEmulator < Generator::CHIP_BEGIN)
+            chipEmulator = Generator::CHIP_BEGIN;
+        m_currentChip = static_cast<Generator::OPN_Chips>(chipEmulator);
+    }
     m_language = setup.value("language").toString();
     m_audioLatency = setup.value("audio-latency", audioDefaultLatency).toDouble();
 
@@ -213,6 +223,7 @@ void BankEditor::loadSettings()
 
     switch(m_currentChip)
     {
+    default:
     case Generator::CHIP_Nuked:
         ui->actionEmulatorNuked->setChecked(true);
         break;

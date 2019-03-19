@@ -61,6 +61,7 @@ class Generator
 public:
     enum OPN_Chips
     {
+        CHIP_BEGIN = 0,
         CHIP_Nuked = 0,
         CHIP_GENS,
         CHIP_MAME,
@@ -68,6 +69,7 @@ public:
         CHIP_NP2,
         CHIP_MAMEOPNA,
         CHIP_PMDWIN,
+        CHIP_END
     };
     Generator(uint32_t sampleRate, OPN_Chips initialChip);
     ~Generator();
