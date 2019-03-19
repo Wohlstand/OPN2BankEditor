@@ -185,6 +185,8 @@ public:
         uint8_t percNoteNum;
         //! Note offset (first operator pair)
         int16_t note_offset1;
+        //! Note velocity offset
+        int8_t velocity_offset;
         //! Number of milliseconds of produced sound while sustaining
         uint16_t ms_sound_kon;
         //! Number of milliseconds of produced sound while release
