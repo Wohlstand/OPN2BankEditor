@@ -1,5 +1,6 @@
 
 #include <stdint.h>
+#include <memory>
 #include <cstring>
 #include <QSet>
 #include <QList>
@@ -11,29 +12,43 @@
 
 class RawYm2612ToWopi
 {
+    struct InstrumentData
+    {
+        QSet<QByteArray> cache;
+        QList<FmBank::Instrument> caughtInstruments;
+    };
+
     uint8_t m_ymram[2][0xFF];
     char m_magic[4];
     bool m_keys[6];
     uint8_t m_lfoVal = 0;
     bool m_dacOn = false;
-    QSet<QByteArray> m_cache;
-    QList<FmBank::Instrument> m_caughtInstruments;
+    std::shared_ptr<InstrumentData> m_insdata;
+
 public:
     RawYm2612ToWopi()
     {
+        m_insdata.reset(new InstrumentData);
         reset();
     }
 
     void reset()
     {
+        InstrumentData &insdata = *m_insdata;
+        insdata.cache.clear();
+        insdata.caughtInstruments.clear();
+
         std::memset(m_magic, 0, 4);
         std::memset(m_ymram[0], 0, 0xFF);
         std::memset(m_ymram[1], 0, 0xFF);
         std::memset(m_keys, 0, sizeof(bool) * 6);
         m_lfoVal = 0;
         m_dacOn = false;
-        m_cache.clear();
-        m_caughtInstruments.clear();
+    }
+
+    void shareInstruments(RawYm2612ToWopi &other)
+    {
+        m_insdata = other.m_insdata;
     }
 
     void passReg(uint8_t port, uint8_t reg, uint8_t val)
@@ -73,6 +88,8 @@ public:
 
     void doAnalyzeState()
     {
+        InstrumentData &insdata = *m_insdata;
+
         /* Analyze dumps and take the instruments */
         for(size_t i = 0; i < 2; i++)
         {
@@ -155,15 +172,15 @@ public:
                 insRaw[1 + OPERATOR3*7] = (char)ins.getRegLevel(OPERATOR3);
                 insRaw[1 + OPERATOR4*7] = (char)ins.getRegLevel(OPERATOR4);
 
-                if(!m_cache.contains(insRaw))
+                if(!insdata.cache.contains(insRaw))
                 {
                     std::snprintf(ins.name, 32,
                                   "Ins %d, channel %d",
-                                  m_caughtInstruments.size(),
+                                  insdata.caughtInstruments.size(),
                                   (int)(ch + (3 * i))
                     );
-                    m_caughtInstruments.push_back(ins);
-                    m_cache.insert(insRaw);
+                    insdata.caughtInstruments.push_back(ins);
+                    insdata.cache.insert(insRaw);
                 }
             }
         }
@@ -171,9 +188,8 @@ public:
 
     const QList<FmBank::Instrument> &caughtInstruments()
     {
-        return m_caughtInstruments;
+        return m_insdata->caughtInstruments;
     }
-
 };
 
 #endif // YM2612_TO_WOPI_HPP

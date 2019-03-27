@@ -34,6 +34,9 @@ bool VGM_Importer::detect(const QString &, char *magic)
 FfmtErrCode VGM_Importer::loadFile(QString filePath, FmBank &bank)
 {
     RawYm2612ToWopi pseudoChip;
+    RawYm2612ToWopi pseudoChip2608;
+    pseudoChip2608.shareInstruments(pseudoChip);
+
     char    magic[4];
     uint8_t numb[4];
 
@@ -68,15 +71,26 @@ FfmtErrCode VGM_Importer::loadFile(QString filePath, FmBank &bank)
         file.read(char_p(&cmd), 1);
         switch(cmd)
         {
-        case 0x52://Write port 0
+        case 0x52://Write YM2612 port 0
             file.read(char_p(&reg), 1);
             file.read(char_p(&val), 1);
             pseudoChip.passReg(0, reg, val);
             break;
-        case 0x53://Write port 1
+        case 0x53://Write YM2612 port 1
             file.read(char_p(&reg), 1);
             file.read(char_p(&val), 1);
             pseudoChip.passReg(1, reg, val);
+            break;
+
+        case 0x56://Write YM2608 port 0
+            file.read(char_p(&reg), 1);
+            file.read(char_p(&val), 1);
+            pseudoChip2608.passReg(0, reg, val);
+            break;
+        case 0x57://Write YM2608 port 1
+            file.read(char_p(&reg), 1);
+            file.read(char_p(&val), 1);
+            pseudoChip2608.passReg(1, reg, val);
             break;
 
         case 0x61://Wait samples
@@ -101,6 +115,7 @@ FfmtErrCode VGM_Importer::loadFile(QString filePath, FmBank &bank)
             if(cmd == 0x61)
                 file.seek(file.pos() + 2);
             pseudoChip.doAnalyzeState();
+            pseudoChip2608.doAnalyzeState();
             break;
 
         case 0x66://End of sound data
