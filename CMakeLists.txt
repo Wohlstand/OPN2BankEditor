@@ -81,6 +81,7 @@ set(FILEFORMATS_SOURCES
   "src/FileFormats/format_gens_y12.cpp"
   "src/FileFormats/format_opm.cpp"
   "src/FileFormats/format_mucom88_dat.cpp"
+  "src/FileFormats/format_vgi.cpp"
   "src/FileFormats/format_wohlstand_opn2.cpp")
 add_library(FileFormats STATIC ${FILEFORMATS_SOURCES})
 target_include_directories(FileFormats PUBLIC "src")
