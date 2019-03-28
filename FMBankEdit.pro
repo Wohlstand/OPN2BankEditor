@@ -117,6 +117,7 @@ SOURCES += \
     src/FileFormats/format_gens_y12.cpp \
     src/FileFormats/format_opm.cpp \
     src/FileFormats/format_mucom88_dat.cpp \
+    src/FileFormats/format_vgi.cpp \
     src/FileFormats/format_wohlstand_opn2.cpp \
     src/formats_sup.cpp \
     src/importer.cpp \
@@ -152,6 +153,7 @@ HEADERS += \
     src/FileFormats/format_gens_y12.h \
     src/FileFormats/format_opm.h \
     src/FileFormats/format_mucom88_dat.h \
+    src/FileFormats/format_vgi.h \
     src/FileFormats/format_wohlstand_opn2.h \
     src/formats_sup.h \
     src/importer.h \

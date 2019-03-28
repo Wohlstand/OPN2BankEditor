@@ -35,6 +35,7 @@
 #include "format_saxman_ymx.h"
 #include "format_tx81z_import.h"
 #include "format_gens_y12.h"
+#include "format_vgi.h"
 #include "format_opm.h"
 #include "format_mucom88_dat.h"
 
@@ -78,6 +79,7 @@ void FmBankFormatFactory::registerAllFormats()
     registerInstFormat(new Gens_Y12());
     registerBankFormat(new OPM());
     registerBankFormat(new Mucom88_DAT());
+    registerInstFormat(new VGM_MM());
 }
 
 
