@@ -21,8 +21,6 @@
 
 #include <stdint.h>
 #include <memory>
-#include <QSet>
-#include <QList>
 
 #include "../bank.h"
 #include "ym2612_to_wopi.h" // instrument sharing
