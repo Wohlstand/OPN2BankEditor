@@ -17,7 +17,7 @@
  */
 
 #include "format_s98_import.h"
-#include "ym2612_to_wopi.hpp"
+#include "ym2612_to_wopi.h"
 #include "../common.h"
 #include <memory>
 
