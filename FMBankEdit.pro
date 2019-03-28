@@ -120,6 +120,7 @@ SOURCES += \
     src/FileFormats/format_vgi.cpp \
     src/FileFormats/format_wohlstand_opn2.cpp \
     src/FileFormats/ym2612_to_wopi.cpp \
+    src/FileFormats/ym2151_to_wopi.cpp \
     src/formats_sup.cpp \
     src/importer.cpp \
     src/latency.cpp \
@@ -157,6 +158,7 @@ HEADERS += \
     src/FileFormats/format_vgi.h \
     src/FileFormats/format_wohlstand_opn2.h \
     src/FileFormats/ym2612_to_wopi.h \
+    src/FileFormats/ym2151_to_wopi.h \
     src/formats_sup.h \
     src/importer.h \
     src/latency.h \

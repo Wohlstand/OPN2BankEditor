@@ -16,8 +16,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef YM2612_TO_WOPI_H
-#define YM2612_TO_WOPI_H
+#ifndef YM2151_TO_WOPI_H
+#define YM2151_TO_WOPI_H
 
 #include <stdint.h>
 #include <memory>
@@ -25,31 +25,22 @@
 #include <QList>
 
 #include "../bank.h"
+#include "ym2612_to_wopi.h" // instrument sharing
 
-class RawYm2612ToWopi
+class RawYm2151ToWopi
 {
-    struct InstrumentData
-    {
-        QSet<QByteArray> cache;
-        QList<FmBank::Instrument> caughtInstruments;
-    };
-
-    uint8_t m_ymram[2][0xFF];
-    char m_magic[4];
-    bool m_keys[6];
-    uint8_t m_lfoVal = 0;
-    bool m_dacOn = false;
+    typedef RawYm2612ToWopi::InstrumentData InstrumentData;
+    uint8_t m_keys[8];
+    uint8_t m_ymram[0xFF];
     std::shared_ptr<InstrumentData> m_insdata;
 
-    friend class RawYm2151ToWopi; // instrument sharing
-
 public:
-    RawYm2612ToWopi();
+    RawYm2151ToWopi();
     void reset();
-    void shareInstruments(RawYm2612ToWopi &other);
-    void passReg(uint8_t port, uint8_t reg, uint8_t val);
+    template <class Ym> void shareInstruments(Ym &other) { m_insdata = other.m_insdata; }
+    void passReg(uint8_t reg, uint8_t val);
     void doAnalyzeState();
     const QList<FmBank::Instrument> &caughtInstruments();
 };
 
-#endif // YM2612_TO_WOPI_H
+#endif // YM2151_TO_WOPI_H

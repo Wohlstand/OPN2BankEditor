@@ -18,6 +18,7 @@
 
 #include "format_vgm_import.h"
 #include "ym2612_to_wopi.h"
+#include "ym2151_to_wopi.h"
 #include "../common.h"
 
 #include <QSet>
@@ -35,7 +36,9 @@ FfmtErrCode VGM_Importer::loadFile(QString filePath, FmBank &bank)
 {
     RawYm2612ToWopi pseudoChip;
     RawYm2612ToWopi pseudoChip2608;
+    RawYm2151ToWopi pseudoChip2151;
     pseudoChip2608.shareInstruments(pseudoChip);
+    pseudoChip2151.shareInstruments(pseudoChip);
 
     char    magic[4];
     uint8_t numb[4];
@@ -82,6 +85,12 @@ FfmtErrCode VGM_Importer::loadFile(QString filePath, FmBank &bank)
             pseudoChip.passReg(1, reg, val);
             break;
 
+        case 0x54://Write YM2151 port
+            file.read(char_p(&reg), 1);
+            file.read(char_p(&val), 1);
+            pseudoChip2151.passReg(reg, val);
+            break;
+
         case 0x56://Write YM2608 port 0
             file.read(char_p(&reg), 1);
             file.read(char_p(&val), 1);
@@ -116,6 +125,7 @@ FfmtErrCode VGM_Importer::loadFile(QString filePath, FmBank &bank)
                 file.seek(file.pos() + 2);
             pseudoChip.doAnalyzeState();
             pseudoChip2608.doAnalyzeState();
+            pseudoChip2151.doAnalyzeState();
             break;
 
         case 0x66://End of sound data
