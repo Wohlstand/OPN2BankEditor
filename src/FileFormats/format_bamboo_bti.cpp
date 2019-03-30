@@ -37,6 +37,8 @@ static constexpr uint32_t btVersion(uint8_t x, uint8_t y, uint8_t z)
 
 FfmtErrCode Bamboo_BTI::loadFileInst(QString filePath, FmBank::Instrument &inst, bool *isDrum)
 {
+    Q_UNUSED(isDrum);
+
     QFile file(filePath);
     if(!file.open(QFile::ReadOnly))
         return FfmtErrCode::ERR_NOFILE;

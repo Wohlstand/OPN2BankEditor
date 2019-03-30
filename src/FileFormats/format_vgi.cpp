@@ -22,6 +22,8 @@
 
 bool VGM_MM::detectInst(const QString &filePath, char* magic)
 {
+    Q_UNUSED(magic);
+
     //By name extension
     if(filePath.endsWith(".vgi", Qt::CaseInsensitive))
         return true;
@@ -36,6 +38,8 @@ bool VGM_MM::detectInst(const QString &filePath, char* magic)
 
 FfmtErrCode VGM_MM::loadFileInst(QString filePath, FmBank::Instrument &inst, bool *isDrum)
 {
+    Q_UNUSED(isDrum);
+
     uint8_t idata[43];
     QFile file(filePath);
 
@@ -70,6 +74,8 @@ FfmtErrCode VGM_MM::loadFileInst(QString filePath, FmBank::Instrument &inst, boo
 
 FfmtErrCode VGM_MM::saveFileInst(QString filePath, FmBank::Instrument &inst, bool isDrum)
 {
+    Q_UNUSED(isDrum);
+
     uint8_t idata[43];
 
     idata[0] = inst.algorithm;
