@@ -65,13 +65,14 @@ FfmtErrCode VGM_Importer::loadFile(QString filePath, FmBank &bank)
     uint8_t vgm_sizetable[0x100];
     make_size_table(vgm_sizetable, vgm_version);
 
-    file.seek(0x34);
-    file.read(char_p(numb), 4);
-
-    uint32_t data_offset = toUint32LE(numb);
-    if(data_offset == 0x0C)
-        data_offset = 0x40;
-    file.seek(data_offset);
+    uint32_t data_offset = 0xC;
+    if(vgm_version >= 0x150)
+    {
+        file.seek(0x34);
+        file.read(char_p(numb), 4);
+        data_offset = toUint32LE(numb);
+    }
+    file.seek(0x34 + data_offset);
 
     bank.Ins_Melodic_box.clear();
 
