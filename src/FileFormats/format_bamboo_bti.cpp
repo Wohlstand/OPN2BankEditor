@@ -24,15 +24,10 @@ static const char bti_magic[] = "BambooTrackerIst";
 
 bool Bamboo_BTI::detectInst(const QString &filePath, char *magic)
 {
-    //By name extension
-    if(filePath.endsWith(".bti", Qt::CaseInsensitive))
-        return true;
+    Q_UNUSED(filePath);
 
     //By magic
-    if(std::memcmp(magic, bti_magic, 16) == 0)
-        return true;
-
-    return false;
+    return std::memcmp(magic, bti_magic, 16) == 0;
 }
 
 static constexpr uint32_t btVersion(uint8_t x, uint8_t y, uint8_t z)
