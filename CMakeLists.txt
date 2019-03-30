@@ -28,6 +28,7 @@ find_package(Qt5Concurrent REQUIRED)
 find_package(Qt5LinguistTools REQUIRED)
 set(QWT_NAMES qwt-qt5 qwt) # find versions for Qt5 only
 find_package(Qwt)
+find_package(ZLIB REQUIRED)
 find_package(Threads REQUIRED)
 
 if(QWT_FOUND)
@@ -82,10 +83,12 @@ set(FILEFORMATS_SOURCES
   "src/FileFormats/format_opm.cpp"
   "src/FileFormats/format_mucom88_dat.cpp"
   "src/FileFormats/format_vgi.cpp"
-  "src/FileFormats/format_wohlstand_opn2.cpp")
+  "src/FileFormats/format_wohlstand_opn2.cpp"
+  "src/FileFormats/ym2612_to_wopi.cpp"
+  "src/FileFormats/ym2151_to_wopi.cpp")
 add_library(FileFormats STATIC ${FILEFORMATS_SOURCES})
-target_include_directories(FileFormats PUBLIC "src")
-target_link_libraries(FileFormats PUBLIC Common)
+target_include_directories(FileFormats PUBLIC "src" PRIVATE ${ZLIB_INCLUDE_DIRS})
+target_link_libraries(FileFormats PUBLIC Common PRIVATE ${ZLIB_LIBRARIES})
 
 include(src/opl/chips/chipset.cmake)
 add_library(Chips STATIC ${CHIPS_SOURCES})

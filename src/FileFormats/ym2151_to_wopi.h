@@ -16,29 +16,29 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef VGM_IMPORT_H
-#define VGM_IMPORT_H
+#ifndef YM2151_TO_WOPI_H
+#define YM2151_TO_WOPI_H
 
-#include "ffmt_base.h"
+#include <stdint.h>
+#include <memory>
 
-class QIODevice;
+#include "../bank.h"
+#include "ym2612_to_wopi.h" // instrument sharing
 
-/**
- * @brief Import from VGM files
- */
-class VGM_Importer final : public FmBankFormatBase
+class RawYm2151ToWopi
 {
-public:
-    bool        detect(const QString &filePath, char* magic) override;
-    FfmtErrCode loadFile(QString filePath, FmBank &bank) override;
-    int         formatCaps() const override;
-    QString     formatName() const override;
-    QString     formatModuleName() const override;
-    QString     formatExtensionMask() const override;
-    BankFormats formatId() const override;
+    typedef RawYm2612ToWopi::InstrumentData InstrumentData;
+    uint8_t m_keys[8];
+    uint8_t m_ymram[0xFF];
+    std::shared_ptr<InstrumentData> m_insdata;
 
-private:
-    FfmtErrCode load(QIODevice &file, FmBank &bank);
+public:
+    RawYm2151ToWopi();
+    void reset();
+    template <class Ym> void shareInstruments(Ym &other) { m_insdata = other.m_insdata; }
+    void passReg(uint8_t reg, uint8_t val);
+    void doAnalyzeState();
+    const QList<FmBank::Instrument> &caughtInstruments();
 };
 
-#endif // VGM_IMPORT_H
+#endif // YM2151_TO_WOPI_H
