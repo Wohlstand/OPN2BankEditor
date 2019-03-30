@@ -83,6 +83,7 @@ set(FILEFORMATS_SOURCES
   "src/FileFormats/format_opm.cpp"
   "src/FileFormats/format_mucom88_dat.cpp"
   "src/FileFormats/format_vgi.cpp"
+  "src/FileFormats/format_bamboo_bti.cpp"
   "src/FileFormats/format_wohlstand_opn2.cpp"
   "src/FileFormats/ym2612_to_wopi.cpp"
   "src/FileFormats/ym2151_to_wopi.cpp")
