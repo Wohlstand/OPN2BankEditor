@@ -2,6 +2,60 @@
 <!DOCTYPE TS>
 <TS version="2.1" language="ru_RU">
 <context>
+    <name>AudioConfigDialog</name>
+    <message>
+        <location filename="../audio_config.ui" line="14"/>
+        <source>Audio configuration</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../audio_config.ui" line="20"/>
+        <source>Device</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../audio_config.ui" line="28"/>
+        <source>Select the sound device:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../audio_config.ui" line="35"/>
+        <source>...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../audio_config.ui" line="80"/>
+        <source>Latency</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../audio_config.ui" line="86"/>
+        <source>Define the audio latency.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../audio_config.ui" line="127"/>
+        <source>ms</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../audio_config.ui" line="136"/>
+        <source>If audio glitches occur, you should reset this setting to a higher value.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../audio_config.ui" line="162"/>
+        <source>These settings will only become effective after restarting the software.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../audio_config.cpp" line="30"/>
+        <location filename="../audio_config.cpp" line="84"/>
+        <source>Default device</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>AudioOutRt</name>
     <message>
         <location filename="../audio/ao_rtaudio.cpp" line="37"/>
@@ -469,7 +523,7 @@
     </message>
     <message>
         <location filename="../bank_editor.ui" line="2823"/>
-        <location filename="../bank_editor.cpp" line="702"/>
+        <location filename="../bank_editor.cpp" line="704"/>
         <source>&lt;Untitled&gt;</source>
         <translation>&lt;Безымянный&gt;</translation>
     </message>
@@ -811,6 +865,11 @@ Available from 0 to 127</source>
         <translation>Nuked OPN2 (Высокоточный)</translation>
     </message>
     <message>
+        <location filename="../bank_editor.ui" line="3747"/>
+        <source>Audio &amp;configuration</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>Mame YM2612</source>
         <translation type="vanished">Mame YM2612</translation>
     </message>
@@ -825,9 +884,8 @@ Available from 0 to 127</source>
         <translation>Запустить тест эмуляторов</translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="3747"/>
         <source>Audio &amp;latency...</source>
-        <translation>&amp;Задержка аудио...</translation>
+        <translation type="vanished">&amp;Задержка аудио...</translation>
     </message>
     <message>
         <source>Genesis Plus GX</source>
@@ -868,131 +926,131 @@ Available from 0 to 127</source>
         <translation>Сравнить с другим банком...</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="477"/>
-        <location filename="../bank_editor.cpp" line="517"/>
+        <location filename="../bank_editor.cpp" line="479"/>
+        <location filename="../bank_editor.cpp" line="519"/>
         <source>bad file format</source>
         <translation>неверный формат файла</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="489"/>
-        <location filename="../bank_editor.cpp" line="529"/>
+        <location filename="../bank_editor.cpp" line="491"/>
+        <location filename="../bank_editor.cpp" line="531"/>
         <source>unknown error occurred</source>
         <translation>произошла неизвестная ошибка</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="436"/>
+        <location filename="../bank_editor.cpp" line="438"/>
         <source>Bank &apos;%1&apos; has been loaded!</source>
         <translation>Загружен банк &quot;%1&quot;!</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="480"/>
-        <location filename="../bank_editor.cpp" line="520"/>
+        <location filename="../bank_editor.cpp" line="482"/>
+        <location filename="../bank_editor.cpp" line="522"/>
         <source>can&apos;t open file for write</source>
         <translation>невозможно открыть файл для записи</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="483"/>
-        <location filename="../bank_editor.cpp" line="523"/>
+        <location filename="../bank_editor.cpp" line="485"/>
+        <location filename="../bank_editor.cpp" line="525"/>
         <source>writing into this format is not implemented yet</source>
         <translation>записть в этот формат пока ещё не реализован</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="486"/>
-        <location filename="../bank_editor.cpp" line="526"/>
+        <location filename="../bank_editor.cpp" line="488"/>
+        <location filename="../bank_editor.cpp" line="528"/>
         <source>unsupported file format, please define file name extension to choice target file format</source>
         <translation>неподдерживаемый формат файла, пожалуйста, укажите расширение имени файла чтобы выбрать целевой формат</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="502"/>
+        <location filename="../bank_editor.cpp" line="504"/>
         <source>Bank file &apos;%1&apos; has been saved!</source>
         <translation>Банк &quot;%1&quot; успешно сохранён!</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="539"/>
+        <location filename="../bank_editor.cpp" line="541"/>
         <source>Instrument file &apos;%1&apos; has been saved!</source>
         <translation>Файл инструмента &quot;%1&quot; успешно сохранён!</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="585"/>
+        <location filename="../bank_editor.cpp" line="587"/>
         <source>Nothing to save</source>
         <translation>Нечего сохранять</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="586"/>
+        <location filename="../bank_editor.cpp" line="588"/>
         <source>No selected instrument to save. Please select an instrument first!</source>
         <translation>Инструменты для сохранеиня не выбраны. Пожалуйста, выберите инструмент!</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="603"/>
+        <location filename="../bank_editor.cpp" line="605"/>
         <source>File is not saved</source>
         <translation>Файл не сохранён</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="603"/>
+        <location filename="../bank_editor.cpp" line="605"/>
         <source>File is modified and not saved. Do you want to save it?</source>
         <translation>Файл был изменён и пока ещё не сохранён... Хотите его сохранить?</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="619"/>
+        <location filename="../bank_editor.cpp" line="621"/>
         <source>&lt;Unknown&gt;</source>
         <translation>&lt;Неизвестный&gt;</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="631"/>
+        <location filename="../bank_editor.cpp" line="633"/>
         <source>&lt;Reserved %1&gt;</source>
         <translation>&lt;Резерв %1&gt;</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="775"/>
+        <location filename="../bank_editor.cpp" line="777"/>
         <source>Reset instrument to initial state</source>
         <translation>Сбросить инструмент в исходное состояние</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="776"/>
+        <location filename="../bank_editor.cpp" line="778"/>
         <source>This instrument will be reset to initial state (since this file was loaded or saved).
 Do you wish to continue?</source>
         <translation>Текущий инструмент будет сброшен в исходное состояние (начиная от момента открытия или сохранения файла).
 Хотите продолжить?</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="790"/>
+        <location filename="../bank_editor.cpp" line="792"/>
         <source>Are you sure?</source>
         <translation>Вы уверены?</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="791"/>
+        <location filename="../bank_editor.cpp" line="793"/>
         <source>All sounding delays measures will be re-calculated. This operation may take a while. Do you want to continue? You may cancel operation in any moment.</source>
         <translation>Все измеренные длительности звучания будут перерассчитаны. Данная операция может продлиться очень долго. Хотите продолжить? Операцию можно будет отменить в любой момент.</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="798"/>
+        <location filename="../bank_editor.cpp" line="800"/>
         <source>Sounding delays calculation has been completed!</source>
         <translation>Рассчёт длительностей звучания завершён!</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="800"/>
+        <location filename="../bank_editor.cpp" line="802"/>
         <source>Sounding delays calculation was canceled!</source>
         <translation>Рассчёт длительностей звучания отменён!</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="811"/>
-        <location filename="../bank_editor.cpp" line="886"/>
+        <location filename="../bank_editor.cpp" line="813"/>
+        <location filename="../bank_editor.cpp" line="888"/>
         <source>Nothing to measure</source>
         <translation>Нечего измерять</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="812"/>
-        <location filename="../bank_editor.cpp" line="887"/>
+        <location filename="../bank_editor.cpp" line="814"/>
+        <location filename="../bank_editor.cpp" line="889"/>
         <source>No selected instrument to measure. Please select an instrument first!</source>
         <translation>Не выбран инструмент для измерения. Пожалуйста, выберите инструмент!</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="841"/>
+        <location filename="../bank_editor.cpp" line="843"/>
         <source>Benchmark result</source>
         <translation>Результат теста</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="842"/>
+        <location filename="../bank_editor.cpp" line="844"/>
         <source>Result of emulators benchmark based on &apos;%1&apos; instrument:
 
 %2</source>
@@ -1001,39 +1059,39 @@ Do you wish to continue?</source>
 %2</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="850"/>
-        <location filename="../bank_editor.cpp" line="1505"/>
-        <location filename="../bank_editor.cpp" line="1521"/>
+        <location filename="../bank_editor.cpp" line="852"/>
+        <location filename="../bank_editor.cpp" line="1510"/>
+        <location filename="../bank_editor.cpp" line="1526"/>
         <source>Instrument is not selected</source>
         <translation>Инструмент не выбран</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="851"/>
+        <location filename="../bank_editor.cpp" line="853"/>
         <source>Please select any instrument to begin the benchmark of emulators!</source>
         <translation>Пожалуйста, выберите любой инструмент, чтобы начать тест эмуляторов!</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="859"/>
+        <location filename="../bank_editor.cpp" line="861"/>
         <source>Open other bank file</source>
         <translation>Открыть другой банк</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="911"/>
+        <location filename="../bank_editor.cpp" line="913"/>
         <source>Nothing to edit</source>
         <translation>Нечего править</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="912"/>
+        <location filename="../bank_editor.cpp" line="914"/>
         <source>No selected instrument to edit. Please select an instrument first!</source>
         <translation>Не выбран инструмент для редактирования. Пожалуйста, выберите инструмент!</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="936"/>
+        <location filename="../bank_editor.cpp" line="938"/>
         <source>About bank editor</source>
         <translation>О редакторе банков</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="937"/>
+        <location filename="../bank_editor.cpp" line="939"/>
         <source>FM Bank Editor for Yamaha OPN2 chip, Version %1
 
 %2
@@ -1052,116 +1110,116 @@ Source code available on GitHub:
 %3</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="1056"/>
-        <location filename="../bank_editor.cpp" line="1072"/>
+        <location filename="../bank_editor.cpp" line="1058"/>
+        <location filename="../bank_editor.cpp" line="1074"/>
         <source>Delays on: %1, off: %2</source>
         <translation>Длит. нажат.: %1, отпуск.: %2</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="1287"/>
+        <location filename="../bank_editor.cpp" line="1292"/>
         <source>Change name of bank</source>
         <translation>Изменить имя банка</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="1287"/>
+        <location filename="../bank_editor.cpp" line="1292"/>
         <source>Please type name of current bank (32 characters max):</source>
         <translation>Пожалуйста, наберите имя текущего банка (максимум 32 символа):</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="1506"/>
+        <location filename="../bank_editor.cpp" line="1511"/>
         <source>Select instrument to clear please</source>
         <translation>Пожалуйста, выберите инструмент для очистки</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="1522"/>
+        <location filename="../bank_editor.cpp" line="1527"/>
         <source>Select instrument to remove please</source>
         <translation>Пожалуйста, выберите инструмент для удаления</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="1527"/>
+        <location filename="../bank_editor.cpp" line="1532"/>
         <source>Single instrument deletion</source>
         <translation>Удаление одного инструмента</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="1528"/>
+        <location filename="../bank_editor.cpp" line="1533"/>
         <source>Deletion of instrument will cause offset of all next instrument indexes. Suggested to use &apos;Clear instrument&apos; action instead. Do you want continue deletion?</source>
         <translation>Удаление инструмента спровоцирует смещение индексов всех следующих инструментов. Вместо этого, желательно применить &quot;Очистить инструмент&quot;. Вы хотите продолжить удаление?</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="1579"/>
+        <location filename="../bank_editor.cpp" line="1584"/>
         <source>Add bank error</source>
         <translation>Ошибка добавления банка</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="1580"/>
-        <location filename="../bank_editor.cpp" line="1616"/>
-        <location filename="../bank_editor.cpp" line="1703"/>
+        <location filename="../bank_editor.cpp" line="1585"/>
+        <location filename="../bank_editor.cpp" line="1621"/>
+        <location filename="../bank_editor.cpp" line="1708"/>
         <source>United bank mode is turned on. Disable it to be able add or remove banks.</source>
         <translation>Включён режим объединённого банка. Отключите его, чтобы можно было добавлять или удалять банки.</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="1615"/>
+        <location filename="../bank_editor.cpp" line="1620"/>
         <source>Clone bank error</source>
         <translation>Ошибка клонирования банка</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="1660"/>
+        <location filename="../bank_editor.cpp" line="1665"/>
         <source>Clear bank error</source>
         <translation>Ошибка очистки банка</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="1661"/>
+        <location filename="../bank_editor.cpp" line="1666"/>
         <source>United bank mode is turned on. Disable it to be able clear banks.</source>
         <translation>Включён режим объединённого банка. Отключите его, чтобы можно было чистить банки.</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="1666"/>
+        <location filename="../bank_editor.cpp" line="1671"/>
         <source>128-instrument bank erasure</source>
         <translation>Очистка 128-инструментного банка</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="1667"/>
+        <location filename="../bank_editor.cpp" line="1672"/>
         <source>All instruments in this bank will be cleared. Do you want continue erasure?</source>
         <translation>Все инструменты в этом банке будут очищены. Вы хотите продолжить?</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="1702"/>
-        <location filename="../bank_editor.cpp" line="1711"/>
+        <location filename="../bank_editor.cpp" line="1707"/>
+        <location filename="../bank_editor.cpp" line="1716"/>
         <source>Delete bank error</source>
         <translation>Ошибка удаления банка</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="1712"/>
+        <location filename="../bank_editor.cpp" line="1717"/>
         <source>Removing of last bank is not allowed!</source>
         <translation>Удаление последнего банка не позволено!</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="1717"/>
+        <location filename="../bank_editor.cpp" line="1722"/>
         <source>128-instrument bank deletion</source>
         <translation>Удаление 128-инструментного банка</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="1718"/>
+        <location filename="../bank_editor.cpp" line="1723"/>
         <source>Deletion of bank will cause offset of all next bank indexes. Suggested to use &apos;Clear bank&apos; action instead. Do you want continue deletion?</source>
         <translation>Удаление банка спровоцирует смещение индексов всех следующих инструментов. Вместо этого, желательно использовать &quot;Очистить банк&quot;. Хотите продолжить удаление?</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="1769"/>
+        <location filename="../bank_editor.cpp" line="1774"/>
         <source>Virtual port</source>
         <translation>Виртуальный порт</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="1788"/>
+        <location filename="../bank_editor.cpp" line="1793"/>
         <source>Disable</source>
         <translation>Отключить</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="1829"/>
+        <location filename="../bank_editor.cpp" line="1834"/>
         <source>Error</source>
         <translation>Ошибка</translation>
     </message>
     <message>
-        <location filename="../bank_editor.cpp" line="1830"/>
+        <location filename="../bank_editor.cpp" line="1835"/>
         <source>Cannot open the MIDI port.</source>
         <translation>Невозможно открыть MIDI-порт.</translation>
     </message>
@@ -1386,20 +1444,17 @@ Please select target instrument in the main window and retry again!</source>
 <context>
     <name>LatencyDialog</name>
     <message>
-        <location filename="../latency.cpp" line="50"/>
         <source>Audio latency</source>
-        <translation>Задержка аудио</translation>
+        <translation type="vanished">Задержка аудио</translation>
     </message>
     <message>
-        <location filename="../latency.cpp" line="55"/>
         <source>Define the audio latency.</source>
-        <translation>Установить задержку аудио.</translation>
+        <translation type="vanished">Установить задержку аудио.</translation>
     </message>
     <message>
-        <location filename="../latency.cpp" line="82"/>
         <source>This setting will only become effective after restarting the software.
 If audio glitches occur, you should reset this setting to a higher value.</source>
-        <translation>Эта настройка вступит в силу после перезапуска программы.
+        <translation type="vanished">Эта настройка вступит в силу после перезапуска программы.
 Если адуио начнёт глючить, нужно поставить это значение повыше.</translation>
     </message>
 </context>
