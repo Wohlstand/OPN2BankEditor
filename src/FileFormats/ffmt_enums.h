@@ -43,13 +43,14 @@ enum BankFormats
 
 enum InstFormats
 {
-    FORMAT_INST_UNKNOWN  = -1,
-    FORMAT_INST_WOPN2    = 0,
-    FORMAT_INST_TFI_MM   = 1,
-    FORMAT_INST_DM_DMP   = 2,
-    FORMAT_INST_GEMS_PAT = 3,
-    FORMAT_INST_Y12      = 4,
-    FORMAT_INST_VGM_MM   = 5,
+    FORMAT_INST_UNKNOWN    = -1,
+    FORMAT_INST_WOPN2      = 0,
+    FORMAT_INST_TFI_MM     = 1,
+    FORMAT_INST_DM_DMP     = 2,
+    FORMAT_INST_GEMS_PAT   = 3,
+    FORMAT_INST_Y12        = 4,
+    FORMAT_INST_VGM_MM     = 5,
+    FORMAT_INST_BAMBOO_BTI = 6,
 };
 
 enum class FormatCaps

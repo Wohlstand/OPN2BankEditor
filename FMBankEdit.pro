@@ -119,6 +119,7 @@ SOURCES += \
     src/FileFormats/format_opm.cpp \
     src/FileFormats/format_mucom88_dat.cpp \
     src/FileFormats/format_vgi.cpp \
+    src/FileFormats/format_bamboo_bti.cpp \
     src/FileFormats/format_wohlstand_opn2.cpp \
     src/FileFormats/ym2612_to_wopi.cpp \
     src/FileFormats/ym2151_to_wopi.cpp \
@@ -157,6 +158,7 @@ HEADERS += \
     src/FileFormats/format_opm.h \
     src/FileFormats/format_mucom88_dat.h \
     src/FileFormats/format_vgi.h \
+    src/FileFormats/format_bamboo_bti.h \
     src/FileFormats/format_wohlstand_opn2.h \
     src/FileFormats/ym2612_to_wopi.h \
     src/FileFormats/ym2151_to_wopi.h \

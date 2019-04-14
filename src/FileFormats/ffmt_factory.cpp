@@ -38,6 +38,7 @@
 #include "format_vgi.h"
 #include "format_opm.h"
 #include "format_mucom88_dat.h"
+#include "format_bamboo_bti.h"
 
 typedef std::unique_ptr<FmBankFormatBase> FmBankFormatBase_uptr;
 typedef std::list<FmBankFormatBase_uptr>  FmBankFormatsL;
@@ -80,6 +81,7 @@ void FmBankFormatFactory::registerAllFormats()
     registerBankFormat(new OPM());
     registerBankFormat(new Mucom88_DAT());
     registerInstFormat(new VGM_MM());
+    registerInstFormat(new Bamboo_BTI());
 }
 
 
