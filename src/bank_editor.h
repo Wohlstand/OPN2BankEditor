@@ -71,6 +71,8 @@ private:
     OPNFamily           m_currentChipFamily = OPNChip_OPN2;
     //! Audio latency (ms)
     double m_audioLatency;
+    //! Name of the audio device
+    QString m_audioDevice;
 
 public:
     //! Audio latency constants (ms)
@@ -453,9 +455,9 @@ private slots:
      */
     void on_actionAdLibBnkMode_triggered(bool checked);
     /**
-     * @brief Opens the latency setting dialog
+     * @brief Opens the audio configuration dialog
      */
-    void on_actionLatency_triggered();
+    void on_actionAudioConfig_triggered();
     /**
      * @brief Changes the current language
      */

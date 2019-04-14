@@ -114,7 +114,7 @@ set(SOURCES
   "src/proxystyle.cpp"
   "src/formats_sup.cpp"
   "src/importer.cpp"
-  "src/latency.cpp"
+  "src/audio_config.cpp"
   "src/register_editor.cpp"
   "src/ins_names.cpp"
   "src/main.cpp"
@@ -132,6 +132,7 @@ set(UIS
   "src/bank_comparison.ui"
   "src/formats_sup.ui"
   "src/importer.ui"
+  "src/audio_config.ui"
   "src/register_editor.ui")
 if(ENABLE_PLOTS)
   list(APPEND UIS

@@ -3581,7 +3581,7 @@ Available from 0 to 127</string>
      <addaction name="actionEmulatorPMDWinOPNA"/>
     </widget>
     <addaction name="menuChoose_chip_emulator"/>
-    <addaction name="actionLatency"/>
+    <addaction name="actionAudioConfig"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuEdito"/>
@@ -3742,9 +3742,9 @@ Available from 0 to 127</string>
     <string>Run emulators benchmark</string>
    </property>
   </action>
-  <action name="actionLatency">
+  <action name="actionAudioConfig">
    <property name="text">
-    <string>Audio &amp;latency...</string>
+    <string>Audio &amp;configuration</string>
    </property>
   </action>
   <action name="actionEmulatorGX">

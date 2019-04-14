@@ -32,7 +32,7 @@
 #include "bank_editor.h"
 #include "ui_bank_editor.h"
 #include "bank_comparison.h"
-#include "latency.h"
+#include "audio_config.h"
 #include "ins_names.h"
 #include "main.h"
 #if defined(ENABLE_PLOTS)
@@ -208,6 +208,7 @@ void BankEditor::loadSettings()
     }
     m_language = setup.value("language").toString();
     m_audioLatency = setup.value("audio-latency", audioDefaultLatency).toDouble();
+    m_audioDevice = setup.value("audio-device", QString()).toString();
 
     if (m_audioLatency < audioMinimumLatency)
         m_audioLatency = audioMinimumLatency;
@@ -256,6 +257,7 @@ void BankEditor::saveSettings()
     setup.setValue("chip-emulator", (int)m_currentChip);
     setup.setValue("language", m_language);
     setup.setValue("audio-latency", m_audioLatency);
+    setup.setValue("audio-device", m_audioDevice);
 }
 
 
@@ -1261,13 +1263,16 @@ void BankEditor::on_actionAdLibBnkMode_triggered(bool checked)
     }
 }
 
-void BankEditor::on_actionLatency_triggered()
+void BankEditor::on_actionAudioConfig_triggered()
 {
-    LatencyDialog *dlg = new LatencyDialog(this);
-    dlg->setLatency(m_audioLatency);
-    dlg->exec();
-    m_audioLatency = dlg->latency();
-    delete dlg;
+    AudioConfigDialog dlg(m_audioOut, this);
+    dlg.setLatency(m_audioLatency);
+    dlg.setDeviceName(m_audioDevice);
+    if(dlg.exec() == QDialog::Accepted)
+    {
+        m_audioLatency = dlg.latency();
+        m_audioDevice = dlg.deviceName();
+    }
 }
 
 void BankEditor::onActionLanguageTriggered()
