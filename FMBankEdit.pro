@@ -53,7 +53,7 @@ QMAKE_CXXFLAGS += -fopenmp
 
 TEMPLATE = app
 TARGET = opn2_bank_editor
-INCLUDEPATH += $$PWD/
+INCLUDEPATH += $$PWD/src
 
 android:{
     ARCH=android_arm
