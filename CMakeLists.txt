@@ -86,7 +86,9 @@ set(FILEFORMATS_SOURCES
   "src/FileFormats/format_bamboo_bti.cpp"
   "src/FileFormats/format_wohlstand_opn2.cpp"
   "src/FileFormats/ym2612_to_wopi.cpp"
-  "src/FileFormats/ym2151_to_wopi.cpp")
+  "src/FileFormats/ym2151_to_wopi.cpp"
+  "src/FileFormats/text_format.cpp"
+  "src/FileFormats/text_format_tokens.cpp")
 add_library(FileFormats STATIC ${FILEFORMATS_SOURCES})
 target_include_directories(FileFormats PUBLIC "src" PRIVATE ${ZLIB_INCLUDE_DIRS})
 target_link_libraries(FileFormats PUBLIC Common PRIVATE ${ZLIB_LIBRARIES})

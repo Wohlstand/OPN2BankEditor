@@ -24,16 +24,25 @@
 struct MetaParameter
 {
     typedef int (Get)(const FmBank::Instrument &);
+    typedef void (Set)(FmBank::Instrument &, int);
 
     MetaParameter() {}
-    MetaParameter(const char *name, Get *get, int min, int max, unsigned flags)
-        : name(name), get(get), min(min), max(max), flags(flags) {}
+    MetaParameter(const char *name, Get *get, Set *set, int min, int max, unsigned flags)
+        : name(name), get(get), set(set), min(min), max(max), flags(flags) {}
 
     const char *const name = nullptr;
     Get *const get = nullptr;
+    Set *const set = nullptr;
     int min = 0;
     int max = 0;
     const unsigned flags = 0;
+
+    int clamp(int value) const
+    {
+        value = (value > min) ? value : min;
+        value = (value < max) ? value : max;
+        return value;
+    }
 };
 
 enum MetaParameterFlag
@@ -51,35 +60,39 @@ enum MetaParameterFlag
 static const MetaParameter MP_instrument[] =
 {
 #define G(x) (+[](const FmBank::Instrument &ins) -> int { return (x); })
+#define S(x) (+[](FmBank::Instrument &ins, int val) { (x) = val; })
+#define GS(x) G(x), S(x)
 
-    {"alg", G(ins.algorithm), 0, 7, MP_None},
-    {"fb", G(ins.feedback), 0, 7, MP_None},
-    {"ams", G(ins.am), 0, 3, MP_None},
-    {"fms", G(ins.fm), 0, 7, MP_None},
+    {"alg", GS(ins.algorithm), 0, 7, MP_None},
+    {"fb", GS(ins.feedback), 0, 7, MP_None},
+    {"ams", GS(ins.am), 0, 3, MP_None},
+    {"fms", GS(ins.fm), 0, 7, MP_None},
 #define OP(n, flags)                                                           \
-    {"ar", G(ins.OP[n].attack), 0, 31, (flags)}, \
-    {"d1r", G(ins.OP[n].decay1), 0, 31, (flags)}, \
-    {"d2r", G(ins.OP[n].decay2), 0, 31, (flags)}, \
-    {"d1l", G(ins.OP[n].sustain), 0, 15, (flags)}, \
-    {"rr", G(ins.OP[n].release), 0, 15, (flags)}, \
-    {"tl", G(ins.OP[n].level), 0, 127, (flags)}, \
-    {"rs", G(ins.OP[n].ratescale), 0, 3, (flags)}, \
-    {"mul", G(ins.OP[n].fmult), 0, 15, (flags)}, \
-    {"dt", G(ins.OP[n].detune), 0, 7, (flags)}, \
-    {"am", G(ins.OP[n].am_enable), 0, 1, (flags)}, \
-    {"ssg", G(ins.OP[n].ssg_eg), 0, 15, (flags)}
+    {"ar", GS(ins.OP[n].attack), 0, 31, (flags)}, \
+    {"d1r", GS(ins.OP[n].decay1), 0, 31, (flags)}, \
+    {"d2r", GS(ins.OP[n].decay2), 0, 31, (flags)}, \
+    {"d1l", GS(ins.OP[n].sustain), 0, 15, (flags)}, \
+    {"rr", GS(ins.OP[n].release), 0, 15, (flags)}, \
+    {"tl", GS(ins.OP[n].level), 0, 127, (flags)}, \
+    {"rs", GS(ins.OP[n].ratescale), 0, 3, (flags)}, \
+    {"mul", GS(ins.OP[n].fmult), 0, 15, (flags)}, \
+    {"dt", GS(ins.OP[n].detune), 0, 7, (flags)}, \
+    {"am", GS(ins.OP[n].am_enable), 0, 1, (flags)}, \
+    {"ssg", GS(ins.OP[n].ssg_eg), 0, 15, (flags)}
     OP(OPERATOR1_HR, MP_Operator1),
     OP(OPERATOR2_HR, MP_Operator2),
     OP(OPERATOR3_HR, MP_Operator3),
     OP(OPERATOR4_HR, MP_Operator4),
 #undef OP
-    {"note", G(ins.note_offset1), -128, 127, MP_None},
-    {"vel", G(ins.velocity_offset), -128, 127, MP_None},
-    {"pk", G(ins.percNoteNum), 0, 127, MP_None},
-    {"kon", G(ins.ms_sound_kon), 0, 65535, MP_Measure},
-    {"koff", G(ins.ms_sound_koff), 0, 65535, MP_Measure},
+    {"note", GS(ins.note_offset1), -128, 127, MP_None},
+    {"vel", GS(ins.velocity_offset), -128, 127, MP_None},
+    {"pk", GS(ins.percNoteNum), 0, 127, MP_None},
+    {"kon", GS(ins.ms_sound_kon), 0, 65535, MP_Measure},
+    {"koff", GS(ins.ms_sound_koff), 0, 65535, MP_Measure},
 
 #undef G
+#undef S
+#undef GS
 };
 
 #endif // METAPARAMETER_H
