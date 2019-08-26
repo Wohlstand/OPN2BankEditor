@@ -482,53 +482,7 @@ private slots:
     void on_lfoEnable_clicked(bool checked);
     void on_lfoFrequency_currentIndexChanged(int index);
 
-    void on_op1_attack_valueChanged(int arg1);
-    void on_op1_decay1_valueChanged(int arg1);
-    void on_op1_decay2_valueChanged(int arg1);
-    void on_op1_sustain_valueChanged(int arg1);
-    void on_op1_release_valueChanged(int arg1);
-    void on_op1_am_toggled(bool checked);
-    void on_op1_level_valueChanged(int arg1);
-    void on_op1_freqmult_valueChanged(int arg1);
-    void on_op1_detune_currentIndexChanged(int index);
-    void on_op1_ratescale_valueChanged(int arg1);
-    void on_op1_ssgeg_currentIndexChanged(int index);
-
-    void on_op2_attack_valueChanged(int arg1);
-    void on_op2_decay1_valueChanged(int arg1);
-    void on_op2_decay2_valueChanged(int arg1);
-    void on_op2_sustain_valueChanged(int arg1);
-    void on_op2_release_valueChanged(int arg1);
-    void on_op2_am_toggled(bool checked);
-    void on_op2_level_valueChanged(int arg1);
-    void on_op2_freqmult_valueChanged(int arg1);
-    void on_op2_detune_currentIndexChanged(int index);
-    void on_op2_ratescale_valueChanged(int arg1);
-    void on_op2_ssgeg_currentIndexChanged(int index);
-
-    void on_op3_attack_valueChanged(int arg1);
-    void on_op3_decay1_valueChanged(int arg1);
-    void on_op3_decay2_valueChanged(int arg1);
-    void on_op3_sustain_valueChanged(int arg1);
-    void on_op3_release_valueChanged(int arg1);
-    void on_op3_am_toggled(bool checked);
-    void on_op3_level_valueChanged(int arg1);
-    void on_op3_freqmult_valueChanged(int arg1);
-    void on_op3_detune_currentIndexChanged(int index);
-    void on_op3_ratescale_valueChanged(int arg1);
-    void on_op3_ssgeg_currentIndexChanged(int index);
-
-    void on_op4_attack_valueChanged(int arg1);
-    void on_op4_decay1_valueChanged(int arg1);
-    void on_op4_decay2_valueChanged(int arg1);
-    void on_op4_sustain_valueChanged(int arg1);
-    void on_op4_release_valueChanged(int arg1);
-    void on_op4_am_toggled(bool checked);
-    void on_op4_level_valueChanged(int arg1);
-    void on_op4_freqmult_valueChanged(int arg1);
-    void on_op4_detune_currentIndexChanged(int index);
-    void on_op4_ratescale_valueChanged(int arg1);
-    void on_op4_ssgeg_currentIndexChanged(int index);
+    void onOperatorChanged();
 
     void on_pitchBendSlider_valueChanged(int value);
     void on_pitchBendSlider_sliderReleased();

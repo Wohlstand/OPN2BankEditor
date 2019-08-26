@@ -110,6 +110,7 @@ endif()
 set(SOURCES
   "src/audio.cpp"
   "src/bank_editor.cpp"
+  "src/operator_editor.cpp"
   "src/bank_comparison.cpp"
   "src/controlls.cpp"
   "src/proxystyle.cpp"
@@ -130,6 +131,7 @@ endif()
 
 set(UIS
   "src/bank_editor.ui"
+  "src/operator_editor.ui"
   "src/bank_comparison.ui"
   "src/formats_sup.ui"
   "src/importer.ui"

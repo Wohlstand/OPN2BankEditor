@@ -23,7 +23,6 @@
 #include <QSettings>
 #include <QUrl>
 #include <QMimeData>
-#include <QStandardItemModel>
 #include <QClipboard>
 #include <QtDebug>
 
@@ -31,6 +30,7 @@
 #include "formats_sup.h"
 #include "bank_editor.h"
 #include "ui_bank_editor.h"
+#include "operator_editor.h"
 #include "bank_comparison.h"
 #include "audio_config.h"
 #include "ins_names.h"
@@ -126,18 +126,13 @@ BankEditor::BankEditor(QWidget *parent) :
     connect(ui->actionEmulatorMameOPNA, SIGNAL(triggered()), this, SLOT(toggleEmulator()));
     connect(ui->actionEmulatorPMDWinOPNA, SIGNAL(triggered()), this, SLOT(toggleEmulator()));
 
-    /* Hide first 7 SSG-EG items */
+    OperatorEditor *op_editors[4] = {ui->op1edit, ui->op2edit, ui->op3edit, ui->op4edit};
+
+    for(size_t i = 0; i < 4; i++)
     {
-        QComboBox *ssgegs[4] = {ui->op1_ssgeg, ui->op2_ssgeg, ui->op3_ssgeg, ui->op4_ssgeg};
-        for(size_t i = 0; i < 4; i++)
-        {
-            QStandardItemModel* model = qobject_cast<QStandardItemModel*>(ssgegs[i]->model());
-            for(int j = 1; j < 8; j++)
-            {
-                QStandardItem* item = model->item(j);
-                item->setFlags(item->flags() & ~Qt::ItemIsEnabled);
-            }
-        }
+        OperatorEditor *ed = op_editors[i];
+        ed->setOperatorNumber(i);
+        connect(ed, SIGNAL(operatorChanged()), this, SLOT(onOperatorChanged()));
     }
 
     ui->instruments->installEventFilter(this);
@@ -339,6 +334,12 @@ void BankEditor::onBankEditorShown()
 void BankEditor::onLanguageChanged()
 {
     ui->retranslateUi(this);
+    OperatorEditor *op_editors[4] = {ui->op1edit, ui->op2edit, ui->op3edit, ui->op4edit};
+    for(size_t i = 0; i < 4; i++)
+    {
+        OperatorEditor *ed = op_editors[i];
+        ed->onLanguageChanged();
+    }
     ui->currentFile->setText(m_currentFilePath);
     ui->version->setText(QString("%1, v.%2").arg(PROGRAM_NAME).arg(VERSION));
     reloadBanks();
@@ -1082,53 +1083,9 @@ void BankEditor::loadInstrument()
     ui->fmsens->setCurrentIndex(m_curInst->fm);
     ui->algorithm->setCurrentIndex(m_curInst->algorithm);
 
-    ui->op1_attack->setValue(       m_curInst->OP[OPERATOR1_HR].attack);
-    ui->op1_decay1->setValue(       m_curInst->OP[OPERATOR1_HR].decay1);
-    ui->op1_decay2->setValue(       m_curInst->OP[OPERATOR1_HR].decay2);
-    ui->op1_sustain->setValue(      m_curInst->OP[OPERATOR1_HR].sustain);
-    ui->op1_release->setValue(      m_curInst->OP[OPERATOR1_HR].release);
-    ui->op1_am->setChecked(         m_curInst->OP[OPERATOR1_HR].am_enable);
-    ui->op1_freqmult->setValue(     m_curInst->OP[OPERATOR1_HR].fmult);
-    ui->op1_level->setValue(        m_curInst->OP[OPERATOR1_HR].level);
-    ui->op1_detune->setCurrentIndex(m_curInst->OP[OPERATOR1_HR].detune);
-    ui->op1_ratescale->setValue(    m_curInst->OP[OPERATOR1_HR].ratescale);
-    ui->op1_ssgeg->setCurrentIndex( m_curInst->OP[OPERATOR1_HR].ssg_eg);
-
-    ui->op2_attack->setValue(       m_curInst->OP[OPERATOR2_HR].attack);
-    ui->op2_decay1->setValue(       m_curInst->OP[OPERATOR2_HR].decay1);
-    ui->op2_decay2->setValue(       m_curInst->OP[OPERATOR2_HR].decay2);
-    ui->op2_sustain->setValue(      m_curInst->OP[OPERATOR2_HR].sustain);
-    ui->op2_release->setValue(      m_curInst->OP[OPERATOR2_HR].release);
-    ui->op2_am->setChecked(         m_curInst->OP[OPERATOR2_HR].am_enable);
-    ui->op2_freqmult->setValue(     m_curInst->OP[OPERATOR2_HR].fmult);
-    ui->op2_level->setValue(        m_curInst->OP[OPERATOR2_HR].level);
-    ui->op2_detune->setCurrentIndex(m_curInst->OP[OPERATOR2_HR].detune);
-    ui->op2_ratescale->setValue(    m_curInst->OP[OPERATOR2_HR].ratescale);
-    ui->op2_ssgeg->setCurrentIndex( m_curInst->OP[OPERATOR2_HR].ssg_eg);
-
-    ui->op3_attack->setValue(       m_curInst->OP[OPERATOR3_HR].attack);
-    ui->op3_decay1->setValue(       m_curInst->OP[OPERATOR3_HR].decay1);
-    ui->op3_decay2->setValue(       m_curInst->OP[OPERATOR3_HR].decay2);
-    ui->op3_sustain->setValue(      m_curInst->OP[OPERATOR3_HR].sustain);
-    ui->op3_release->setValue(      m_curInst->OP[OPERATOR3_HR].release);
-    ui->op3_am->setChecked(         m_curInst->OP[OPERATOR3_HR].am_enable);
-    ui->op3_freqmult->setValue(     m_curInst->OP[OPERATOR3_HR].fmult);
-    ui->op3_level->setValue(        m_curInst->OP[OPERATOR3_HR].level);
-    ui->op3_detune->setCurrentIndex(m_curInst->OP[OPERATOR3_HR].detune);
-    ui->op3_ratescale->setValue(    m_curInst->OP[OPERATOR3_HR].ratescale);
-    ui->op3_ssgeg->setCurrentIndex( m_curInst->OP[OPERATOR3_HR].ssg_eg);
-
-    ui->op4_attack->setValue(       m_curInst->OP[OPERATOR4_HR].attack);
-    ui->op4_decay1->setValue(       m_curInst->OP[OPERATOR4_HR].decay1);
-    ui->op4_decay2->setValue(       m_curInst->OP[OPERATOR4_HR].decay2);
-    ui->op4_sustain->setValue(      m_curInst->OP[OPERATOR4_HR].sustain);
-    ui->op4_release->setValue(      m_curInst->OP[OPERATOR4_HR].release);
-    ui->op4_am->setChecked(         m_curInst->OP[OPERATOR4_HR].am_enable);
-    ui->op4_freqmult->setValue(     m_curInst->OP[OPERATOR4_HR].fmult);
-    ui->op4_level->setValue(        m_curInst->OP[OPERATOR4_HR].level);
-    ui->op4_detune->setCurrentIndex(m_curInst->OP[OPERATOR4_HR].detune);
-    ui->op4_ratescale->setValue(    m_curInst->OP[OPERATOR4_HR].ratescale);
-    ui->op4_ssgeg->setCurrentIndex( m_curInst->OP[OPERATOR4_HR].ssg_eg);
+    OperatorEditor *op_editors[4] = {ui->op1edit, ui->op2edit, ui->op3edit, ui->op4edit};
+    for(unsigned i = 0; i < 4; ++i)
+        op_editors[i]->loadDataFromInst(*m_curInst);
 
     m_lock = false;
 }
@@ -1203,8 +1160,10 @@ void BankEditor::createLanguageChoices()
 
     QStringList languages;
     languages.push_back("en");  // generic english
-    foreach (const QString &entry, dir.entryList()) {
-        if (entry.startsWith(prefix, cs) && entry.endsWith(suffix, cs)) {
+    foreach(const QString &entry, dir.entryList())
+    {
+        if(entry.startsWith(prefix, cs) && entry.endsWith(suffix, cs))
+        {
             QString lang = entry.mid(
                 prefix.size(), entry.size() - prefix.size() - suffix.size());
             languages << lang;
@@ -1213,7 +1172,8 @@ void BankEditor::createLanguageChoices()
 
     QMenu *menuLanguage = ui->menuLanguage;
 
-    foreach (const QString &lang, languages) {
+    foreach(const QString &lang, languages)
+    {
         QLocale loc(lang);
 
         QString name;
