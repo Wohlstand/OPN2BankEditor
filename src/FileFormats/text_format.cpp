@@ -195,9 +195,40 @@ static TextFormat createVopmFormat()
     return tf;
 }
 
+static TextFormat createPmdFormat()
+{
+    TextFormat tf;
+
+    tf.setName("PMD");
+    tf.setLineComment(";");
+
+    using namespace TextFormatTokens;
+
+    tf << "@" << " " << Int() << " " << Val("alg") << " " << Val("fb") << "\n";
+
+    for(int o = 0; o < 4; ++o)
+    {
+        int op = MP_Operator1 + o;
+        tf << " " << Val("ar", op) << " " << Val("d1r", op)
+           << " " << Val("d2r", op) << " " << Val("rr", op)
+           << " " << Val("d1l", op) << " " << Val("tl", op)
+           << " " << Val("rs", op) << " " << Val("mul", op)
+           << " " << Val("dt", op) << " " << Val("am", op) << "\n";
+    }
+
+    return tf;
+}
+
+///
 const TextFormat &TextFormat::vopmFormat()
 {
     static TextFormat tf = createVopmFormat();
+    return tf;
+}
+
+const TextFormat &TextFormat::pmdFormat()
+{
+    static TextFormat tf = createPmdFormat();
     return tf;
 }
 
@@ -205,6 +236,7 @@ const std::vector<const TextFormat *> &TextFormat::allFormats()
 {
     static const std::vector<const TextFormat *> all = {
         &vopmFormat(),
+        &pmdFormat(),
     };
     return all;
 }
