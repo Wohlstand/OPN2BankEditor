@@ -36,6 +36,7 @@ class TextFormat
 public:
     static const TextFormat &vopmFormat();
     static const TextFormat &pmdFormat();
+    static const TextFormat &fmpFormat();
 
     static const std::vector<const TextFormat *> &allFormats();
     static const TextFormat *getFormatByName(const std::string &name);
@@ -48,6 +49,7 @@ public:
 
     //
     void setLineComment(const std::string &com) { m_lineComment = com; }
+    void setLineKeepPrefix(const std::string &prefix) { m_lineKeepPrefix = prefix; }
 
     //
     template <class T> TextFormat &operator<<(const T &token);
@@ -60,7 +62,8 @@ public:
 protected:
     bool m_valid = true;
     std::string m_name;
-    std::string m_lineComment;
+    std::string m_lineComment; // a line comment syntax, most often `//` or `;`
+    std::string m_lineKeepPrefix; // a prefix of text lines not to discard (`'` in the case of FMP)
     std::vector<TextFormatTokens::TokenPtr> m_tokens;
 };
 

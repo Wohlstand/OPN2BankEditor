@@ -77,6 +77,39 @@ bool TextFormat::parseInstrument(const char *text, FmBank::Instrument &ins) cons
     ins = FmBank::emptyInst();
 
     const std::string &lc = m_lineComment;
+    const std::string &lkp = m_lineKeepPrefix;
+
+    /// begin preprocess
+    std::string lineFilterBuffer;
+    if(!lkp.empty())
+    {
+        // delete lines not matching the prefix
+        char c;
+        const char *p = text;
+        bool atLineStart = true;
+        lineFilterBuffer.reserve(1024);
+        while((c = *p) != '\0')
+        {
+            if(atLineStart && strncmp(p, lkp.c_str(), lkp.size()) != 0)
+            {
+                while(c != '\0' && c != '\r' && c != '\n')
+                    c = *++p;
+                if(c != '\0')
+                {
+                    ++p;
+                    atLineStart = true;
+                }
+            }
+            else
+            {
+                lineFilterBuffer.push_back(c);
+                ++p;
+                atLineStart = c == '\r' || c == '\n';
+            }
+        }
+        text = lineFilterBuffer.c_str();
+    }
+    /// end preprocess
 
     ///
     auto skipWhitespace = [&text, lc]()
@@ -219,6 +252,33 @@ static TextFormat createPmdFormat()
     return tf;
 }
 
+static TextFormat createFmpFormat()
+{
+    TextFormat tf;
+
+    tf.setName("FMP");
+    tf.setLineKeepPrefix("'");
+
+    using namespace TextFormatTokens;
+
+    tf << "'" << "@" << " " << Int() << " " << NameString()/*guess*/ << "\n";
+
+    for(int o = 0; o < 4; ++o)
+    {
+        int op = MP_Operator1 + o;
+        tf << "'" << "@"
+           << " " << Val("ar", op) << "," << Val("d1r", op)
+           << "," << Val("d2r", op) << "," << Val("rr", op)
+           << "," << Val("d1l", op) << "," << Val("tl", op)
+           << "," << Val("rs", op) << "," << Val("mul", op)
+           << "," << Val("dt", op) << "," << Val("am", op) << "\n";
+    }
+
+    tf << "'" << "@" << " " << Val("alg") << "," << Val("fb") << "\n";
+
+    return tf;
+}
+
 ///
 const TextFormat &TextFormat::vopmFormat()
 {
@@ -232,11 +292,18 @@ const TextFormat &TextFormat::pmdFormat()
     return tf;
 }
 
+const TextFormat &TextFormat::fmpFormat()
+{
+    static TextFormat tf = createFmpFormat();
+    return tf;
+}
+
 const std::vector<const TextFormat *> &TextFormat::allFormats()
 {
     static const std::vector<const TextFormat *> all = {
         &vopmFormat(),
         &pmdFormat(),
+        &fmpFormat(),
     };
     return all;
 }
