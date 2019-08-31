@@ -137,16 +137,11 @@ BankEditor::BankEditor(QWidget *parent) :
     }
 
     {
-        const TextFormat *currentFormat = TextFormat::allFormats().front();
-        //TODO load it from settings
-        m_textconvFormat = currentFormat;
-
         QMenu *textconvMenu = new QMenu(this);
         ui->textconvButton->setMenu(textconvMenu);
 
-        QString currentFormatName = QString::fromStdString(currentFormat->name());
-        m_textconvCopyAction = textconvMenu->addAction(tr("Copy to %1").arg(currentFormatName));
-        m_textconvPasteAction = textconvMenu->addAction(tr("Paste from %1").arg(currentFormatName));
+        m_textconvCopyAction = textconvMenu->addAction("");
+        m_textconvPasteAction = textconvMenu->addAction("");
 
         connect(m_textconvCopyAction, SIGNAL(triggered()), this, SLOT(onTextconvCopyTriggered()));
         connect(m_textconvPasteAction, SIGNAL(triggered()), this, SLOT(onTextconvPasteTriggered()));
@@ -164,6 +159,8 @@ BankEditor::BankEditor(QWidget *parent) :
         }
 
         ui->textconvButton->setPopupMode(QToolButton::InstantPopup);
+
+        setTextconvFormat(*TextFormat::allFormats().front());
     }
 
     ui->instruments->installEventFilter(this);
@@ -274,6 +271,10 @@ void BankEditor::loadSettings()
         ui->actionEmulatorPMDWinOPNA->setChecked(true);
         break;
     }
+
+    if(const TextFormat *tf = TextFormat::getFormatByName(
+           setup.value("text-conversion-format").toString().toStdString()))
+        setTextconvFormat(*tf);
 }
 
 void BankEditor::saveSettings()
@@ -284,6 +285,7 @@ void BankEditor::saveSettings()
     setup.setValue("language", m_language);
     setup.setValue("audio-latency", m_audioLatency);
     setup.setValue("audio-device", m_audioDevice);
+    setup.setValue("text-conversion-format", QString::fromStdString(m_textconvFormat->name()));
 }
 
 
@@ -1874,7 +1876,13 @@ void BankEditor::onTextconvFormatSelected()
     if(!currentFormat)
         return;
 
-    m_textconvFormat = currentFormat;
-    m_textconvCopyAction->setText(tr("Copy to %1").arg(currentFormatName));
-    m_textconvPasteAction->setText(tr("Paste from %1").arg(currentFormatName));
+    setTextconvFormat(*currentFormat);
+}
+
+void BankEditor::setTextconvFormat(const TextFormat &format)
+{
+    QString name = QString::fromStdString(format.name());
+    m_textconvFormat = &format;
+    m_textconvCopyAction->setText(tr("Copy to %1").arg(name));
+    m_textconvPasteAction->setText(tr("Paste from %1").arg(name));
 }

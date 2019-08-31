@@ -514,6 +514,11 @@ private slots:
     void onTextconvPasteTriggered();
     void onTextconvFormatSelected();
 
+    /**
+     * @brief Changes the current text conversion format, and updates the view accordingly
+     */
+    void setTextconvFormat(const TextFormat &format);
+
 private:
     /**
      * @brief Updates the text to display after a language change
