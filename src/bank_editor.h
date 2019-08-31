@@ -44,6 +44,7 @@ namespace Ui
 }
 
 class Importer;
+class TextFormat;
 class QActionGroup;
 
 /**
@@ -125,6 +126,11 @@ private:
     MidiInRt        *m_midiIn = nullptr;
     QAction         *m_midiInAction = nullptr;
     #endif
+
+    /* ********** Text formatting stuff ********** */
+    const TextFormat *m_textconvFormat = nullptr;
+    QAction *m_textconvCopyAction = nullptr;
+    QAction *m_textconvPasteAction = nullptr;
 
     /*!
      * \brief Initializes audio subsystem and FM generator
@@ -503,6 +509,10 @@ private slots:
     void on_midiIn_triggered(QAction *);
     void onMidiPortTriggered();
     #endif
+
+    void onTextconvCopyTriggered();
+    void onTextconvPasteTriggered();
+    void onTextconvFormatSelected();
 
 private:
     /**

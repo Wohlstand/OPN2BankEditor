@@ -41,6 +41,7 @@
 #include "register_editor.h"
 
 #include "FileFormats/ffmt_factory.h"
+#include "FileFormats/text_format.h"
 
 #include "opl/measurer.h"
 
@@ -133,6 +134,36 @@ BankEditor::BankEditor(QWidget *parent) :
         OperatorEditor *ed = op_editors[i];
         ed->setOperatorNumber(i);
         connect(ed, SIGNAL(operatorChanged()), this, SLOT(onOperatorChanged()));
+    }
+
+    {
+        const TextFormat *currentFormat = TextFormat::allFormats().front();
+        //TODO load it from settings
+        m_textconvFormat = currentFormat;
+
+        QMenu *textconvMenu = new QMenu(this);
+        ui->textconvButton->setMenu(textconvMenu);
+
+        QString currentFormatName = QString::fromStdString(currentFormat->name());
+        m_textconvCopyAction = textconvMenu->addAction(tr("Copy to %1").arg(currentFormatName));
+        m_textconvPasteAction = textconvMenu->addAction(tr("Paste from %1").arg(currentFormatName));
+
+        connect(m_textconvCopyAction, SIGNAL(triggered()), this, SLOT(onTextconvCopyTriggered()));
+        connect(m_textconvPasteAction, SIGNAL(triggered()), this, SLOT(onTextconvPasteTriggered()));
+
+        textconvMenu->addSeparator();
+
+        QMenu *textconvFormatSubmenu = new QMenu(tr("Select format"), this);
+        textconvMenu->addMenu(textconvFormatSubmenu);
+        for(const TextFormat *tf : TextFormat::allFormats())
+        {
+            QString formatName = QString::fromStdString(tf->name());
+            QAction *action = textconvFormatSubmenu->addAction(formatName);
+            action->setData(formatName);
+            connect(action, SIGNAL(triggered()), this, SLOT(onTextconvFormatSelected()));
+        }
+
+        ui->textconvButton->setPopupMode(QToolButton::InstantPopup);
     }
 
     ui->instruments->installEventFilter(this);
@@ -1803,3 +1834,47 @@ void BankEditor::onMidiPortTriggered()
     button->setPalette(pal);
 }
 #endif
+
+void BankEditor::onTextconvCopyTriggered()
+{
+    const TextFormat *tf = m_textconvFormat;
+    std::string text = tf->formatInstrument(*m_curInst);
+    QGuiApplication::clipboard()->setText(QString::fromStdString(text));
+
+    QString message = tr("Copied %1 instrument text to the clipboard.").arg(QString::fromStdString(tf->name()));
+    statusBar()->showMessage(message, 5000);
+}
+
+void BankEditor::onTextconvPasteTriggered()
+{
+    const TextFormat *tf = m_textconvFormat;
+    std::string text = QGuiApplication::clipboard()->text().toStdString();
+
+    FmBank::Instrument inst;
+    QString message;
+    if(!tf->parseInstrument(text.c_str(), inst))
+        message = tr("Could not load %1 instrument text.").arg(QString::fromStdString(tf->name()));
+    else
+    {
+        memcpy(m_curInst, &inst, sizeof(FmBank::Instrument));
+        flushInstrument();
+        syncInstrumentName();
+        message = tr("Pasted %1 instrument text from the clipboard.").arg(QString::fromStdString(tf->name()));
+    }
+
+    statusBar()->showMessage(message, 5000);
+}
+
+void BankEditor::onTextconvFormatSelected()
+{
+    QString currentFormatName = qobject_cast<QAction *>(sender())->data().toString();
+    const TextFormat *currentFormat = TextFormat::getFormatByName(currentFormatName.toStdString());
+
+    Q_ASSERT(currentFormat);
+    if(!currentFormat)
+        return;
+
+    m_textconvFormat = currentFormat;
+    m_textconvCopyAction->setText(tr("Copy to %1").arg(currentFormatName));
+    m_textconvPasteAction->setText(tr("Paste from %1").arg(currentFormatName));
+}

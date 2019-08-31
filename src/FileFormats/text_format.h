@@ -36,8 +36,14 @@ class TextFormat
 public:
     static const TextFormat &vopmFormat();
 
+    static const std::vector<const TextFormat *> &allFormats();
+    static const TextFormat *getFormatByName(const std::string &name);
+
 public:
     bool isValid() const { return m_valid; }
+
+    const std::string &name() const { return m_name; }
+    void setName(const std::string &name) { m_name = name; }
 
     //
     void setLineComment(const std::string &com) { m_lineComment = com; }
@@ -52,6 +58,7 @@ public:
 
 protected:
     bool m_valid = true;
+    std::string m_name;
     std::string m_lineComment;
     std::vector<TextFormatTokens::TokenPtr> m_tokens;
 };

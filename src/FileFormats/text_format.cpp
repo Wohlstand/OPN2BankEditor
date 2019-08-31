@@ -162,6 +162,7 @@ static TextFormat createVopmFormat()
 {
     TextFormat tf;
 
+    tf.setName("VOPM");
     tf.setLineComment("//");
 
     using namespace TextFormatTokens;
@@ -198,4 +199,20 @@ const TextFormat &TextFormat::vopmFormat()
 {
     static TextFormat tf = createVopmFormat();
     return tf;
+}
+
+const std::vector<const TextFormat *> &TextFormat::allFormats()
+{
+    static const std::vector<const TextFormat *> all = {
+        &vopmFormat(),
+    };
+    return all;
+}
+
+const TextFormat *TextFormat::getFormatByName(const std::string &name)
+{
+    for(const TextFormat *tf : TextFormat::allFormats())
+        if(name == tf->name())
+            return tf;
+    return nullptr;
 }
