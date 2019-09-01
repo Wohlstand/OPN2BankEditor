@@ -29,6 +29,7 @@ enum Type
     T_Symbol,
     T_Whitespace,
     T_Int,
+    T_AlphaNumString,
     T_Val,
     T_NameString,
     T_QuotedNameString,
@@ -83,6 +84,18 @@ public:
 private:
     int m_defaultValue;
     mutable char m_buf[32];
+};
+
+///
+class AlphaNumString : public Token
+{
+public:
+    explicit AlphaNumString(const char *defaultValue) : m_defaultValue(defaultValue) {}
+    Type type() const override { return T_AlphaNumString; }
+    const char *text() const override { return m_defaultValue; }
+
+private:
+    const char *m_defaultValue;
 };
 
 ///

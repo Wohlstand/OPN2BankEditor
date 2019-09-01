@@ -172,6 +172,16 @@ bool TextFormat::parseInstrument(const char *text, FmBank::Instrument &ins) cons
             text += count;
             break;
         }
+        case T_AlphaNumString:
+        {
+            std::string value;
+            value.reserve(256);
+            for(char c; (c = *text) != '\0' && std::isalnum((unsigned char)c); ++text)
+                value.push_back(c);
+            if (value.empty())
+                return false;
+            break;
+        }
         case T_Val:
         {
             int value;
@@ -282,7 +292,8 @@ static TextFormat createFmpFormat()
 
     using namespace TextFormatTokens;
 
-    tf << "'" << "@" << " " << Int() << " " << NameString()/*guess*/ << "\n";
+    // permissive parsing on this line
+    tf << "'" << "@" << " " << AlphaNumString("FA") << " " << AlphaNumString("0") << "\n";
 
     for(int o = 0; o < 4; ++o)
     {
