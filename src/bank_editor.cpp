@@ -150,7 +150,7 @@ BankEditor::BankEditor(QWidget *parent) :
 
         QMenu *textconvFormatSubmenu = new QMenu(tr("Select format"), this);
         textconvMenu->addMenu(textconvFormatSubmenu);
-        for(const TextFormat *tf : TextFormat::allFormats())
+        for(const TextFormat *tf : TextFormats::allFormats())
         {
             QString formatName = QString::fromStdString(tf->name());
             QAction *action = textconvFormatSubmenu->addAction(formatName);
@@ -160,7 +160,7 @@ BankEditor::BankEditor(QWidget *parent) :
 
         ui->textconvButton->setPopupMode(QToolButton::InstantPopup);
 
-        setTextconvFormat(*TextFormat::allFormats().front());
+        setTextconvFormat(*TextFormats::allFormats().front());
     }
 
     ui->instruments->installEventFilter(this);
@@ -272,7 +272,7 @@ void BankEditor::loadSettings()
         break;
     }
 
-    if(const TextFormat *tf = TextFormat::getFormatByName(
+    if(const TextFormat *tf = TextFormats::getFormatByName(
            setup.value("text-conversion-format").toString().toStdString()))
         setTextconvFormat(*tf);
 }
@@ -1870,7 +1870,7 @@ void BankEditor::onTextconvPasteTriggered()
 void BankEditor::onTextconvFormatSelected()
 {
     QString currentFormatName = qobject_cast<QAction *>(sender())->data().toString();
-    const TextFormat *currentFormat = TextFormat::getFormatByName(currentFormatName.toStdString());
+    const TextFormat *currentFormat = TextFormats::getFormatByName(currentFormatName.toStdString());
 
     Q_ASSERT(currentFormat);
     if(!currentFormat)

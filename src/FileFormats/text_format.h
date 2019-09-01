@@ -34,37 +34,52 @@ typedef std::unique_ptr<Token> TokenPtr;
 class TextFormat
 {
 public:
-    static const TextFormat &vopmFormat();
-    static const TextFormat &pmdFormat();
-    static const TextFormat &fmpFormat();
-    static const TextFormat &notexFormat();
-    static const TextFormat &nrtdrvFormat();
-    static const TextFormat &mucom88Format();
-
-    static const std::vector<const TextFormat *> &allFormats();
-    static const TextFormat *getFormatByName(const std::string &name);
-
-public:
-    bool isValid() const { return m_valid; }
+    virtual ~TextFormat() {}
 
     const std::string &name() const { return m_name; }
     void setName(const std::string &name) { m_name = name; }
+
+    virtual std::string formatInstrument(const FmBank::Instrument &ins) const = 0;
+    virtual bool parseInstrument(const char *text, FmBank::Instrument &ins) const = 0;
+
+protected:
+    std::string m_name;
+};
+
+///
+namespace TextFormats
+{
+    const TextFormat &vopmFormat();
+    const TextFormat &pmdFormat();
+    const TextFormat &fmpFormat();
+    const TextFormat &notexFormat();
+    const TextFormat &nrtdrvFormat();
+    const TextFormat &mucom88Format();
+
+    const std::vector<const TextFormat *> &allFormats();
+    const TextFormat *getFormatByName(const std::string &name);
+};
+
+///
+class GrammaticalTextFormat : public TextFormat
+{
+public:
+    bool isValid() const { return m_valid; }
 
     //
     void setLineComment(const std::string &com) { m_lineComment = com; }
     void setLineKeepPrefix(const std::string &prefix) { m_lineKeepPrefix = prefix; }
 
     //
-    template <class T> TextFormat &operator<<(const T &token);
-    TextFormat &operator<<(const char *tokenText);
+    template <class T> GrammaticalTextFormat &operator<<(const T &token);
+    GrammaticalTextFormat &operator<<(const char *tokenText);
 
     //
-    std::string formatInstrument(const FmBank::Instrument &ins) const;
-    bool parseInstrument(const char *text, FmBank::Instrument &ins) const;
+    std::string formatInstrument(const FmBank::Instrument &ins) const override;
+    bool parseInstrument(const char *text, FmBank::Instrument &ins) const override;
 
 protected:
     bool m_valid = true;
-    std::string m_name;
     std::string m_lineComment; // a line comment syntax, most often `//` or `;`
     std::string m_lineKeepPrefix; // a prefix of text lines not to discard (`'` in the case of FMP)
     std::vector<TextFormatTokens::TokenPtr> m_tokens;
