@@ -77,12 +77,14 @@ public:
 class Int : public Token
 {
 public:
-    explicit Int(int defaultValue = 0);
+    explicit Int(int defaultValue = 0, const char *format = "%3d");
     Type type() const override { return T_Int; }
     const char *text() const override;
+    const char *format() const { return m_format; }
 
 private:
     int m_defaultValue;
+    const char *m_format;
     mutable char m_buf[32];
 };
 
@@ -102,15 +104,17 @@ private:
 class Val : public Token
 {
 public:
-    explicit Val(const char *id, unsigned flags = 0);
+    explicit Val(const char *id, unsigned flags = 0, const char *format = "%3d");
     Type type() const override { return T_Val; }
     const char *text() const override;
     bool isValid() const override;
+    const char *format() const { return m_format; }
 
     const MetaParameter *parameter() const { return m_param; }
 
 private:
     const MetaParameter *m_param = nullptr;
+    const char *m_format;
 };
 
 ///

@@ -60,9 +60,13 @@ std::string TextFormat::formatInstrument(const FmBank::Instrument &ins) const
             text.append(token->text());
             break;
         case T_Val:
-            text.append(std::to_string(
-                            static_cast<Val &>(*token).parameter()->get(ins)));
+        {
+            int value = static_cast<Val &>(*token).parameter()->get(ins);
+            char buffer[32];
+            std::sprintf(buffer, static_cast<Val &>(*token).format(), value);
+            text.append(buffer);
             break;
+        }
         case T_NameString:
             text.append(ins.name);
             break;
@@ -320,7 +324,7 @@ static TextFormat createNotexFormat()
 
     using namespace TextFormatTokens;
 
-    tf << "@" << Int() << " " << "=" << " " << "{" << "\n";
+    tf << "@" << Int(0, "%d") << " " << "=" << " " << "{" << "\n";
 
     for(int o = 0; o < 4; ++o)
     {

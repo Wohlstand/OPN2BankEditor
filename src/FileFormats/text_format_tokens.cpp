@@ -36,19 +36,20 @@ bool Whitespace::isValid() const
 }
 
 ///
-Int::Int(int defaultValue)
-    : m_defaultValue(defaultValue)
+Int::Int(int defaultValue, const char *format)
+    : m_defaultValue(defaultValue), m_format(format)
 {
 }
 
 const char *Int::text() const
 {
-    std::sprintf(m_buf, "%d", m_defaultValue);
+    std::sprintf(m_buf, m_format, m_defaultValue);
     return m_buf;
 }
 
 ///
-Val::Val(const char *id, unsigned flags)
+Val::Val(const char *id, unsigned flags, const char *format)
+    : m_format(format)
 {
     for(const MetaParameter &mp : MP_instrument)
     {
