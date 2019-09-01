@@ -21,6 +21,7 @@
 #include "metaparameter.h"
 #include <cstring>
 #include <cctype>
+#include <climits>
 
 ///
 template <class T> TextFormat &TextFormat::operator<<(const T &token)
@@ -147,6 +148,18 @@ bool TextFormat::parseInstrument(const char *text, FmBank::Instrument &ins) cons
         return std::string(begin, text);
     };
 
+    auto readNextInt = [](const char *&text, int *dest) -> bool
+    {
+        char *end = nullptr;
+        long value = std::strtol(text, &end, 10);
+        if(!end || end == text || value < INT_MIN || value > INT_MAX)
+            return false;
+        text = end;
+        if(dest)
+            *dest = (int)value;
+        return true;
+    };
+
     ///
     using namespace TextFormatTokens;
 
@@ -170,10 +183,8 @@ bool TextFormat::parseInstrument(const char *text, FmBank::Instrument &ins) cons
         case T_Int:
         {
             int value;
-            unsigned count;
-            if(std::sscanf(text, "%d%n", &value, &count) != 1)
+            if (!readNextInt(text, &value))
                 return false;
-            text += count;
             break;
         }
         case T_AlphaNumString:
@@ -189,10 +200,8 @@ bool TextFormat::parseInstrument(const char *text, FmBank::Instrument &ins) cons
         case T_Val:
         {
             int value;
-            unsigned count;
-            if(std::sscanf(text, "%d%n", &value, &count) != 1)
+            if (!readNextInt(text, &value))
                 return false;
-            text += count;
             const MetaParameter *mp = static_cast<Val &>(*token).parameter();
             mp->set(ins, mp->clamp(value));
             break;
