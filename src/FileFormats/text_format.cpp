@@ -307,6 +307,35 @@ static TextFormat createNotexFormat()
     return tf;
 }
 
+static TextFormat createNrtdrvFormat()
+{
+    TextFormat tf;
+
+    tf.setName("NRTDRV");
+    tf.setLineComment(";");
+
+    using namespace TextFormatTokens;
+
+    tf << "@" << Int() << " " << "{" << "\n";
+
+    tf << Int() << "," << Val("alg") << "," << Val("fb") << "," << Int(15) << "\n";
+
+    for(int o = 0; o < 4; ++o)
+    {
+        int op = MP_Operator1 + o;
+        tf << Val("ar", op) << "," << Val("d1r", op)
+           << "," << Val("d2r", op) << "," << Val("rr", op)
+           << "," << Val("d1l", op) << "," << Val("tl", op)
+           << "," << Val("rs", op) << "," << Val("mul", op)
+           << "," << Val("dt", op) << "," << Int()
+           << "," << Val("am", op) << "\n";
+    }
+
+    tf << "}" << "\n";
+
+    return tf;
+}
+
 ///
 const TextFormat &TextFormat::vopmFormat()
 {
@@ -332,6 +361,12 @@ const TextFormat &TextFormat::notexFormat()
     return tf;
 }
 
+const TextFormat &TextFormat::nrtdrvFormat()
+{
+    static TextFormat tf = createNrtdrvFormat();
+    return tf;
+}
+
 const std::vector<const TextFormat *> &TextFormat::allFormats()
 {
     static const std::vector<const TextFormat *> all = {
@@ -339,6 +374,7 @@ const std::vector<const TextFormat *> &TextFormat::allFormats()
         &pmdFormat(),
         &fmpFormat(),
         &notexFormat(),
+        &nrtdrvFormat(),
     };
     return all;
 }

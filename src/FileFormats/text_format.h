@@ -38,6 +38,7 @@ public:
     static const TextFormat &pmdFormat();
     static const TextFormat &fmpFormat();
     static const TextFormat &notexFormat();
+    static const TextFormat &nrtdrvFormat();
 
     static const std::vector<const TextFormat *> &allFormats();
     static const TextFormat *getFormatByName(const std::string &name);
