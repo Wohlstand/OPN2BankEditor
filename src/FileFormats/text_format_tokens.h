@@ -31,6 +31,7 @@ enum Type
     T_Int,
     T_Val,
     T_NameString,
+    T_QuotedNameString,
 };
 
 ///
@@ -105,6 +106,14 @@ class NameString : public Token
 public:
     Type type() const override { return T_NameString; }
     const char *text() const override { return "Untitled"; }
+    bool isValid() const override { return true; }
+};
+
+class QuotedNameString : public Token
+{
+public:
+    Type type() const override { return T_QuotedNameString; }
+    const char *text() const override { return "\"Untitled\""; }
     bool isValid() const override { return true; }
 };
 

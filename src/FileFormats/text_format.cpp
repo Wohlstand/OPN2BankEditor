@@ -66,6 +66,11 @@ std::string TextFormat::formatInstrument(const FmBank::Instrument &ins) const
         case T_NameString:
             text.append(ins.name);
             break;
+        case T_QuotedNameString:
+            text.push_back('"');
+            text.append(ins.name);
+            text.push_back('"');
+            break;
         }
     }
 
@@ -181,6 +186,22 @@ bool TextFormat::parseInstrument(const char *text, FmBank::Instrument &ins) cons
         case T_NameString:
         {
             std::string name = readUntilEolOrComment();
+            std::strncpy(ins.name, name.c_str(), 32);
+            break;
+        }
+        case T_QuotedNameString:
+        {
+            if(*text++ != '"')
+                return false;
+
+            std::string name;
+            name.reserve(256);
+            while(*text != '\0' && *text != '"')
+                name.push_back(*text++);
+
+            if(*text++ != '"')
+                return false;
+
             std::strncpy(ins.name, name.c_str(), 32);
             break;
         }
@@ -336,6 +357,37 @@ static TextFormat createNrtdrvFormat()
     return tf;
 }
 
+static TextFormat createMucom88Format()
+{
+    TextFormat tf;
+
+    tf.setName("MUCOM88");
+    tf.setLineComment(";");
+
+    using namespace TextFormatTokens;
+
+    tf << "@" << Int() << " " << ":" << " " << "{" << "\n";
+
+    tf << Val("fb") << "," << Val("alg") << "\n";
+
+    for(int o = 0; o < 4; ++o)
+    {
+        int op = MP_Operator1 + o;
+        tf << Val("ar", op) << "," << Val("d1r", op)
+           << "," << Val("d2r", op) << "," << Val("rr", op)
+           << "," << Val("d1l", op) << "," << Val("tl", op)
+           << "," << Val("rs", op) << "," << Val("mul", op)
+           << "," << Val("dt", op);
+        if (o == 3)
+            tf << "," << QuotedNameString();
+        tf << "\n";
+    }
+
+    tf << "}" << "\n";
+
+    return tf;
+}
+
 ///
 const TextFormat &TextFormat::vopmFormat()
 {
@@ -367,6 +419,12 @@ const TextFormat &TextFormat::nrtdrvFormat()
     return tf;
 }
 
+const TextFormat &TextFormat::mucom88Format()
+{
+    static TextFormat tf = createMucom88Format();
+    return tf;
+}
+
 const std::vector<const TextFormat *> &TextFormat::allFormats()
 {
     static const std::vector<const TextFormat *> all = {
@@ -375,6 +433,7 @@ const std::vector<const TextFormat *> &TextFormat::allFormats()
         &fmpFormat(),
         &notexFormat(),
         &nrtdrvFormat(),
+        &mucom88Format(),
     };
     return all;
 }
