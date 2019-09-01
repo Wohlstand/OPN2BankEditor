@@ -379,11 +379,11 @@ static GrammaticalTextFormat createVopmFormat()
     return tf;
 }
 
-static GrammaticalTextFormat createPmdFormat()
+static GrammaticalTextFormat createPmdOpnFormat()
 {
     GrammaticalTextFormat tf;
 
-    tf.setName("PMD");
+    tf.setName("PMD (OPN)");
     tf.setLineComment(";");
 
     using namespace TextFormatTokens;
@@ -409,6 +409,61 @@ static GrammaticalTextFormat createPmdFormat()
            << sep() << Val("dt", op) << sep() << Val("am", op)
            << optionalSep() << "\n";
     }
+
+    return tf;
+}
+
+static GrammaticalTextFormat createPmdOpmFormat()
+{
+    GrammaticalTextFormat tf;
+
+    tf.setName("PMD (OPM)");
+    tf.setLineComment(";");
+
+    using namespace TextFormatTokens;
+
+    tf << "@" << " " << Int() << " " << Val("alg") << " " << Val("fb")
+       << " " << Conditional(
+           TokenSharedPtr(new Symbol("=")),
+           TokenList{} << Whitespace(" ") << NameString(),
+           TokenList{})
+       << "\n";
+
+    // PMD instrument can have comma, handle it as whitespace separator
+    auto sep = []() -> Whitespace { return Whitespace(" ", ", \t\r\n"); };
+    auto optionalSep = []() -> Whitespace { return Whitespace("", ", \t\r\n"); };
+
+    for(int o = 0; o < 4; ++o)
+    {
+        int op = MP_Operator1 + o;
+        tf << sep() << Val("ar", op) << sep() << Val("d1r", op)
+           << sep() << Val("d2r", op) << sep() << Val("rr", op)
+           << sep() << Val("d1l", op) << sep() << Val("tl", op)
+           << sep() << Val("rs", op) << sep() << Val("mul", op)
+           << sep() << Val("dt", op) << sep() << Int()
+           << sep() << Val("am", op)
+           << optionalSep() << "\n";
+    }
+
+    return tf;
+}
+
+static CompositeTextFormat createPmdFormat()
+{
+    CompositeTextFormat tf;
+    tf.setName("PMD");
+
+    std::shared_ptr<GrammaticalTextFormat> tfOpn(
+        new GrammaticalTextFormat(createPmdOpnFormat()));
+    std::shared_ptr<GrammaticalTextFormat> tfOpm(
+        new GrammaticalTextFormat(createPmdOpmFormat()));
+
+    // always write it as OPN
+    tf.setWriterFormat(tfOpn);
+
+    // try OPM first, then OPN; this order is unambiguous because of size
+    tf.addReaderFormat(tfOpm);
+    tf.addReaderFormat(tfOpn);
 
     return tf;
 }
@@ -538,7 +593,7 @@ const TextFormat &TextFormats::vopmFormat()
 
 const TextFormat &TextFormats::pmdFormat()
 {
-    static GrammaticalTextFormat tf = createPmdFormat();
+    static CompositeTextFormat tf = createPmdFormat();
     return tf;
 }
 
