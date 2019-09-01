@@ -68,9 +68,12 @@ public:
 class Whitespace : public StaticText
 {
 public:
-    explicit Whitespace(const char *text) : StaticText(text) {}
+    explicit Whitespace(const char *text, const char *wschars = " \t\r\n") : StaticText(text), m_whiteChars(wschars) {}
     Type type() const override { return T_Whitespace; }
     bool isValid() const override;
+    const char *whiteChars() const { return m_whiteChars; }
+private:
+    const char *m_whiteChars;
 };
 
 ///

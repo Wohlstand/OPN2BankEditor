@@ -122,11 +122,11 @@ bool TextFormat::parseInstrument(const char *text, FmBank::Instrument &ins) cons
     /// end preprocess
 
     ///
-    auto skipWhitespace = [&text, lc]()
+    auto skipWhitespace = [&text, lc](const char *ws)
     {
         for(bool endWs = false; !endWs;)
         {
-            if (std::isspace((unsigned char)*text))
+            if (std::strchr(ws, *text))
                 ++text;
             else if(!lc.empty() && std::strncmp(text, lc.data(), lc.size()) == 0)
             {
@@ -163,9 +163,11 @@ bool TextFormat::parseInstrument(const char *text, FmBank::Instrument &ins) cons
     ///
     using namespace TextFormatTokens;
 
+    const char *defaultWhiteChars = TextFormatTokens::Whitespace("").whiteChars();
+
     for(const TokenPtr &token : m_tokens)
     {
-        skipWhitespace();
+        skipWhitespace(defaultWhiteChars);
 
         switch(token->type())
         {
@@ -179,7 +181,12 @@ bool TextFormat::parseInstrument(const char *text, FmBank::Instrument &ins) cons
             break;
         }
         case T_Whitespace:
+        {
+            // if there are special characters set having whitespace-like behavior
+            const char *whiteChars = static_cast<Whitespace &>(*token).whiteChars();
+            skipWhitespace(whiteChars);
             break;
+        }
         case T_Int:
         {
             int value;
@@ -281,16 +288,23 @@ static TextFormat createPmdFormat()
 
     using namespace TextFormatTokens;
 
-    tf << "@" << " " << Int() << " " << Val("alg") << " " << Val("fb") << "\n";
+    tf << "@" << " " << Int() << " " << Val("alg") << " " << Val("fb")
+       << " " << "=" << " " << NameString()
+       << "\n";
+
+    // PMD instrument can have comma, handle it as whitespace separator
+    Whitespace sep(" ", ", \t\r\n");
+    Whitespace optionalSep("", ", \t\r\n");
 
     for(int o = 0; o < 4; ++o)
     {
         int op = MP_Operator1 + o;
-        tf << " " << Val("ar", op) << " " << Val("d1r", op)
-           << " " << Val("d2r", op) << " " << Val("rr", op)
-           << " " << Val("d1l", op) << " " << Val("tl", op)
-           << " " << Val("rs", op) << " " << Val("mul", op)
-           << " " << Val("dt", op) << " " << Val("am", op) << "\n";
+        tf << sep << Val("ar", op) << sep << Val("d1r", op)
+           << sep << Val("d2r", op) << sep << Val("rr", op)
+           << sep << Val("d1l", op) << sep << Val("tl", op)
+           << sep << Val("rs", op) << sep << Val("mul", op)
+           << sep << Val("dt", op) << sep << Val("am", op)
+           << optionalSep << "\n";
     }
 
     return tf;

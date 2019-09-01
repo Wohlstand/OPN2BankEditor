@@ -29,8 +29,8 @@ bool Whitespace::isValid() const
 {
     for(const char *p = m_text; *p != '\0'; ++p)
     {
-        if(!std::isspace((unsigned char)*p))
-            return false;;
+        if(!std::strchr(m_whiteChars, *p))
+            return false;
     }
     return true;
 }
