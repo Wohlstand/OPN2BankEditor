@@ -85,4 +85,19 @@ protected:
     std::vector<TextFormatTokens::TokenPtr> m_tokens;
 };
 
+///
+class CompositeTextFormat : public TextFormat
+{
+public:
+    void setWriterFormat(const std::shared_ptr<TextFormat> &format);
+    void addReaderFormat(const std::shared_ptr<TextFormat> &format);
+
+    std::string formatInstrument(const FmBank::Instrument &ins) const override;
+    bool parseInstrument(const char *text, FmBank::Instrument &ins) const override;
+
+private:
+    std::shared_ptr<TextFormat> m_writeFormat;
+    std::vector<std::shared_ptr<TextFormat>> m_readFormats;
+};
+
 #endif

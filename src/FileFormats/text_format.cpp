@@ -315,6 +315,33 @@ bool GrammaticalTextFormat::parseInstrument(const char *text, FmBank::Instrument
 }
 
 ///
+void CompositeTextFormat::setWriterFormat(const std::shared_ptr<TextFormat> &format)
+{
+    m_writeFormat = format;
+}
+
+void CompositeTextFormat::addReaderFormat(const std::shared_ptr<TextFormat> &format)
+{
+    m_readFormats.push_back(format);
+}
+
+std::string CompositeTextFormat::formatInstrument(const FmBank::Instrument &ins) const
+{
+    TextFormat *tf = m_writeFormat.get();
+    return tf ? tf->formatInstrument(ins) : std::string();
+}
+
+bool CompositeTextFormat::parseInstrument(const char *text, FmBank::Instrument &ins) const
+{
+    for(const std::shared_ptr<TextFormat> &tf : m_readFormats)
+    {
+        if (tf->parseInstrument(text, ins))
+            return true;
+    }
+    return false;
+}
+
+///
 static GrammaticalTextFormat createVopmFormat()
 {
     GrammaticalTextFormat tf;
