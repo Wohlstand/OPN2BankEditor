@@ -26,14 +26,14 @@
 #include <cassert>
 
 ///
-template <class T> TextFormat &TextFormat::operator<<(const T &token)
+template <class T> GrammaticalTextFormat &GrammaticalTextFormat::operator<<(const T &token)
 {
     m_valid = m_valid && token.isValid();
     m_tokens.emplace_back(new T(token));
     return *this;
 }
 
-TextFormat &TextFormat::operator<<(const char *tokenText)
+GrammaticalTextFormat &GrammaticalTextFormat::operator<<(const char *tokenText)
 {
     using namespace TextFormatTokens;
 
@@ -46,7 +46,7 @@ TextFormat &TextFormat::operator<<(const char *tokenText)
 }
 
 ///
-std::string TextFormat::formatInstrument(const FmBank::Instrument &ins) const
+std::string GrammaticalTextFormat::formatInstrument(const FmBank::Instrument &ins) const
 {
     std::string text;
 
@@ -105,7 +105,7 @@ std::string TextFormat::formatInstrument(const FmBank::Instrument &ins) const
     return text;
 }
 
-bool TextFormat::parseInstrument(const char *text, FmBank::Instrument &ins) const
+bool GrammaticalTextFormat::parseInstrument(const char *text, FmBank::Instrument &ins) const
 {
     ins = FmBank::emptyInst();
 
@@ -315,9 +315,36 @@ bool TextFormat::parseInstrument(const char *text, FmBank::Instrument &ins) cons
 }
 
 ///
-static TextFormat createVopmFormat()
+void CompositeTextFormat::setWriterFormat(const std::shared_ptr<TextFormat> &format)
 {
-    TextFormat tf;
+    m_writeFormat = format;
+}
+
+void CompositeTextFormat::addReaderFormat(const std::shared_ptr<TextFormat> &format)
+{
+    m_readFormats.push_back(format);
+}
+
+std::string CompositeTextFormat::formatInstrument(const FmBank::Instrument &ins) const
+{
+    TextFormat *tf = m_writeFormat.get();
+    return tf ? tf->formatInstrument(ins) : std::string();
+}
+
+bool CompositeTextFormat::parseInstrument(const char *text, FmBank::Instrument &ins) const
+{
+    for(const std::shared_ptr<TextFormat> &tf : m_readFormats)
+    {
+        if (tf->parseInstrument(text, ins))
+            return true;
+    }
+    return false;
+}
+
+///
+static GrammaticalTextFormat createVopmFormat()
+{
+    GrammaticalTextFormat tf;
 
     tf.setName("VOPM");
     tf.setLineComment("//");
@@ -352,11 +379,11 @@ static TextFormat createVopmFormat()
     return tf;
 }
 
-static TextFormat createPmdFormat()
+static GrammaticalTextFormat createPmdOpnFormat()
 {
-    TextFormat tf;
+    GrammaticalTextFormat tf;
 
-    tf.setName("PMD");
+    tf.setName("PMD (OPN)");
     tf.setLineComment(";");
 
     using namespace TextFormatTokens;
@@ -386,9 +413,64 @@ static TextFormat createPmdFormat()
     return tf;
 }
 
-static TextFormat createFmpFormat()
+static GrammaticalTextFormat createPmdOpmFormat()
 {
-    TextFormat tf;
+    GrammaticalTextFormat tf;
+
+    tf.setName("PMD (OPM)");
+    tf.setLineComment(";");
+
+    using namespace TextFormatTokens;
+
+    tf << "@" << " " << Int() << " " << Val("alg") << " " << Val("fb")
+       << " " << Conditional(
+           TokenSharedPtr(new Symbol("=")),
+           TokenList{} << Whitespace(" ") << NameString(),
+           TokenList{})
+       << "\n";
+
+    // PMD instrument can have comma, handle it as whitespace separator
+    auto sep = []() -> Whitespace { return Whitespace(" ", ", \t\r\n"); };
+    auto optionalSep = []() -> Whitespace { return Whitespace("", ", \t\r\n"); };
+
+    for(int o = 0; o < 4; ++o)
+    {
+        int op = MP_Operator1 + o;
+        tf << sep() << Val("ar", op) << sep() << Val("d1r", op)
+           << sep() << Val("d2r", op) << sep() << Val("rr", op)
+           << sep() << Val("d1l", op) << sep() << Val("tl", op)
+           << sep() << Val("rs", op) << sep() << Val("mul", op)
+           << sep() << Val("dt", op) << sep() << Int()
+           << sep() << Val("am", op)
+           << optionalSep() << "\n";
+    }
+
+    return tf;
+}
+
+static CompositeTextFormat createPmdFormat()
+{
+    CompositeTextFormat tf;
+    tf.setName("PMD");
+
+    std::shared_ptr<GrammaticalTextFormat> tfOpn(
+        new GrammaticalTextFormat(createPmdOpnFormat()));
+    std::shared_ptr<GrammaticalTextFormat> tfOpm(
+        new GrammaticalTextFormat(createPmdOpmFormat()));
+
+    // always write it as OPN
+    tf.setWriterFormat(tfOpn);
+
+    // try OPM first, then OPN; this order is unambiguous because of size
+    tf.addReaderFormat(tfOpm);
+    tf.addReaderFormat(tfOpn);
+
+    return tf;
+}
+
+static GrammaticalTextFormat createFmpFormat()
+{
+    GrammaticalTextFormat tf;
 
     tf.setName("FMP");
     tf.setLineKeepPrefix("'");
@@ -414,9 +496,9 @@ static TextFormat createFmpFormat()
     return tf;
 }
 
-static TextFormat createNotexFormat()
+static GrammaticalTextFormat createNotexFormat()
 {
-    TextFormat tf;
+    GrammaticalTextFormat tf;
 
     tf.setName("NOTE.X");
     tf.setLineComment("//");
@@ -442,9 +524,9 @@ static TextFormat createNotexFormat()
     return tf;
 }
 
-static TextFormat createNrtdrvFormat()
+static GrammaticalTextFormat createNrtdrvFormat()
 {
-    TextFormat tf;
+    GrammaticalTextFormat tf;
 
     tf.setName("NRTDRV");
     tf.setLineComment(";");
@@ -471,9 +553,9 @@ static TextFormat createNrtdrvFormat()
     return tf;
 }
 
-static TextFormat createMucom88Format()
+static GrammaticalTextFormat createMucom88Format()
 {
-    TextFormat tf;
+    GrammaticalTextFormat tf;
 
     tf.setName("MUCOM88");
     tf.setLineComment(";");
@@ -503,43 +585,43 @@ static TextFormat createMucom88Format()
 }
 
 ///
-const TextFormat &TextFormat::vopmFormat()
+const TextFormat &TextFormats::vopmFormat()
 {
-    static TextFormat tf = createVopmFormat();
+    static GrammaticalTextFormat tf = createVopmFormat();
     return tf;
 }
 
-const TextFormat &TextFormat::pmdFormat()
+const TextFormat &TextFormats::pmdFormat()
 {
-    static TextFormat tf = createPmdFormat();
+    static CompositeTextFormat tf = createPmdFormat();
     return tf;
 }
 
-const TextFormat &TextFormat::fmpFormat()
+const TextFormat &TextFormats::fmpFormat()
 {
-    static TextFormat tf = createFmpFormat();
+    static GrammaticalTextFormat tf = createFmpFormat();
     return tf;
 }
 
-const TextFormat &TextFormat::notexFormat()
+const TextFormat &TextFormats::notexFormat()
 {
-    static TextFormat tf = createNotexFormat();
+    static GrammaticalTextFormat tf = createNotexFormat();
     return tf;
 }
 
-const TextFormat &TextFormat::nrtdrvFormat()
+const TextFormat &TextFormats::nrtdrvFormat()
 {
-    static TextFormat tf = createNrtdrvFormat();
+    static GrammaticalTextFormat tf = createNrtdrvFormat();
     return tf;
 }
 
-const TextFormat &TextFormat::mucom88Format()
+const TextFormat &TextFormats::mucom88Format()
 {
-    static TextFormat tf = createMucom88Format();
+    static GrammaticalTextFormat tf = createMucom88Format();
     return tf;
 }
 
-const std::vector<const TextFormat *> &TextFormat::allFormats()
+const std::vector<const TextFormat *> &TextFormats::allFormats()
 {
     static const std::vector<const TextFormat *> all = {
         &vopmFormat(),
@@ -552,9 +634,9 @@ const std::vector<const TextFormat *> &TextFormat::allFormats()
     return all;
 }
 
-const TextFormat *TextFormat::getFormatByName(const std::string &name)
+const TextFormat *TextFormats::getFormatByName(const std::string &name)
 {
-    for(const TextFormat *tf : TextFormat::allFormats())
+    for(const TextFormat *tf : allFormats())
         if(name == tf->name())
             return tf;
     return nullptr;
