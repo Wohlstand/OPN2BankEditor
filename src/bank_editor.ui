@@ -601,6 +601,9 @@
                   <property name="orientation">
                    <enum>Qt::Horizontal</enum>
                   </property>
+                  <property name="sizeType">
+                   <enum>QSizePolicy::Maximum</enum>
+                  </property>
                   <property name="sizeHint" stdset="0">
                    <size>
                     <width>10</width>
@@ -827,6 +830,29 @@
                   </property>
                   <property name="maxLength">
                    <number>32</number>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <spacer name="horizontalSpacer_4">
+                  <property name="orientation">
+                   <enum>Qt::Horizontal</enum>
+                  </property>
+                  <property name="sizeType">
+                   <enum>QSizePolicy::Maximum</enum>
+                  </property>
+                  <property name="sizeHint" stdset="0">
+                   <size>
+                    <width>10</width>
+                    <height>20</height>
+                   </size>
+                  </property>
+                 </spacer>
+                </item>
+                <item>
+                 <widget class="QToolButton" name="textconvButton">
+                  <property name="text">
+                   <string>Convert</string>
                   </property>
                  </widget>
                 </item>
@@ -1605,7 +1631,7 @@ Available from 0 to 127</string>
      <x>0</x>
      <y>0</y>
      <width>950</width>
-     <height>17</height>
+     <height>19</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">

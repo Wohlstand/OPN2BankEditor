@@ -124,6 +124,8 @@ SOURCES += \
     src/FileFormats/format_wohlstand_opn2.cpp \
     src/FileFormats/ym2612_to_wopi.cpp \
     src/FileFormats/ym2151_to_wopi.cpp \
+    src/FileFormats/text_format.cpp \
+    src/FileFormats/text_format_tokens.cpp \
     src/formats_sup.cpp \
     src/importer.cpp \
     src/audio_config.cpp \
@@ -164,6 +166,8 @@ HEADERS += \
     src/FileFormats/format_wohlstand_opn2.h \
     src/FileFormats/ym2612_to_wopi.h \
     src/FileFormats/ym2151_to_wopi.h \
+    src/FileFormats/text_format.h \
+    src/FileFormats/text_format_tokens.h \
     src/formats_sup.h \
     src/importer.h \
     src/audio_config.h \
