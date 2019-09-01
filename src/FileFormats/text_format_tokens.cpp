@@ -36,6 +36,12 @@ bool Whitespace::isValid() const
 }
 
 ///
+Conditional::Conditional(TokenSharedPtr cond, TokenList ifTrue, TokenList ifFalse, bool defaultValue)
+    : m_cond(std::move(cond)), m_ifTrue(std::move(ifTrue)), m_ifFalse(std::move(ifFalse)), m_defaultValue(defaultValue)
+{
+}
+
+///
 Int::Int(int defaultValue, const char *format)
     : m_defaultValue(defaultValue), m_format(format)
 {

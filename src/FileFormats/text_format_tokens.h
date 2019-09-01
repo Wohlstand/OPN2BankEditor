@@ -19,6 +19,10 @@
 #ifndef TEXT_FORMAT_TOKENS_H
 #define TEXT_FORMAT_TOKENS_H
 
+#include <vector>
+#include <string>
+#include <memory>
+
 struct MetaParameter;
 
 namespace TextFormatTokens {
@@ -28,6 +32,7 @@ enum Type
 {
     T_Symbol,
     T_Whitespace,
+    T_Conditional,
     T_Int,
     T_AlphaNumString,
     T_Val,
@@ -43,6 +48,22 @@ public:
     virtual Type type() const = 0;
     virtual bool isValid() const { return true; }
     virtual const char *text() const = 0;
+};
+
+///
+typedef std::unique_ptr<Token> TokenPtr;
+typedef std::shared_ptr<Token> TokenSharedPtr;
+
+///
+struct TokenList
+{
+    std::vector<TokenSharedPtr> items;
+
+    template <class T> TokenList &operator<<(const T &token)
+    {
+        items.emplace_back(new T(token));
+        return *this;
+    }
 };
 
 ///
@@ -74,6 +95,27 @@ public:
     const char *whiteChars() const { return m_whiteChars; }
 private:
     const char *m_whiteChars;
+};
+
+///
+class Conditional : public Token
+{
+public:
+    Conditional(TokenSharedPtr cond, TokenList ifTrue, TokenList ifFalse, bool defaultValue = true);
+    Type type() const { return T_Conditional; };
+    bool isValid() const { return true; }
+    const char *text() const { return "?"; }
+
+    bool defaultValue() const { return m_defaultValue; }
+    const Token &condition() const { return *m_cond; }
+    const TokenList &eval(bool value) const { return value ? m_ifTrue : m_ifFalse; }
+
+private:
+    TokenSharedPtr m_cond;
+    TokenList m_ifTrue;
+    TokenList m_ifFalse;
+    bool m_defaultValue;
+    mutable std::string m_textBuffer;
 };
 
 ///

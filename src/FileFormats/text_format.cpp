@@ -19,9 +19,11 @@
 #include "text_format.h"
 #include "text_format_tokens.h"
 #include "metaparameter.h"
+#include <list>
 #include <cstring>
 #include <cctype>
 #include <climits>
+#include <cassert>
 
 ///
 template <class T> TextFormat &TextFormat::operator<<(const T &token)
@@ -53,8 +55,15 @@ std::string TextFormat::formatInstrument(const FmBank::Instrument &ins) const
 
     using namespace TextFormatTokens;
 
+    std::list<const Token *> tokens;
     for(const TokenPtr &token : m_tokens)
+        tokens.push_back(token.get());
+
+    while(!tokens.empty())
     {
+        const Token *token = tokens.front();
+        tokens.pop_front();
+
         switch(token->type())
         {
         default:
@@ -62,9 +71,9 @@ std::string TextFormat::formatInstrument(const FmBank::Instrument &ins) const
             break;
         case T_Val:
         {
-            int value = static_cast<Val &>(*token).parameter()->get(ins);
+            int value = static_cast<const Val &>(*token).parameter()->get(ins);
             char buffer[32];
-            std::sprintf(buffer, static_cast<Val &>(*token).format(), value);
+            std::sprintf(buffer, static_cast<const Val &>(*token).format(), value);
             text.append(buffer);
             break;
         }
@@ -76,6 +85,20 @@ std::string TextFormat::formatInstrument(const FmBank::Instrument &ins) const
             text.append(ins.name);
             text.push_back('"');
             break;
+        case T_Conditional:
+        {
+            const Conditional &cond = static_cast<const Conditional &>(*token);
+
+            // go through the default branch of the conditional
+            bool value = cond.defaultValue();
+            const TokenList &branch = cond.eval(value);
+            for(size_t i = branch.items.size(); i-- > 0;)
+                tokens.push_front(branch.items[i].get());
+            if(value)
+                tokens.push_front(&cond.condition());
+
+            break;
+        }
         }
     }
 
@@ -165,25 +188,45 @@ bool TextFormat::parseInstrument(const char *text, FmBank::Instrument &ins) cons
 
     const char *defaultWhiteChars = TextFormatTokens::Whitespace("").whiteChars();
 
+    std::list<const Token *> tokens;
     for(const TokenPtr &token : m_tokens)
+        tokens.push_back(token.get());
+
+    while(!tokens.empty())
     {
+        const Token *token = tokens.front();
+        tokens.pop_front();
+
         skipWhitespace(defaultWhiteChars);
+
+        bool success = true;
+
+        // conditional: a special case
+        const Conditional *ifelse = nullptr;
+        if(token->type() == T_Conditional)
+        {
+            ifelse = static_cast<const Conditional *>(token);
+            token = &ifelse->condition();
+        }
 
         switch(token->type())
         {
         case T_Symbol:
         {
-            const char *sym = static_cast<Symbol &>(*token).text();
+            const char *sym = static_cast<const Symbol &>(*token).text();
             size_t len = strlen(sym);
             if(std::strncmp(text, sym, len))
-                return false;
+            {
+                success = false;
+                break;
+            }
             text += len;
             break;
         }
         case T_Whitespace:
         {
             // if there are special characters set having whitespace-like behavior
-            const char *whiteChars = static_cast<Whitespace &>(*token).whiteChars();
+            const char *whiteChars = static_cast<const Whitespace &>(*token).whiteChars();
             skipWhitespace(whiteChars);
             break;
         }
@@ -191,25 +234,36 @@ bool TextFormat::parseInstrument(const char *text, FmBank::Instrument &ins) cons
         {
             int value;
             if (!readNextInt(text, &value))
-                return false;
+                success = false;
             break;
         }
         case T_AlphaNumString:
         {
             std::string value;
             value.reserve(256);
-            for(char c; (c = *text) != '\0' && std::isalnum((unsigned char)c); ++text)
+
+            const char *pos = text;
+            for(char c; (c = *pos) != '\0' && std::isalnum((unsigned char)c); ++pos)
                 value.push_back(c);
-            if (value.empty())
-                return false;
+
+            if(value.empty())
+            {
+                success = false;
+                break;
+            }
+
+            text = pos;
             break;
         }
         case T_Val:
         {
             int value;
             if (!readNextInt(text, &value))
-                return false;
-            const MetaParameter *mp = static_cast<Val &>(*token).parameter();
+            {
+                success = false;
+                break;
+            }
+            const MetaParameter *mp = static_cast<const Val &>(*token).parameter();
             mp->set(ins, mp->clamp(value));
             break;
         }
@@ -221,20 +275,39 @@ bool TextFormat::parseInstrument(const char *text, FmBank::Instrument &ins) cons
         }
         case T_QuotedNameString:
         {
-            if(*text++ != '"')
-                return false;
+            const char *pos = text;
+            if(*pos++ != '"')
+            {
+                success = false;
+                break;
+            }
 
             std::string name;
             name.reserve(256);
-            while(*text != '\0' && *text != '"')
-                name.push_back(*text++);
+            while(*pos != '\0' && *pos != '"')
+                name.push_back(*pos++);
 
-            if(*text++ != '"')
-                return false;
+            if(*pos++ != '"')
+            {
+                success = false;
+                break;
+            }
 
             std::strncpy(ins.name, name.c_str(), 32);
+            text = pos;
             break;
         }
+        case T_Conditional:
+            assert(false);
+            break;
+        }
+
+        if(!success && !ifelse)
+            return false;
+        else if(ifelse)
+        {
+            for(const TokenSharedPtr &branchToken : ifelse->eval(success).items)
+                tokens.push_front(branchToken.get());
         }
     }
 
@@ -289,22 +362,25 @@ static TextFormat createPmdFormat()
     using namespace TextFormatTokens;
 
     tf << "@" << " " << Int() << " " << Val("alg") << " " << Val("fb")
-       << " " << "=" << " " << NameString()
+       << " " << Conditional(
+           TokenSharedPtr(new Symbol("=")),
+           TokenList{} << Whitespace(" ") << NameString(),
+           TokenList{})
        << "\n";
 
     // PMD instrument can have comma, handle it as whitespace separator
-    Whitespace sep(" ", ", \t\r\n");
-    Whitespace optionalSep("", ", \t\r\n");
+    auto sep = []() -> Whitespace { return Whitespace(" ", ", \t\r\n"); };
+    auto optionalSep = []() -> Whitespace { return Whitespace("", ", \t\r\n"); };
 
     for(int o = 0; o < 4; ++o)
     {
         int op = MP_Operator1 + o;
-        tf << sep << Val("ar", op) << sep << Val("d1r", op)
-           << sep << Val("d2r", op) << sep << Val("rr", op)
-           << sep << Val("d1l", op) << sep << Val("tl", op)
-           << sep << Val("rs", op) << sep << Val("mul", op)
-           << sep << Val("dt", op) << sep << Val("am", op)
-           << optionalSep << "\n";
+        tf << sep() << Val("ar", op) << sep() << Val("d1r", op)
+           << sep() << Val("d2r", op) << sep() << Val("rr", op)
+           << sep() << Val("d1l", op) << sep() << Val("tl", op)
+           << sep() << Val("rs", op) << sep() << Val("mul", op)
+           << sep() << Val("dt", op) << sep() << Val("am", op)
+           << optionalSep() << "\n";
     }
 
     return tf;
