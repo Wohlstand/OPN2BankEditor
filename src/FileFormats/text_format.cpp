@@ -279,6 +279,34 @@ static TextFormat createFmpFormat()
     return tf;
 }
 
+static TextFormat createNotexFormat()
+{
+    TextFormat tf;
+
+    tf.setName("NOTE.X");
+    tf.setLineComment("//");
+
+    using namespace TextFormatTokens;
+
+    tf << "@" << Int() << " " << "=" << " " << "{" << "\n";
+
+    for(int o = 0; o < 4; ++o)
+    {
+        int op = MP_Operator1 + o;
+        tf << Val("ar", op) << "," << Val("d1r", op)
+           << "," << Val("d2r", op) << "," << Val("rr", op)
+           << "," << Val("d1l", op) << "," << Val("tl", op)
+           << "," << Val("rs", op) << "," << Val("mul", op)
+           << "," << Val("dt", op) << "," << Int()
+           << "," << Val("am", op) << "\n";
+    }
+
+    tf << Val("alg") << "," << Val("fb") << "," << Int(15) << "\n"
+       << "}" << "\n";
+
+    return tf;
+}
+
 ///
 const TextFormat &TextFormat::vopmFormat()
 {
@@ -298,12 +326,19 @@ const TextFormat &TextFormat::fmpFormat()
     return tf;
 }
 
+const TextFormat &TextFormat::notexFormat()
+{
+    static TextFormat tf = createNotexFormat();
+    return tf;
+}
+
 const std::vector<const TextFormat *> &TextFormat::allFormats()
 {
     static const std::vector<const TextFormat *> all = {
         &vopmFormat(),
         &pmdFormat(),
         &fmpFormat(),
+        &notexFormat(),
     };
     return all;
 }
