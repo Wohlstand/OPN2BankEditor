@@ -55,6 +55,7 @@ namespace TextFormats
     const TextFormat &notexFormat();
     const TextFormat &nrtdrvFormat();
     const TextFormat &mucom88Format();
+    const TextFormat &mml2vgmFormat();
 
     const std::vector<const TextFormat *> &allFormats();
     const TextFormat *getFormatByName(const std::string &name);
