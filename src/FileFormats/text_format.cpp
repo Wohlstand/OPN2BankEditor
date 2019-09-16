@@ -584,6 +584,35 @@ static GrammaticalTextFormat createMucom88Format()
     return tf;
 }
 
+static GrammaticalTextFormat createmml2vgmFormat()
+{
+    GrammaticalTextFormat tf;
+
+    tf.setName("MML2VGM");
+    tf.setLineKeepPrefix("'");
+
+    using namespace TextFormatTokens;
+
+    // permissive parsing on this line
+    tf << "'" << "@" << " " << AlphaNumString("N") << " " << AlphaNumString("000") << "\n";
+
+    for(int o = 0; o < 4; ++o)
+    {
+        int op = MP_Operator1 + o;
+        tf << "'" << "@"
+           << " " << Val("ar", op) << "," << Val("d1r", op)
+           << "," << Val("d2r", op) << "," << Val("rr", op)
+           << "," << Val("d1l", op) << "," << Val("tl", op)
+           << "," << Val("rs", op) << "," << Val("mul", op)
+           << "," << Val("dt", op) << "," << Val("am", op) 
+           << "," << Val("ssg", op) << "\n";
+    }
+
+    tf << "'" << "@" << " " << Val("alg") << "," << Val("fb") << "\n";
+
+    return tf;
+}
+
 ///
 const TextFormat &TextFormats::vopmFormat()
 {
@@ -621,6 +650,12 @@ const TextFormat &TextFormats::mucom88Format()
     return tf;
 }
 
+const TextFormat &TextFormats::mml2vgmFormat()
+{
+    static GrammaticalTextFormat tf = createmml2vgmFormat();
+    return tf;
+}
+
 const std::vector<const TextFormat *> &TextFormats::allFormats()
 {
     static const std::vector<const TextFormat *> all = {
@@ -630,6 +665,7 @@ const std::vector<const TextFormat *> &TextFormats::allFormats()
         &notexFormat(),
         &nrtdrvFormat(),
         &mucom88Format(),
+        &mml2vgmFormat(),
     };
     return all;
 }
