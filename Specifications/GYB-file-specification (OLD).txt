@@ -1,0 +1,39 @@
++------------------------------------------------------------------------------+
+|           GYB instrument file specification (reverse-engineering)            |
++------------------------------------------------------------------------------+
+
+### Contents
+
+$00-$02  magic $1A,$0C,$02
+$03      melodic instrument count
+$04      percussion instrument count
+>        instrument mapping entry[128]
+>        instrument data[total instrument count]
+>        1 ??? byte
+>        name entry[total instrument count]
+>        4 checksum bytes ($00000000 to ignore check)
+
+### Instrument mapping entry
+
+$00  melodic index for nth GM ($FF=unassigned)
+$01  percussion index for nth GM ($FF=unassigned)
+
+### Instrument data (size 32)
+
+note: $22 register is only set on 1st instrument
+
+$00      $22 register
+$01-$04  $3X registers (OP1, OP3, OP2, OP4)
+$05-$08  $4X registers (OP1, OP3, OP2, OP4)
+$09-$0c  $5X registers (OP1, OP3, OP2, OP4)
+$0d-$10  $6X registers (OP1, OP3, OP2, OP4)
+$11-$14  $7X registers (OP1, OP3, OP2, OP4)
+$15-$18  $8X registers (OP1, OP3, OP2, OP4)
+$19-$1c  $9X registers (OP1, OP3, OP2, OP4)
+$1d-$1e  $BX registers
+$1f      1 ??? bit, 7 "Transpose/Pitch" bits
+
+### Name entry
+
+$00       size
+>         8-bit character[size]
