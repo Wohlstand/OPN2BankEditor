@@ -32,12 +32,15 @@ bool M2V_GYB::detect(const QString &filePath, char *magic)
         return true;
 
     //By magic
-    if(magic[0] == 0x1a && magic[1] == 0x0c && magic[2] == 0x02)
+    if(magic[0] == 26 && magic[1] == 12)
         return true;
 
     return false;
 }
 
+
+// TODO: Correct this regarding to specification to work with v1 and v2 files
+// TODO: Implement a hash summ generator and checker
 FfmtErrCode M2V_GYB::loadFile(QString filePath, FmBank &bank)
 {
     QFile file(filePath);
@@ -46,16 +49,22 @@ FfmtErrCode M2V_GYB::loadFile(QString filePath, FmBank &bank)
         return FfmtErrCode::ERR_NOFILE;
 
     uint8_t header[5];
+    uint8_t version = 0;
     if(file.read(char_p(header), 5) != 5)
         return FfmtErrCode::ERR_BADFORMAT;
 
-    if(!(header[0] == 0x1a && header[1] == 0x0c && header[2] == 0x02))
+    if(!(header[0] == 26 && header[1] == 12))
         return FfmtErrCode::ERR_BADFORMAT;
+
+    version = header[2];
 
     const unsigned melo_count = header[3];
     const unsigned drum_count = header[4];
 
-    if (melo_count > 128 || drum_count > 128)
+    if(melo_count > 128 || drum_count > 128)
+        return FfmtErrCode::ERR_BADFORMAT;
+
+    if(version < 1 && version > 2)
         return FfmtErrCode::ERR_BADFORMAT;
 
     const unsigned total_count = melo_count + drum_count;
@@ -63,6 +72,15 @@ FfmtErrCode M2V_GYB::loadFile(QString filePath, FmBank &bank)
 
     if(file.read(char_p(ins_map), sizeof(ins_map)) != sizeof(ins_map))
         return FfmtErrCode::ERR_BADFORMAT;
+
+#if 0 // Regarding the specification, this should be a field. However, It appears over first instrument
+    if(version == 2)
+    {
+        if(file.read(char_p(&bank.lfo_frequency), 1) != 1)
+            return FfmtErrCode::ERR_BADFORMAT;
+        bank.lfo_enabled = (bank.lfo_frequency != 0x00);
+    }
+#endif
 
     bank.reset(1, 1);
 
@@ -79,8 +97,14 @@ FfmtErrCode M2V_GYB::loadFile(QString filePath, FmBank &bank)
         bool isdrum = ins_index >= melo_count;
 
         uint8_t idata[32];
-        if(file.read(char_p(idata), 32) != 32)
-            return FfmtErrCode::ERR_BADFORMAT;
+        if(version == 2)
+        {
+            if(file.read(char_p(idata), 32) != 32)
+                return FfmtErrCode::ERR_BADFORMAT;
+        } else {
+            if(file.read(char_p(idata), 30) != 30)
+                return FfmtErrCode::ERR_BADFORMAT;
+        }
 
         unsigned gm = ~0u;
         // search for GM assignment in map
