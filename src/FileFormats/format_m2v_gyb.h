@@ -34,6 +34,9 @@ public:
     QString     formatName() const override;
     QString     formatExtensionMask() const override;
     BankFormats formatId() const override;
+
+protected:
+    FfmtErrCode saveFileWithVersion(QString filePath, FmBank &bank, uint8_t version);
 };
 
 #endif // FORMAT_M2V_GYB_H
