@@ -38,8 +38,6 @@ bool M2V_GYB::detect(const QString &filePath, char *magic)
     return false;
 }
 
-
-// TODO: Correct this regarding to specification to work with v1 and v2 files
 // TODO: Implement a hash summ generator and checker
 FfmtErrCode M2V_GYB::loadFile(QString filePath, FmBank &bank)
 {
@@ -64,7 +62,7 @@ FfmtErrCode M2V_GYB::loadFile(QString filePath, FmBank &bank)
     if(melo_count > 128 || drum_count > 128)
         return FfmtErrCode::ERR_BADFORMAT;
 
-    if(version < 1 && version > 2)
+    if(version < 1 || version > 2)
         return FfmtErrCode::ERR_BADFORMAT;
 
     const unsigned total_count = melo_count + drum_count;
@@ -73,16 +71,15 @@ FfmtErrCode M2V_GYB::loadFile(QString filePath, FmBank &bank)
     if(file.read(char_p(ins_map), sizeof(ins_map)) != sizeof(ins_map))
         return FfmtErrCode::ERR_BADFORMAT;
 
-#if 0 // Regarding the specification, this should be a field. However, It appears over first instrument
+    bank.reset(1, 1);
+
     if(version == 2)
     {
-        if(file.read(char_p(&bank.lfo_frequency), 1) != 1)
+        uint8_t regLfo;
+        if(file.read(char_p(&regLfo), 1) != 1)
             return FfmtErrCode::ERR_BADFORMAT;
-        bank.lfo_enabled = (bank.lfo_frequency != 0x00);
+        bank.setRegLFO(regLfo);
     }
-#endif
-
-    bank.reset(1, 1);
 
     memset(&bank.Banks_Melodic[0], 0, sizeof(FmBank::MidiBank));
     memset(&bank.Banks_Percussion[0], 0, sizeof(FmBank::MidiBank));
@@ -97,14 +94,10 @@ FfmtErrCode M2V_GYB::loadFile(QString filePath, FmBank &bank)
         bool isdrum = ins_index >= melo_count;
 
         uint8_t idata[32];
-        if(version == 2)
-        {
-            if(file.read(char_p(idata), 32) != 32)
-                return FfmtErrCode::ERR_BADFORMAT;
-        } else {
-            if(file.read(char_p(idata), 30) != 30)
-                return FfmtErrCode::ERR_BADFORMAT;
-        }
+        uint8_t idatalen = (version == 2) ? 32 : 30;
+
+        if(file.read(char_p(idata), idatalen) != idatalen)
+            return FfmtErrCode::ERR_BADFORMAT;
 
         unsigned gm = ~0u;
         // search for GM assignment in map
@@ -125,38 +118,35 @@ FfmtErrCode M2V_GYB::loadFile(QString filePath, FmBank &bank)
         if(gm == ~0u)
             continue;  // not assigned
 
-        if(ins_index == 0)
-            bank.setRegLFO(idata[0]);
-
         FmBank::Instrument *ins = isdrum ?
             &bank.Ins_Percussion[gm] : &bank.Ins_Melodic[gm];
 
         ins->is_blank = false;
 
-        if(isdrum)
-            ins->percNoteNum = idata[31] & 127;
-        else
-            ins->note_offset1 = static_cast<int16_t>(-static_cast<int8_t>(idata[31]));
-
-        for (unsigned op_index = 0; op_index < 4; ++op_index)
+        for(unsigned op_index = 0; op_index < 4; ++op_index)
         {
             const unsigned opnum[4] = {OPERATOR1_HR, OPERATOR3_HR, OPERATOR2_HR, OPERATOR4_HR};
             unsigned op = opnum[op_index];
 
-            ins->setRegDUMUL(op, idata[1 + op_index]);
-            ins->setRegLevel(op, idata[5 + op_index]);
-            ins->setRegRSAt(op, idata[9 + op_index]);
-            ins->setRegAMD1(op, idata[13 + op_index]);
-            ins->setRegD2(op, idata[17 + op_index]);
-            ins->setRegSysRel(op, idata[21 + op_index]);
-            ins->setRegSsgEg(op, idata[25 + op_index]);
+            ins->setRegDUMUL(op, idata[0 + op_index]);
+            ins->setRegLevel(op, idata[4 + op_index]);
+            ins->setRegRSAt(op, idata[8 + op_index]);
+            ins->setRegAMD1(op, idata[12 + op_index]);
+            ins->setRegD2(op, idata[16 + op_index]);
+            ins->setRegSysRel(op, idata[20 + op_index]);
+            ins->setRegSsgEg(op, idata[24 + op_index]);
         }
-        ins->setRegFbAlg(idata[29]);
-        ins->setRegLfoSens(idata[30]);
-    }
+        ins->setRegFbAlg(idata[28]);
 
-    if (!file.seek(file.pos() + 1))
-        return FfmtErrCode::ERR_BADFORMAT;
+        if (version == 2)
+            ins->setRegLfoSens(idata[29]);
+
+        uint8_t transposeOrKey = idata[(version == 2) ? 30 : 29];
+        if(!isdrum)
+            ins->note_offset1 = static_cast<int16_t>(-static_cast<int8_t>(transposeOrKey));
+        else
+            ins->percNoteNum = transposeOrKey & 127;
+    }
 
     for(unsigned ins_index = 0; ins_index < total_count; ++ins_index)
     {
@@ -211,6 +201,14 @@ FfmtErrCode M2V_GYB::loadFile(QString filePath, FmBank &bank)
 
 FfmtErrCode M2V_GYB::saveFile(QString filePath, FmBank &bank)
 {
+    return saveFileWithVersion(filePath, bank, 2);
+}
+
+FfmtErrCode M2V_GYB::saveFileWithVersion(QString filePath, FmBank &bank, uint8_t version)
+{
+    if(version < 1 || version > 2)
+        return FfmtErrCode::ERR_BADFORMAT;
+
     QFile file(filePath);
 
     if(!file.open(QIODevice::WriteOnly))
@@ -255,7 +253,7 @@ FfmtErrCode M2V_GYB::saveFile(QString filePath, FmBank &bank)
 
     // write file header
     const uint8_t header[5] =
-        { 0x1a, 0x0c, 0x02,
+        { 0x1a, 0x0c, version,
           (uint8_t)melo_entry_count, (uint8_t)drum_entry_count };
     file.write(char_p(header), sizeof(header));
 
@@ -268,44 +266,52 @@ FfmtErrCode M2V_GYB::saveFile(QString filePath, FmBank &bank)
         file.write(char_p(&p), 1);
     }
 
+    // write LFO register
+    if(version == 2)
+    {
+        uint8_t regLfo = bank.getRegLFO();
+        file.write(char_p(&regLfo), 1);
+    }
+
     // write instruments
     for(unsigned i = 0; i < total_count; ++i)
     {
         uint8_t idata[32];
-        bool isdrum = i >= melo_entry_count;
+        uint8_t idatalen = (version == 2) ? 32 : 30;
 
-        idata[0] = (i == 0) ? bank.getRegLFO() : 0;
+        memset(&idata, 0, sizeof(idata));
+
+        bool isdrum = i >= melo_entry_count;
 
         const FmBank::Instrument *ins = (!isdrum) ?
             melo_entry[i] : drum_entry[i - melo_entry_count];
-
-        if(isdrum)
-            idata[31] = ins->percNoteNum;
-        else
-            idata[31] = static_cast<uint8_t>(static_cast<int8_t>(-ins->note_offset1));
 
         for (unsigned op_index = 0; op_index < 4; ++op_index)
         {
             const unsigned opnum[4] = {OPERATOR1_HR, OPERATOR3_HR, OPERATOR2_HR, OPERATOR4_HR};
             unsigned op = opnum[op_index];
 
-            idata[1 + op_index] = ins->getRegDUMUL(op);
-            idata[5 + op_index] = ins->getRegLevel(op);
-            idata[9 + op_index] = ins->getRegRSAt(op);
-            idata[13 + op_index] = ins->getRegAMD1(op);
-            idata[17 + op_index] = ins->getRegD2(op);
-            idata[21 + op_index] = ins->getRegSysRel(op);
-            idata[25 + op_index] = ins->getRegSsgEg(op);
+            idata[0 + op_index] = ins->getRegDUMUL(op);
+            idata[4 + op_index] = ins->getRegLevel(op);
+            idata[8 + op_index] = ins->getRegRSAt(op);
+            idata[12 + op_index] = ins->getRegAMD1(op);
+            idata[16 + op_index] = ins->getRegD2(op);
+            idata[20 + op_index] = ins->getRegSysRel(op);
+            idata[24 + op_index] = ins->getRegSsgEg(op);
         }
-        idata[29] = ins->getRegFbAlg();
-        idata[30] = ins->getRegLfoSens();
+        idata[28] = ins->getRegFbAlg();
 
-        file.write(char_p(idata), 32);
+        if(version == 2)
+            idata[29] = ins->getRegLfoSens();
+
+        uint8_t *transposeOrKey = &idata[(version == 2) ? 30 : 29];
+        if(!isdrum)
+            *transposeOrKey = static_cast<uint8_t>(static_cast<int8_t>(-ins->note_offset1));
+        else
+            *transposeOrKey = ins->percNoteNum;
+
+        file.write(char_p(idata), idatalen);
     }
-
-    // write ???
-    uint8_t mystery_data[1] = {0};
-    file.write(char_p(mystery_data), sizeof(mystery_data));
 
     // write names
     for(unsigned i = 0; i < total_count; ++i)
