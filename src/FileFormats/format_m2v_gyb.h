@@ -21,22 +21,74 @@
 
 #include "ffmt_base.h"
 
+class QFile;
+
 /**
- * @brief Reader and Writer of the GYB File Format
+ * @brief Base class of GYB File Format readers and writers
  */
-class M2V_GYB final : public FmBankFormatBase
+class Basic_M2V_GYB : public FmBankFormatBase
+{
+public:
+    virtual ~Basic_M2V_GYB() {}
+
+    QString formatExtensionMask() const override;
+
+protected:
+    FfmtErrCode loadFileVersion1Or2(QFile &file, FmBank &bank, uint8_t version);
+    FfmtErrCode loadFileVersion3(QFile &file, FmBank &bank);
+
+    FfmtErrCode saveFileVersion1Or2(QFile &file, FmBank &bank, uint8_t version);
+    FfmtErrCode saveFileVersion3(QFile &file, FmBank &bank);
+};
+
+/**
+ * @brief Reader of GYB File Format, any version
+ */
+class M2V_GYB_READ final : public Basic_M2V_GYB
 {
 public:
     bool        detect(const QString &filePath, char* magic) override;
     FfmtErrCode loadFile(QString filePath, FmBank &bank) override;
+    int         formatCaps() const override;
+    QString     formatName() const override;
+    BankFormats formatId() const override;
+};
+
+/**
+ * @brief Writer of GYB File Format, version 1
+ */
+class M2V_GYB_WRITEv1 final : public Basic_M2V_GYB
+{
+public:
     FfmtErrCode saveFile(QString filePath, FmBank &bank) override;
     int         formatCaps() const override;
     QString     formatName() const override;
-    QString     formatExtensionMask() const override;
     BankFormats formatId() const override;
+};
 
-protected:
-    FfmtErrCode saveFileWithVersion(QString filePath, FmBank &bank, uint8_t version);
+/**
+ * @brief Writer of GYB File Format, version 1
+ */
+class M2V_GYB_WRITEv2 final : public Basic_M2V_GYB
+{
+public:
+    FfmtErrCode saveFile(QString filePath, FmBank &bank) override;
+    int         formatCaps() const override;
+    QString     formatName() const override;
+    BankFormats formatId() const override;
+};
+
+
+/**
+ * @brief Writer of GYB File Format, version 1
+ */
+class M2V_GYB_WRITEv3 final : public Basic_M2V_GYB
+{
+public:
+    FfmtErrCode saveFile(QString filePath, FmBank &bank) override;
+    int         formatCaps() const override;
+    QString     formatName() const override;
+    BankFormats formatId() const override;
 };
 
 #endif // FORMAT_M2V_GYB_H

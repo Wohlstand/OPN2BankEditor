@@ -71,7 +71,10 @@ void FmBankFormatFactory::registerAllFormats()
     registerInstFormat(new DefleMask());
     registerBankFormat(new GEMS_PAT());
     registerInstFormat(new GEMS_PAT());
-    registerBankFormat(new M2V_GYB());
+    registerBankFormat(new M2V_GYB_READ());
+    registerBankFormat(new M2V_GYB_WRITEv3());
+    registerBankFormat(new M2V_GYB_WRITEv2());
+    registerBankFormat(new M2V_GYB_WRITEv1());
 #ifdef DEBUG_BUILD // Experimental and unfinished format support. Disable it in release builds
     registerBankFormat(new Tomsoft_GIN());
 #endif
