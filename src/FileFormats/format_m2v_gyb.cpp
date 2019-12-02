@@ -234,8 +234,24 @@ FfmtErrCode Basic_M2V_GYB::loadFileVersion3(QFile &file, FmBank &bank)
                 uint8_t lsb = ent_data[1];
                 uint16_t inst_index = toUint16LE(&ent_data[2]);
 
+                // 0xFF for MSB & LSB means "all". I don't know what to make of
+                // it, so make it zero instead.
+                if (msb == 0xff)
+                    msb = 0;
+                if (lsb == 0xff)
+                    lsb = 0;
+
+                if (msb >= 128 || lsb >= 128)
+                    return FfmtErrCode::ERR_BADFORMAT;
+
                 FmBank::Instrument *midi_bank_insts = nullptr;
                 bank.createBank(msb, lsb, isdrum, nullptr, &midi_bank_insts);
+
+                // high bit indicates drum, but it's already determined above
+                inst_index &= (1 << 15) - 1;
+
+                if(inst_index >= inst_count)
+                    return FfmtErrCode::ERR_BADFORMAT;
 
                 InstMappingInfo &info = mapInfo[inst_index];
                 info.isdrum = isdrum;
