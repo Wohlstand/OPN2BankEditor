@@ -24,45 +24,22 @@
 #include <QByteArray>
 #include <algorithm>
 
-
-bool M2V_GYB::detect(const QString &filePath, char *magic)
+QString Basic_M2V_GYB::formatExtensionMask() const
 {
-    //By name extension
-    if(filePath.endsWith(".gyb", Qt::CaseInsensitive))
-        return true;
-
-    //By magic
-    if(magic[0] == 26 && magic[1] == 12)
-        return true;
-
-    return false;
+    return "*.gyb";
 }
 
 // TODO: Implement a hash summ generator and checker
-FfmtErrCode M2V_GYB::loadFile(QString filePath, FmBank &bank)
+FfmtErrCode Basic_M2V_GYB::loadFileVersion1Or2(QFile &file, FmBank &bank, uint8_t version)
 {
-    QFile file(filePath);
-
-    if(!file.open(QIODevice::ReadOnly))
-        return FfmtErrCode::ERR_NOFILE;
-
     uint8_t header[5];
-    uint8_t version = 0;
     if(file.read(char_p(header), 5) != 5)
         return FfmtErrCode::ERR_BADFORMAT;
-
-    if(!(header[0] == 26 && header[1] == 12))
-        return FfmtErrCode::ERR_BADFORMAT;
-
-    version = header[2];
 
     const unsigned melo_count = header[3];
     const unsigned drum_count = header[4];
 
     if(melo_count > 128 || drum_count > 128)
-        return FfmtErrCode::ERR_BADFORMAT;
-
-    if(version < 1 || version > 2)
         return FfmtErrCode::ERR_BADFORMAT;
 
     const unsigned total_count = melo_count + drum_count;
@@ -199,21 +176,15 @@ FfmtErrCode M2V_GYB::loadFile(QString filePath, FmBank &bank)
     return FfmtErrCode::ERR_OK;
 }
 
-FfmtErrCode M2V_GYB::saveFile(QString filePath, FmBank &bank)
+FfmtErrCode Basic_M2V_GYB::loadFileVersion3(QFile &file, FmBank &bank)
 {
-    return saveFileWithVersion(filePath, bank, 2);
+    //TODO: implement me version 3
+    
+    return FfmtErrCode::ERR_BADFORMAT;
 }
 
-FfmtErrCode M2V_GYB::saveFileWithVersion(QString filePath, FmBank &bank, uint8_t version)
+FfmtErrCode Basic_M2V_GYB::saveFileVersion1Or2(QFile &file, FmBank &bank, uint8_t version)
 {
-    if(version < 1 || version > 2)
-        return FfmtErrCode::ERR_BADFORMAT;
-
-    QFile file(filePath);
-
-    if(!file.open(QIODevice::WriteOnly))
-        return FfmtErrCode::ERR_NOFILE;
-
     FmBank::Instrument blank_ins = FmBank::emptyInst();
     blank_ins.is_blank = true;
     FmBank::Instrument blank_ins_list[128];
@@ -337,22 +308,157 @@ FfmtErrCode M2V_GYB::saveFileWithVersion(QString filePath, FmBank &bank, uint8_t
     return FfmtErrCode::ERR_OK;
 }
 
-int M2V_GYB::formatCaps() const
+FfmtErrCode Basic_M2V_GYB::saveFileVersion3(QFile &file, FmBank &bank)
 {
-    return (int)FormatCaps::FORMAT_CAPS_EVERYTHING;
+    //TODO: implement me version 3
+    
+    return FfmtErrCode::ERR_BADFORMAT;
 }
 
-QString M2V_GYB::formatName() const
+/*
+ * GYB file reader v1/v2/v3
+ */
+
+bool M2V_GYB_READ::detect(const QString &filePath, char *magic)
+{
+    //By name extension
+    if(filePath.endsWith(".gyb", Qt::CaseInsensitive))
+        return true;
+
+    //By magic
+    if(magic[0] == 26 && magic[1] == 12)
+        return true;
+
+    return false;
+}
+
+FfmtErrCode M2V_GYB_READ::loadFile(QString filePath, FmBank &bank)
+{
+    QFile file(filePath);
+
+    if(!file.open(QIODevice::ReadOnly))
+        return FfmtErrCode::ERR_NOFILE;
+
+    uint8_t header[3];
+    if(file.peek(char_p(header), 3) != 3)
+        return FfmtErrCode::ERR_BADFORMAT;
+
+    if(!(header[0] == 26 && header[1] == 12))
+        return FfmtErrCode::ERR_BADFORMAT;
+
+    uint8_t version = header[2];
+    switch(version)
+    {
+    case 1:
+    case 2:
+        return loadFileVersion1Or2(file, bank, version);
+    case 3:
+        return loadFileVersion3(file, bank);
+    default:
+        return FfmtErrCode::ERR_BADFORMAT;
+    }
+}
+
+int M2V_GYB_READ::formatCaps() const
+{
+    return (int)FormatCaps::FORMAT_CAPS_OPEN|(int)FormatCaps::FORMAT_CAPS_IMPORT;
+}
+
+QString M2V_GYB_READ::formatName() const
 {
     return "GYB bank";
 }
 
-QString M2V_GYB::formatExtensionMask() const
+BankFormats M2V_GYB_READ::formatId() const
 {
-    return "*.gyb";
+    return BankFormats::FORMAT_M2V_GYB_READ;
 }
 
-BankFormats M2V_GYB::formatId() const
+/*
+ * GYB file writer v1
+ */
+
+FfmtErrCode M2V_GYB_WRITEv1::saveFile(QString filePath, FmBank &bank)
 {
-    return BankFormats::FORMAT_M2V_GYB;
+    QFile file(filePath);
+
+    if(!file.open(QIODevice::WriteOnly))
+        return FfmtErrCode::ERR_NOFILE;
+
+    uint8_t version = 1;
+    return saveFileVersion1Or2(file, bank, version);
+}
+
+int M2V_GYB_WRITEv1::formatCaps() const
+{
+    return (int)FormatCaps::FORMAT_CAPS_SAVE;
+}
+
+QString M2V_GYB_WRITEv1::formatName() const
+{
+    return "GYB bank version 1";
+}
+
+BankFormats M2V_GYB_WRITEv1::formatId() const
+{
+    return BankFormats::FORMAT_M2V_GYB_WRITEv1;
+}
+
+/*
+ * GYB file writer v2
+ */
+
+FfmtErrCode M2V_GYB_WRITEv2::saveFile(QString filePath, FmBank &bank)
+{
+    QFile file(filePath);
+
+    if(!file.open(QIODevice::WriteOnly))
+        return FfmtErrCode::ERR_NOFILE;
+
+    uint8_t version = 2;
+    return saveFileVersion1Or2(file, bank, version);
+}
+
+int M2V_GYB_WRITEv2::formatCaps() const
+{
+    return (int)FormatCaps::FORMAT_CAPS_SAVE;
+}
+
+QString M2V_GYB_WRITEv2::formatName() const
+{
+    return "GYB bank version 2";
+}
+
+BankFormats M2V_GYB_WRITEv2::formatId() const
+{
+    return BankFormats::FORMAT_M2V_GYB_WRITEv2;
+}
+
+/*
+ * GYB file writer v3
+ */
+
+FfmtErrCode M2V_GYB_WRITEv3::saveFile(QString filePath, FmBank &bank)
+{
+    QFile file(filePath);
+
+    if(!file.open(QIODevice::WriteOnly))
+        return FfmtErrCode::ERR_NOFILE;
+
+    return saveFileVersion3(file, bank);
+}
+
+int M2V_GYB_WRITEv3::formatCaps() const
+{
+    return (int)FormatCaps::FORMAT_CAPS_SAVE;
+}
+
+QString M2V_GYB_WRITEv3::formatName() const
+{
+    return "GYB bank version 3";
+}
+
+BankFormats M2V_GYB_WRITEv3::formatId() const
+{
+    return BankFormats::FORMAT_M2V_GYB_WRITEv3;
 }
