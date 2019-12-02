@@ -178,9 +178,156 @@ FfmtErrCode Basic_M2V_GYB::loadFileVersion1Or2(QFile &file, FmBank &bank, uint8_
 
 FfmtErrCode Basic_M2V_GYB::loadFileVersion3(QFile &file, FmBank &bank)
 {
-    //TODO: implement me version 3
-    
-    return FfmtErrCode::ERR_BADFORMAT;
+    uint8_t header[16];
+    if(file.read(char_p(header), 16) != 16)
+        return FfmtErrCode::ERR_BADFORMAT;
+
+    bank.setRegLFO(header[3]);
+
+    const uint32_t offset_banks = toUint32LE(&header[8]);
+    const uint32_t offset_maps = toUint32LE(&header[12]);
+
+    //////////////////////////
+    // (1) Instrument Count //
+    //////////////////////////
+
+    // excursion into the banks part, in order to get the instrument count
+    uint16_t inst_count;
+    if (!file.seek(offset_banks) || file.read(char_p(&inst_count), 2) != 2)
+        return FfmtErrCode::ERR_BADFORMAT;
+    inst_count = toUint16LE((uint8_t *)&inst_count);
+
+    /////////////////////////
+    // (2) Instrument Maps //
+    /////////////////////////
+
+    if(!file.seek(offset_maps))
+        return FfmtErrCode::ERR_BADFORMAT;
+
+    // collect mapping information of instruments, in relation with their GYB index
+    struct InstMappingInfo {
+        bool isdrum;
+        std::list<FmBank::Instrument *> targets;
+        InstMappingInfo() : isdrum(false) {}
+    };
+
+    std::vector<InstMappingInfo> mapInfo(inst_count);
+
+    for(unsigned nth_map = 0; nth_map < 2; ++nth_map)
+    {
+        bool isdrum = nth_map == 1;
+
+        for(unsigned gm = 0; gm < 128; ++gm)
+        {
+            uint16_t sub_entry_count = 0;
+            if (file.read(char_p(&sub_entry_count), 2) != 2)
+                return FfmtErrCode::ERR_BADFORMAT;
+            sub_entry_count = toUint16LE((uint8_t *)&sub_entry_count);
+
+            for(unsigned nth_ent = 0; nth_ent < sub_entry_count; ++ nth_ent)
+            {
+                uint8_t ent_data[4];
+                if (file.read(char_p(ent_data), 4) != 4)
+                    return FfmtErrCode::ERR_BADFORMAT;
+
+                uint8_t msb = ent_data[0];
+                uint8_t lsb = ent_data[1];
+                uint16_t inst_index = toUint16LE(&ent_data[2]);
+
+                FmBank::Instrument *midi_bank_insts = nullptr;
+                bank.createBank(msb, lsb, isdrum, nullptr, &midi_bank_insts);
+
+                InstMappingInfo &info = mapInfo[inst_index];
+                info.isdrum = isdrum;
+                info.targets.push_back(&midi_bank_insts[gm]);
+            }
+        }
+    }
+
+    //////////////////////////
+    // (3) Instrument Banks //
+    //////////////////////////
+
+    // reposition and skip count
+    if (!file.seek(offset_banks + 2))
+        return FfmtErrCode::ERR_BADFORMAT;
+
+    for(unsigned nth_inst = 0; nth_inst < inst_count; ++nth_inst)
+    {
+        FmBank::Instrument inst = FmBank::emptyInst();
+        InstMappingInfo &info = mapInfo[nth_inst];
+
+        uint32_t offset_inst = (uint32_t)file.pos();
+
+        uint16_t inst_size;
+        if (file.read(char_p(&inst_size), 2) != 2)
+            return FfmtErrCode::ERR_BADFORMAT;
+        inst_size = toUint16LE((uint8_t *)&inst_size);
+
+        uint8_t idata[32];
+        if (file.read(char_p(idata), 32) != 32)
+            return FfmtErrCode::ERR_BADFORMAT;
+
+        for(unsigned op_index = 0; op_index < 4; ++op_index)
+        {
+            const unsigned opnum[4] = {OPERATOR1_HR, OPERATOR3_HR, OPERATOR2_HR, OPERATOR4_HR};
+            unsigned op = opnum[op_index];
+
+            inst.setRegDUMUL(op, idata[0 + op_index]);
+            inst.setRegLevel(op, idata[4 + op_index]);
+            inst.setRegRSAt(op, idata[8 + op_index]);
+            inst.setRegAMD1(op, idata[12 + op_index]);
+            inst.setRegD2(op, idata[16 + op_index]);
+            inst.setRegSysRel(op, idata[20 + op_index]);
+            inst.setRegSsgEg(op, idata[24 + op_index]);
+        }
+        inst.setRegFbAlg(idata[28]);
+        inst.setRegLfoSens(idata[29]);
+
+        uint8_t transposeOrKey = idata[30];
+        if(!info.isdrum)
+            inst.note_offset1 = static_cast<int16_t>(-static_cast<int8_t>(transposeOrKey));
+        else
+            inst.percNoteNum = transposeOrKey & 127;
+
+        uint8_t extraBits = idata[31];
+        if(extraBits & 1)
+        {
+            int8_t chord_notes[255];
+            uint8_t chord_note_count;
+
+            if(file.read(char_p(&chord_note_count), 1) != 1 ||
+               file.read(char_p(chord_notes), chord_note_count) != chord_note_count)
+                return FfmtErrCode::ERR_BADFORMAT;
+
+            /* ignored */
+        }
+
+        char name[256];
+        uint8_t name_length;
+
+        if(file.read(char_p(&name_length), 1) != 1 ||
+           file.read(name, name_length) != name_length)
+            return FfmtErrCode::ERR_BADFORMAT;
+
+        name[name_length] = '\0';
+        strncpy(inst.name, name, 32);
+
+        // copy it into bank slots (can be multiple)
+        std::list<FmBank::Instrument *> &target_list = mapInfo[nth_inst].targets;
+        for(std::list<FmBank::Instrument *>::iterator it = target_list.begin(),
+                end = target_list.end(); it != end; ++it)
+        {
+            FmBank::Instrument *target = *it;
+            memcpy(target, &inst, sizeof(FmBank::Instrument));
+        }
+
+        // next
+        if (!file.seek(offset_inst + inst_size))
+            return FfmtErrCode::ERR_BADFORMAT;
+    }
+
+    return FfmtErrCode::ERR_OK;
 }
 
 FfmtErrCode Basic_M2V_GYB::saveFileVersion1Or2(QFile &file, FmBank &bank, uint8_t version)
