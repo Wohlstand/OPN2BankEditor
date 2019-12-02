@@ -210,7 +210,7 @@ FfmtErrCode Basic_M2V_GYB::loadFileVersion3(QFile &file, FmBank &bank)
     // collect mapping information of instruments, in relation with their GYB index
     struct InstMappingInfo {
         bool isdrum;
-        std::list<FmBank::Instrument *> targets;
+        std::list<size_t> inst_slots;
         InstMappingInfo() : isdrum(false) {}
     };
 
@@ -258,7 +258,12 @@ FfmtErrCode Basic_M2V_GYB::loadFileVersion3(QFile &file, FmBank &bank)
 
                 InstMappingInfo &info = mapInfo[inst_index];
                 info.isdrum = isdrum;
-                info.targets.push_back(&midi_bank_insts[gm]);
+
+                FmBank::Instrument *target = &midi_bank_insts[gm];
+
+                size_t slot = std::distance(
+                    (!isdrum) ? bank.Ins_Melodic : bank.Ins_Percussion, target);
+                info.inst_slots.push_back(slot);
             }
         }
     }
@@ -275,6 +280,7 @@ FfmtErrCode Basic_M2V_GYB::loadFileVersion3(QFile &file, FmBank &bank)
     {
         FmBank::Instrument inst = FmBank::emptyInst();
         InstMappingInfo &info = mapInfo[nth_inst];
+        bool isdrum = info.isdrum;
 
         uint32_t offset_inst = (uint32_t)file.pos();
 
@@ -304,7 +310,7 @@ FfmtErrCode Basic_M2V_GYB::loadFileVersion3(QFile &file, FmBank &bank)
         inst.setRegLfoSens(idata[29]);
 
         uint8_t transposeOrKey = idata[30];
-        if(!info.isdrum)
+        if(!isdrum)
             inst.note_offset1 = static_cast<int16_t>(-static_cast<int8_t>(transposeOrKey));
         else
             inst.percNoteNum = transposeOrKey & 127;
@@ -333,12 +339,15 @@ FfmtErrCode Basic_M2V_GYB::loadFileVersion3(QFile &file, FmBank &bank)
         strncpy(inst.name, name, 32);
 
         // copy it into bank slots (can be multiple)
-        std::list<FmBank::Instrument *> &target_list = mapInfo[nth_inst].targets;
-        for(std::list<FmBank::Instrument *>::iterator it = target_list.begin(),
-                end = target_list.end(); it != end; ++it)
+        FmBank::Instrument *inst_list = (!isdrum) ?
+            bank.Ins_Melodic : bank.Ins_Percussion;
+
+        std::list<size_t> &slot_list = mapInfo[nth_inst].inst_slots;
+        for(std::list<size_t>::iterator it = slot_list.begin(),
+                end = slot_list.end(); it != end; ++it)
         {
-            FmBank::Instrument *target = *it;
-            memcpy(target, &inst, sizeof(FmBank::Instrument));
+            size_t inst_slot = *it;
+            memcpy(&inst_list[inst_slot], &inst, sizeof(FmBank::Instrument));
         }
 
         // next
