@@ -17,11 +17,13 @@
  */
 
 #include "format_m2v_gyb.h"
+#include "format_m2v_gyb_checksum.h"
 #include "../common.h"
 
 #include <QSet>
 #include <QFileInfo>
 #include <QByteArray>
+#include <QBuffer>
 #include <algorithm>
 
 QString Basic_M2V_GYB::formatExtensionMask() const
@@ -360,6 +362,36 @@ FfmtErrCode Basic_M2V_GYB::loadFileVersion3(QFile &file, FmBank &bank)
 
 FfmtErrCode Basic_M2V_GYB::saveFileVersion1Or2(QFile &file, FmBank &bank, uint8_t version)
 {
+    // save first into a byte array
+    QByteArray bytes;
+    bytes.reserve(64 * 1024);
+    {
+        QBuffer datastream(&bytes);
+        datastream.open(QBuffer::WriteOnly);
+
+        FfmtErrCode err = saveFileVersion1Or2FakeChecksum(datastream, bank, version);
+        if(err != FfmtErrCode::ERR_OK)
+            return err;
+    }
+
+    uint8_t *gybdata = (uint8_t *)bytes.data();
+    unsigned gybsize = bytes.size();
+
+    // compute the checksum, and apply
+    uint8_t *checksum = gybdata + gybsize - 4;
+    *(uint32_t *)checksum = CalcGYBChecksum(gybsize, gybdata);
+    // note: converted back and forth between uint32_t and bytes.. endian will be correct
+
+    // finally, save to file
+    file.write((char *)gybdata, gybsize);
+    if(!file.flush())
+        return FfmtErrCode::ERR_NOFILE;
+
+    return FfmtErrCode::ERR_OK;
+}
+
+FfmtErrCode Basic_M2V_GYB::saveFileVersion1Or2FakeChecksum(QIODevice &file, FmBank &bank, uint8_t version)
+{
     FmBank::Instrument blank_ins = FmBank::emptyInst();
     blank_ins.is_blank = true;
     FmBank::Instrument blank_ins_list[128];
@@ -476,9 +508,6 @@ FfmtErrCode Basic_M2V_GYB::saveFileVersion1Or2(QFile &file, FmBank &bank, uint8_
     // write fake checksum
     uint8_t cs[4] = {0, 0, 0, 0};
     file.write(char_p(cs), sizeof(cs));
-
-    if(!file.flush())
-        return FfmtErrCode::ERR_NOFILE;
 
     return FfmtErrCode::ERR_OK;
 }

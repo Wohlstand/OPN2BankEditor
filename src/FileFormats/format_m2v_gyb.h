@@ -22,6 +22,7 @@
 #include "ffmt_base.h"
 
 class QFile;
+class QIODevice;
 
 /**
  * @brief Base class of GYB File Format readers and writers
@@ -39,6 +40,9 @@ protected:
 
     FfmtErrCode saveFileVersion1Or2(QFile &file, FmBank &bank, uint8_t version);
     FfmtErrCode saveFileVersion3(QFile &file, FmBank &bank);
+
+private:
+    FfmtErrCode saveFileVersion1Or2FakeChecksum(QIODevice &file, FmBank &bank, uint8_t version);
 };
 
 /**
