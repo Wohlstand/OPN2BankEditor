@@ -115,7 +115,7 @@ FfmtErrCode Basic_M2V_GYB::loadFileVersion1Or2(QFile &file, FmBank &bank, uint8_
         }
         ins->setRegFbAlg(idata[28]);
 
-        if (version == 2)
+        if(version == 2)
             ins->setRegLfoSens(idata[29]);
 
         uint8_t transposeOrKey = idata[(version == 2) ? 30 : 29];
@@ -151,7 +151,7 @@ FfmtErrCode Basic_M2V_GYB::loadFileVersion1Or2(QFile &file, FmBank &bank, uint8_
         // if cannot be assigned, drop
         if(gm == ~0u)
         {
-            if (!file.seek(file.pos() + text_size))
+            if(!file.seek(file.pos() + text_size))
                 return FfmtErrCode::ERR_BADFORMAT;
             continue;  // not assigned
         }
@@ -169,7 +169,7 @@ FfmtErrCode Basic_M2V_GYB::loadFileVersion1Or2(QFile &file, FmBank &bank, uint8_
         if(file.read(ins->name, text_size) != text_size)
             return FfmtErrCode::ERR_BADFORMAT;
 
-        if (!file.seek(file.pos() + text_skip))
+        if(!file.seek(file.pos() + text_skip))
             return FfmtErrCode::ERR_BADFORMAT;
     }
 
@@ -193,7 +193,7 @@ FfmtErrCode Basic_M2V_GYB::loadFileVersion3(QFile &file, FmBank &bank)
 
     // excursion into the banks part, in order to get the instrument count
     uint16_t inst_count;
-    if (!file.seek(offset_banks) || file.read(char_p(&inst_count), 2) != 2)
+    if(!file.seek(offset_banks) || file.read(char_p(&inst_count), 2) != 2)
         return FfmtErrCode::ERR_BADFORMAT;
     inst_count = toUint16LE((uint8_t *)&inst_count);
 
@@ -220,14 +220,14 @@ FfmtErrCode Basic_M2V_GYB::loadFileVersion3(QFile &file, FmBank &bank)
         for(unsigned gm = 0; gm < 128; ++gm)
         {
             uint16_t sub_entry_count = 0;
-            if (file.read(char_p(&sub_entry_count), 2) != 2)
+            if(file.read(char_p(&sub_entry_count), 2) != 2)
                 return FfmtErrCode::ERR_BADFORMAT;
             sub_entry_count = toUint16LE((uint8_t *)&sub_entry_count);
 
             for(unsigned nth_ent = 0; nth_ent < sub_entry_count; ++ nth_ent)
             {
                 uint8_t ent_data[4];
-                if (file.read(char_p(ent_data), 4) != 4)
+                if(file.read(char_p(ent_data), 4) != 4)
                     return FfmtErrCode::ERR_BADFORMAT;
 
                 uint8_t msb = ent_data[0];
@@ -249,7 +249,7 @@ FfmtErrCode Basic_M2V_GYB::loadFileVersion3(QFile &file, FmBank &bank)
     //////////////////////////
 
     // reposition and skip count
-    if (!file.seek(offset_banks + 2))
+    if(!file.seek(offset_banks + 2))
         return FfmtErrCode::ERR_BADFORMAT;
 
     for(unsigned nth_inst = 0; nth_inst < inst_count; ++nth_inst)
@@ -260,12 +260,12 @@ FfmtErrCode Basic_M2V_GYB::loadFileVersion3(QFile &file, FmBank &bank)
         uint32_t offset_inst = (uint32_t)file.pos();
 
         uint16_t inst_size;
-        if (file.read(char_p(&inst_size), 2) != 2)
+        if(file.read(char_p(&inst_size), 2) != 2)
             return FfmtErrCode::ERR_BADFORMAT;
         inst_size = toUint16LE((uint8_t *)&inst_size);
 
         uint8_t idata[32];
-        if (file.read(char_p(idata), 32) != 32)
+        if(file.read(char_p(idata), 32) != 32)
             return FfmtErrCode::ERR_BADFORMAT;
 
         for(unsigned op_index = 0; op_index < 4; ++op_index)
@@ -323,7 +323,7 @@ FfmtErrCode Basic_M2V_GYB::loadFileVersion3(QFile &file, FmBank &bank)
         }
 
         // next
-        if (!file.seek(offset_inst + inst_size))
+        if(!file.seek(offset_inst + inst_size))
             return FfmtErrCode::ERR_BADFORMAT;
     }
 
@@ -404,7 +404,7 @@ FfmtErrCode Basic_M2V_GYB::saveFileVersion1Or2(QFile &file, FmBank &bank, uint8_
         const FmBank::Instrument *ins = (!isdrum) ?
             melo_entry[i] : drum_entry[i - melo_entry_count];
 
-        for (unsigned op_index = 0; op_index < 4; ++op_index)
+        for(unsigned op_index = 0; op_index < 4; ++op_index)
         {
             const unsigned opnum[4] = {OPERATOR1_HR, OPERATOR3_HR, OPERATOR2_HR, OPERATOR4_HR};
             unsigned op = opnum[op_index];
@@ -459,7 +459,7 @@ FfmtErrCode Basic_M2V_GYB::saveFileVersion3(QFile &file, FmBank &bank)
 {
     //TODO: implement me version 3
     
-    return FfmtErrCode::ERR_BADFORMAT;
+    return FfmtErrCode::ERR_NOT_IMLEMENTED;
 }
 
 /*

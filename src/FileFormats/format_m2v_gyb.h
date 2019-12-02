@@ -67,7 +67,7 @@ public:
 };
 
 /**
- * @brief Writer of GYB File Format, version 1
+ * @brief Writer of GYB File Format, version 2
  */
 class M2V_GYB_WRITEv2 final : public Basic_M2V_GYB
 {
@@ -80,7 +80,7 @@ public:
 
 
 /**
- * @brief Writer of GYB File Format, version 1
+ * @brief Writer of GYB File Format, version 3
  */
 class M2V_GYB_WRITEv3 final : public Basic_M2V_GYB
 {
