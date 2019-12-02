@@ -728,7 +728,7 @@ FfmtErrCode M2V_GYB_READ::loadFile(QString filePath, FmBank &bank)
     case 3:
         return loadFileVersion3(file, bank);
     default:
-        return FfmtErrCode::ERR_BADFORMAT;
+        return FfmtErrCode::ERR_UNSUPPORTED_FORMAT;
     }
 }
 
