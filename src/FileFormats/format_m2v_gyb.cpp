@@ -182,6 +182,9 @@ FfmtErrCode Basic_M2V_GYB::loadFileVersion3(QFile &file, FmBank &bank)
     if(file.read(char_p(header), 16) != 16)
         return FfmtErrCode::ERR_BADFORMAT;
 
+    bank.Ins_Melodic_box.fill(FmBank::blankInst());
+    bank.Ins_Percussion_box.fill(FmBank::blankInst());
+
     bank.setRegLFO(header[3]);
 
     const uint32_t offset_banks = toUint32LE(&header[8]);
@@ -473,9 +476,207 @@ FfmtErrCode Basic_M2V_GYB::saveFileVersion1Or2(QFile &file, FmBank &bank, uint8_
 
 FfmtErrCode Basic_M2V_GYB::saveFileVersion3(QFile &file, FmBank &bank)
 {
-    //TODO: implement me version 3
-    
-    return FfmtErrCode::ERR_NOT_IMLEMENTED;
+
+    //////////////////////////////////////////
+    // (1) Convert instruments and mappings //
+    //////////////////////////////////////////
+
+    // count of instrument slots in GYB file
+    unsigned gyb_instrument_count = 0;
+
+    // maximum instrument count (15 bits, high bit reserved)
+    unsigned gyb_instrument_max = 32768;
+
+    // hashtable for duplicate management
+    QHash<QByteArray, unsigned> gyb_index_of_idata;
+
+    // linear storage of temporary GYB instruments
+    std::vector<const QByteArray *> gyb_instruments;
+
+    // collected mapping info
+    struct GybMapping {
+        struct Entry { uint8_t msb; uint8_t lsb; uint16_t index_and_drumbit; };
+        std::list<Entry> entry;
+    };
+    GybMapping melo_inst_map[128];
+    GybMapping drum_inst_map[128];
+
+    for(unsigned nth_bank = 0,
+            num_melo_banks = bank.Banks_Melodic.size(),
+            num_drum_banks = bank.Banks_Percussion.size(),
+            num_total_banks = num_melo_banks + num_drum_banks;
+        nth_bank < num_total_banks; ++nth_bank)
+    {
+        bool isdrum = nth_bank >= num_melo_banks;
+
+        const FmBank::Instrument *inst_list = (!isdrum) ?
+            &bank.Ins_Melodic[nth_bank * 128] :
+            &bank.Ins_Percussion[(nth_bank - num_melo_banks) * 128];
+
+        const FmBank::MidiBank &midi_bank = (!isdrum) ?
+            bank.Banks_Melodic[nth_bank] :
+            bank.Banks_Percussion[nth_bank - num_melo_banks];
+
+        for(unsigned gm = 0; gm < 128; ++gm)
+        {
+            const FmBank::Instrument &inst = inst_list[gm];
+
+            if(inst.is_blank)
+                continue;
+
+            uint8_t name_length = (uint8_t)strlen(inst.name);
+
+            QByteArray idata;
+            idata.reserve(128);
+
+            // instrument size (fill later)
+            idata.push_back('\0');
+            idata.push_back('\0');
+
+            // write YM registers
+            uint8_t ymdata[30];
+            for(unsigned op_index = 0; op_index < 4; ++op_index)
+            {
+                const unsigned opnum[4] = {OPERATOR1_HR, OPERATOR3_HR, OPERATOR2_HR, OPERATOR4_HR};
+                unsigned op = opnum[op_index];
+
+                ymdata[0 + op_index] = inst.getRegDUMUL(op);
+                ymdata[4 + op_index] = inst.getRegLevel(op);
+                ymdata[8 + op_index] = inst.getRegRSAt(op);
+                ymdata[12 + op_index] = inst.getRegAMD1(op);
+                ymdata[16 + op_index] = inst.getRegD2(op);
+                ymdata[20 + op_index] = inst.getRegSysRel(op);
+                ymdata[24 + op_index] = inst.getRegSsgEg(op);
+            }
+            ymdata[28] = inst.getRegFbAlg();
+            ymdata[29] = inst.getRegLfoSens();
+            idata.append((char *)ymdata, 30);
+
+            // key
+            uint8_t transposeOrKey;
+            if(!isdrum)
+                transposeOrKey = static_cast<uint8_t>(static_cast<int8_t>(-inst.note_offset1));
+            else
+                transposeOrKey = inst.percNoteNum;
+            idata.push_back(transposeOrKey);
+
+            // extra data (none)
+            idata.push_back('\0');
+
+            // name
+            idata.push_back(name_length);
+            idata.append(inst.name, name_length);
+
+            // write instrument size
+            fromUint16LE((uint16_t)idata.size(), (uint8_t *)idata.data());
+
+            // -- instrument done -- //
+
+            // insert, only if we don't have it already
+            unsigned index = gyb_index_of_idata.value(idata, ~0u);
+            if(index == ~0u && gyb_instrument_count < gyb_instrument_max)
+            {
+                index = gyb_instrument_count++;
+                gyb_index_of_idata.insert(idata, index);
+            }
+
+            if(index != ~0u)
+            {
+                GybMapping &inst_map = ((!isdrum) ? melo_inst_map : drum_inst_map)[gm];
+
+                GybMapping::Entry entry;
+                entry.msb = midi_bank.msb & 127;
+                entry.lsb = midi_bank.lsb & 127;
+                entry.index_and_drumbit = index | (isdrum << 15);
+
+                inst_map.entry.push_back(entry);
+            }
+        }
+    }
+
+    gyb_instruments.resize(gyb_instrument_count);
+
+    for(QHash<QByteArray, unsigned>::iterator it = gyb_index_of_idata.begin(),
+             end = gyb_index_of_idata.end(); it != end; ++it)
+    {
+        gyb_instruments[it.value()] = &it.key();
+    }
+
+    ////////////////////
+    // (2) Write file //
+    ////////////////////
+
+    uint8_t temp16LE[2];
+    uint8_t temp32LE[4];
+
+    const char magic[3] = {26, 12, 3};
+    file.write(magic, 3);
+
+    file.putChar(bank.getRegLFO());
+
+    // file offsets (fill later)
+    for(unsigned i = 0; i < 12; ++i)
+        file.putChar('\0');
+
+    // write instrument bank
+    const uint32_t offset_bank = (uint32_t)file.pos();
+
+    fromUint16LE(gyb_instrument_count, temp16LE);
+    file.write(char_p(temp16LE), 2);
+    for(unsigned i = 0; i < gyb_instrument_count; ++i)
+    {
+        const QByteArray &idata = *gyb_instruments[i];
+        file.write(idata);
+    }
+
+    // write instrument maps
+    const uint32_t offset_maps = (uint32_t)file.pos();
+
+    for(unsigned nth_map = 0; nth_map < 2; ++nth_map)
+    {
+        bool isdrum = nth_map == 1;
+
+        const GybMapping *inst_map = (!isdrum) ? melo_inst_map : drum_inst_map;
+
+        for(unsigned gm = 0; gm < 128; ++gm)
+        {
+            const GybMapping &inst_map_this_gm = inst_map[gm];
+            uint16_t count = (uint16_t)inst_map_this_gm.entry.size();
+
+            fromUint16LE(count, temp16LE);
+            file.write(char_p(temp16LE), 2);
+
+            for(std::list<GybMapping::Entry>::const_iterator it = inst_map_this_gm.entry.begin(),
+                end = inst_map_this_gm.entry.end(); it != end; ++it)
+            {
+                file.write(char_p(&it->msb), 1);
+                file.write(char_p(&it->lsb), 1);
+                fromUint16LE(it->index_and_drumbit, temp16LE);
+                file.write(char_p(temp16LE), 2);
+            }
+        }
+    }
+
+    const uint32_t offset_end = (uint32_t)file.pos();
+
+    if(!file.flush())
+        return FfmtErrCode::ERR_NOFILE;
+
+    // write file offsets
+    if (!file.seek(4))
+        return FfmtErrCode::ERR_NOFILE;
+
+    fromUint32LE(offset_end, temp32LE);
+    file.write(char_p(temp32LE), 4);
+    fromUint32LE(offset_bank, temp32LE);
+    file.write(char_p(temp32LE), 4);
+    fromUint32LE(offset_maps, temp32LE);
+    file.write(char_p(temp32LE), 4);
+
+    if(!file.flush())
+        return FfmtErrCode::ERR_NOFILE;
+
+    return FfmtErrCode::ERR_OK;
 }
 
 /*
