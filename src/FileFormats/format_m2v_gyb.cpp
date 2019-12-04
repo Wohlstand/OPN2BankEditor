@@ -102,10 +102,10 @@ FfmtErrCode Basic_M2V_GYB::loadFileVersion1Or2(QFile &file, FmBank &bank, uint8_
 
         ins->is_blank = false;
 
-        for(unsigned op_index = 0; op_index < 4; ++op_index)
+        for(int op_index = 0; op_index < 4; ++op_index)
         {
-            const unsigned opnum[4] = {OPERATOR1_HR, OPERATOR3_HR, OPERATOR2_HR, OPERATOR4_HR};
-            unsigned op = opnum[op_index];
+            const int opnum[4] = {OPERATOR1_HR, OPERATOR3_HR, OPERATOR2_HR, OPERATOR4_HR};
+            int op = opnum[op_index];
 
             ins->setRegDUMUL(op, idata[0 + op_index]);
             ins->setRegLevel(op, idata[4 + op_index]);
@@ -263,8 +263,8 @@ FfmtErrCode Basic_M2V_GYB::loadFileVersion3(QFile &file, FmBank &bank)
 
                 FmBank::Instrument *target = &midi_bank_insts[gm];
 
-                size_t slot = std::distance(
-                    (!isdrum) ? bank.Ins_Melodic : bank.Ins_Percussion, target);
+                size_t slot = static_cast<size_t>(std::distance(
+                    (!isdrum) ? bank.Ins_Melodic : bank.Ins_Percussion, target));
                 info.inst_slots.push_back(slot);
             }
         }
@@ -295,10 +295,10 @@ FfmtErrCode Basic_M2V_GYB::loadFileVersion3(QFile &file, FmBank &bank)
         if(file.read(char_p(idata), 32) != 32)
             return FfmtErrCode::ERR_BADFORMAT;
 
-        for(unsigned op_index = 0; op_index < 4; ++op_index)
+        for(int op_index = 0; op_index < 4; ++op_index)
         {
-            const unsigned opnum[4] = {OPERATOR1_HR, OPERATOR3_HR, OPERATOR2_HR, OPERATOR4_HR};
-            unsigned op = opnum[op_index];
+            const int opnum[4] = {OPERATOR1_HR, OPERATOR3_HR, OPERATOR2_HR, OPERATOR4_HR};
+            int op = opnum[op_index];
 
             inst.setRegDUMUL(op, idata[0 + op_index]);
             inst.setRegLevel(op, idata[4 + op_index]);
@@ -375,7 +375,7 @@ FfmtErrCode Basic_M2V_GYB::saveFileVersion1Or2(QFile &file, FmBank &bank, uint8_
     }
 
     uint8_t *gybdata = (uint8_t *)bytes.data();
-    unsigned gybsize = bytes.size();
+    unsigned gybsize = static_cast<unsigned>(bytes.size());
 
     // compute the checksum, and apply
     uint8_t *checksum = gybdata + gybsize - 4;
@@ -400,13 +400,13 @@ FfmtErrCode Basic_M2V_GYB::saveFileVersion1Or2FakeChecksum(QIODevice &file, FmBa
     // find GM 1:1 melodics and drums
     const FmBank::Instrument *melo_ins_list = nullptr;
     const FmBank::Instrument *drum_ins_list = nullptr;
-    for(size_t i = 0, n = bank.Banks_Melodic.size(); !melo_ins_list && i < n; ++i)
+    for(int i = 0, n = bank.Banks_Melodic.size(); !melo_ins_list && i < n; ++i)
     {
         const FmBank::MidiBank &b = bank.Banks_Melodic[i];
         if(b.msb == 0 && b.lsb == 0)
             melo_ins_list = &bank.Ins_Melodic[i * 128];
     }
-    for(size_t i = 0, n = bank.Banks_Percussion.size(); !drum_ins_list && i < n; ++i)
+    for(int i = 0, n = bank.Banks_Percussion.size(); !drum_ins_list && i < n; ++i)
     {
         const FmBank::MidiBank &b = bank.Banks_Percussion[i];
         if(b.msb == 0 && b.lsb == 0)
@@ -464,10 +464,10 @@ FfmtErrCode Basic_M2V_GYB::saveFileVersion1Or2FakeChecksum(QIODevice &file, FmBa
         const FmBank::Instrument *ins = (!isdrum) ?
             melo_entry[i] : drum_entry[i - melo_entry_count];
 
-        for(unsigned op_index = 0; op_index < 4; ++op_index)
+        for(int op_index = 0; op_index < 4; ++op_index)
         {
-            const unsigned opnum[4] = {OPERATOR1_HR, OPERATOR3_HR, OPERATOR2_HR, OPERATOR4_HR};
-            unsigned op = opnum[op_index];
+            const int opnum[4] = {OPERATOR1_HR, OPERATOR3_HR, OPERATOR2_HR, OPERATOR4_HR};
+            int op = opnum[op_index];
 
             idata[0 + op_index] = ins->getRegDUMUL(op);
             idata[4 + op_index] = ins->getRegLevel(op);
@@ -539,7 +539,7 @@ FfmtErrCode Basic_M2V_GYB::saveFileVersion3(QFile &file, FmBank &bank)
     GybMapping melo_inst_map[128];
     GybMapping drum_inst_map[128];
 
-    for(unsigned nth_bank = 0,
+    for(int nth_bank = 0,
             num_melo_banks = bank.Banks_Melodic.size(),
             num_drum_banks = bank.Banks_Percussion.size(),
             num_total_banks = num_melo_banks + num_drum_banks;
@@ -573,10 +573,10 @@ FfmtErrCode Basic_M2V_GYB::saveFileVersion3(QFile &file, FmBank &bank)
 
             // write YM registers
             uint8_t ymdata[30];
-            for(unsigned op_index = 0; op_index < 4; ++op_index)
+            for(int op_index = 0; op_index < 4; ++op_index)
             {
-                const unsigned opnum[4] = {OPERATOR1_HR, OPERATOR3_HR, OPERATOR2_HR, OPERATOR4_HR};
-                unsigned op = opnum[op_index];
+                const int opnum[4] = {OPERATOR1_HR, OPERATOR3_HR, OPERATOR2_HR, OPERATOR4_HR};
+                int op = opnum[op_index];
 
                 ymdata[0 + op_index] = inst.getRegDUMUL(op);
                 ymdata[4 + op_index] = inst.getRegLevel(op);
@@ -596,13 +596,13 @@ FfmtErrCode Basic_M2V_GYB::saveFileVersion3(QFile &file, FmBank &bank)
                 transposeOrKey = static_cast<uint8_t>(static_cast<int8_t>(-inst.note_offset1));
             else
                 transposeOrKey = inst.percNoteNum;
-            idata.push_back(transposeOrKey);
+            idata.push_back(static_cast<char>(transposeOrKey));
 
             // extra data (none)
             idata.push_back('\0');
 
             // name
-            idata.push_back(name_length);
+            idata.push_back(static_cast<char>(name_length));
             idata.append(inst.name, name_length);
 
             // write instrument size
@@ -625,7 +625,7 @@ FfmtErrCode Basic_M2V_GYB::saveFileVersion3(QFile &file, FmBank &bank)
                 GybMapping::Entry entry;
                 entry.msb = midi_bank.msb & 127;
                 entry.lsb = midi_bank.lsb & 127;
-                entry.index_and_drumbit = index | (isdrum << 15);
+                entry.index_and_drumbit = static_cast<uint16_t>(index | static_cast<unsigned int>(isdrum << 15));
 
                 inst_map.entry.push_back(entry);
             }
@@ -650,7 +650,7 @@ FfmtErrCode Basic_M2V_GYB::saveFileVersion3(QFile &file, FmBank &bank)
     const char magic[3] = {26, 12, 3};
     file.write(magic, 3);
 
-    file.putChar(bank.getRegLFO());
+    file.putChar(static_cast<char>(bank.getRegLFO()));
 
     // file offsets (fill later)
     for(unsigned i = 0; i < 12; ++i)
@@ -659,7 +659,7 @@ FfmtErrCode Basic_M2V_GYB::saveFileVersion3(QFile &file, FmBank &bank)
     // write instrument bank
     const uint32_t offset_bank = (uint32_t)file.pos();
 
-    fromUint16LE(gyb_instrument_count, temp16LE);
+    fromUint16LE(static_cast<uint16_t>(gyb_instrument_count), temp16LE);
     file.write(char_p(temp16LE), 2);
     for(unsigned i = 0; i < gyb_instrument_count; ++i)
     {

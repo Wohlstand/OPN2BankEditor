@@ -28,7 +28,7 @@ static uint32_t CalcGYBChecksum(uint32_t FileSize, const uint8_t *FileData)
 
     ChkByt3 = 0;
     QSum = 0;
-    BytMask = 1 << (FileSize & 0x07);
+    BytMask = static_cast<uint8_t>(1 << (FileSize & 0x07));
     for(CurPos = 0x00; CurPos < FileSize; CurPos++)
     {
         if((FileData[CurPos] & BytMask) == BytMask)
@@ -36,7 +36,7 @@ static uint32_t CalcGYBChecksum(uint32_t FileSize, const uint8_t *FileData)
         QSum += FileData[CurPos];
     }
     InsCount = FileData[0x03] + FileData[0x04];    // Melody + Drum Instruments
-    ChkByt1 = (FileSize + QSum) % (InsCount + 1);
+    ChkByt1 = static_cast<uint8_t>((FileSize + QSum) % (InsCount + 1));
     QSum %= 999;
 
     ChkArr[0x00] = ChkByt2 + (QSum % 37);
