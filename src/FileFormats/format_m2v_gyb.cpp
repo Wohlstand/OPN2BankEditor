@@ -379,7 +379,7 @@ FfmtErrCode Basic_M2V_GYB::saveFileVersion1Or2(QFile &file, FmBank &bank, uint8_
 
     // compute the checksum, and apply
     uint8_t *checksum = gybdata + gybsize - 4;
-    *(uint32_t *)checksum = CalcGYBChecksum(gybsize, gybdata);
+    *(uint32_t *)checksum = CalcGYBChecksum(gybsize - 4, gybdata);
     // note: converted back and forth between uint32_t and bytes.. endian will be correct
 
     // finally, save to file
