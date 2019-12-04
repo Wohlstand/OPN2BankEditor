@@ -142,7 +142,7 @@ void fromSint16BE(int16_t in, uint8_t *arr)
     arr[0] = (in >> 8) & 0x00FF;
 }
 
-void fromUint32LE(int32_t in, uint8_t *arr)
+void fromUint32LE(uint32_t in, uint8_t *arr)
 {
     arr[0] = (in)     & 0x00FF;
     arr[1] = (in >> 8)  & 0x00FF;
