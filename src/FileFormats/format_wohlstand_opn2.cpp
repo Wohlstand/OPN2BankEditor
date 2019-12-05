@@ -348,7 +348,7 @@ tryAgain:
 
 int WohlstandOPN2::formatCaps() const
 {
-    return (int)FormatCaps::FORMAT_CAPS_EVERYTHING;
+    return (int)FormatCaps::FORMAT_CAPS_EVERYTHING|(int)FormatCaps::FORMAT_CAPS_NEEDS_MEASURE;
 }
 
 QString WohlstandOPN2::formatName() const
