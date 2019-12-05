@@ -496,7 +496,23 @@ bool BankEditor::openOrImportFile(QString filePath)
 
 bool BankEditor::saveBankFile(QString filePath, BankFormats format)
 {
-    if(format == BankFormats::FORMAT_WOHLSTAND_OPN2)
+    if(FmBankFormatFactory::hasCaps(format, (int)FormatCaps::FORMAT_CAPS_GM_BANK) &&
+        ((m_bank.Banks_Melodic.size() > 1) || (m_bank.Banks_Percussion.size() > 1))
+    )
+    {
+        int reply = QMessageBox::question(this,
+                                          tr("Save GeneralMIDI bank file"),
+                                          tr("Saving into '%1' format allows you to have "
+                                             "one melodic and one percussion banks only. "
+                                             "All extra banks will be ignored while saving into the file.\n\n"
+                                             "Do you want to continue file saving?")
+                                          .arg(FmBankFormatFactory::formatName(format)),
+                                          QMessageBox::Yes|QMessageBox::Cancel);
+        if(reply != QMessageBox::Yes)
+            return false;
+    }
+
+    if(FmBankFormatFactory::hasCaps(format, (int)FormatCaps::FORMAT_CAPS_NEEDS_MEASURE))
     {
         if(!m_measurer->doMeasurement(m_bank, m_bankBackup))
             return false;//Measurement was cancelled

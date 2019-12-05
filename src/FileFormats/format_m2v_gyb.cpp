@@ -793,7 +793,7 @@ FfmtErrCode M2V_GYB_WRITEv1::saveFile(QString filePath, FmBank &bank)
 
 int M2V_GYB_WRITEv1::formatCaps() const
 {
-    return (int)FormatCaps::FORMAT_CAPS_SAVE;
+    return (int)FormatCaps::FORMAT_CAPS_SAVE|(int)FormatCaps::FORMAT_CAPS_GM_BANK;
 }
 
 QString M2V_GYB_WRITEv1::formatName() const
@@ -823,7 +823,7 @@ FfmtErrCode M2V_GYB_WRITEv2::saveFile(QString filePath, FmBank &bank)
 
 int M2V_GYB_WRITEv2::formatCaps() const
 {
-    return (int)FormatCaps::FORMAT_CAPS_SAVE;
+    return (int)FormatCaps::FORMAT_CAPS_SAVE|(int)FormatCaps::FORMAT_CAPS_GM_BANK;
 }
 
 QString M2V_GYB_WRITEv2::formatName() const

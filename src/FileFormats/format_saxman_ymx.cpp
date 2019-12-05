@@ -192,7 +192,7 @@ FfmtErrCode Saxman_YMX::saveFile(QString filePath, FmBank &bank)
 
 int Saxman_YMX::formatCaps() const
 {
-    return (int)FormatCaps::FORMAT_CAPS_EVERYTHING;
+    return (int)FormatCaps::FORMAT_CAPS_EVERYTHING_GM;
 }
 
 QString Saxman_YMX::formatName() const
