@@ -9,8 +9,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>950</width>
-    <height>662</height>
+    <width>973</width>
+    <height>748</height>
    </rect>
   </property>
   <property name="focusPolicy">
@@ -128,7 +128,7 @@
                  <number>0</number>
                 </property>
                 <item>
-                 <widget class="QPushButton" name="bankRename">
+                 <widget class="QToolButton" name="bankRename">
                   <property name="maximumSize">
                    <size>
                     <width>25</width>
@@ -352,6 +352,9 @@
                 <enum>QFrame::Raised</enum>
                </property>
                <layout class="QHBoxLayout" name="horizontalLayout_4">
+                <property name="sizeConstraint">
+                 <enum>QLayout::SetMinimumSize</enum>
+                </property>
                 <property name="leftMargin">
                  <number>1</number>
                 </property>
@@ -653,11 +656,6 @@
                       </property>
                       <item row="0" column="0">
                        <widget class="QLabel" name="label_27">
-                        <property name="font">
-                         <font>
-                          <pointsize>8</pointsize>
-                         </font>
-                        </property>
                         <property name="toolTip">
                          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Fixed pitch note number&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Instrument always plays the same note.&lt;/p&gt;&lt;p&gt;Recommended usage for the percussion instruments. If value is 0 - fixed pitch mode is disabled.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                         </property>
@@ -762,6 +760,9 @@
                 <string>Operator 4</string>
                </property>
                <layout class="QVBoxLayout" name="verticalLayout_10">
+                <property name="sizeConstraint">
+                 <enum>QLayout::SetMinimumSize</enum>
+                </property>
                 <property name="leftMargin">
                  <number>1</number>
                 </property>
@@ -871,6 +872,9 @@
                 <string>Operator 2</string>
                </property>
                <layout class="QVBoxLayout" name="verticalLayout_7">
+                <property name="sizeConstraint">
+                 <enum>QLayout::SetMinimumSize</enum>
+                </property>
                 <property name="leftMargin">
                  <number>1</number>
                 </property>
@@ -901,6 +905,9 @@
                 <string>Operator 3</string>
                </property>
                <layout class="QVBoxLayout" name="verticalLayout_9">
+                <property name="sizeConstraint">
+                 <enum>QLayout::SetMinimumSize</enum>
+                </property>
                 <property name="leftMargin">
                  <number>1</number>
                 </property>
@@ -931,6 +938,9 @@
                 <string>Operator 1</string>
                </property>
                <layout class="QVBoxLayout" name="verticalLayout_8">
+                <property name="sizeConstraint">
+                 <enum>QLayout::SetMinimumSize</enum>
+                </property>
                 <property name="leftMargin">
                  <number>1</number>
                 </property>
@@ -1019,7 +1029,6 @@
             <property name="font">
              <font>
               <family>Monospace</family>
-              <pointsize>7</pointsize>
               <stylestrategy>NoAntialias</stylestrategy>
              </font>
             </property>
@@ -1043,7 +1052,7 @@
             <property name="font">
              <font>
               <family>Monospace</family>
-              <pointsize>7</pointsize>
+              <underline>true</underline>
              </font>
             </property>
             <property name="text">
@@ -1171,11 +1180,6 @@
              </item>
              <item>
               <widget class="QCheckBox" name="lfoEnable">
-               <property name="font">
-                <font>
-                 <pointsize>8</pointsize>
-                </font>
-               </property>
                <property name="toolTip">
                 <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;The LFO (Low frequency Oscillator)&lt;/span&gt; is used to distort the FM sound's amplitude and phase.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                </property>
@@ -1252,6 +1256,9 @@
              <set>Qt::AlignCenter</set>
             </property>
             <layout class="QVBoxLayout" name="verticalLayout_2">
+             <property name="sizeConstraint">
+              <enum>QLayout::SetMinimumSize</enum>
+             </property>
              <property name="leftMargin">
               <number>1</number>
              </property>
@@ -1273,12 +1280,6 @@
              </item>
              <item>
               <widget class="QSpinBox" name="noteToTest">
-               <property name="maximumSize">
-                <size>
-                 <width>60</width>
-                 <height>20</height>
-                </size>
-               </property>
                <property name="toolTip">
                 <string>Current note position (60 is a C of a first octave).
 Available from 0 to 127</string>
@@ -1293,12 +1294,6 @@ Available from 0 to 127</string>
              </item>
              <item>
               <widget class="QPushButton" name="testNote">
-               <property name="maximumSize">
-                <size>
-                 <width>16777215</width>
-                 <height>20</height>
-                </size>
-               </property>
                <property name="toolTip">
                 <string>Play a single note. Hold button to play sound, release button to off note.</string>
                </property>
@@ -1309,12 +1304,6 @@ Available from 0 to 127</string>
              </item>
              <item>
               <widget class="QPushButton" name="testMajor">
-               <property name="maximumSize">
-                <size>
-                 <width>16777215</width>
-                 <height>20</height>
-                </size>
-               </property>
                <property name="toolTip">
                 <string>Play a major triad chord relative to selected note. Hold button to play sound, release button to off note.</string>
                </property>
@@ -1325,12 +1314,6 @@ Available from 0 to 127</string>
              </item>
              <item>
               <widget class="QPushButton" name="testMinor">
-               <property name="maximumSize">
-                <size>
-                 <width>16777215</width>
-                 <height>20</height>
-                </size>
-               </property>
                <property name="toolTip">
                 <string>Play a minor triad chord relative to selected note. Hold button to play sound, release button to off note.</string>
                </property>
@@ -1341,12 +1324,6 @@ Available from 0 to 127</string>
              </item>
              <item>
               <widget class="QPushButton" name="testAugmented">
-               <property name="maximumSize">
-                <size>
-                 <width>16777215</width>
-                 <height>20</height>
-                </size>
-               </property>
                <property name="toolTip">
                 <string>Play a augmented triad chord relative to selected note. Hold button to play sound, release button to off note.</string>
                </property>
@@ -1357,12 +1334,6 @@ Available from 0 to 127</string>
              </item>
              <item>
               <widget class="QPushButton" name="testDiminished">
-               <property name="maximumSize">
-                <size>
-                 <width>16777215</width>
-                 <height>20</height>
-                </size>
-               </property>
                <property name="toolTip">
                 <string>Play a diminished triad chord relative to selected note. Hold button to play sound, release button to off note.</string>
                </property>
@@ -1373,12 +1344,6 @@ Available from 0 to 127</string>
              </item>
              <item>
               <widget class="QPushButton" name="testMajor7">
-               <property name="maximumSize">
-                <size>
-                 <width>16777215</width>
-                 <height>20</height>
-                </size>
-               </property>
                <property name="toolTip">
                 <string>Play a major seventh chord relative to selected note. Hold button to play sound, release button to off note.</string>
                </property>
@@ -1389,12 +1354,6 @@ Available from 0 to 127</string>
              </item>
              <item>
               <widget class="QPushButton" name="testMinor7">
-               <property name="maximumSize">
-                <size>
-                 <width>16777215</width>
-                 <height>20</height>
-                </size>
-               </property>
                <property name="toolTip">
                 <string>Play a minor seventh chord relative to selected note. Hold button to play sound, release button to off note.</string>
                </property>
@@ -1418,12 +1377,6 @@ Available from 0 to 127</string>
              </item>
              <item>
               <widget class="QPushButton" name="shutUp">
-               <property name="maximumSize">
-                <size>
-                 <width>16777215</width>
-                 <height>20</height>
-                </size>
-               </property>
                <property name="toolTip">
                 <string>Mute all playing/sustaining notes in all channels</string>
                </property>
@@ -1630,8 +1583,8 @@ Available from 0 to 127</string>
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>950</width>
-     <height>19</height>
+     <width>973</width>
+     <height>22</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -1988,7 +1941,7 @@ Available from 0 to 127</string>
   <customwidget>
    <class>Piano</class>
    <extends>QFrame</extends>
-   <header>src/piano.h</header>
+   <header>piano.h</header>
    <container>1</container>
   </customwidget>
   <customwidget>
