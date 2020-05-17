@@ -56,9 +56,9 @@ matrix:
         - qmake CONFIG-=debug CONFIG+=release
         - make -s -j 4
         - lrelease FMBankEdit.pro
-        - mkdir -p bin-release/opn2_bank_editor.app/Contents/Resources/translations/
-        - cp src/translations/*.qm bin-release/opn2_bank_editor.app/Contents/Resources/translations/
-        - cd bin-release; zip -r -X "../opn2_bank_editor-macos.zip" opn2_bank_editor.app; cd ..
+        - mkdir -p "bin-release/OPN2 Bank Editor.app/Contents/Resources/translations/"
+        - cp src/translations/*.qm "bin-release/OPN2 Bank Editor.app/Contents/Resources/translations/"
+        - cd bin-release; zip -r -X "../opn2_bank_editor-macos.zip" "OPN2 Bank Editor.app"; cd ..
         - cd utils/create-dmg; ./create-dmg.sh --volname "OPN2 Bank Editor" --window-size 800 600 --app-drop-link 450 320 ../../opn2_bank_editor-macos.dmg ../../bin-release; cd ../..
         - ./utils/ftp-upload.sh ./macosx/opn2-bank-editor/ ./opn2_bank_editor-macos.zip
         - ./utils/ftp-upload.sh ./macosx/opn2-bank-editor/ ./opn2_bank_editor-macos.dmg

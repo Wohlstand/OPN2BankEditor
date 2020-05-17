@@ -55,6 +55,8 @@ TEMPLATE = app
 TARGET = opn2_bank_editor
 INCLUDEPATH += $$PWD/src
 
+macx: TARGET = "OPN2 Bank Editor"
+
 android:{
     ARCH=android_arm
 } else {
