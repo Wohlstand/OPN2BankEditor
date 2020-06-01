@@ -22,7 +22,7 @@ copy "..\src\translations\*.qm" translations
 IF ERRORLEVEL 1 goto error
 cd ..
 
-"%SEVENZIP%\7z" a -tzip "opn2-bank-editor\opn2-bank-editor-dev-win32.zip" .\license.txt .\Specifications\WOPN-and-OPNI-Specification.txt .\Specifications\YM2612.pdf .\bin-release\* Bank_Examples
+"%SEVENZIP%\7z" a -tzip "opn2-bank-editor\opn2-bank-editor-dev-win32.zip" .\license.txt .\changelog.txt .\Specifications\WOPN-and-OPNI-Specification.txt .\Specifications\YM2612.pdf .\bin-release\* Bank_Examples
 
 goto quit
 :error
