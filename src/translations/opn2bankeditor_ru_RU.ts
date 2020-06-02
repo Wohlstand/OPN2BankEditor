@@ -360,13 +360,13 @@
     <message>
         <location filename="../bank_editor.ui" line="397"/>
         <source>Feedback</source>
-        <translation type="unfinished"></translation>
+        <translation>Обратная связь</translation>
     </message>
     <message>
         <location filename="../bank_editor.ui" line="710"/>
         <location filename="../bank_editor.ui" line="732"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Offset to one semi-tone (octave is 12 semi-tones)&lt;br/&gt;(0 is don&apos;t offset note. Value range is from -127 to 127). &lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Смещение на один полутон (октава состоит из 12 полутонов)&lt;br/&gt;(0 - не смешять ноту. Допускаются значения между -127 и 127). &lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="../bank_editor.ui" line="830"/>
@@ -376,7 +376,7 @@
     <message>
         <location filename="../bank_editor.ui" line="856"/>
         <source>Convert</source>
-        <translation type="unfinished"></translation>
+        <translation>Преобразовать</translation>
     </message>
     <message>
         <location filename="../bank_editor.ui" line="872"/>
@@ -817,19 +817,21 @@ Available from 0 to 127</source>
     <message>
         <location filename="../bank_editor.cpp" line="151"/>
         <source>Select format</source>
-        <translation type="unfinished"></translation>
+        <translation>Выбрать формат</translation>
     </message>
     <message>
         <location filename="../bank_editor.cpp" line="504"/>
         <source>Save GeneralMIDI bank file</source>
-        <translation type="unfinished"></translation>
+        <translation>Сохранить файл банка GeneralMIDI</translation>
     </message>
     <message>
         <location filename="../bank_editor.cpp" line="505"/>
         <source>Saving into &apos;%1&apos; format allows you to have one melodic and one percussion banks only. All extra banks will be ignored while saving into the file.
 
 Do you want to continue file saving?</source>
-        <translation type="unfinished"></translation>
+        <translation>Формат &quot;%1&quot; позволяет сохранить только один мелодический набор, либо один набор ударных в одном банке. Все дополнительные банки будут проигнорированы во время сохранения в файл.
+
+Продолжить сохранение файла?</translation>
     </message>
     <message>
         <location filename="../bank_editor.cpp" line="532"/>
@@ -1115,27 +1117,27 @@ Source code available on GitHub:
     <message>
         <location filename="../bank_editor.cpp" line="1862"/>
         <source>Copied %1 instrument text to the clipboard.</source>
-        <translation type="unfinished"></translation>
+        <translation>Текстовый инструмент %1 скопирован в буфер обмена.</translation>
     </message>
     <message>
         <location filename="../bank_editor.cpp" line="1874"/>
         <source>Could not load %1 instrument text.</source>
-        <translation type="unfinished"></translation>
+        <translation>Не удалось загрузить текстовый инструмент %1.</translation>
     </message>
     <message>
         <location filename="../bank_editor.cpp" line="1880"/>
         <source>Pasted %1 instrument text from the clipboard.</source>
-        <translation type="unfinished"></translation>
+        <translation>Вставлен текстовый инструмент %1 из буфера обмена.</translation>
     </message>
     <message>
         <location filename="../bank_editor.cpp" line="1902"/>
         <source>Copy to %1</source>
-        <translation type="unfinished"></translation>
+        <translation>Скопировать в %1</translation>
     </message>
     <message>
         <location filename="../bank_editor.cpp" line="1903"/>
         <source>Paste from %1</source>
-        <translation type="unfinished"></translation>
+        <translation>Вставить из %1</translation>
     </message>
 </context>
 <context>
@@ -1421,13 +1423,13 @@ If audio glitches occur, you should reset this setting to a higher value.</sourc
         <location filename="../operator_editor.ui" line="80"/>
         <location filename="../operator_editor.ui" line="217"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Primary Decay Rate.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Determines the diminishing time for the sound. The higher the value, the shorter the decay.&lt;/p&gt;&lt;p&gt;It&apos;s the initial steep amplitude decay rate.</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Первая скорость затухания&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Определяет время затухания звука при нажатии клавиши после достижения пиковой высоты вплоть до достижения &lt;b&gt;стабильного уровня&lt;/b&gt;. Чем больше значение, тем короче время затухания.</translation>
     </message>
     <message>
         <location filename="../operator_editor.ui" line="118"/>
         <location filename="../operator_editor.ui" line="194"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Sustain Level.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Determines the point at which the sound ceases to decay and changes to a sound having a constant level. The sustain level is expressed as a fraction of the maximum level. 0 is the softest and 15 is the loudest sustain level.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;html&gt;&lt;head&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot;font-weight:600&quot;&gt;Стабиль.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Определяет точку, при которой звук стабилизируется и звучит с постоянной громкостью. Стабиль следует за периодом затухания. Стабиль - это дробь от максимального уровня. 0 - самый тихий, и 15 - самый громкий уровень.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="../operator_editor.ui" line="121"/>
@@ -1496,13 +1498,13 @@ If audio glitches occur, you should reset this setting to a higher value.</sourc
         <location filename="../operator_editor.ui" line="358"/>
         <location filename="../operator_editor.ui" line="374"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:large; font-weight:600;&quot;&gt;Detune&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Detune gives small variations from the overall frequency × MUL. The MSB of DT1 is a primitive sign bit, and the two LSB’s are magnitude bits. &lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:large; font-weight:600;&quot;&gt;Тоновое смещение&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Тоновое смещение даёт небольшое число различных множителей частоты × MUL. Старший бит DT1 это простейший знаковый бит. Два младших бита - значение магнитуды.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="../operator_editor.ui" line="421"/>
         <location filename="../operator_editor.ui" line="449"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:large; font-weight:600;&quot;&gt;Rate Scale Level&lt;/span&gt;&lt;/p&gt;&lt;p&gt;A parameter that determines the degree to which the envelope execution speed increases according to the pitch. &lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:large; font-weight:600;&quot;&gt;Уровень масштабирования&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Это параметр, который определяет степень, при которой скорость огибающей увеличивается в зависимости от высоты тона.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:large; font-weight:600;&quot;&gt;Detune&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Detune gives small variations from the overall frequency × MUL. The MSB of DT1 is a primitive sign bit, and the two LSB’s are magnitude bits. See the next page for a diagram. &lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>

@@ -234,7 +234,7 @@
     <message>
         <location filename="../bank_editor.ui" line="397"/>
         <source>Feedback</source>
-        <translation type="unfinished"></translation>
+        <translation>Retour</translation>
     </message>
     <message>
         <location filename="../bank_editor.ui" line="710"/>
