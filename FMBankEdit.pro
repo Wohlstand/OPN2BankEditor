@@ -199,7 +199,9 @@ RESOURCES += \
 
 TRANSLATIONS += \
     src/translations/opn2bankeditor_fr_FR.ts \
-    src/translations/opn2bankeditor_ru_RU.ts
+    src/translations/opn2bankeditor_ru_RU.ts \
+    src/translations/opn2bankeditor_pl_PL.ts
+
 
 plots {
     SOURCES += src/delay_analysis.cpp
