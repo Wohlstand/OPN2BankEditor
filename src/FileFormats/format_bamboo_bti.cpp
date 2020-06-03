@@ -54,7 +54,7 @@ FfmtErrCode Bamboo_BTI::loadFileInst(QString filePath, FmBank::Instrument &inst,
 
     uint32_t file_ver = toUint32LE(temp);
 
-    if(file_ver < btVersion(1, 0, 0) || file_ver > btVersion(1, 2, 0))
+    if(file_ver < btVersion(1, 0, 0) || file_ver > btVersion(1, 4, 0))
         return FfmtErrCode::ERR_BADFORMAT;
 
     // - Instrument Section -
