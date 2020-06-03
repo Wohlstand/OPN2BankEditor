@@ -366,7 +366,7 @@
         <location filename="../bank_editor.ui" line="710"/>
         <location filename="../bank_editor.ui" line="732"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Offset to one semi-tone (octave is 12 semi-tones)&lt;br/&gt;(0 is don&apos;t offset note. Value range is from -127 to 127). &lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Смещение на один полутон (октава состоит из 12 полутонов)&lt;br/&gt;(0 - не смешять ноту. Допускаются значения между -127 и 127). &lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Смещение на один полутон (октава состоит из 12 полутонов)&lt;br/&gt;(0 - не смешять ноту. Допускаются значения между -127 и 127).&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="../bank_editor.ui" line="830"/>
