@@ -36,12 +36,12 @@
     <message>
         <location filename="../audio_config.ui" line="136"/>
         <source>If audio glitches occur, you should reset this setting to a higher value.</source>
-        <translation>Jeśli wystąpią usterki audio, należy zresetować to ustawienie do wyższej wartości.</translation>
+        <translation>Jeśli wystąpią  problemy z dźwiękiem, należy zresetować to ustawienie do wyższej wartości.</translation>
     </message>
     <message>
         <location filename="../audio_config.ui" line="162"/>
         <source>These settings will only become effective after restarting the software.</source>
-        <translation>Te ustawienia zaczną działać tylko po ponownym uruchomieniu oprogramowania.</translation>
+        <translation>Te ustawienia zaczną działać dopiero po ponownym uruchomieniu programu.</translation>
     </message>
     <message>
         <location filename="../audio_config.cpp" line="30"/>
@@ -103,7 +103,7 @@
     <message>
         <location filename="../bank_comparison.cpp" line="186"/>
         <source>(empty string)</source>
-        <translation>(pusta struna)</translation>
+        <translation>(pusty napis)</translation>
     </message>
     <message>
         <location filename="../bank_comparison.cpp" line="197"/>
@@ -118,7 +118,7 @@
     <message>
         <location filename="../bank_comparison.cpp" line="343"/>
         <source>&lt;Reserved %1&gt;</source>
-        <translation>&lt;Odwrócone %1&gt;</translation>
+        <translation>&lt;Zarezerwowany %1&gt;</translation>
     </message>
 </context>
 <context>
@@ -126,7 +126,7 @@
     <message>
         <location filename="../bank_editor.ui" line="23"/>
         <source>Bank editor for Yamaha OPN2 sound generator</source>
-        <translation>Edytor banku dla generatora dźwięków Yamaha OPN2</translation>
+        <translation>Edytor banków dla generatora dźwięku Yamaha OPN2</translation>
     </message>
     <message>
         <location filename="../bank_editor.ui" line="88"/>
@@ -183,11 +183,11 @@
         <location filename="../bank_editor.ui" line="394"/>
         <location filename="../bank_editor.ui" line="416"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Feedback Modulation Factor&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Feedback is the degree to which operator 1 feeds back into itself.</source>
-        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Współczynnik Modulacji Sprzężenia Zwrotnego&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Sprzężenie zwrotne to stopień, w jakim operator 1 wraca do siebie.</translation>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Współczynnik Modulacji Sprzężenia Zwrotnego&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Sprzężenie zwrotne to stopień, w jakim operator 1 zwraca część swojego sygnału.</translation>
     </message>
     <message>
         <source>Feedback 1</source>
-        <translation type="vanished">Sprzężenie zwrotne 1</translation>
+        <translation type="vanished">Sprzężenie zwrotne</translation>
     </message>
     <message>
         <location filename="../bank_editor.ui" line="426"/>
@@ -235,7 +235,7 @@
         <location filename="../bank_editor.ui" line="660"/>
         <location filename="../bank_editor.ui" line="682"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Fixed pitch note number&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Instrument always plays the same note.&lt;/p&gt;&lt;p&gt;Recommended usage for the percussion instruments. If value is 0 - fixed pitch mode is disabled.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Naprawiono numer nuty&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Instrument zawsze gra tę samą nutę.&lt;/p&gt;&lt;p&gt;Zalecane użycie instrumentów perkusyjnych. Jeśli wartość wynosi 0 - tryb stałej częstotliwości jest wyłączony.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Naprawiono numer nuty&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Instrument zawsze gra tę samą nutę.&lt;/p&gt;&lt;p&gt;Zalecane użycie dla instrumentów perkusyjnych. Jeśli wartość wynosi 0 - tryb stałej częstotliwości jest wyłączony.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="../bank_editor.ui" line="663"/>
@@ -243,8 +243,8 @@
         <translation>Numer nuty:</translation>
     </message>
     <message>
-        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Offset to one semi-tone (octave is 12 semi-tones)&lt;br/&gt;(0 is don&apos;t offset note. Value range from -127 to 127).&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; text-decoration: underline;&quot;&gt;In pair of 2-operator voices mode is an offset of the first voice&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation type="vanished">&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Przesunięcie do jednego półtonu (oktawa to 12 półtonów)&lt;br/&gt;(0 nie jest odsuniętą nutą. Zakres wartości od -127 do 127).&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; text-decoration: underline;&quot;&gt;W parze głosów 2-operatorowych jest to przesunięcie pierwszego głosu&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Offset to one semi-tone (octave is 12 semi-tones)&lt;br/&gt;(0 is don&apos;t offset note. Value range from -127 to 127).&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation type="vanished">&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Przesunięcie do jednego półtonu (oktawa to 12 półtonów)&lt;br/&gt;(0 nie jest przesuniętą nutą. Zakres wartości od -127 do 127).&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="../bank_editor.ui" line="397"/>
@@ -255,12 +255,12 @@
         <location filename="../bank_editor.ui" line="710"/>
         <location filename="../bank_editor.ui" line="732"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Offset to one semi-tone (octave is 12 semi-tones)&lt;br/&gt;(0 is don&apos;t offset note. Value range is from -127 to 127). &lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Przesunięcie do jednego półtonu (oktawa to 12 półtonów)&lt;br/&gt;(0 nie jest odsuniętą nutą. Zakres wartości od -127 do 127).&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Przesunięcie do jednego półtonu (oktawa to 12 półtonów)&lt;br/&gt;(0 nie jest przesuniętą nutą. Zakres wartości od -127 do 127).&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="../bank_editor.ui" line="713"/>
         <source>Note offset 1</source>
-        <translation>Uwaga przesunięcie 1</translation>
+        <translation>Przesunięcie nuty</translation>
     </message>
     <message>
         <location filename="../bank_editor.ui" line="760"/>
@@ -306,7 +306,7 @@
     <message>
         <location filename="../bank_editor.ui" line="1036"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Recently used channel ID&lt;/span&gt;&lt;br/&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;(from 0 to N-1)&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Totally 6 four-operator channels available on OPN2 chip in regular mode. When DAC is turned on, the sixth FM channel is disabled, and it&apos;s port is used for DAC input.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Ostatnio używany Identyfikator kanału&lt;/span&gt;&lt;br/&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;(od 0 do N-1)&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Całkowicie 6 kanałów czterech operatorów dostępnych na układzie OPN2 w trybie zwykłym. Gdy DAC jest włączony, szósty kanał FM jest wyłączony, a jego port służy do wejścia DAC.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Ostatnio używany Identyfikator kanału&lt;/span&gt;&lt;br/&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;(od 0 do N-1)&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Łącznie 6 cztero-operatorowych kanałów jest dostępnych na układzie OPN2 w trybie zwykłym. Gdy DAC jest włączony, szósty kanał FM jest wyłączony, a jego port służy do wejścia DAC.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="../bank_editor.ui" line="1072"/>
@@ -321,7 +321,7 @@
     <message>
         <location filename="../bank_editor.ui" line="1146"/>
         <source>Global chip flags</source>
-        <translation>Globalne flagi chipów</translation>
+        <translation>Globalne flagi układu</translation>
     </message>
     <message>
         <location filename="../bank_editor.ui" line="1167"/>
@@ -386,7 +386,7 @@
     <message>
         <location filename="../bank_editor.ui" line="1253"/>
         <source>Testing</source>
-        <translation>Testuję</translation>
+        <translation>Testuj</translation>
     </message>
     <message>
         <location filename="../bank_editor.ui" line="1277"/>
@@ -403,7 +403,7 @@ Dostępne od 0 do 127</translation>
     <message>
         <location filename="../bank_editor.ui" line="1298"/>
         <source>Play a single note. Hold button to play sound, release button to off note.</source>
-        <translation>Zagraj pojedynczą nutę. Przytrzymaj przycisk, aby zagrać muzykę, puść przycisk, aby wyłączyć nutę.</translation>
+        <translation>Zagraj pojedynczą nutę. Przytrzymaj przycisk, aby zagrać dźwięk, puść przycisk, aby wyłączyć nutę.</translation>
     </message>
     <message>
         <location filename="../bank_editor.ui" line="1301"/>
@@ -413,7 +413,7 @@ Dostępne od 0 do 127</translation>
     <message>
         <location filename="../bank_editor.ui" line="1308"/>
         <source>Play a major triad chord relative to selected note. Hold button to play sound, release button to off note.</source>
-        <translation>Zagraj główny akord triady względem wybranej nuty. Przytrzymaj przycisk, aby zagrać muzykę, puść przycisk, aby wyłączyć nutę.</translation>
+        <translation>Zagraj główny akord triady względem wybranej nuty. Przytrzymaj przycisk, aby zagrać dźwięk, puść przycisk, aby wyłączyć nutę.</translation>
     </message>
     <message>
         <location filename="../bank_editor.ui" line="1311"/>
@@ -423,7 +423,7 @@ Dostępne od 0 do 127</translation>
     <message>
         <location filename="../bank_editor.ui" line="1318"/>
         <source>Play a minor triad chord relative to selected note. Hold button to play sound, release button to off note.</source>
-        <translation>Zagraj niewielki akord triady względem wybranej nuty. Przytrzymaj przycisk, aby zagrać muzykę, puść przycisk, aby wyłączyć nutę.</translation>
+        <translation>Zagraj niewielki akord triady względem wybranej nuty. Przytrzymaj przycisk, aby zagrać dźwięk, puść przycisk, aby wyłączyć nutę.</translation>
     </message>
     <message>
         <location filename="../bank_editor.ui" line="1321"/>
@@ -433,7 +433,7 @@ Dostępne od 0 do 127</translation>
     <message>
         <location filename="../bank_editor.ui" line="1328"/>
         <source>Play a augmented triad chord relative to selected note. Hold button to play sound, release button to off note.</source>
-        <translation>Zagraj wzmocniony akord triady względem wybranej nuty Przytrzymaj przycisk, aby zagrać muzykę, puść przycisk, aby wyłączyć nutę.</translation>
+        <translation>Zagraj wzmocniony akord triady względem wybranej nuty Przytrzymaj przycisk, aby zagrać dźwięk, puść przycisk, aby wyłączyć nutę.</translation>
     </message>
     <message>
         <location filename="../bank_editor.ui" line="1331"/>
@@ -443,7 +443,7 @@ Dostępne od 0 do 127</translation>
     <message>
         <location filename="../bank_editor.ui" line="1338"/>
         <source>Play a diminished triad chord relative to selected note. Hold button to play sound, release button to off note.</source>
-        <translation>Zagraj zmniejszony akord triady w stosunku do wybranej nuty. Przytrzymaj przycisk, aby zagrać muzykę, puść przycisk, aby wyłączyć nutę.</translation>
+        <translation>Zagraj zmniejszony akord triady w stosunku do wybranej nuty. Przytrzymaj przycisk, aby zagrać dźwięk, puść przycisk, aby wyłączyć nutę.</translation>
     </message>
     <message>
         <location filename="../bank_editor.ui" line="1341"/>
@@ -453,7 +453,7 @@ Dostępne od 0 do 127</translation>
     <message>
         <location filename="../bank_editor.ui" line="1348"/>
         <source>Play a major seventh chord relative to selected note. Hold button to play sound, release button to off note.</source>
-        <translation>Zagraj główny siódmy akord w stosunku do wybranej nuty. Przytrzymaj przycisk, aby zagrać muzykę, puść przycisk, aby wyłączyć nutę.</translation>
+        <translation>Zagraj główny siódmy akord w stosunku do wybranej nuty. Przytrzymaj przycisk, aby zagrać dźwięk, puść przycisk, aby wyłączyć nutę.</translation>
     </message>
     <message>
         <location filename="../bank_editor.ui" line="1351"/>
@@ -463,7 +463,7 @@ Dostępne od 0 do 127</translation>
     <message>
         <location filename="../bank_editor.ui" line="1358"/>
         <source>Play a minor seventh chord relative to selected note. Hold button to play sound, release button to off note.</source>
-        <translation>Zagraj niewielki siódmy akord w stosunku do wybranej nuty. Przytrzymaj przycisk, aby zagrać muzykę, puść przycisk, aby wyłączyć nutę.</translation>
+        <translation>Zagraj niewielki siódmy akord w stosunku do wybranej nuty. Przytrzymaj przycisk, aby zagrać dźwięk, puść przycisk, aby wyłączyć nutę.</translation>
     </message>
     <message>
         <location filename="../bank_editor.ui" line="1361"/>
@@ -618,7 +618,7 @@ Dostępne od 0 do 127</translation>
     <message>
         <location filename="../bank_editor.ui" line="1791"/>
         <source>United view of all banks</source>
-        <translation>Zjednoczony widok wszystkich banków</translation>
+        <translation>Połączony widok wszystkich banków</translation>
     </message>
     <message>
         <location filename="../bank_editor.ui" line="1794"/>
@@ -643,7 +643,7 @@ Dostępne od 0 do 127</translation>
     <message>
         <location filename="../bank_editor.ui" line="1828"/>
         <source>GENS 2.10 (for slow CPUs, legacy)</source>
-        <translation>GENS 2.10 (dla wolnych procesorów, starsze wersje)</translation>
+        <translation>GENS 2.10 (dla wolnych procesorów, przestarzały)</translation>
     </message>
     <message>
         <location filename="../bank_editor.ui" line="1833"/>
@@ -742,7 +742,7 @@ Czy chcesz kontynuować zapisywanie pliku?</translation>
     <message>
         <location filename="../bank_editor.cpp" line="554"/>
         <source>Bank file &apos;%1&apos; has been saved!</source>
-        <translation>Plik bankowy &apos;%1&apos; został zapisany!</translation>
+        <translation>Plik banku &apos;%1&apos; został zapisany!</translation>
     </message>
     <message>
         <location filename="../bank_editor.cpp" line="591"/>
@@ -777,7 +777,7 @@ Czy chcesz kontynuować zapisywanie pliku?</translation>
     <message>
         <location filename="../bank_editor.cpp" line="683"/>
         <source>&lt;Reserved %1&gt;</source>
-        <translation>&lt;Odwrócony %1&gt;</translation>
+        <translation>&lt;Zarezerwowany %1&gt;</translation>
     </message>
     <message>
         <location filename="../bank_editor.cpp" line="827"/>
@@ -892,7 +892,7 @@ Licencja na podstawie GNU GPLv3
         <location filename="../bank_editor.cpp" line="1108"/>
         <location filename="../bank_editor.cpp" line="1124"/>
         <source>Delays on: %1, off: %2</source>
-        <translation>Opóźnienie włączone: %1, wyłączone: %2</translation>
+        <translation>Opóźnienie wł.: %1, wył.: %2</translation>
     </message>
     <message>
         <location filename="../bank_editor.cpp" line="1301"/>
@@ -944,12 +944,12 @@ Licencja na podstawie GNU GPLv3
     <message>
         <location filename="../bank_editor.cpp" line="1674"/>
         <source>Clear bank error</source>
-        <translation>Wyczyść błąd banku</translation>
+        <translation>Błąd czyszczenia banku</translation>
     </message>
     <message>
         <location filename="../bank_editor.cpp" line="1675"/>
         <source>United bank mode is turned on. Disable it to be able clear banks.</source>
-        <translation>Tryb zjednoczonego banku jest włączony. Wyłącz to, aby móc wyczyścić banki.</translation>
+        <translation>Tryb połączonego banku jest włączony. Wyłącz go, aby móc wyczyścić banki.</translation>
     </message>
     <message>
         <location filename="../bank_editor.cpp" line="1680"/>
@@ -965,7 +965,7 @@ Licencja na podstawie GNU GPLv3
         <location filename="../bank_editor.cpp" line="1716"/>
         <location filename="../bank_editor.cpp" line="1725"/>
         <source>Delete bank error</source>
-        <translation>Usuń błąd banku</translation>
+        <translation>Błąd usuwania banku</translation>
     </message>
     <message>
         <location filename="../bank_editor.cpp" line="1726"/>
@@ -1033,7 +1033,7 @@ Licencja na podstawie GNU GPLv3
     <message>
         <location filename="../delay_analysis.ui" line="14"/>
         <source>Delay analysis</source>
-        <translation>Analizy opóźnienia</translation>
+        <translation>Analiza opóźnienia</translation>
     </message>
     <message>
         <location filename="../delay_analysis.ui" line="45"/>
@@ -1051,12 +1051,12 @@ Amplituda w punkcie przerwania: %3</translation>
     <message>
         <location filename="../delay_analysis.cpp" line="164"/>
         <source>Key-On Amplitude</source>
-        <translation>Amplituda Włączonego Klawisza</translation>
+        <translation>Amplituda Naciśniętego Klawisza</translation>
     </message>
     <message>
         <location filename="../delay_analysis.cpp" line="166"/>
         <source>Key-Off Amplitude</source>
-        <translation>Amplituda Wyłączonego Klawisza</translation>
+        <translation>Amplituda Puszczonego Klawisza</translation>
     </message>
     <message>
         <location filename="../delay_analysis.cpp" line="180"/>
@@ -1198,7 +1198,7 @@ Amplituda w punkcie przerwania: %3</translation>
     <message>
         <location filename="../importer.ui" line="236"/>
         <source>Test Note</source>
-        <translation>Uwaga Dotycząca Testu</translation>
+        <translation>Testuj nutę</translation>
     </message>
     <message>
         <location filename="../importer.cpp" line="469"/>
@@ -1208,7 +1208,7 @@ Amplituda w punkcie przerwania: %3</translation>
     <message>
         <location filename="../importer.cpp" line="479"/>
         <source>&lt;Reserved %1&gt;</source>
-        <translation>&lt;Odwrócony %1&gt;</translation>
+        <translation>&lt;Zarezerwowany %1&gt;</translation>
     </message>
     <message>
         <location filename="../importer.cpp" line="529"/>
@@ -1252,7 +1252,7 @@ Proszę wybierz instrument docelowy w głównym oknie i spróbuj ponownie!</tran
         <location filename="../opl/measurer.cpp" line="806"/>
         <location filename="../opl/measurer.cpp" line="833"/>
         <source>Sounding delay calculation</source>
-        <translation>Obliczanie opóźnienia dźwiękowania</translation>
+        <translation>Obliczanie opóźnienia dźwięku</translation>
     </message>
     <message>
         <location filename="../opl/measurer.cpp" line="751"/>
@@ -1265,7 +1265,7 @@ Proszę wybierz instrument docelowy w głównym oknie i spróbuj ponownie!</tran
     <message>
         <location filename="../opl/measurer.cpp" line="860"/>
         <source>Benchmarking emulators</source>
-        <translation>Emulatory analizy porównawczej</translation>
+        <translation>Analiza porównawcza emulatorów</translation>
     </message>
 </context>
 <context>
@@ -1274,17 +1274,17 @@ Proszę wybierz instrument docelowy w głównym oknie i spróbuj ponownie!</tran
         <location filename="../operator_editor.ui" line="52"/>
         <location filename="../operator_editor.ui" line="227"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Attack Rate.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Determines the rising time for the sound. The higher the value, the faster the attack.&lt;/p&gt;&lt;p&gt;Range from 0 to 31.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Wskaźnik Ataku.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Określa czas narastania dźwięku. Im wyższa wartość, tym szybszy atak.&lt;/p&gt;&lt;p&gt;Zakres od 0 do 31. &lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Współczynnik Ataku.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Określa czas narastania dźwięku. Im wyższa wartość, tym szybszy atak.&lt;/p&gt;&lt;p&gt;Zakres od 0 do 31. &lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;First Decay Rate.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Determines the diminishing time for the sound. The higher the value, the shorter the decay.&lt;/p&gt;&lt;p&gt;It&apos;s the initial steep amplitude decay rate.</source>
-        <translation type="vanished">&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Szybkość Pierwszego Rozkładu.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Określa malejący czas dla dźwięku. Im wyższa wartość, tym krótszy rozkład.&lt;/p&gt;&lt;p&gt;Jest to szybkość zaniku amplitudy początkowego stopnia.</translation>
+        <translation type="vanished">&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Pierwotny Współczynnik Opadania.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Określa malejący czas dla dźwięku. Im wyższa wartość, tym krótszy czas opadania.&lt;/p&gt;&lt;p&gt;Jest to szybkość zaniku amplitudy początkowego stopnia.</translation>
     </message>
     <message>
         <location filename="../operator_editor.ui" line="108"/>
         <location filename="../operator_editor.ui" line="128"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Release Rate.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Determines the rate at which the sound disappears after KEY-OFF. The higher the value, the shorter the release.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Szybkość Zwolnienia.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Określa szybkość zanikania dźwięku po Wyłączeniu Klawisza. Im wyższa wartość, tym krótsze zwolnienie.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Współczynnik Zwolnienia.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Określa szybkość zanikania dźwięku po puszczeniu klawisza. Im wyższa wartość, tym krótsze zwolnienie.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Sustain Level.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Determines the point at which the sound ceases to decay and changes to a sound having a constant level. The sustain level is expressed as a fraction of the maximum level. 0 is the softest and 15 is the loudest sustain level. Note that has Sustain flag must be set for this to have an effect.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
@@ -1294,7 +1294,7 @@ Proszę wybierz instrument docelowy w głównym oknie i spróbuj ponownie!</tran
         <location filename="../operator_editor.ui" line="80"/>
         <location filename="../operator_editor.ui" line="217"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Primary Decay Rate.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Determines the diminishing time for the sound. The higher the value, the shorter the decay.&lt;/p&gt;&lt;p&gt;It&apos;s the initial steep amplitude decay rate.</source>
-        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Szybkość Pierwszego Rozkładu.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Określa malejący czas dla dźwięku. Im wyższa wartość, tym krótszy rozkład.&lt;/p&gt;&lt;p&gt;Jest to szybkość zaniku amplitudy początkowego stopnia.</translation>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Pierwotny Współczynnik Opadania.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Określa malejący czas dla dźwięku. Im wyższa wartość, tym krótszy czas opadania.&lt;/p&gt;&lt;p&gt;Jest to szybkość zaniku amplitudy początkowego stopnia.</translation>
     </message>
     <message>
         <location filename="../operator_editor.ui" line="118"/>
@@ -1305,7 +1305,7 @@ Proszę wybierz instrument docelowy w głównym oknie i spróbuj ponownie!</tran
     <message>
         <location filename="../operator_editor.ui" line="121"/>
         <source>Sustain</source>
-        <translation>Utrzymanie</translation>
+        <translation>Podtrzymanie</translation>
     </message>
     <message>
         <location filename="../operator_editor.ui" line="131"/>
@@ -1316,22 +1316,22 @@ Proszę wybierz instrument docelowy w głównym oknie i spróbuj ponownie!</tran
         <location filename="../operator_editor.ui" line="156"/>
         <location filename="../operator_editor.ui" line="166"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Secondary Decay Rate.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Determines the diminishing time for the sound. The higher the value, the shorter the decay.&lt;/p&gt;&lt;p&gt;This is the long tail off of the sound that continues as long as the key is depressed.</source>
-        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Wtórna Szybkość Rozpadu.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Określa malejący czas dla dźwięku. Im wyższa wartość, tym krótszy rozkład.&lt;/p&gt;&lt;p&gt;Jest to długi ogon dźwięku, który trwa tak długo, jak wciśnięty jest klawisz.</translation>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Wtórny Wspólczynnik Opadania.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Określa malejący czas dla dźwięku. Im wyższa wartość, tym krótszy czas opadania.&lt;/p&gt;&lt;p&gt;Jest to długi "ogon" dźwięku, który trwa tak długo, jak wciśnięty jest klawisz.</translation>
     </message>
     <message>
         <location filename="../operator_editor.ui" line="169"/>
         <source>Decay 2</source>
-        <translation>Rozkład 2</translation>
+        <translation>Opadanie 2</translation>
     </message>
     <message>
         <location filename="../operator_editor.ui" line="220"/>
         <source>Decay 1</source>
-        <translation>Rozkład 1</translation>
+        <translation>Opadanie 1</translation>
     </message>
     <message>
         <location filename="../operator_editor.ui" line="230"/>
         <source>Attack</source>
-        <translation>Atakuj</translation>
+        <translation>Atak</translation>
     </message>
     <message>
         <location filename="../operator_editor.ui" line="264"/>
@@ -1347,7 +1347,7 @@ Proszę wybierz instrument docelowy w głównym oknie i spróbuj ponownie!</tran
         <location filename="../operator_editor.ui" line="282"/>
         <location filename="../operator_editor.ui" line="310"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Total Level&lt;/span&gt;&lt;/p&gt;&lt;p&gt;TL (total level) represents the envelope’s highest amplitude, with 0 being the largest and 127 (decimal) the smallest. A change of one unit is about 0.75 dB.&lt;/p&gt;&lt;p&gt;Attenuates the operator output level. &lt;span style=&quot; font-weight:600;&quot;&gt;0&lt;/span&gt; is the loudest, &lt;span style=&quot; font-weight:600;&quot;&gt;127&lt;/span&gt; is the softest. In dependence on algorithm, varying the output level of any operator varies the volume of its corresponding channel. In FM synthesis, varying the output level of the carrier varies the volume of the channel. Varying the output of the modulator will change the frequency spectrum produced by the carrier.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Total Level&lt;/span&gt;&lt;/p&gt;&lt;p&gt;PC (poziom całkowity) reprezentuje najwyższą amplitudę obwiedni, przy czym 0 oznacza największą, a 127 (dziesiętną) najmniejszą. Zmiana jednego urządzenia wynosi około 0,75 dB. &lt;/p&gt; &lt;p&gt; Tłumi poziom wyjściowy operatora. &lt;span style=&quot; font-weight:600;&quot;&gt;0&lt;/span&gt; jest najgłośniejszy, &lt;span style=&quot;font-weight:600;&quot;&gt;127&lt;/span&gt; jest najcichszy. W zależności od algorytmu zmiana poziomu wyjściowego dowolnego operatora zmienia głośność odpowiedniego kanału. W syntezie FM zmiana poziomu wyjściowego nośnej zmienia głośność kanału. Zmiana wyjścia modulatora zmieni widmo częstotliwości wytwarzane przez nośną.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Total Level&lt;/span&gt;&lt;/p&gt;&lt;p&gt;PC (poziom całkowity) reprezentuje najwyższą amplitudę obwiedni, przy czym 0 oznacza największą, a 127 (wartość dziesiętna) najmniejszą. Zmiana o jedną jednostkę wynosi około 0,75 dB. &lt;/p&gt; &lt;p&gt; Tłumi poziom wyjściowy operatora. &lt;span style=&quot; font-weight:600;&quot;&gt;0&lt;/span&gt; jest najgłośniejszy, &lt;span style=&quot;font-weight:600;&quot;&gt;127&lt;/span&gt; jest najcichszy. W zależności od algorytmu zmiana poziomu wyjściowego dowolnego operatora zmienia głośność odpowiedniego kanału. W syntezie FM zmiana poziomu wyjściowego fali nośnej zmienia głośność kanału. Zmiana wyjścia modulatora zmieni widmo częstotliwości wytwarzane przez falę nośną.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="../operator_editor.ui" line="285"/>
@@ -1358,35 +1358,35 @@ Proszę wybierz instrument docelowy w głównym oknie i spróbuj ponownie!</tran
         <location filename="../operator_editor.ui" line="320"/>
         <location filename="../operator_editor.ui" line="348"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Frequency Multiplication Factor (MUL)&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Operator&apos;s frequency is set to F-Number*Factor.&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; text-decoration: underline;&quot;&gt;In simple words, increases operator&apos;s frequency to number of octaves.&lt;/span&gt;&lt;br/&gt;&lt;br/&gt;Where F-Number is:&lt;/p&gt;&lt;p&gt;F-Number = Music Frequency * 2^(20-Block) / 53267 Hz&lt;/p&gt;&lt;p&gt;Where Block is a Block Number. Roughly determines the octave.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Współczynnik Zwielokrotnienia Częstotliwości (WZC)&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Częstotliwość operatora jest ustawiona na współczynnik F-Number*Factor.&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; text-decoration:underline;&quot;&gt;Krótko mówiąc, zwiększa częstotliwość pracy operatora do liczby oktaw.&lt;/span&gt;&lt;br/&gt;&lt;br/&gt;Gdzie jest F-Number:&lt;/p&gt;&lt;p&gt;F-Number = Częstotliwość muzyki * 2^(20-Blok) / 53267 Hz&lt;/p&gt;&lt;p&gt;Gdzie Blok jest Numerem Bloku. Z grubsza określa oktawę.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Współczynnik Zwielokrotnienia Częstotliwości (WZC)&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Częstotliwość operatora jest ustawiona na współczynnik F-Number*Factor.&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; text-decoration:underline;&quot;&gt;Krótko mówiąc, zwiększa częstotliwość pracy operatora do liczby oktaw.&lt;/span&gt;&lt;br/&gt;&lt;br/&gt;Gdzie jest F-Number:&lt;/p&gt;&lt;p&gt;F-Number = Częstotliwość dźwięku * 2^(20-Blok) / 53267 Hz&lt;/p&gt;&lt;p&gt;Gdzie Blok jest Numerem Bloku. Z grubsza określa oktawę.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="../operator_editor.ui" line="323"/>
         <source>Frequency multiplication</source>
-        <translation>Mnożenie częstotliwości</translation>
+        <translation>Mnożnik częstotliwości</translation>
     </message>
     <message>
         <location filename="../operator_editor.ui" line="358"/>
         <location filename="../operator_editor.ui" line="374"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:large; font-weight:600;&quot;&gt;Detune&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Detune gives small variations from the overall frequency × MUL. The MSB of DT1 is a primitive sign bit, and the two LSB’s are magnitude bits. &lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:large; font-weight:600;&quot;&gt;Odmelodiuj&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Odmelodiowywanie daje małe wariacje od ogólnej częstotliwości x MUL. MSB DT1 jest pierwotnym bitem znaku, a dwa LSB są bitami wielkości. Schemat znajduje się na następnej stronie.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:large; font-weight:600;&quot;&gt;Rozstrójlt;/span&gt;&lt;/p&gt;&lt;p&gt;Rozstrojenie wywołuje małe różnice względem ogólnej częstotliwości x MUL. MSB DT1 jest pierwotnym bitem znaku, a dwa LSB są bitami wielkości.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="../operator_editor.ui" line="421"/>
         <location filename="../operator_editor.ui" line="449"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:large; font-weight:600;&quot;&gt;Rate Scale Level&lt;/span&gt;&lt;/p&gt;&lt;p&gt;A parameter that determines the degree to which the envelope execution speed increases according to the pitch. &lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:large; font-weight:600;&quot;&gt;
-Poziom Skali Stawki&lt;/span&gt;&lt;/p&gt;&lt;p&gt;
-Parametr określający stopień, w jakim prędkość wykonywania obwiedni rośnie zgodnie ze skokiem.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+Poziom Skali Obwiedni&lt;/span&gt;&lt;/p&gt;&lt;p&gt;
+Parametr określający stopień, w jakim prędkość wykonywania obwiedni rośnie zgodnie ze wzrostem wysokości dźwięku.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:large; font-weight:600;&quot;&gt;Detune&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Detune gives small variations from the overall frequency × MUL. The MSB of DT1 is a primitive sign bit, and the two LSB’s are magnitude bits. See the next page for a diagram. &lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation type="vanished">&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:large; font-weight:600;&quot;&gt;Odmelodiuj&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Odmelodiowywanie daje małe wariacje od ogólnej częstotliwości x MUL. MSB DT1 jest pierwotnym bitem znaku, a dwa LSB są bitami wielkości. Schemat znajduje się na następnej stronie. &lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:large; font-weight:600;&quot;&gt;Detune&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Detune gives small variations from the overall frequency × MUL. The MSB of DT1 is a primitive sign bit, and the two LSB’s are magnitude bits.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation type="vanished">&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:large; font-weight:600;&quot;&gt;Rozstrój&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Rozstrojenie wywołuje małe różnice względem ogólnej częstotliwości x MUL. MSB DT1 jest pierwotnym bitem znaku, a dwa LSB są bitami wielkości.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="../operator_editor.ui" line="361"/>
         <source>Detune</source>
-        <translation>Odmejodiuj</translation>
+        <translation>Rozstrój</translation>
     </message>
     <message>
         <location filename="../operator_editor.ui" line="378"/>
@@ -1396,12 +1396,12 @@ Parametr określający stopień, w jakim prędkość wykonywania obwiedni rośni
     </message>
     <message>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Rate Scale Level.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Attenuates output level towards higher pitch&lt;br/&gt;&lt;/p&gt;&lt;table border=&quot;1&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px;&quot; cellspacing=&quot;0&quot; cellpadding=&quot;0&quot;&gt;&lt;tr&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;RSL&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Attenuation&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;p&gt;0&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p&gt;-&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;p&gt;1&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p&gt;1.5 dB/oct&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;p&gt;2&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p&gt;3.0 dB/oct &lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;p&gt;3&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p&gt;6.0 dB/oct &lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation type="vanished">&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Poziom Skali Stawki.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Tłumi poziom wyjściowy w kierunku wyższego tonu&lt;br/&gt;&lt;/p&gt;&lt;table border=&quot;1&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px;&quot; cellspacing=&quot;0&quot; cellpadding=&quot;0&quot;&gt;&lt;tr&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;RSL&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Tłumienie&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;p&gt;0&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p&gt;-&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;p&gt;1&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p&gt;1.5 dB/okt&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;p&gt;2&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p&gt;3.0 dB/okt &lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;p&gt;3&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p&gt;6.0 dB/okt &lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+        <translation type="vanished">&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Poziom Skali Obwiedni.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Tłumi poziom wyjściowy w kierunku wyższego tonu&lt;br/&gt;&lt;/p&gt;&lt;table border=&quot;1&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px;&quot; cellspacing=&quot;0&quot; cellpadding=&quot;0&quot;&gt;&lt;tr&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;RSL&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Tłumienie&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;p&gt;0&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p&gt;-&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;p&gt;1&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p&gt;1.5 dB/okt&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;p&gt;2&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p&gt;3.0 dB/okt &lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;p&gt;3&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p&gt;6.0 dB/okt &lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="../operator_editor.ui" line="424"/>
         <source>Rate scale level</source>
-        <translation>Poziom Skali Stawki</translation>
+        <translation>Poziom Skali Obwiedni</translation>
     </message>
     <message>
         <location filename="../operator_editor.ui" line="459"/>
@@ -1411,7 +1411,7 @@ Parametr określający stopień, w jakim prędkość wykonywania obwiedni rośni
     <message>
         <location filename="../operator_editor.ui" line="472"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;SSG-EG - &lt;span style=&quot; font-weight:600;&quot;&gt;S&lt;/span&gt;oftware-controlled &lt;span style=&quot; font-weight:600;&quot;&gt;S&lt;/span&gt;ound &lt;span style=&quot; font-weight:600;&quot;&gt;G&lt;/span&gt;enerator - Envelope generator.&lt;/p&gt;&lt;p&gt;The Envelope generator (EG) is an unique low-frequency signal generator which can be used to modulate the output of the tone channels.&lt;/p&gt;&lt;p&gt;Envelope shape register ($0D): &lt;/p&gt;&lt;table border=&quot;1&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px;&quot; cellspacing=&quot;2&quot; cellpadding=&quot;0&quot;&gt;&lt;tr&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Bit &lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;7 &lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;6 &lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;5 &lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;4 &lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;3 &lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;2 &lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;1 &lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;0 &lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Def &lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;td colspan=&quot;4&quot;&gt;&lt;p align=&quot;center&quot;&gt;- &lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;CONT &lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;ATT &lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;ALT &lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;HOLD &lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;ul style=&quot;margin-top: 0px; margin-bottom: 0px; margin-left: 0px; margin-right: 0px; -qt-list-indent: 1;&quot;&gt;&lt;li style=&quot; margin-top:12px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;CONT: Should always be 1 ?&lt;/li&gt;&lt;li style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;ATT: Counter direction (0:Down, 1:Up)&lt;/li&gt;&lt;li style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;ALT: Alternate direction each period&lt;/li&gt;&lt;li style=&quot; margin-top:0px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;HOLD: Hold value after first period (depends on ALT)&lt;/li&gt;&lt;/ul&gt;&lt;p&gt;Envelope frequency = 8M / 2 / (256 * value) &lt;/p&gt;&lt;p&gt;Note that each period is 32 analog steps (5-bit internal counter).&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;SSG-EG - &lt;span style=&quot; font-weight:600;&quot;&gt;S&lt;/span&gt;oftware-controlled &lt;span style=&quot; font-weight:600;&quot;&gt;S&lt;/span&gt;ound &lt;span style=&quot; font-weight:600;&quot;&gt;G&lt;/span&gt;enerator - Powłoka generatora..&lt;/p&gt;&lt;p&gt;Generator powłok (GP) jest unikalnym generatorem sygnałów o niskiej częstotliwości, który może być wykorzystywany do modulacji wyjścia kanałów tonowych.&lt;/p&gt;&lt;p&gt;Rejestrator kształtu powłoki ($0D): &lt;/p&gt;&lt;table border=&quot;1&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px;&quot; cellspacing=&quot;2&quot; cellpadding=&quot;0&quot;&gt;&lt;tr&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Bit &lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;7 &lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;6 &lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;5 &lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;4 &lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;3 &lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;2 &lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;1 &lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;0 &lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Definitywnie &lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;td colspan=&quot;4&quot;&gt;&lt;p align=&quot;center&quot;&gt;- &lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;KONT. &lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;AT &lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;ALT &lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;UTRZYMANIE &lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;ul style=&quot;margin-top: 0px; margin-bottom: 0px; margin-left: 0px; margin-right: 0px; -qt-list-indent: 1;&quot;&gt;&lt;li style=&quot; margin-top:12px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;KONT.: Zawsze powinno być 1?&lt;/li&gt;&lt;li style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;AT: Przeciwny kierunek (0: Dół, 1: Góra)&lt;/li&gt;&lt;li style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;ALT: Zmiana kierunku w każdym okresie&lt;/li&gt;&lt;li style=&quot; margin-top:0px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;UTRZYMANIE: Zatrzymaj wartość po pierwszym okresie (zależy od ALT)&lt;/li&gt;&lt;/ul&gt;&lt;p&gt;Częstotliwość powłok = 8 M / 2 / (wartość 256 *)&lt;/p&gt;&lt;p&gt;Zauważ, że każdy okres to 32 kroki analogowe (5-bitowy licznik wewnętrzny).&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;SSG-EG - &lt;span style=&quot; font-weight:600;&quot;&gt;S&lt;/span&gt;oftware-controlled &lt;span style=&quot; font-weight:600;&quot;&gt;S&lt;/span&gt;ound &lt;span style=&quot; font-weight:600;&quot;&gt;G&lt;/span&gt;enerator - Generator Obwiedni..&lt;/p&gt;&lt;p&gt;Generator obwiedni (GO) jest unikalnym generatorem sygnałów o niskiej częstotliwości, który może być wykorzystywany do modulacji wyjścia kanałów tonowych.&lt;/p&gt;&lt;p&gt;Rejestr kształtu obwiedni ($0D): &lt;/p&gt;&lt;table border=&quot;1&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px;&quot; cellspacing=&quot;2&quot; cellpadding=&quot;0&quot;&gt;&lt;tr&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Bit &lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;7 &lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;6 &lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;5 &lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;4 &lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;3 &lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;2 &lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;1 &lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;0 &lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Definicja &lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;td colspan=&quot;4&quot;&gt;&lt;p align=&quot;center&quot;&gt;- &lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;KONT. &lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;AT &lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;ALT &lt;/p&gt;&lt;/td&gt;&lt;td&gt;&lt;p align=&quot;center&quot;&gt;UTRZYMANIE &lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;ul style=&quot;margin-top: 0px; margin-bottom: 0px; margin-left: 0px; margin-right: 0px; -qt-list-indent: 1;&quot;&gt;&lt;li style=&quot; margin-top:12px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;KONT.: Zawsze powinno być 1?&lt;/li&gt;&lt;li style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;AT: Przeciwny kierunek (0: Dół, 1: Góra)&lt;/li&gt;&lt;li style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;ALT: Zmiana kierunku w każdym okresie&lt;/li&gt;&lt;li style=&quot; margin-top:0px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;UTRZYMANIE: Zatrzymuje wartość po pierwszym okresie (zależy od ALT)&lt;/li&gt;&lt;/ul&gt;&lt;p&gt;Częstotliwość obwiedni = 8 M / 2 / (wartość 256 *)&lt;/p&gt;&lt;p&gt;Zauważ, że każdy okres to 32 kroki analogowe (5-bitowy licznik wewnętrzny).&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="../operator_editor.ui" line="476"/>
@@ -1456,7 +1456,7 @@ Parametr określający stopień, w jakim prędkość wykonywania obwiedni rośni
     <message>
         <location filename="../ins_names.cpp" line="135"/>
         <source>&lt;Reserved %1&gt;</source>
-        <translation>&lt;Odwrócony %1&gt;</translation>
+        <translation>&lt;Zarezerwowany %1&gt;</translation>
     </message>
 </context>
 <context>
@@ -1464,7 +1464,7 @@ Parametr określający stopień, w jakim prędkość wykonywania obwiedni rośni
     <message>
         <location filename="../register_editor.ui" line="14"/>
         <source>Register Editor</source>
-        <translation>Zarejestruj Edytora</translation>
+        <translation>Edytor rejestrów</translation>
     </message>
 </context>
 <context>
