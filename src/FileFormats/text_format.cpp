@@ -483,7 +483,7 @@ static GrammaticalTextFormat createFmp7FAFormat()
     using namespace TextFormatTokens;
 
     // permissive parsing on this line
-    tf << "'" << "@" << " " << AlphaNumString("FA") << " " << AlphaNumString("0") << "\n";
+    tf << "'" << "@" << " " << Symbol("FA") << " " << AlphaNumString("0") << "\n";
 
     for(int o = 0; o < 4; ++o)
     {
@@ -511,7 +511,7 @@ static GrammaticalTextFormat createFmp7FFormat()
     using namespace TextFormatTokens;
 
     // permissive parsing on this line
-    tf << "'" << "@" << " " << AlphaNumString("F") << " " << AlphaNumString("0") << "\n";
+    tf << "'" << "@" << " " << Symbol("F") << " " << AlphaNumString("0") << "\n";
 
     for(int o = 0; o < 4; ++o)
     {
@@ -549,9 +549,7 @@ static GrammaticalTextFormat createFmp4Format()
            << "," << Val("d2r", op) << "," << Val("rr", op)
            << "," << Val("d1l", op) << "," << Val("tl", op)
            << "," << Val("rs", op) << "," << Val("mul", op)
-           << "," << Val("dt", op) << Conditional(TokenSharedPtr(new Symbol(",")),
-                                                  TokenList{} << Whitespace(" ") << Val("dt2", op),
-                                                  TokenList{}) << "\n";
+           << "," << Val("dt", op) << "\n";
     }
 
     tf << "'" << "@" << " " << Val("alg") << "," << Val("fb") << "\n";
