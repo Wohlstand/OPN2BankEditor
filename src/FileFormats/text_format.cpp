@@ -488,7 +488,9 @@ static GrammaticalTextFormat createFmpFormat()
            << "," << Val("d2r", op) << "," << Val("rr", op)
            << "," << Val("d1l", op) << "," << Val("tl", op)
            << "," << Val("rs", op) << "," << Val("mul", op)
-           << "," << Val("dt", op) << "," << Val("am", op) << "\n";
+           << "," << Val("dt", op) << Conditional(TokenSharedPtr(new Symbol(",")),
+                                                  TokenList{} << Whitespace(" ") << Val("am", op),
+                                                  TokenList{}) << "\n";
     }
 
     tf << "'" << "@" << " " << Val("alg") << "," << Val("fb") << "\n";
