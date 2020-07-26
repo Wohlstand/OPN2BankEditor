@@ -264,6 +264,11 @@ bool GrammaticalTextFormat::parseInstrument(const char *text, FmBank::Instrument
                 break;
             }
             const MetaParameter *mp = static_cast<const Val &>(*token).parameter();
+            if (!mp)
+            {
+                success = false;
+                break;
+            }
             mp->set(ins, mp->clamp(value));
             break;
         }
@@ -468,17 +473,17 @@ static CompositeTextFormat createPmdFormat()
     return tf;
 }
 
-static GrammaticalTextFormat createFmpFormat()
+static GrammaticalTextFormat createFmp7FAFormat()
 {
     GrammaticalTextFormat tf;
 
-    tf.setName("FMP");
+    tf.setName("FMP7FA");
     tf.setLineKeepPrefix("'");
 
     using namespace TextFormatTokens;
 
     // permissive parsing on this line
-    tf << "'" << "@" << " " << AlphaNumString("FA") << " " << AlphaNumString("0") << "\n";
+    tf << "'" << "@" << " " << Symbol("FA") << " " << AlphaNumString("0") << "\n";
 
     for(int o = 0; o < 4; ++o)
     {
@@ -492,6 +497,85 @@ static GrammaticalTextFormat createFmpFormat()
     }
 
     tf << "'" << "@" << " " << Val("alg") << "," << Val("fb") << "\n";
+
+    return tf;
+}
+
+static GrammaticalTextFormat createFmp7FFormat()
+{
+    GrammaticalTextFormat tf;
+
+    tf.setName("FMP7F");
+    tf.setLineKeepPrefix("'");
+
+    using namespace TextFormatTokens;
+
+    // permissive parsing on this line
+    tf << "'" << "@" << " " << Symbol("F") << " " << AlphaNumString("0") << "\n";
+
+    for(int o = 0; o < 4; ++o)
+    {
+        int op = MP_Operator1 + o;
+        tf << "'" << "@"
+           << " " << Val("ar", op) << "," << Val("d1r", op)
+           << "," << Val("d2r", op) << "," << Val("rr", op)
+           << "," << Val("d1l", op) << "," << Val("tl", op)
+           << "," << Val("rs", op) << "," << Val("mul", op)
+           << "," << Val("dt", op) << "\n";
+    }
+
+    tf << "'" << "@" << " " << Val("alg") << "," << Val("fb") << "\n";
+
+    return tf;
+}
+
+static GrammaticalTextFormat createFmp4Format()
+{
+    GrammaticalTextFormat tf;
+
+    tf.setName("FMP4");
+    tf.setLineKeepPrefix("'");
+
+    using namespace TextFormatTokens;
+
+    // permissive parsing on this line
+    tf << "'" << "@" << " " << AlphaNumString("0") << "\n";
+
+    for(int o = 0; o < 4; ++o)
+    {
+        int op = MP_Operator1 + o;
+        tf << "'" << "@"
+           << " " << Val("ar", op) << "," << Val("d1r", op)
+           << "," << Val("d2r", op) << "," << Val("rr", op)
+           << "," << Val("d1l", op) << "," << Val("tl", op)
+           << "," << Val("rs", op) << "," << Val("mul", op)
+           << "," << Val("dt", op) << "\n";
+    }
+
+    tf << "'" << "@" << " " << Val("alg") << "," << Val("fb") << "\n";
+
+    return tf;
+}
+
+static CompositeTextFormat createFmpFormat()
+{
+    CompositeTextFormat tf;
+    tf.setName("FMP");
+
+    std::shared_ptr<GrammaticalTextFormat> tfFmp7FA(
+        new GrammaticalTextFormat(createFmp7FAFormat()));
+    std::shared_ptr<GrammaticalTextFormat> tfFmp7F(
+        new GrammaticalTextFormat(createFmp7FFormat()));
+    std::shared_ptr<GrammaticalTextFormat> tfFmp4(
+        new GrammaticalTextFormat(createFmp4Format()));
+
+    // always write it as FMP7FA
+    tf.setWriterFormat(tfFmp7FA);
+
+    // try FMP7 (FA -> F) -> FMP4
+    tf.addReaderFormat(tfFmp7FA);
+    tf.addReaderFormat(tfFmp7F);
+    tf.addReaderFormat(tfFmp4);
 
     return tf;
 }
@@ -628,7 +712,7 @@ const TextFormat &TextFormats::pmdFormat()
 
 const TextFormat &TextFormats::fmpFormat()
 {
-    static GrammaticalTextFormat tf = createFmpFormat();
+    static CompositeTextFormat tf = createFmpFormat();
     return tf;
 }
 
