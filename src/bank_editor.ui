@@ -729,7 +729,7 @@
                          </size>
                         </property>
                         <property name="toolTip">
-                        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Offset to one semi-tone (octave is 12 semi-tones)&lt;br/&gt;(0 is don't offset note. Value range is from -127 to 127). &lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Offset to one semi-tone (octave is 12 semi-tones)&lt;br/&gt;(0 is don't offset note. Value range is from -127 to 127). &lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                         </property>
                         <property name="minimum">
                          <number>-127</number>
@@ -1584,7 +1584,7 @@ Available from 0 to 127</string>
      <x>0</x>
      <y>0</y>
      <width>973</width>
-     <height>22</height>
+     <height>19</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -1742,6 +1742,9 @@ Available from 0 to 127</string>
    <property name="text">
     <string>Import instruments...</string>
    </property>
+   <property name="shortcut">
+    <string>Ctrl+I</string>
+   </property>
   </action>
   <action name="actionAddInst">
    <property name="text">
@@ -1762,6 +1765,9 @@ Available from 0 to 127</string>
    <property name="text">
     <string>Add bank</string>
    </property>
+   <property name="shortcut">
+    <string>Ctrl+A</string>
+   </property>
   </action>
   <action name="actionCloneBank">
    <property name="text">
@@ -1777,10 +1783,16 @@ Available from 0 to 127</string>
    <property name="text">
     <string>Delete bank</string>
    </property>
+   <property name="shortcut">
+    <string>Shift+Del</string>
+   </property>
   </action>
   <action name="actionClearInstrument">
    <property name="text">
     <string>Clear instrument</string>
+   </property>
+   <property name="shortcut">
+    <string>Del</string>
    </property>
   </action>
   <action name="actionAdLibBnkMode">
@@ -1802,6 +1814,9 @@ Available from 0 to 127</string>
   <action name="actionReMeasure">
    <property name="text">
     <string>Re-Calculate all sounding delays</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Alt+G</string>
    </property>
   </action>
   <action name="actionEmulatorNuked">
@@ -1849,6 +1864,9 @@ Available from 0 to 127</string>
   <action name="actionReMeasureOne">
    <property name="text">
     <string>Re-Calculate sounding delays of instrument</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Alt+S</string>
    </property>
   </action>
   <action name="actionDelayAnalysis">
