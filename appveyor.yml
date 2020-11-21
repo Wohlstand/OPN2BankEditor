@@ -52,9 +52,8 @@ build_script:
   - build.bat
 
 artifacts:
-  - path: opn2-bank-editor\opn2-bank-editor-dev-win32.zip
+  - path: opn2-bank-editor\opn2-bank-editor-dev-$(WINXX_ARCH).zip
 
 deploy:
   - provider: Environment
     name: WohlnetFTP
-
