@@ -88,7 +88,7 @@ int BankEditor_ProxyStyle::styleHint(QStyle::StyleHint hint, const QStyleOption 
                         width = qMax(width, textWidth + iconSize);
                 }
 
-                view->setFixedWidth(width);
+                view->setMinimumWidth(width);
             }
         } /*fallthrough*/
         //Combobox fix end
