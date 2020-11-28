@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>316</width>
-    <height>249</height>
+    <height>250</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -380,17 +380,17 @@
        </item>
        <item>
         <property name="text">
-         <string notr="true">×(1+ε)</string>
+         <string notr="true">1: ×(1+ε)</string>
         </property>
        </item>
        <item>
         <property name="text">
-         <string notr="true">×(1+2ε)</string>
+         <string notr="true">2: ×(1+2ε)</string>
         </property>
        </item>
        <item>
         <property name="text">
-         <string notr="true">×(1+3ε)</string>
+         <string notr="true">3: ×(1+3ε)</string>
         </property>
        </item>
        <item>
@@ -400,17 +400,17 @@
        </item>
        <item>
         <property name="text">
-         <string notr="true">×(1-ε)</string>
+         <string notr="true">5: ×(1-ε)</string>
         </property>
        </item>
        <item>
         <property name="text">
-         <string notr="true">×(1-2ε)</string>
+         <string notr="true">6: ×(1-2ε)</string>
         </property>
        </item>
        <item>
         <property name="text">
-         <string notr="true">×(1-3ε)</string>
+         <string notr="true">7: ×(1-3ε)</string>
         </property>
        </item>
       </widget>
