@@ -217,6 +217,7 @@ void BankEditor::loadSettings()
     QApplication::setOrganizationDomain(PGE_URL);
     QApplication::setApplicationName("OPN2 FM Banks Editor");
 
+    int preferredMidiStandard = 3;
     int defaultChip = Generator::CHIP_Nuked;
 
     QSettings setup;
@@ -245,6 +246,8 @@ void BankEditor::loadSettings()
     ui->actionEmulatorNP2->setChecked(false);
     ui->actionEmulatorMameOPNA->setChecked(false);
     ui->actionEmulatorPMDWinOPNA->setChecked(false);
+
+    preferredMidiStandard = setup.value("preferred-midi-standard", 3).toInt();
 
     switch(m_currentChip)
     {
@@ -275,6 +278,24 @@ void BankEditor::loadSettings()
     if(const TextFormat *tf = TextFormats::getFormatByName(
            setup.value("text-conversion-format").toString().toStdString()))
         setTextconvFormat(*tf);
+
+    switch(preferredMidiStandard)
+    {
+    case 0: // GM
+        ui->actionStandardGM->setChecked(true);
+        break;
+
+    case 1: // GM2
+        ui->actionStandardGM2->setChecked(true);
+        break;
+
+    case 2: // GS
+        ui->actionStandardGS->setChecked(true);
+        break;
+    default:
+    case 3: // XG, initially set by default
+        break;
+    }
 }
 
 void BankEditor::saveSettings()
@@ -286,6 +307,17 @@ void BankEditor::saveSettings()
     setup.setValue("audio-latency", m_audioLatency);
     setup.setValue("audio-device", m_audioDevice);
     setup.setValue("text-conversion-format", QString::fromStdString(m_textconvFormat->name()));
+
+    int preferredMidiStandard = 3;
+    if(ui->actionStandardGM->isChecked())
+        preferredMidiStandard = 0;
+    else if(ui->actionStandardGM2->isChecked())
+        preferredMidiStandard = 1;
+    else if(ui->actionStandardGS->isChecked())
+        preferredMidiStandard = 2;
+    else if(ui->actionStandardXG->isChecked())
+        preferredMidiStandard = 3;
+    setup.setValue("preferred-midi-standard", preferredMidiStandard);
 }
 
 
