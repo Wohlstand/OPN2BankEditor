@@ -1,7 +1,7 @@
 # OPN2BankEditor
 ![OPN2 Editor Logo](src/resources/opn2_48.png)
 
-A small cross-platform editor for the OPN family of FM synthesis soundchips (which were widely used in Sega Genesis (aka Mega Drive) game console), Fujitsu FM Towns home computer and NEC PC-88 and PC-98 home computer series.)
+A small cross-platform editor for the OPN family of FM synthesis soundchips (which were widely used in Sega Genesis (aka Mega Drive) game console), Fujitsu FM Towns home computer and NEC PC-88 and PC-98 home computer series).
 
 # CI Build status
 Linux | Windows (32-bit) | macOS
@@ -21,6 +21,7 @@ Linux | Windows (32-bit) | macOS
 
 # How to build
 **Prerequisites**
+
 This editor requires following dependences on Linux-based systems.
 Debian and it's derivatives:
 ```
