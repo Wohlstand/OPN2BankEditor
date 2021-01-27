@@ -56,11 +56,11 @@ void GensOPN2::writeReg(uint32_t port, uint16_t addr, uint8_t data)
     switch (port)
     {
     case 0:
-	chip->write(0, addr);
+        chip->write(0, addr);
         chip->write(1, data);   
         break;
     case 1:
-	chip->write(2, addr);
+        chip->write(2, addr);
         chip->write(3, data);
         break;
     }
