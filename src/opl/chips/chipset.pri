@@ -1,5 +1,5 @@
 SOURCES+= \
-    $$PWD/gens/Ym2612_Emu.cpp \
+    $$PWD/gens/Ym2612.cpp \
     $$PWD/mamefm/fm.cpp \
     $$PWD/mamefm/resampler.cpp \
     $$PWD/mamefm/ymdeltat.cpp \
@@ -24,7 +24,8 @@ SOURCES+= \
     $$PWD/pmdwin/rhythmdata.c
 
 HEADERS+= \
-    $$PWD/gens/Ym2612_Emu.h \
+    $$PWD/gens/Ym2612.hpp \
+    $$PWD/gens/Ym2612_p.hpp \
     $$PWD/gx/gx_ym2612.h \
     $$PWD/mame/mame_ym2612fm.h \
     $$PWD/mame/mamedef.h \

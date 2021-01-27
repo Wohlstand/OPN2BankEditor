@@ -23,10 +23,10 @@
 
 #include "opn_chip_base.h"
 
-class Ym2612_Emu;
+namespace LibGens { class Ym2612; }
 class GensOPN2 final : public OPNChipBaseBufferedT<GensOPN2>
 {
-    Ym2612_Emu *chip;
+    LibGens::Ym2612 *chip;
 public:
     explicit GensOPN2(OPNFamily f);
     ~GensOPN2() override;
@@ -35,7 +35,7 @@ public:
     void setRate(uint32_t rate, uint32_t clock) override;
     void reset() override;
     void writeReg(uint32_t port, uint16_t addr, uint8_t data) override;
-    void writePan(uint16_t chan, uint8_t data) override;
+//    void writePan(uint16_t chan, uint8_t data) override;
     void nativePreGenerate() override {}
     void nativePostGenerate() override {}
     void nativeGenerateN(int16_t *output, size_t frames) override;

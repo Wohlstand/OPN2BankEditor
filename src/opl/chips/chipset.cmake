@@ -1,5 +1,5 @@
 set(CHIPS_SOURCES
-    "src/opl/chips/gens/Ym2612_Emu.cpp"
+    "src/opl/chips/gens/Ym2612.cpp"
     "src/opl/chips/mamefm/fm.cpp"
     "src/opl/chips/mamefm/resampler.cpp"
     "src/opl/chips/mamefm/ymdeltat.cpp"
