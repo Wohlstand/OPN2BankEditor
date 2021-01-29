@@ -108,6 +108,8 @@ class Ym2612Private
 			int KC[4];	// Key Code = valeur fonction de la fréquence (voir KSR pour les slots, KSR = KC >> KSR_S)
 			slot_t _SLOT[4];	// four slot.operators = les 4 slots de la voie
 			int FFlag;	// Frequency step recalculation flag
+			int PANVolumeL;         // Left PCM output channel volume
+			int PANVolumeR;         // Right PCM output  channel volume
 		};
 
 		struct state_t {
