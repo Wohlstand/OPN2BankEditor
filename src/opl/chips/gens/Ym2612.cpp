@@ -120,6 +120,31 @@ const uint8_t Ym2612Private::LFO_FMS_TAB[8] = {
 	LFO_FMS_BASE * 12, LFO_FMS_BASE * 24
 };
 
+/*
+ * Pan law table
+ */
+static const unsigned short panlawtable[] =
+{
+	65535, 65529, 65514, 65489, 65454, 65409, 65354, 65289,
+	65214, 65129, 65034, 64929, 64814, 64689, 64554, 64410,
+	64255, 64091, 63917, 63733, 63540, 63336, 63123, 62901,
+	62668, 62426, 62175, 61914, 61644, 61364, 61075, 60776,
+	60468, 60151, 59825, 59489, 59145, 58791, 58428, 58057,
+	57676, 57287, 56889, 56482, 56067, 55643, 55211, 54770,
+	54320, 53863, 53397, 52923, 52441, 51951, 51453, 50947,
+	50433, 49912, 49383, 48846, 48302, 47750, 47191,
+	46340, /* Center left */
+	46340, /* Center right */
+	45472, 44885, 44291, 43690, 43083, 42469, 41848, 41221,
+	40588, 39948, 39303, 38651, 37994, 37330, 36661, 35986,
+	35306, 34621, 33930, 33234, 32533, 31827, 31116, 30400,
+	29680, 28955, 28225, 27492, 26754, 26012, 25266, 24516,
+	23762, 23005, 22244, 21480, 20713, 19942, 19169, 18392,
+	17613, 16831, 16046, 15259, 14469, 13678, 12884, 12088,
+	11291, 10492, 9691, 8888, 8085, 7280, 6473, 5666,
+	4858, 4050, 3240, 2431, 1620, 810, 0
+};
+
 unsigned int Ym2612Private::SL_TAB[16];		// Sustain level table. (STATIC)
 unsigned int Ym2612Private::NULL_RATE[32];	// Table for NULL rate. (STATIC)
 
@@ -1607,10 +1632,17 @@ int Ym2612::reInit(int clock, int rate)
 		d->LFO_INC_TAB[i] = (unsigned int) (LFO_BITS[i] * (double) (1 << (LFO_HBITS + LFO_LBITS)) / j);
 	}
 
+
 	// Reset the YM2612.
 	reset();
 	return 0;
 }
+
+/**void Ym2612::write_pan(int channel, int data )
+{
+	Ym2612.CHANNEL[channel].PANVolumeL = panlawtable[data & 0x7F];
+	Ym2612.CHANNEL[channel].PANVolumeR = panlawtable[0x7F - (data & 0x7F)];
+}*/
 
 /**
  * Reset the YM2612.
@@ -1645,6 +1677,10 @@ void Ym2612::reset(void)
 		d->state.CHANNEL[i].FB = 31;
 		d->state.CHANNEL[i].FMS = 0;
 		d->state.CHANNEL[i].AMS = 0;
+
+
+		d->state.CHANNEL[i].PANVolumeL = 46340;
+		d->state.CHANNEL[i].PANVolumeR = 46340;
 
 		for (int j = 0; j < 4; j++) {
 			d->state.CHANNEL[i].S0_OUT[j] = 0;
@@ -1755,11 +1791,6 @@ int Ym2612::write(unsigned int address, uint8_t data)
 					return 2;
 				}
 				d->state.REG[0][d->state.OPNAadr] = data;
-
-				/* TODO: Reimplement GYM dumping support in LibGens.
-				if (GYM_Dumping)
-					gym_dump_update(1, (uint8_t)d->state.OPNAadr, data);
-				*/
 
 				if (reg_num < 0xA0) {
 					d->SLOT_SET(d->state.OPNAadr, data);
@@ -1907,6 +1938,10 @@ void Ym2612::update(int32_t *bufL, int32_t *bufR, int length)
 
 		algo_type |= 8;
 	}
+        
+         
+	//int t0 = buf [0] + ((CH_OUTd * d->state.CHANNEL[i].PANVolumeL / 65535) & d->state.CHANNEL[i].LEFT);
+	//int t1 = buf [1] + ((CH_OUTd * d->state.CHANNEL[i].PANVolumeL / 65535) & d->state.CHANNEL[i].RIGHT);
 
 	d->Update_Chan((d->state.CHANNEL[0].ALGO + algo_type), &(d->state.CHANNEL[0]), bufL, bufR, length);
 	d->Update_Chan((d->state.CHANNEL[1].ALGO + algo_type), &(d->state.CHANNEL[1]), bufL, bufR, length);
