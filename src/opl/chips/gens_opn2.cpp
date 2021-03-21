@@ -57,7 +57,7 @@ void GensOPN2::writeReg(uint32_t port, uint16_t addr, uint8_t data)
     {
     case 0:
         chip->write(0, addr);
-        chip->write(1, data);   
+        chip->write(1, data);
         break;
     case 1:
         chip->write(2, addr);
@@ -65,12 +65,12 @@ void GensOPN2::writeReg(uint32_t port, uint16_t addr, uint8_t data)
         break;
     }
 }
-/*
+
 void GensOPN2::writePan(uint16_t chan, uint8_t data)
 {
     chip->write_pan(static_cast<int>(chan), static_cast<int>(data));
 }
-*/
+
 void GensOPN2::nativeGenerateN(int16_t *output, size_t frames)
 {
     enum { maxFrames = 256 };

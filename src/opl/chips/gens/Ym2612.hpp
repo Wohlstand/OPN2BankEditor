@@ -51,7 +51,7 @@ class Ym2612
 
 		uint8_t read(void) const;
 		int write(unsigned int address, uint8_t data);
-		void write_pan( int channel, int data);
+		void write_pan(int channel, int data);
 		void update(int32_t *bufL, int32_t *bufR, int length);
 
 		// Properties.

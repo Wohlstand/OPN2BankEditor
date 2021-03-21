@@ -1115,15 +1115,15 @@ en3 = ENV_TAB[(CH->_SLOT[S3].Ecnt >> ENV_LBITS)] + CH->_SLOT[S3].TLL + (env_LFO 
 } while (0)
 
 #define DO_OUTPUT() do {			\
-	bufL[i] += (int)(CH->OUTd & CH->LEFT);	\
-	bufR[i] += (int)(CH->OUTd & CH->RIGHT);	\
+	bufL[i] += (int)((CH->OUTd * CH->PANVolumeL / 65535) & CH->LEFT);	\
+	bufR[i] += (int)((CH->OUTd * CH->PANVolumeR / 65535) & CH->RIGHT);	\
 } while (0)
 
 #define DO_OUTPUT_INT0() do {					\
 	if ((int_cnt += state.Inter_Step) & 0x04000)	{	\
 		int_cnt &= 0x3FFF;				\
-		bufL[i] += (int)(CH->OUTd & CH->LEFT);		\
-		bufR[i] += (int)(CH->OUTd & CH->RIGHT);		\
+		bufL[i] += (int)((CH->OUTd * CH->PANVolumeL / 65535) & CH->LEFT);		\
+		bufR[i] += (int)((CH->OUTd * CH->PANVolumeR / 65535) & CH->RIGHT);		\
 	} else {						\
 		i--;						\
 	}							\
@@ -1133,8 +1133,8 @@ en3 = ENV_TAB[(CH->_SLOT[S3].Ecnt >> ENV_LBITS)] + CH->_SLOT[S3].TLL + (env_LFO 
 	CH->Old_OUTd = (CH->OUTd + CH->Old_OUTd) >> 1;		\
 	if ((int_cnt += state.Inter_Step) & 0x04000) {		\
 		int_cnt &= 0x3FFF;				\
-		bufL[i] += (int)(CH->Old_OUTd & CH->LEFT);	\
-		bufR[i] += (int)(CH->Old_OUTd & CH->RIGHT);	\
+		bufL[i] += (int)((CH->Old_OUTd * CH->PANVolumeL / 65535) & CH->LEFT);	\
+		bufR[i] += (int)((CH->Old_OUTd * CH->PANVolumeR / 65535) & CH->RIGHT);	\
 	} else {						\
 		i--;						\
 	}							\
@@ -1144,8 +1144,8 @@ en3 = ENV_TAB[(CH->_SLOT[S3].Ecnt >> ENV_LBITS)] + CH->_SLOT[S3].TLL + (env_LFO 
 	if ((int_cnt += state.Inter_Step) & 0x04000) {		\
 		int_cnt &= 0x3FFF;				\
 		CH->Old_OUTd = (CH->OUTd + CH->Old_OUTd) >> 1;	\
-		bufL[i] += (int)(CH->Old_OUTd & CH->LEFT);	\
-		bufR[i] += (int)(CH->Old_OUTd & CH->RIGHT);	\
+		bufL[i] += (int)((CH->Old_OUTd * CH->PANVolumeL / 65535) & CH->LEFT);	\
+		bufR[i] += (int)((CH->Old_OUTd * CH->PANVolumeR / 65535) & CH->RIGHT);	\
 	} else {						\
 		i--;						\
 	} \							\
@@ -1157,8 +1157,8 @@ en3 = ENV_TAB[(CH->_SLOT[S3].Ecnt >> ENV_LBITS)] + CH->_SLOT[S3].TLL + (env_LFO 
 		int_cnt &= 0x3FFF;					\
 		CH->Old_OUTd = (((int_cnt ^ 0x3FFF) * CH->OUTd) +	\
 				(int_cnt * CH->Old_OUTd)) >> 14;	\
-		bufL[i] += (int)(CH->Old_OUTd & CH->LEFT);		\
-		bufR[i] += (int)(CH->Old_OUTd & CH->RIGHT);		\
+		bufL[i] += (int)((CH->Old_OUTd * CH->PANVolumeL / 65535) & CH->LEFT);		\
+		bufR[i] += (int)((CH->Old_OUTd * CH->PANVolumeR / 65535) & CH->RIGHT);		\
 	} else {							\
 		i--;							\
 	}								\
@@ -1638,11 +1638,11 @@ int Ym2612::reInit(int clock, int rate)
 	return 0;
 }
 
-/**void Ym2612::write_pan(int channel, int data )
+void Ym2612::write_pan(int channel, int data)
 {
-	Ym2612.CHANNEL[channel].PANVolumeL = panlawtable[data & 0x7F];
-	Ym2612.CHANNEL[channel].PANVolumeR = panlawtable[0x7F - (data & 0x7F)];
-}*/
+	d->state.CHANNEL[channel].PANVolumeL = panlawtable[data & 0x7F];
+	d->state.CHANNEL[channel].PANVolumeR = panlawtable[0x7F - (data & 0x7F)];
+}
 
 /**
  * Reset the YM2612.
@@ -1938,10 +1938,6 @@ void Ym2612::update(int32_t *bufL, int32_t *bufR, int length)
 
 		algo_type |= 8;
 	}
-        
-         
-	//int t0 = buf [0] + ((CH_OUTd * d->state.CHANNEL[i].PANVolumeL / 65535) & d->state.CHANNEL[i].LEFT);
-	//int t1 = buf [1] + ((CH_OUTd * d->state.CHANNEL[i].PANVolumeL / 65535) & d->state.CHANNEL[i].RIGHT);
 
 	d->Update_Chan((d->state.CHANNEL[0].ALGO + algo_type), &(d->state.CHANNEL[0]), bufL, bufR, length);
 	d->Update_Chan((d->state.CHANNEL[1].ALGO + algo_type), &(d->state.CHANNEL[1]), bufL, bufR, length);
