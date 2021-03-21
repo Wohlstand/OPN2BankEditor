@@ -25,7 +25,7 @@
 
 #define PROGRAM_NAME "OPN2 Bank Editor"
 
-#define VERSION "1.3.1"
+#define VERSION "1.3.2"
 
 #ifdef IS_QT_4
 #define COPYRIGHT_SIGN "(C)"
@@ -33,6 +33,6 @@
 #define COPYRIGHT_SIGN "©"
 #endif
 
-#define COPYRIGHT COPYRIGHT_SIGN " 2017-2019, Vitaly Novichkov \"Wohlstand\""
+#define COPYRIGHT COPYRIGHT_SIGN " 2017-2021, Vitaly Novichkov \"Wohlstand\""
 
 #endif // VERSION_H
