@@ -160,7 +160,7 @@ QString Tomsoft_GIN::formatExtensionMask() const
 
 BankFormats Tomsoft_GIN::formatId() const
 {
-    return BankFormats::FORMAT_GEMS_BNK;
+    return BankFormats::FORMAT_TOMSOFT_GIN;
 }
 
 FfmtErrCode Tomsoft_GIN::loadMemInst(const INSTRUMENTFILEITEM *idata, FmBank::Instrument &inst)
