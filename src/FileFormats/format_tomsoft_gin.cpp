@@ -164,7 +164,7 @@ FfmtErrCode Tomsoft_GIN::saveFile(QString filePath, FmBank &bank)
     strncpy(ibank->InstrumentID, magic_tomsoft_gin, strlen(magic_tomsoft_gin) + 1);
     ibank->nID = BANK_VERSION;
 
-    for(unsigned i = 0; i < (unsigned)std::max(128, bank.Ins_Melodic_box.size()); ++i)
+    for(unsigned i = 0; i < (unsigned)std::min(128, bank.Ins_Melodic_box.size()); ++i)
     {
         FmBank::Instrument &ins = bank.Ins_Melodic[i];
 
