@@ -528,6 +528,34 @@ bool BankEditor::openOrImportFile(QString filePath)
 
 bool BankEditor::saveBankFile(QString filePath, BankFormats format)
 {
+    if(FmBankFormatFactory::hasCaps(format, (int)FormatCaps::FORMAT_CAPS_MELODIC_ONLY))
+    {
+        int reply = QMessageBox::question(this,
+                                          tr("Save melodic-only bank file"),
+                                          tr("Saving into '%1' format allows to save "
+                                             "one melodic only bank. "
+                                             "All other banks include percussion will be ignored while saving into the file.\n\n"
+                                             "Do you want to continue file saving?")
+                                          .arg(FmBankFormatFactory::formatName(format)),
+                                          QMessageBox::Yes|QMessageBox::Cancel);
+        if(reply != QMessageBox::Yes)
+            return false;
+    }
+    else
+    if(FmBankFormatFactory::hasCaps(format, (int)FormatCaps::FORMAT_CAPS_PERCUSSION_ONLY))
+    {
+        int reply = QMessageBox::question(this,
+                                          tr("Save percussion-only bank file"),
+                                          tr("Saving into '%1' format allows to save "
+                                             "one percussion only bank. "
+                                             "All other banks include melodic will be ignored while saving into the file.\n\n"
+                                             "Do you want to continue file saving?")
+                                          .arg(FmBankFormatFactory::formatName(format)),
+                                          QMessageBox::Yes|QMessageBox::Cancel);
+        if(reply != QMessageBox::Yes)
+            return false;
+    }
+    else
     if(FmBankFormatFactory::hasCaps(format, (int)FormatCaps::FORMAT_CAPS_GM_BANK) &&
         ((m_bank.Banks_Melodic.size() > 1) || (m_bank.Banks_Percussion.size() > 1))
     )
