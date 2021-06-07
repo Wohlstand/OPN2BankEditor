@@ -225,7 +225,7 @@ public:
         void    setRegSsgEg(int OpID, uint8_t reg_ssgeg);
 
         uint8_t getRegFbAlg() const;
-        void    setRegFbAlg(uint8_t reg_ssgeg);
+        void    setRegFbAlg(uint8_t reg_fbalg);
 
         uint8_t getRegLfoSens() const;
         void    setRegLfoSens(uint8_t reg_lfosens);

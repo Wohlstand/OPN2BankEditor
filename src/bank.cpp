@@ -365,10 +365,10 @@ uint8_t FmBank::Instrument::getRegFbAlg() const
     return out;
 }
 
-void FmBank::Instrument::setRegFbAlg(uint8_t reg_ssgeg)
+void FmBank::Instrument::setRegFbAlg(uint8_t reg_fbalg)
 {
-    feedback    = (reg_ssgeg >> 3) & 0x07;
-    algorithm   = (reg_ssgeg) & 0x07;
+    feedback    = (reg_fbalg >> 3) & 0x07;
+    algorithm   = (reg_fbalg) & 0x07;
 }
 
 uint8_t FmBank::Instrument::getRegLfoSens() const
