@@ -21,6 +21,8 @@
 
 #include "ffmt_base.h"
 
+typedef struct tagInstrumentFileItem INSTRUMENTFILEITEM;
+
 /**
  * @brief Reader and Writer of the GEMS File Format
  */
@@ -35,7 +37,7 @@ public:
     BankFormats formatId() const override;
 
 private:
-    FfmtErrCode loadMemInst(const uint8_t idata[80], FmBank::Instrument &inst);
+    FfmtErrCode loadMemInst(const INSTRUMENTFILEITEM *idata, FmBank::Instrument &inst);
 };
 
 #endif // FORMAT_TOMSOFT_GIN_H
