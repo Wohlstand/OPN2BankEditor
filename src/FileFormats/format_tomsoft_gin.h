@@ -22,6 +22,7 @@
 #include "ffmt_base.h"
 
 typedef struct tagInstrumentFileItem INSTRUMENTFILEITEM;
+typedef struct tagInstrumentFile INSTRUMENTFILE;
 
 /**
  * @brief Reader and Writer of the GEMS File Format
@@ -31,6 +32,7 @@ class Tomsoft_GIN final : public FmBankFormatBase
 public:
     bool        detect(const QString &filePath, char* magic) override;
     FfmtErrCode loadFile(QString filePath, FmBank &bank) override;
+    FfmtErrCode saveFile(QString filePath, FmBank &bank) override;
     int         formatCaps() const override;
     QString     formatName() const override;
     QString     formatExtensionMask() const override;
@@ -38,6 +40,7 @@ public:
 
 private:
     FfmtErrCode loadMemInst(const INSTRUMENTFILEITEM *idata, FmBank::Instrument &inst);
+    FfmtErrCode saveMemInst(INSTRUMENTFILEITEM *idata, const FmBank::Instrument &inst);
 };
 
 #endif // FORMAT_TOMSOFT_GIN_H
