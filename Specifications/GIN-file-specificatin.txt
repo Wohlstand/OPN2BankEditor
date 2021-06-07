@@ -1,0 +1,112 @@
+===============================================================================
+       Sega Megadrive instrument file (GIM) by TommieXie (Xie Rong Chun)
+===============================================================================
+                         Created in June, 7, 2021
+===============================================================================
+Author of specification:    Vitaliy Novichkov "Wohlstand"
+Contacts emails:            admin@wohlnet.ru, nvd339@yandex.ru
+===============================================================================
+
+
+This is an YM2612 instruments bank format developed by TommieXie (Xie Rong Chun)
+around 2000~2002'th years
+
+
+- GIN files has total 4306 bytes size
+- Every GIN file contains the header and 128 melodic instruments inside
+- GIN doesn't support percission instruments being stored
+- Every instrument keeps the chip-global LFO setup register (LFO-En & LFO freq)
+
+All chip register data stored in GIN file has inverted location in their bytes:
+For example:
+ - How actually on the chip specification:  -> 00 AA 0 BBB
+ - How was saved in the file:                  BBB 0 AA 00 <-
+However, bits are in their normal order.
+
+
+===============================================================================
+   Header
+===============================================================================
+    Offset  |  Length    | Description
+-------------------------------------------------------------------------------
+   0x00     | 80 bytes   | The magic number. It should contain next string:
+ = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
+Tomsoft Studio.SEGA Genesys Instrument.1.00a. E-mail:tomsoft@cmmail.com
+ = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
+The string must be terminated with a zero byte, and all bytes left up to end of
+the 80-byte block, are unused and usually contains a garbage.
+_______________________________________________________________________________
+   0x50     |  2 bytes   | Version number, unsigned 16-bit integer, always 0
+-------------------------------------------------------------------------------
+   0x52     | 4224 bytes | Array of [Instrument entry], 128 entries
+-------------------------------------------------------------------------------
+
+
+
+===============================================================================
+   Instrument entry
+===============================================================================
+    Offset  |  Length    | Description
+-------------------------------------------------------------------------------
+   0x00     | 2 bytes    | Bitwise: [NNN BBB RR, NNNNNNNN] (little-endian int)
+            |            | R - 2 bits, Reserved
+            |            | B - 3 bits, Frequency bank
+            |            | N - 11 bits, Frequency number
+-------------------------------------------------------------------------------
+   0x02     | 1 byte     | Bitwise [00 FFF E RR]
+            |            | R - 2 bits, Reserved
+            |            | E - 1 bit, LFO Enabled
+            |            | F - 3 bits, LFO frequency number
+-------------------------------------------------------------------------------
+   0x03     | 1 byte     | Bitwise [AAA FFF RR]
+            |            | R - 2 bits, reserved
+            |            | B - 3 bits, Feedback
+            |            | A - 3 bits, Algorithm number
+-------------------------------------------------------------------------------
+   0x04     | 1 byte     | Bitwise [FFF R AA RR]
+            |            | R - 2 bits, reserved
+            |            | A - 2 bits, LFO AM sensitivity
+            |            | R - 1 bit, reserved
+            |            | F - 3 bits, LFO FM sensitivity
+-------------------------------------------------------------------------------
+   0x05     | 28 bytes   | Array of [Operator], 4 entries
+-------------------------------------------------------------------------------
+
+
+
+===============================================================================
+   Operator
+===============================================================================
+    Offset  |  Length    | Description
+-------------------------------------------------------------------------------
+   0x00     | 1 byte     | Bitwise [MMM DDD R]
+            |            | R - 1 bit, reserved
+            |            | D - 3 bits, Detune
+            |            | M - Frequency multiplicator
+-------------------------------------------------------------------------------
+   0x01     | 1 byte     | Bitwise [LLLLLLL R]
+            |            | R - 1 bit, reserved
+            |            | L - 7 bits, Total Level
+-------------------------------------------------------------------------------
+   0x02     | 1 byte     | Bitwise [AAAAA R SS]
+            |            | SS - 2 bits, Rate scale
+            |            | R - 1 bit, reserved
+            |            | A - 5 bits, Attack Rate
+-------------------------------------------------------------------------------
+   0x03     | 1 byte     | Bitwise [11111 RR L]
+            |            | L - 1 bit, Enable LFO for amplitude
+            |            | R - 2 bits, reserved
+            |            | 1 - 5 bits, Decay rate #1
+-------------------------------------------------------------------------------
+   0x04     | 1 byte     | Bitwise [22222 RRR]
+            |            | R - 3 bits, reserved
+            |            | 2 - 5 bits, Decay rate #2
+-------------------------------------------------------------------------------
+   0x05     | 1 byte     | Bitwise [SSSS LLLL]
+            |            | L - 4 bits, Release rate
+            |            | S - 4 bits, Sustain rate
+-------------------------------------------------------------------------------
+   0x06     | 1 byte     | Bitwise [SSSS RRRR]
+            |            | R - 4 bits, Reserved
+            |            | S - 4 bits, SSG-EG
+-------------------------------------------------------------------------------
