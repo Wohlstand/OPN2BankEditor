@@ -47,6 +47,10 @@ void BankEditor::on_lfoFrequency_currentIndexChanged(int index)
     m_bank.lfo_frequency = uint8_t(index);
 }
 
+void BankEditor::on_volumeSlider_valueChanged(int value)
+{
+    m_generator->ctl_changeVolume((unsigned)value);
+}
 
 void BankEditor::on_insName_textChanged(const QString &arg1)
 {
@@ -103,6 +107,14 @@ void BankEditor::on_perc_noteNum_valueChanged(int arg1)
     m_curInst->percNoteNum = uint8_t(arg1);
     if(ui->percussion->isChecked())
         ui->noteToTest->setValue(arg1);
+    afterChangeControlValue();
+}
+
+void BankEditor::on_fixedNote_clicked(bool checked)
+{
+    if(m_lock) return;
+    if(!m_curInst) return;
+    m_curInst->is_fixed_note = checked;
     afterChangeControlValue();
 }
 

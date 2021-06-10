@@ -105,6 +105,8 @@ void FmBank::reset()
     size = sizeof(MidiBank) * banksnum;
     memset(Banks_Melodic.data(), 0, size);
     memset(Banks_Percussion.data(), 0, size);
+    for(auto &i : Ins_Percussion_box)
+        i.is_fixed_note = true;
     opna_mode       = false;
     lfo_enabled     = false;
     lfo_frequency   = 0;
@@ -126,9 +128,44 @@ void FmBank::reset(uint16_t melodic_banks, uint16_t percussion_banks)
     memset(Banks_Melodic.data(), 0, size);
     size = sizeof(MidiBank) * percussion_banks;
     memset(Banks_Percussion.data(), 0, size);
+    for(auto &i : Ins_Percussion_box)
+        i.is_fixed_note = true;
     opna_mode       = false;
     lfo_enabled     = false;
     lfo_frequency   = 0;
+}
+
+void FmBank::autocreateMissingBanks()
+{
+    int melodic_banks = ((countMelodic() - 1) / 128 + 1);
+    int percussion_banks = ((countDrums() - 1) / 128 + 1);
+    size_t size = 0;
+    if(Banks_Melodic.size() < melodic_banks)
+    {
+        size = (size_t)Banks_Melodic.size();
+        Banks_Melodic.resize(melodic_banks);
+        memset(Banks_Melodic.data() + size, 0, sizeof(MidiBank) * ((size_t)melodic_banks - size));
+        for(int i = (int)size; i < Banks_Melodic.size(); i++)
+        {
+            int lsb = i % 256;
+            int msb = (i >> 8) & 255;
+            Banks_Melodic[i].lsb = (uint8_t)lsb;
+            Banks_Melodic[i].msb = (uint8_t)msb;
+        }
+    }
+    if(Banks_Percussion.size() < percussion_banks)
+    {
+        size = (size_t)Banks_Percussion.size();
+        Banks_Percussion.resize(percussion_banks);
+        memset(Banks_Percussion.data() + size, 0, sizeof(MidiBank) * ((size_t)percussion_banks - size));
+        for(int i = (int)size; i < Banks_Percussion.size(); i++)
+        {
+            int lsb = i % 256;
+            int msb = (i >> 8) & 255;
+            Banks_Percussion[i].lsb = (uint8_t)lsb;
+            Banks_Percussion[i].msb = (uint8_t)msb;
+        }
+    }
 }
 
 uint8_t FmBank::getRegLFO() const
@@ -168,10 +205,11 @@ FmBank::Instrument FmBank::emptyInst()
     return inst;
 }
 
-FmBank::Instrument FmBank::blankInst()
+FmBank::Instrument FmBank::blankInst(bool fixedNote)
 {
     FmBank::Instrument inst = emptyInst();
     inst.is_blank = true;
+    inst.is_fixed_note = fixedNote;
     return inst;
 }
 

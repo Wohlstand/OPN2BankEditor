@@ -58,6 +58,11 @@ public:
     void reset(uint16_t melodic_banks, uint16_t percussion_banks);
 
     /**
+     * @brief Automatically create bank entries in dependence of count of instruments in the bank
+     */
+    void autocreateMissingBanks();
+
+    /**
      * @brief Operator specs
      */
     struct Operator
@@ -193,6 +198,8 @@ public:
         uint16_t ms_sound_koff;
         //! Is instrument blank
         bool     is_blank;
+        //! Is fixed note like drum? (when a melodic instrument)
+        bool     is_fixed_note;
 
         //! Frequency modulation sensitivity (0 or 7)
         uint8_t fm;
@@ -262,7 +269,7 @@ public:
      * @brief Get blank instrument entry
      * @return blank instrument entry
      */
-    static Instrument blankInst();
+    static Instrument blankInst(bool fixedNote = false);
 
     /**
      * @brief Get empty bank meta-data entry

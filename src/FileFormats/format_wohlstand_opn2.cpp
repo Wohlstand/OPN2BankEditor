@@ -61,6 +61,7 @@ static bool readInstrument(QFile &file, FmBank::Instrument &ins, uint16_t &versi
     strncpy(ins.name, char_p(idata), 32);
     ins.note_offset1 = toSint16BE(idata + 32);
     ins.percNoteNum  = idata[34];
+    ins.is_fixed_note = (ins.percNoteNum > 0);
     ins.setRegFbAlg(idata[35]);
     ins.setRegLfoSens(idata[36]);
 
@@ -84,13 +85,13 @@ static bool readInstrument(QFile &file, FmBank::Instrument &ins, uint16_t &versi
     return true;
 }
 
-static bool writeInstrument(QFile &file, FmBank::Instrument &ins, bool hasSoundKoefficients = true)
+static bool writeInstrument(QFile &file, FmBank::Instrument &ins, bool isDrum, bool hasSoundKoefficients = true)
 {
     uint8_t odata[WOPL_INST_SIZE_V2];
     memset(odata, 0, WOPL_INST_SIZE_V2);
     strncpy(char_p(odata), ins.name, 32);
     fromSint16BE(ins.note_offset1, odata + 32);
-    odata[34] = ins.percNoteNum;
+    odata[34] = (ins.is_fixed_note || isDrum) ? ins.percNoteNum : 0;
     odata[35] = ins.getRegFbAlg();
     odata[36] = ins.getRegLfoSens();
     for(int op = 0; op < 4; op++)
@@ -314,7 +315,7 @@ tryAgain:
         if(i < total_insts)
         {
             FmBank::Instrument &ins = insts[i];
-            if(!writeInstrument(file, ins))
+            if(!writeInstrument(file, ins, wrtiePercussion))
             {
                 bankStripBack(bank, alignMelodic, alignDrums);
                 return FfmtErrCode::ERR_BADFORMAT;
@@ -322,7 +323,7 @@ tryAgain:
         }
         else
         {
-            if(!writeInstrument(file, null))
+            if(!writeInstrument(file, null, wrtiePercussion))
             {
                 bankStripBack(bank, alignMelodic, alignDrums);
                 return FfmtErrCode::ERR_BADFORMAT;

@@ -34,6 +34,8 @@ enum MessageTag
     MSG_CtlPatchChange,
     MSG_CtlLFO,
     MSG_CtlLFOFreq,
+    MSG_CtlVolumeModel,
+    MSG_CtlVolume,
 };
 
 struct MessageHeader
@@ -219,6 +221,25 @@ void RealtimeGenerator::ctl_changeLFOfreq(int freq)
     rb.put(freq);
 }
 
+void RealtimeGenerator::ctl_changeVolumeModel(int model)
+{
+    Ring_Buffer &rb = *m_rb_ctl;
+    MessageHeader hdr = {MSG_CtlVolumeModel, sizeof(int)};
+    wait_for_fifo_write_space(rb, hdr.size);
+    rb.put(hdr);
+    rb.put(model);
+}
+
+void RealtimeGenerator::ctl_changeVolume(unsigned vol)
+{
+    Ring_Buffer &rb = *m_rb_ctl;
+    MessageHeader hdr = {MSG_CtlVolume, sizeof(unsigned)};
+    wait_for_fifo_write_space(rb, hdr.size);
+    rb.put(hdr);
+    rb.put(vol);
+}
+
+
 /* MIDI */
 void RealtimeGenerator::midi_event(const uint8_t *msg, unsigned msglen)
 {
@@ -282,9 +303,15 @@ void RealtimeGenerator::rt_message_process(int tag, const uint8_t *data, unsigne
         gen.NoteOffAllChans();
         break;
     case MSG_CtlPlayNote:
+    {
+        // use constant velocity, and controls from MIDI channel 1.
+        // if UI supports changing these later, modify this. (TODO)
+        const MidiChannelInfo &ch = m_midichan[0];
+        const uint8_t vel = 127;
         gen.changeNote(*(unsigned *)data);
-        gen.PlayNote();
+        gen.PlayNote(vel, ch.volume, ch.expression);
         break;
+    }
     case MSG_CtlStopNote:
         gen.changeNote(*(unsigned *)data);
         gen.StopNote();
@@ -295,16 +322,19 @@ void RealtimeGenerator::rt_message_process(int tag, const uint8_t *data, unsigne
     case MSG_CtlHold:
         gen.Hold(*(bool *)data);
         break;
-    case MSG_CtlPlayChord: {
+    case MSG_CtlPlayChord:
+    {
+        const MidiChannelInfo &ch = m_midichan[0];
+        const uint8_t vel = 127;
         ChordMessage msg = *(ChordMessage *)data;
         gen.changeNote(msg.note);
         switch(msg.chord) {
-        case ChordType::Major: gen.PlayMajorChord(); break;
-        case ChordType::Minor: gen.PlayMinorChord(); break;
-        case ChordType::Augmented: gen.PlayAugmentedChord(); break;
-        case ChordType::Diminished: gen.PlayDiminishedChord(); break;
-        case ChordType::Major7: gen.PlayMajor7Chord(); break;
-        case ChordType::Minor7: gen.PlayMinor7Chord(); break;
+        case ChordType::Major: gen.PlayMajorChord(msg.note, vel, ch.volume, ch.expression); break;
+        case ChordType::Minor: gen.PlayMinorChord(msg.note, vel, ch.volume, ch.expression); break;
+        case ChordType::Augmented: gen.PlayAugmentedChord(msg.note, vel, ch.volume, ch.expression); break;
+        case ChordType::Diminished: gen.PlayDiminishedChord(msg.note, vel, ch.volume, ch.expression); break;
+        case ChordType::Major7: gen.PlayMajor7Chord(msg.note, vel, ch.volume, ch.expression); break;
+        case ChordType::Minor7: gen.PlayMinor7Chord(msg.note, vel, ch.volume, ch.expression); break;
         }
         break;
     }
@@ -319,6 +349,17 @@ void RealtimeGenerator::rt_message_process(int tag, const uint8_t *data, unsigne
     case MSG_CtlLFOFreq:
         gen.changeLFOfreq(*(int *)data);
         break;
+    case MSG_CtlVolumeModel:
+        gen.changeVolumeModel(*(int *)data);
+        break;
+    case MSG_CtlVolume:
+    {
+        unsigned vol = *(unsigned *)data;
+        vol = (vol < 128) ? vol : 127;
+        for (unsigned i = 0; i < 16; ++i)
+            m_midichan[i].volume = vol;
+        break;
+    }
     }
 }
 
@@ -345,7 +386,7 @@ void RealtimeGenerator::rt_midi_process(const uint8_t *data, unsigned len)
             break;
         case 0x9:
             gen.changeNote((int)note);
-            gen.PlayNote(vel);
+            gen.PlayNote(vel, ch.volume, ch.expression);
             break;
         case 0xb:
             switch (note) {
@@ -354,6 +395,12 @@ void RealtimeGenerator::rt_midi_process(const uint8_t *data, unsigned len)
                 break;
             case 123:  // all notes off
                 gen.NoteOffAllChans();
+                break;
+            case 7:  // volume
+                ch.volume = vel;
+                break;
+            case 11:  // expression
+                ch.expression = vel;
                 break;
             case 64:  // hold pedal
                 gen.Hold(vel >= 64);
@@ -393,7 +440,7 @@ void RealtimeGenerator::rt_midi_process(const uint8_t *data, unsigned len)
             gen.PitchBend((int)((vel << 7) | note) - 8192);
             break;
         }
-     }
+    }
 }
 
 const GeneratorDebugInfo &RealtimeGenerator::generatorDebugInfo() const

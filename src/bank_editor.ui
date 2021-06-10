@@ -9,8 +9,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>973</width>
-    <height>748</height>
+    <width>960</width>
+    <height>752</height>
    </rect>
   </property>
   <property name="focusPolicy">
@@ -654,16 +654,6 @@
                       <property name="bottomMargin">
                        <number>0</number>
                       </property>
-                      <item row="0" column="0">
-                       <widget class="QLabel" name="label_27">
-                        <property name="toolTip">
-                         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Fixed pitch note number&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Instrument always plays the same note.&lt;/p&gt;&lt;p&gt;Recommended usage for the percussion instruments. If value is 0 - fixed pitch mode is disabled.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-                        </property>
-                        <property name="text">
-                         <string>Note number:</string>
-                        </property>
-                       </widget>
-                      </item>
                       <item row="0" column="1">
                        <widget class="QSpinBox" name="perc_noteNum">
                         <property name="sizePolicy">
@@ -683,6 +673,26 @@
                         </property>
                         <property name="maximum">
                          <number>127</number>
+                        </property>
+                       </widget>
+                      </item>
+                      <item row="0" column="0">
+                       <widget class="QLabel" name="label_27">
+                        <property name="toolTip">
+                         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Fixed pitch note number&lt;/span&gt;&lt;/p&gt;&lt;p&gt;Instrument always plays the same note.&lt;/p&gt;&lt;p&gt;Recommended usage for the percussion instruments. If value is 0 - fixed pitch mode is disabled.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                        </property>
+                        <property name="text">
+                         <string>Note number:</string>
+                        </property>
+                       </widget>
+                      </item>
+                      <item row="0" column="2">
+                       <widget class="QCheckBox" name="fixedNote">
+                        <property name="toolTip">
+                         <string>Fixed note tone</string>
+                        </property>
+                        <property name="text">
+                         <string/>
                         </property>
                        </widget>
                       </item>
@@ -1248,6 +1258,124 @@
            </widget>
           </item>
           <item>
+           <widget class="QGroupBox" name="groupBox_4">
+            <property name="toolTip">
+             <string>&lt;p&gt;Declares a volume scale formula that will set physical volume level from a MIDI volume.&lt;/p&gt;
+&lt;p&gt;&lt;br/&gt;&lt;/p&gt;
+&lt;p&gt;&lt;b&gt;Generic&lt;/b&gt; - linear volume scale&lt;/p&gt;
+&lt;p&gt;&lt;b&gt;OPL3 Native&lt;/b&gt; - Logarithmic volume scale produced by OPL3 chip natively&lt;/p&gt;
+&lt;p&gt;&lt;b&gt;DMX&lt;/b&gt; - Indexed table of volumes that sets OPL volume by MIDI volume. Reproduces a bug of DMX that has an incorrect AM voices processing. Carrier voice has always 63.&lt;/p&gt;
+&lt;p&gt;&lt;b&gt;Apogee&lt;/b&gt; - Tuned logarithmic volume. Reproduces a bug of Apogee Sound System that has an incorrect AM voices processing.&lt;/p&gt;
+&lt;p&gt;&lt;b&gt;Win9x Driver&lt;/b&gt; - A short non-smooth indexed table, shorter in two times than possible OPL3 volume levels.&lt;/p&gt;
+&lt;p&gt;&lt;b&gt;DMX (Fixed AM)&lt;/b&gt; - The DMX volume model with a correct AM voices processing.&lt;/p&gt;
+&lt;p&gt;&lt;b&gt;Apogee (Fixed AM)&lt;/b&gt; - The Apogee volume model with a correct AM voices processing.&lt;/p&gt;
+</string>
+            </property>
+            <property name="title">
+             <string>Bank volume model</string>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignCenter</set>
+            </property>
+            <layout class="QVBoxLayout" name="verticalLayout_13">
+             <property name="spacing">
+              <number>2</number>
+             </property>
+             <property name="leftMargin">
+              <number>1</number>
+             </property>
+             <property name="topMargin">
+              <number>0</number>
+             </property>
+             <property name="rightMargin">
+              <number>1</number>
+             </property>
+             <property name="bottomMargin">
+              <number>0</number>
+             </property>
+             <item>
+              <widget class="QComboBox" name="volumeModel">
+               <property name="maximumSize">
+                <size>
+                 <width>16777215</width>
+                 <height>20</height>
+                </size>
+               </property>
+               <property name="focusPolicy">
+                <enum>Qt::NoFocus</enum>
+               </property>
+               <item>
+                <property name="text">
+                 <string>Generic</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>OPN Native</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string notr="true">DMX</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string notr="true">Apogee Sound System</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string notr="true">Win9x SB16</string>
+                </property>
+               </item>
+              </widget>
+             </item>
+             <item>
+              <widget class="QFrame" name="frame_8">
+               <layout class="QHBoxLayout" name="horizontalLayout_21">
+                <property name="spacing">
+                 <number>1</number>
+                </property>
+                <property name="leftMargin">
+                 <number>0</number>
+                </property>
+                <property name="topMargin">
+                 <number>0</number>
+                </property>
+                <property name="rightMargin">
+                 <number>0</number>
+                </property>
+                <property name="bottomMargin">
+                 <number>0</number>
+                </property>
+                <item>
+                 <widget class="QLabel" name="label_43">
+                  <property name="pixmap">
+                   <pixmap resource="../../OPL3BankEditor/src/resources/resources.qrc">:/aportpti.png</pixmap>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QSlider" name="volumeSlider">
+                  <property name="maximum">
+                   <number>127</number>
+                  </property>
+                  <property name="value">
+                   <number>100</number>
+                  </property>
+                  <property name="orientation">
+                   <enum>Qt::Horizontal</enum>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
+              </widget>
+             </item>
+            </layout>
+           </widget>
+          </item>
+          <item>
            <widget class="QGroupBox" name="testNoteBox">
             <property name="title">
              <string>Testing</string>
@@ -1583,8 +1711,8 @@ Available from 0 to 127</string>
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>973</width>
-     <height>19</height>
+     <width>960</width>
+     <height>20</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -1971,6 +2099,7 @@ Available from 0 to 127</string>
  </customwidgets>
  <resources>
   <include location="resources/resources.qrc"/>
+  <include location="../../OPL3BankEditor/src/resources/resources.qrc"/>
  </resources>
  <connections>
   <connection>

@@ -77,7 +77,7 @@ BankEditor::BankEditor(QWidget *parent) :
     m_curInst = nullptr;
     m_curInstBackup = nullptr;
     m_lock = false;
-    m_recentFormat = BankFormats::FORMAT_WOHLSTAND_OPN2;
+    m_recentFormat = BankFormats::FORMATS_DEFAULT_FORMAT;
     m_currentFileFormat = BankFormats::FORMAT_UNKNOWN;
     m_recentNum     = -1;
     m_recentPerc    = false;
@@ -86,7 +86,7 @@ BankEditor::BankEditor(QWidget *parent) :
     ui->version->setText(QString("%1, v.%2").arg(PROGRAM_NAME).arg(VERSION));
     m_recentMelodicNote = ui->noteToTest->value();
     m_bank.Ins_Melodic_box.fill(FmBank::blankInst());
-    m_bank.Ins_Percussion_box.fill(FmBank::blankInst());
+    m_bank.Ins_Percussion_box.fill(FmBank::blankInst(true));
 
     QActionGroup *actionGroupStandard = new QActionGroup(this);
     m_actionGroupStandard = actionGroupStandard;
@@ -233,6 +233,7 @@ void BankEditor::loadSettings()
     m_language = setup.value("language").toString();
     m_audioLatency = setup.value("audio-latency", audioDefaultLatency).toDouble();
     m_audioDevice = setup.value("audio-device", QString()).toString();
+    m_audioDriver = setup.value("audio-driver", QString()).toString();
 
     if (m_audioLatency < audioMinimumLatency)
         m_audioLatency = audioMinimumLatency;
@@ -306,6 +307,7 @@ void BankEditor::saveSettings()
     setup.setValue("language", m_language);
     setup.setValue("audio-latency", m_audioLatency);
     setup.setValue("audio-device", m_audioDevice);
+    setup.setValue("audio-driver", m_audioDriver);
     setup.setValue("text-conversion-format", QString::fromStdString(m_textconvFormat->name()));
 
     int preferredMidiStandard = 3;
@@ -663,10 +665,10 @@ bool BankEditor::saveFileAs(const QString &optionalFilePath)
     {
         saveFormat = m_currentFileFormat;
         canSaveDirectly =
-            saveFormat != BankFormats::FORMAT_UNKNOWN /* &&
+            saveFormat != BankFormats::FORMAT_UNKNOWN &&
             !FmBankFormatFactory::hasCaps(saveFormat, (int)FormatCaps::FORMAT_CAPS_MELODIC_ONLY) &&
             !FmBankFormatFactory::hasCaps(saveFormat, (int)FormatCaps::FORMAT_CAPS_PERCUSSION_ONLY) &&
-            !FmBankFormatFactory::hasCaps(saveFormat, (int)FormatCaps::FORMAT_CAPS_GM_BANK) */;
+            !FmBankFormatFactory::hasCaps(saveFormat, (int)FormatCaps::FORMAT_CAPS_GM_BANK);
     }
 
     if(canSaveDirectly)
@@ -810,7 +812,7 @@ void BankEditor::on_actionNew_triggered()
 {
     if(!askForSaving())
         return;
-    m_recentFormat = BankFormats::FORMAT_WOHLSTAND_OPN2;
+    m_recentFormat = BankFormats::FORMATS_DEFAULT_FORMAT;
     ui->currentFile->setText(tr("<Untitled>"));
     m_currentFilePath.clear();
     m_currentFileFormat = BankFormats::FORMAT_UNKNOWN;
@@ -1169,6 +1171,7 @@ void BankEditor::loadInstrument()
         m_lock = false;
         return;
     }
+
     ui->editzone->setEnabled(true);
     ui->editzone2->setEnabled(true);
     ui->testNoteBox->setEnabled(true);
@@ -1185,6 +1188,7 @@ void BankEditor::loadInstrument()
                                  .arg(m_curInst->ms_sound_kon)
                                  .arg(m_curInst->ms_sound_koff));
     ui->perc_noteNum->setValue(m_curInst->percNoteNum);
+    ui->fixedNote->setChecked(m_curInst->is_fixed_note);
     ui->noteOffset1->setValue(m_curInst->note_offset1);
 
     ui->feedback1->setValue(m_curInst->feedback);
@@ -1337,10 +1341,12 @@ void BankEditor::on_actionAudioConfig_triggered()
     AudioConfigDialog dlg(m_audioOut, this);
     dlg.setLatency(m_audioLatency);
     dlg.setDeviceName(m_audioDevice);
+    dlg.setDriverName(m_audioDriver);
     if(dlg.exec() == QDialog::Accepted)
     {
         m_audioLatency = dlg.latency();
         m_audioDevice = dlg.deviceName();
+        m_audioDriver = dlg.driverName();
     }
 }
 

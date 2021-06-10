@@ -30,6 +30,41 @@
 
 #define USED_CHANNELS_4OP       6
 
+/***************************************************************
+ *                    Volume model tables                      *
+ ***************************************************************/
+
+// Mapping from MIDI volume level to OPL level value.
+
+static const uint_fast32_t s_dmx_volume_model[128] =
+{
+    0,  1,  3,  5,  6,  8,  10, 11,
+    13, 14, 16, 17, 19, 20, 22, 23,
+    25, 26, 27, 29, 30, 32, 33, 34,
+    36, 37, 39, 41, 43, 45, 47, 49,
+    50, 52, 54, 55, 57, 59, 60, 61,
+    63, 64, 66, 67, 68, 69, 71, 72,
+    73, 74, 75, 76, 77, 79, 80, 81,
+    82, 83, 84, 84, 85, 86, 87, 88,
+    89, 90, 91, 92, 92, 93, 94, 95,
+    96, 96, 97, 98, 99, 99, 100, 101,
+    101, 102, 103, 103, 104, 105, 105, 106,
+    107, 107, 108, 109, 109, 110, 110, 111,
+    112, 112, 113, 113, 114, 114, 115, 115,
+    116, 117, 117, 118, 118, 119, 119, 120,
+    120, 121, 121, 122, 122, 123, 123, 123,
+    124, 124, 125, 125, 126, 126, 127, 127,
+};
+
+static const uint_fast32_t W9X_volume_mapping_table[32] =
+{
+    63, 63, 40, 36, 32, 28, 23, 21,
+    19, 17, 15, 14, 13, 12, 11, 10,
+    9,  8,  7,  6,  5,  5,  4,  4,
+    3,  3,  2,  2,  1,  1,  0,  0
+};
+
+
 QString GeneratorDebugInfo::toStr()
 {
     return QString("Channels:\n"
@@ -245,12 +280,16 @@ void Generator::NoteOn(uint32_t c, double hertz) // Hertz range: 0..131071
     WriteReg(0, 0x28, 0xF0 + uint8_t((c <= 2) ? c : c + 1));
 }
 
-void Generator::Touch_Real(uint32_t c, uint32_t volume)
+void Generator::touchNote(uint32_t c,
+                          uint32_t velocity,
+                          uint8_t channelVolume,
+                          uint8_t channelExpression,
+                          uint32_t brightness)
 {
-    if(volume > 127)
-        volume = 127;
     uint8_t cc   =  c % 3;
     uint8_t port = (c <= 2) ? 0 : 1;
+
+    uint_fast32_t volume = 0;
 
     uint8_t op_vol[4] =
     {
@@ -277,20 +316,98 @@ void Generator::Touch_Real(uint32_t c, uint32_t volume)
         {false,true ,true ,true},//Algorithm #6:  W = (1 * 2) + 3 + 4
         {true ,true ,true ,true},//Algorithm #7:  W = 1 + 2 + 3 + 4
     };
+
+
+    switch(m_volumeScale)
+    {
+    default:
+    case VOLUME_Generic:
+    {
+        volume = velocity * 127 *
+                 channelVolume * channelExpression;
+
+        /* If the channel has arpeggio, the effective volume of
+             * *this* instrument is actually lower due to timesharing.
+             * To compensate, add extra volume that corresponds to the
+             * time this note is *not* heard.
+             * Empirical tests however show that a full equal-proportion
+             * increment sounds wrong. Therefore, using the square root.
+             */
+        //volume = (int)(volume * std::sqrt( (double) ch[c].users.size() ));
+        const double c1 = 11.541560327111707;
+        const double c2 = 1.601379199767093e+02;
+        const uint_fast32_t minVolume = 1108075; // 8725 * 127
+
+        // The formula below: SOLVE(V=127^4 * 2^( (A-63.49999) / 8), A)
+        if(volume > minVolume)
+        {
+            double lv = std::log(static_cast<double>(volume));
+            volume = static_cast<uint_fast32_t>(lv * c1 - c2) * 2;
+        }
+        else
+            volume = 0;
+    }
+    break;
+
+    case VOLUME_CMF:
+    {
+        volume = velocity * channelVolume * channelExpression;
+        //volume = volume * m_masterVolume / (127 * 127 * 127) / 2;
+        volume = ((volume * 127) / 4096766);
+
+        if(volume > 0)
+            volume += 64;//OPN has 0~127 range. As 0...63 is almost full silence, but at 64 to 127 is very closed to OPL3, just add 64.
+    }
+    break;
+
+    case VOLUME_DMX:
+    {
+        volume = (channelVolume * channelExpression * 127) / 16129;
+        volume = (s_dmx_volume_model[volume] + 1) << 1;
+        volume = (s_dmx_volume_model[(velocity < 128) ? velocity : 127] * volume) >> 9;
+
+        if(volume > 0)
+            volume += 64;//OPN has 0~127 range. As 0...63 is almost full silence, but at 64 to 127 is very closed to OPL3, just add 64.
+    }
+    break;
+
+    case VOLUME_APOGEE:
+    {
+        volume = (channelVolume * channelExpression * 127 / 16129);
+        volume = ((64 * (velocity + 0x80)) * volume) >> 15;
+        //volume = ((63 * (vol + 0x80)) * Ch[MidCh].volume) >> 15;
+        if(volume > 0)
+            volume += 64;//OPN has 0~127 range. As 0...63 is almost full silence, but at 64 to 127 is very closed to OPL3, just add 64.
+    }
+    break;
+
+    case VOLUME_9X:
+    {
+        //volume = 63 - W9X_volume_mapping_table[(((vol * Ch[MidCh].volume /** Ch[MidCh].expression*/) * 127 / 16129 /*2048383*/) >> 2)];
+        volume = 63 - W9X_volume_mapping_table[((velocity * channelVolume * channelExpression * 127 / 2048383) >> 2)];
+        //volume = W9X_volume_mapping_table[vol >> 2] + volume;
+        if(volume > 0)
+            volume += 64;//OPN has 0~127 range. As 0...63 is almost full silence, but at 64 to 127 is very closed to OPL3, just add 64.
+    }
+    break;
+    }
+
+    if(volume > 127)
+        volume = 127;
+
     uint8_t alg = m_patch.fbalg & 0x07;
+
     for(uint8_t op = 0; op < 4; op++)
     {
         bool do_op = alg_do[alg][op];
-        uint8_t x = op_vol[op];
-        uint32_t vol_res = do_op ? (127 - (static_cast<uint32_t>(volume) * (127 - (x & 127)))/127) : x;
-        /* TODO: implement brightness
+        uint32_t x = op_vol[op];
+        uint32_t vol_res = do_op ? (127 - (static_cast<uint32_t>(volume) * (127 - (x & 127))) / 127) : x;
         if(brightness != 127)
         {
             brightness = static_cast<uint32_t>(::round(127.0 * ::sqrt((static_cast<double>(brightness)) * (1.0 / 127.0))));
             if(!do_op)
                 vol_res = (127 - (brightness * (127 - (static_cast<uint32_t>(vol_res) & 127))) / 127);
         }
-        */
         WriteReg(port, 0x40 + cc + (4 * op), vol_res);
     }
     // Correct formula (ST3, AdPlug):
@@ -299,15 +416,6 @@ void Generator::Touch_Real(uint32_t c, uint32_t volume)
     //   63 - chanvol + chanvol*instrvol/63
     // Also (slower, floats):
     //   63 + chanvol * (instrvol / 63.0 - 1)
-}
-
-void Generator::Touch(uint32_t c, uint32_t volume) // Volume maxes at 127*127*127
-{
-    // The formula below: SOLVE(V=127^3 * 2^( (A-63.49999) / 8), A)
-    //Touch_Real(c, static_cast<uint32_t>(volume > 8725  ? std::log(volume) * 11.541561 + (0.5 - 104.22845) : 0));
-    Touch_Real(c, volume);
-    // The incorrect formula below: SOLVE(V=127^3 * (2^(A/63)-1), A)
-    //Touch_Real(c, volume>11210 ? 91.61112 * std::log(4.8819E-7*volume + 1.0)+0.5 : 0);
 }
 
 void Generator::Patch(uint32_t c)
@@ -337,29 +445,31 @@ void Generator::Pan(uint32_t c, uint8_t value)
     WriteReg(port, 0xB4 + cc, m_pan_lfo[c]);
 }
 
-void Generator::PlayNoteF(int noteID, uint32_t volume)
+void Generator::PlayNoteF(int noteID, uint32_t volume, uint8_t ccvolume, uint8_t ccexpr)
 {
     if(!m_isInstrumentLoaded)
         return;//Deny playing notes without instrument loaded
 
     bool replace;
-    int ch = m_noteManager.noteOn(noteID, volume, &replace);
+    int ch = m_noteManager.noteOn(noteID, volume, ccvolume, ccexpr, &replace);
 
-    if(replace) {
+    if(replace)
+    {
         //if it replaces an old note, shut up the old one first
         //this lets the sustain take over with a fresh envelope
         NoteOff(ch);
     }
 
-    PlayNoteCh(ch, volume);
+    PlayNoteCh(ch);
 }
 
-void Generator::PlayNoteCh(int ch, uint32_t volume, bool patch)
+void Generator::PlayNoteCh(int ch, bool patch)
 {
     if(!m_isInstrumentLoaded)
         return;//Deny playing notes without instrument loaded
 
     int tone;
+    const NotesManager::Note &channel = m_noteManager.channel(ch);
 
     if(m_patch.tone)
     {
@@ -369,7 +479,7 @@ void Generator::PlayNoteCh(int ch, uint32_t volume, bool patch)
     }
     else
     {
-        tone = m_noteManager.channel(ch).note;
+        tone = channel.note;
     }
 
     m_debug.chan4op = int32_t(ch);
@@ -383,7 +493,7 @@ void Generator::PlayNoteCh(int ch, uint32_t volume, bool patch)
         Pan(ch, 0xC0);
     }
 
-    Touch_Real(ch, getChipVolume(volume, 127, 127));
+    touchNote(ch, channel.volume, channel.ccvolume, channel.ccexpr);
 
     bend  = m_bend + m_patch.finetune;
     NoteOn(ch, std::exp(0.057762265 * (tone + bend + phase)));
@@ -428,8 +538,8 @@ void Generator::PitchBend(int bend)
     for(int ch = 0; ch < channels; ++ch)
     {
         const NotesManager::Note &channel = m_noteManager.channel(ch);
-        if(m_noteManager.channel(ch).note != -1)
-            PlayNoteCh(ch, channel.volume, false);
+        if(channel.note != -1)
+            PlayNoteCh(ch, false);  // updates frequency
     }
 }
 
@@ -450,7 +560,7 @@ void Generator::PlayDrum(uint8_t drum, int noteID)
     uint32_t adlchannel = 18 + drum;
     //Patch(adlchannel);
     Pan(adlchannel, 0xC0);
-    Touch_Real(adlchannel, 127);
+    touchNote(adlchannel, 127, 127, 127, 127);
     double bend = 0.0;
     double phase = 0.0;
     bend  = m_bend + m_patch.finetune;
@@ -463,7 +573,7 @@ void Generator::Silence()
     for(uint32_t c = 0; c < NUM_OF_CHANNELS; ++c)
     {
         NoteOff(c);
-        Touch_Real(c, 0);
+        touchNote(c, 0, 0, 0);
     }
 
     m_noteManager.clearNotes();
@@ -492,59 +602,59 @@ void Generator::NoteOffAllChans()
 
 
 
-void Generator::PlayNote(uint32_t volume)
+void Generator::PlayNote(uint32_t volume, uint8_t ccvolume, uint8_t ccexpr)
 {
-    PlayNoteF(note, volume);
+    PlayNoteF(note, volume, ccvolume, ccexpr);
 }
 
-void Generator::PlayMajorChord()
+void Generator::PlayMajorChord(int n, uint32_t volume, uint8_t ccvolume, uint8_t ccexpr)
 {
-    PlayNoteF(note - 12);
-    PlayNoteF(note);
-    PlayNoteF(note + 4);
-    PlayNoteF(note - 5);
+    PlayNoteF(n - 12, volume, ccvolume, ccexpr);
+    PlayNoteF(n, volume, ccvolume, ccexpr);
+    PlayNoteF(n + 4, volume, ccvolume, ccexpr);
+    PlayNoteF(n - 5, volume, ccvolume, ccexpr);
 }
 
-void Generator::PlayMinorChord()
+void Generator::PlayMinorChord(int n, uint32_t volume, uint8_t ccvolume, uint8_t ccexpr)
 {
-    PlayNoteF(note - 12);
-    PlayNoteF(note);
-    PlayNoteF(note + 3);
-    PlayNoteF(note - 5);
+    PlayNoteF(n - 12, volume, ccvolume, ccexpr);
+    PlayNoteF(n, volume, ccvolume, ccexpr);
+    PlayNoteF(n + 3, volume, ccvolume, ccexpr);
+    PlayNoteF(n - 5, volume, ccvolume, ccexpr);
 }
 
-void Generator::PlayAugmentedChord()
+void Generator::PlayAugmentedChord(int n, uint32_t volume, uint8_t ccvolume, uint8_t ccexpr)
 {
-    PlayNoteF(note - 12);
-    PlayNoteF(note);
-    PlayNoteF(note + 4);
-    PlayNoteF(note - 4);
+    PlayNoteF(n - 12, volume, ccvolume, ccexpr);
+    PlayNoteF(n, volume, ccvolume, ccexpr);
+    PlayNoteF(n + 4, volume, ccvolume, ccexpr);
+    PlayNoteF(n - 4, volume, ccvolume, ccexpr);
 }
 
-void Generator::PlayDiminishedChord()
+void Generator::PlayDiminishedChord(int n, uint32_t volume, uint8_t ccvolume, uint8_t ccexpr)
 {
-    PlayNoteF(note - 12);
-    PlayNoteF(note);
-    PlayNoteF(note + 3);
-    PlayNoteF(note - 6);
+    PlayNoteF(n - 12, volume, ccvolume, ccexpr);
+    PlayNoteF(n, volume, ccvolume, ccexpr);
+    PlayNoteF(n + 3, volume, ccvolume, ccexpr);
+    PlayNoteF(n - 6, volume, ccvolume, ccexpr);
 }
 
-void Generator::PlayMajor7Chord()
+void Generator::PlayMajor7Chord(int n, uint32_t volume, uint8_t ccvolume, uint8_t ccexpr)
 {
-    PlayNoteF(note - 12);
-    PlayNoteF(note - 2);
-    PlayNoteF(note);
-    PlayNoteF(note + 4);
-    PlayNoteF(note - 5);
+    PlayNoteF(n - 12, volume, ccvolume, ccexpr);
+    PlayNoteF(n - 2, volume, ccvolume, ccexpr);
+    PlayNoteF(n, volume, ccvolume, ccexpr);
+    PlayNoteF(n + 4, volume, ccvolume, ccexpr);
+    PlayNoteF(n - 5, volume, ccvolume, ccexpr);
 }
 
-void Generator::PlayMinor7Chord()
+void Generator::PlayMinor7Chord(int n, uint32_t volume, uint8_t ccvolume, uint8_t ccexpr)
 {
-    PlayNoteF(note - 12);
-    PlayNoteF(note - 2);
-    PlayNoteF(note);
-    PlayNoteF(note + 3);
-    PlayNoteF(note - 5);
+    PlayNoteF(n - 12, volume, ccvolume, ccexpr);
+    PlayNoteF(n - 2, volume, ccvolume, ccexpr);
+    PlayNoteF(n, volume, ccvolume, ccexpr);
+    PlayNoteF(n + 3, volume, ccvolume, ccexpr);
+    PlayNoteF(n - 5, volume, ccvolume, ccexpr);
 }
 
 void Generator::StopNote()
@@ -602,7 +712,7 @@ void Generator::changePatch(const FmBank::Instrument &instrument, bool isDrum)
         m_patch.finetune = static_cast<int8_t>(instrument.note_offset1);
         m_patch.tone     = 0;
 
-        if(isDrum)
+        if(isDrum || instrument.is_fixed_note)
             m_patch.tone = instrument.percNoteNum;
     }
 
@@ -632,10 +742,9 @@ void Generator::changeLFOfreq(int freq)
     WriteReg(0, 0x22, lfo_reg);
 }
 
-uint32_t Generator::getChipVolume(uint32_t volume, uint8_t midivolume, uint8_t midiexpr)
+void Generator::changeVolumeModel(int volmodel)
 {
-    volume *= midivolume * midiexpr;
-    return volume > 8725 ? static_cast<uint32_t>((std::log(static_cast<double>(volume)) * (11.541561) + (0.5 - 104.22845)) * 2.0) : 0;
+    m_volumeScale = volmodel;
 }
 
 void Generator::generate(int16_t *frames, unsigned nframes)
@@ -661,7 +770,7 @@ void Generator::NotesManager::allocateChannels(int count)
     cycle = 0;
 }
 
-uint8_t Generator::NotesManager::noteOn(int note, uint32_t volume, bool *r)
+uint8_t Generator::NotesManager::noteOn(int note, uint32_t volume, uint8_t ccvolume, uint8_t ccexpr, bool *r)
 {
     uint8_t beganAt = cycle;
     uint8_t chan = 0;
@@ -686,6 +795,8 @@ uint8_t Generator::NotesManager::noteOn(int note, uint32_t volume, bool *r)
         {
             channels[chan].note = note;
             channels[chan].volume = volume;
+            channels[chan].ccvolume = ccvolume;
+            channels[chan].ccexpr = ccexpr;
             channels[chan].held = false;
             channels[chan].age = 0;
             replace = false;
@@ -711,6 +822,8 @@ uint8_t Generator::NotesManager::noteOn(int note, uint32_t volume, bool *r)
                 chan = (uint8_t)oldest;
                 channels[chan].note = note;
                 channels[chan].volume = volume;
+                channels[chan].ccvolume = ccvolume;
+                channels[chan].ccexpr = ccexpr;
                 channels[chan].held = false;
                 channels[chan].age = 0;
             }

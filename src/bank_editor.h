@@ -33,9 +33,9 @@
 #include "FileFormats/ffmt_base.h"
 
 #ifdef NO_NATIVE_OPEN_DIALOGS
-#define FILE_OPEN_DIALOG_OPTIONS QFileDialog::DontUseNativeDialog
+#   define FILE_OPEN_DIALOG_OPTIONS QFileDialog::DontUseNativeDialog
 #else
-#define FILE_OPEN_DIALOG_OPTIONS 0
+#   define FILE_OPEN_DIALOG_OPTIONS QFileDialog::Options()
 #endif
 
 namespace Ui
@@ -74,6 +74,8 @@ private:
     double m_audioLatency;
     //! Name of the audio device
     QString m_audioDevice;
+    //! Name of the audio driver
+    QString m_audioDriver;
 
 public:
     //! Audio latency constants (ms)
@@ -107,7 +109,7 @@ private:
     bool m_lock;
 
     //! OPL chip emulator frontent
-    IRealtimeControl *m_generator;
+    IRealtimeControl *m_generator = nullptr;
 
     //! Sound length measurer
     Measurer        *m_measurer;
@@ -119,7 +121,8 @@ private:
     InstFormats     m_recentInstFormat;
 
     /* ********** Audio output stuff ********** */
-    AudioOutRt    *m_audioOut = nullptr;
+    typedef AudioOutRt AudioOutDefault;
+    AudioOutDefault *m_audioOut = nullptr;
 
     /* ********** MIDI input stuff ********** */
     #ifdef ENABLE_MIDI
@@ -196,13 +199,14 @@ public:
     bool saveBankFile(QString filePath, BankFormats format);
     /*!
      * \brief Save current instrument file
-     * \param filePath absolute path where save a file
+     * \param filePath absolute path where to save a file
      * \param format Target format to save a file
      * \return true if file successfully saved, false if failed
      */
     bool saveInstrumentFile(QString filePath, InstFormats format);
     /*!
-     * \brief Open Save-As dialog box
+     * \brief Saves current bank file, asking for file path if necessary
+     * \param optionalFilePath absolute path where to save a file, or empty string
      * \return true if file successfuly saved, false on rejecting or on fail
      */
     bool saveFileAs(const QString &optionalFilePath = QString());
@@ -335,11 +339,11 @@ private slots:
      */
     void on_actionOpen_triggered();
     /**
-     * @brief Save current bank state into the file
+     * @brief Save current bank state into the current file
      */
     void on_actionSave_triggered();
     /**
-     * @brief Save current bank state into the file
+     * @brief Save current bank state into a selected file
      */
     void on_actionSaveAs_triggered();
     /**
@@ -475,8 +479,11 @@ private slots:
     void on_insName_textChanged(const QString &arg1);
     void on_insName_editingFinished();
 
+    void on_volumeSlider_valueChanged(int value);
+
     void on_feedback1_valueChanged(int arg1);
     void on_perc_noteNum_valueChanged(int arg1);
+    void on_fixedNote_clicked(bool checked);
 
     void on_algorithm_currentIndexChanged(int index);
     void on_amsens_currentIndexChanged(int index);

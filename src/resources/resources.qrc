@@ -10,6 +10,7 @@
         <file>languages/ru.png</file>
         <file>languages/pl.png</file>
         <file>pencil_16x16.png</file>
+        <file>aportpti.png</file>
         <file>mporto.png</file>
     </qresource>
 </RCC>

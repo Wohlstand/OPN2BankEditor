@@ -27,7 +27,7 @@
 void BankEditor::initAudio()
 {
     qDebug() << "Init audioOut...";
-    m_audioOut = new AudioOutRt(m_audioLatency * 1e-3, m_audioDevice.toStdString(), this);
+    m_audioOut = new AudioOutDefault(m_audioLatency * 1e-3, m_audioDevice.toStdString(), m_audioDriver.toStdString(), this);
     qDebug() << "Init Generator...";
     std::shared_ptr<Generator> generator(
         new Generator(uint32_t(m_audioOut->sampleRate()), m_currentChip));
@@ -66,7 +66,7 @@ void BankEditor::initAudio()
 #else
     connect(ui->noteToTest, SIGNAL(valueChanged(int)), m_generator, SLOT(changeNote(int)));
 #endif
-    m_generator->changeNote(ui->noteToTest->value());
+    m_generator->changeNote((unsigned)ui->noteToTest->value());
 
     //LFO enable/disable, and LFO frequency
 #if QT_VERSION >= 0x050000
@@ -82,6 +82,7 @@ void BankEditor::initAudio()
             m_generator,        SLOT(ctl_changeLFOfreq(int)));
     //TODO: Add OPNx chip frequency toggling
 #endif
+    connect(ui->volumeModel,  SIGNAL(currentIndexChanged(int)), m_generator,  SLOT(ctl_changeVolumeModel(int)));
 
     //Generator's debug info
     connect(m_generator, SIGNAL(debugInfo(QString)), ui->debugBox, SLOT(setText(QString)));

@@ -81,27 +81,41 @@ public:
 
     void NoteOn(uint32_t c, double hertz);
     void NoteOff(uint32_t c);
-    void Touch_Real(uint32_t c, uint32_t volume);
-    void Touch(uint32_t c, uint32_t volume);
+
+    void touchNote(uint32_t c,
+                   uint32_t velocity,
+                   uint8_t ccvolume,
+                   uint8_t ccexpr,
+                   uint32_t brightness = 127);
+
     void Patch(uint32_t c);
     void Pan(uint32_t c, uint8_t value);
-    void PlayNoteF(int noteID, uint32_t volume = 127);
-    void PlayNoteCh(int channelID, uint32_t volume = 127, bool patch = true);
+    void PlayNoteF(int noteID, uint32_t volume = 127, uint8_t ccvolume = 100, uint8_t ccexpr = 127);
+    void PlayNoteCh(int channelID, bool patch = true);
     void StopNoteF(int noteID);
     void StopNoteCh(int channelID);
     void PlayDrum(uint8_t drum, int noteID);
+
+    enum VolumesScale
+    {
+        VOLUME_Generic,
+        VOLUME_CMF,
+        VOLUME_DMX,
+        VOLUME_APOGEE,
+        VOLUME_9X
+    };
 
 public:
     void Silence();
     void NoteOffAllChans();
 
-    void PlayNote(uint32_t volume = 127);
-    void PlayMajorChord();
-    void PlayMinorChord();
-    void PlayAugmentedChord();
-    void PlayDiminishedChord();
-    void PlayMajor7Chord();
-    void PlayMinor7Chord();
+    void PlayNote(uint32_t volume = 127, uint8_t ccvolume = 100, uint8_t ccexpr = 127);
+    void PlayMajorChord(int note, uint32_t volume, uint8_t ccvolume, uint8_t ccexpr);
+    void PlayMinorChord(int note, uint32_t volume, uint8_t ccvolume, uint8_t ccexpr);
+    void PlayAugmentedChord(int note, uint32_t volume, uint8_t ccvolume, uint8_t ccexpr);
+    void PlayDiminishedChord(int note, uint32_t volume, uint8_t ccvolume, uint8_t ccexpr);
+    void PlayMajor7Chord(int note, uint32_t volume, uint8_t ccvolume, uint8_t ccexpr);
+    void PlayMinor7Chord(int note, uint32_t volume, uint8_t ccvolume, uint8_t ccexpr);
     void StopNote();
     void PitchBend(int bend);
     void PitchBendSensitivity(int cents);
@@ -112,11 +126,10 @@ public:
 
     void changeLFO(bool enabled);
     void changeLFOfreq(int freq);
+    void changeVolumeModel(int volmodel);
 
     const GeneratorDebugInfo &debugInfo() const
         { return m_debug; }
-
-    static uint32_t getChipVolume(uint32_t volume, uint8_t midivolume, uint8_t midiexpr);
 
 private:
     GeneratorDebugInfo m_debug;
@@ -133,6 +146,10 @@ private:
             int note    = -1;
             //! Note volume determined by velocity
             uint32_t volume = 0;
+            //! Channel volume determined by controller
+            uint8_t ccvolume = 0;
+            //! Channel expression determined by controller
+            uint8_t ccexpr = 0;
             //! Age in count of noteOn requests
             int age = 0;
             //! Whether it has a pending noteOff being delayed while held
@@ -147,7 +164,7 @@ private:
         NotesManager();
         ~NotesManager();
         void allocateChannels(int count);
-        uint8_t noteOn(int note, uint32_t volume, bool *replace = nullptr);
+        uint8_t noteOn(int note, uint32_t volume, uint8_t ccvolume, uint8_t ccexpr, bool *replace = nullptr);
         int8_t  noteOff(int note);
         void    channelOff(int ch);
         int8_t  findNoteOffChannel(int note);
@@ -156,13 +173,14 @@ private:
         const Note &channel(int ch) const
             { return channels.at(ch); }
         int channelCount() const
-            { return (int)channels.size(); }
+            { return static_cast<int>(channels.size()); }
     } m_noteManager;
 
     int32_t     note;
     double      m_bend = 0.0;
     double      m_bendsense = 2.0 / 8192;
     bool        m_hold = false;
+    int         m_volumeScale = VOLUME_Generic;
     bool        m_isInstrumentLoaded = false;
     uint8_t     lfo_enable = 0x00;
     uint8_t     lfo_freq   = 0x00;

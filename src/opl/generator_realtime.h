@@ -68,6 +68,8 @@ public slots:
     virtual void ctl_changePatch(FmBank::Instrument &instrument, bool isDrum = false) = 0;
     virtual void ctl_changeLFO(bool lfo) = 0;
     virtual void ctl_changeLFOfreq(int freq) = 0;
+    virtual void ctl_changeVolumeModel(int model) = 0;
+    virtual void ctl_changeVolume(unsigned vol) = 0;
 
 signals:
     void debugInfo(QString);
@@ -127,6 +129,8 @@ public:
     void ctl_changePatch(FmBank::Instrument &instrument, bool isDrum = false) override;
     void ctl_changeLFO(bool lfo) override;
     void ctl_changeLFOfreq(int freq) override;
+    void ctl_changeVolumeModel(int model) override;
+    void ctl_changeVolume(unsigned vol) override;
     /* MIDI */
     void midi_event(const uint8_t *msg, unsigned msglen) override;
     /* Realtime */
@@ -152,6 +156,8 @@ private:
         bool nrpn = false;
         unsigned bendsensemsb = 2;
         unsigned bendsenselsb = 0;
+        unsigned volume = 100;
+        unsigned expression = 127;
     };
     MidiChannelInfo m_midichan[16];
 
