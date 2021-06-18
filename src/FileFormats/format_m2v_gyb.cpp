@@ -31,6 +31,11 @@ QString Basic_M2V_GYB::formatExtensionMask() const
     return "*.gyb";
 }
 
+QString Basic_M2V_GYB::formatDefaultExtension() const
+{
+    return "gyb";
+}
+
 // TODO: Implement a hash summ generator and checker
 FfmtErrCode Basic_M2V_GYB::loadFileVersion1Or2(QFile &file, FmBank &bank, uint8_t version)
 {

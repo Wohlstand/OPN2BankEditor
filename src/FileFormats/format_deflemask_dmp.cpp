@@ -237,6 +237,11 @@ QString DefleMask::formatInstExtensionMask() const
     return "*.dmp";
 }
 
+QString DefleMask::formatInstDefaultExtension() const
+{
+    return "dmp";
+}
+
 InstFormats DefleMask::formatInstId() const
 {
     return FORMAT_INST_DM_DMP;

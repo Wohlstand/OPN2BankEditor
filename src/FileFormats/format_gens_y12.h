@@ -34,6 +34,7 @@ public:
     int         formatInstCaps() const override;
     QString     formatInstName() const override;
     QString     formatInstExtensionMask() const override;
+    QString     formatInstDefaultExtension() const override;
     InstFormats formatInstId() const override;
 };
 

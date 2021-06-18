@@ -33,6 +33,7 @@ public:
     virtual ~Basic_M2V_GYB() {}
 
     QString formatExtensionMask() const override;
+    QString formatDefaultExtension() const override;
 
 protected:
     FfmtErrCode loadFileVersion1Or2(QFile &file, FmBank &bank, uint8_t version);

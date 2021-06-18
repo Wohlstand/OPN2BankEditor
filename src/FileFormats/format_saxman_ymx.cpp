@@ -205,6 +205,11 @@ QString Saxman_YMX::formatExtensionMask() const
     return "*.ymx";
 }
 
+QString Saxman_YMX::formatDefaultExtension() const
+{
+    return "ymx";
+}
+
 BankFormats Saxman_YMX::formatId() const
 {
     return BankFormats::FORMAT_SAXMAN_YMX;

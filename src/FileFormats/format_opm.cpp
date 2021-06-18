@@ -225,6 +225,11 @@ QString OPM::formatExtensionMask() const
     return "*.opm";
 }
 
+QString OPM::formatDefaultExtension() const
+{
+    return "opm";
+}
+
 BankFormats OPM::formatId() const
 {
     return FORMAT_OPM;

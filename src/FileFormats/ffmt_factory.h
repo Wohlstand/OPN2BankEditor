@@ -53,11 +53,11 @@ public:
     static bool isImportOnly(BankFormats format);
     static bool hasCaps(BankFormats format, int capsQuery);
     static QString formatName(BankFormats format);
-    static FfmtErrCode SaveBankFile(QString filePath, FmBank &bank, BankFormats dest);
     static FfmtErrCode OpenBankFile(QString filePath, FmBank &bank, BankFormats *recent = nullptr);
     static FfmtErrCode ImportBankFile(QString filePath, FmBank &bank, BankFormats *recent = nullptr);
+    static FfmtErrCode SaveBankFile(QString &filePath, FmBank &bank, BankFormats dest);
     static FfmtErrCode OpenInstrumentFile(QString filePath, FmBank::Instrument &ins, InstFormats *recent=0, bool *isDrum = 0, bool import = false);
-    static FfmtErrCode SaveInstrumentFile(QString filePath, FmBank::Instrument &ins, InstFormats format, bool isDrum);
+    static FfmtErrCode SaveInstrumentFile(QString &filePath, FmBank::Instrument &ins, InstFormats format, bool isDrum);
 };
 
 #endif // FFMT_FACTORY_H

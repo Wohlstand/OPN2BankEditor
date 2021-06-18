@@ -362,6 +362,11 @@ QString WohlstandOPN2::formatExtensionMask() const
     return "*.wopn";
 }
 
+QString WohlstandOPN2::formatDefaultExtension() const
+{
+    return "wopn";
+}
+
 BankFormats WohlstandOPN2::formatId() const
 {
     return BankFormats::FORMAT_WOHLSTAND_OPN2;
@@ -438,6 +443,11 @@ QString WohlstandOPN2::formatInstName() const
 QString WohlstandOPN2::formatInstExtensionMask() const
 {
     return "*.opni";
+}
+
+QString WohlstandOPN2::formatInstDefaultExtension() const
+{
+    return "opni";
 }
 
 InstFormats WohlstandOPN2::formatInstId() const

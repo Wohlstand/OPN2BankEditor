@@ -122,6 +122,11 @@ QString VGM_MM::formatInstExtensionMask() const
     return "*.vgi";
 }
 
+QString VGM_MM::formatInstDefaultExtension() const
+{
+    return "vgi";
+}
+
 InstFormats VGM_MM::formatInstId() const
 {
     return FORMAT_INST_VGM_MM;

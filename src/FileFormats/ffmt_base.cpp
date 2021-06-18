@@ -81,6 +81,10 @@ QString FmBankFormatBase::formatInstExtensionMask() const
     return "*.*";
 }
 
+QString FmBankFormatBase::formatInstDefaultExtension() const
+{
+    return QString();
+}
 QString FmBankFormatBase::formatName() const
 {
     return "Unknown format";
@@ -94,6 +98,11 @@ QString FmBankFormatBase::formatModuleName() const
 QString FmBankFormatBase::formatExtensionMask() const
 {
     return "*.*";
+}
+
+QString FmBankFormatBase::formatDefaultExtension() const
+{
+    return QString();
 }
 
 BankFormats FmBankFormatBase::formatId() const

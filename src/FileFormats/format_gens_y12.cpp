@@ -126,6 +126,11 @@ QString Gens_Y12::formatInstExtensionMask() const
     return "*.y12";
 }
 
+QString Gens_Y12::formatInstDefaultExtension() const
+{
+    return "y12";
+}
+
 InstFormats Gens_Y12::formatInstId() const
 {
     return FORMAT_INST_Y12;

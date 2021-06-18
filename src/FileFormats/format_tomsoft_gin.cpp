@@ -198,6 +198,11 @@ QString Tomsoft_GIN::formatExtensionMask() const
     return "*.gin";
 }
 
+QString Tomsoft_GIN::formatDefaultExtension() const
+{
+    return "gin";
+}
+
 BankFormats Tomsoft_GIN::formatId() const
 {
     return BankFormats::FORMAT_TOMSOFT_GIN;

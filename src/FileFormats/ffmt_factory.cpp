@@ -53,11 +53,21 @@ static FmBankFormatsL g_formatsInstr;
 
 static void registerBankFormat(FmBankFormatBase *format)
 {
+#ifndef QT_NO_DEBUG
+    // Banks with the save capability must have the default extension set
+    if((format->formatCaps() & (int)FormatCaps::FORMAT_CAPS_SAVE) != 0)
+        Q_ASSERT(!format->formatDefaultExtension().isEmpty());
+#endif
     g_formats.push_back(FmBankFormatBase_uptr(format));
 }
 
 static void registerInstFormat(FmBankFormatBase *format)
 {
+#ifndef QT_NO_DEBUG
+    // Instruments with the save capability must have the default extension set
+    if((format->formatInstCaps() & (int)FormatCaps::FORMAT_CAPS_SAVE) != 0)
+        Q_ASSERT(!format->formatInstDefaultExtension().isEmpty());
+#endif
     g_formatsInstr.push_back(FmBankFormatBase_uptr(format));
 }
 
@@ -334,7 +344,7 @@ FfmtErrCode FmBankFormatFactory::ImportBankFile(QString filePath, FmBank &bank, 
     return err;
 }
 
-FfmtErrCode FmBankFormatFactory::SaveBankFile(QString filePath, FmBank &bank, BankFormats dest)
+FfmtErrCode FmBankFormatFactory::SaveBankFile(QString &filePath, FmBank &bank, BankFormats dest)
 {
     FfmtErrCode err = FfmtErrCode::ERR_UNSUPPORTED_FORMAT;
     for(FmBankFormatBase_uptr &p : g_formats)
@@ -342,6 +352,9 @@ FfmtErrCode FmBankFormatFactory::SaveBankFile(QString filePath, FmBank &bank, Ba
         Q_ASSERT(p.get());//It must be non-null!
         if((p->formatCaps() & (int)FormatCaps::FORMAT_CAPS_SAVE) && (p->formatId() == dest))
         {
+            QString suff = QString(".%1").arg(p->formatDefaultExtension());
+            if(!filePath.endsWith(suff, Qt::CaseInsensitive))
+                filePath.append(suff);
             err = p->saveFile(filePath, bank);
             break;
         }
@@ -379,7 +392,7 @@ FfmtErrCode FmBankFormatFactory::OpenInstrumentFile(QString filePath,
     return err;
 }
 
-FfmtErrCode FmBankFormatFactory::SaveInstrumentFile(QString filePath, FmBank::Instrument &ins, InstFormats dest, bool isDrum)
+FfmtErrCode FmBankFormatFactory::SaveInstrumentFile(QString &filePath, FmBank::Instrument &ins, InstFormats dest, bool isDrum)
 {
     FfmtErrCode err = FfmtErrCode::ERR_UNSUPPORTED_FORMAT;
     for(FmBankFormatBase_uptr &p : g_formatsInstr)
@@ -387,6 +400,9 @@ FfmtErrCode FmBankFormatFactory::SaveInstrumentFile(QString filePath, FmBank::In
         Q_ASSERT(p.get());//It must be non-null!
         if((p->formatInstCaps() & (int)FormatCaps::FORMAT_CAPS_SAVE) && (p->formatInstId() == dest))
         {
+            QString suff = QString(".%1").arg(p->formatInstDefaultExtension());
+            if(!filePath.endsWith(suff, Qt::CaseInsensitive))
+                filePath.append(suff);
             err = p->saveFileInst(filePath, ins, isDrum);
             break;
         }

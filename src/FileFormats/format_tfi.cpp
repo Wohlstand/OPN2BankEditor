@@ -192,6 +192,11 @@ QString TFI_MM::formatInstExtensionMask() const
     return "*.tfi";
 }
 
+QString TFI_MM::formatInstDefaultExtension() const
+{
+    return "tfi";
+}
+
 InstFormats TFI_MM::formatInstId() const
 {
     return FORMAT_INST_TFI_MM;

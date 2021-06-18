@@ -106,6 +106,11 @@ QString GEMS_PAT::formatExtensionMask() const
     return "*.bnk";
 }
 
+QString GEMS_PAT::formatDefaultExtension() const
+{
+    return "bnk";
+}
+
 BankFormats GEMS_PAT::formatId() const
 {
     return BankFormats::FORMAT_GEMS_BNK;
