@@ -1,4 +1,7 @@
 /*
+ * OPL Bank Editor by Wohlstand, a free tool for music bank editing
+ * Copyright (c) 2016-2021 Vitaly Novichkov <admin@wohlnet.ru>
+ *
  * OPN2 Bank Editor by Wohlstand, a free tool for music bank editing
  * Copyright (c) 2017-2021 Vitaly Novichkov <admin@wohlnet.ru>
  *
@@ -101,11 +104,17 @@ uint16_t toUint16BE(const uint8_t *arr);
 int16_t toSint16BE(const uint8_t *arr);
 
 /*!
- * \brief Convers array of big endian bytes into int
+ * \brief Convers array of little endian bytes into int
  * \param arr Source array of bytes
  * \return Resulted number
  */
 uint32_t toUint32LE(const uint8_t *arr);
+/*!
+ * \brief Convers array of big endian bytes into int
+ * \param arr Source array of bytes
+ * \return Resulted number
+ */
+uint32_t toUint32BE(const uint8_t *arr);
 
 
 /*!
@@ -159,8 +168,10 @@ void getMagic(QString filePath, char* bytes, int count);
  */
 bool hasExt(const QString &file, const char*ext);
 
+#if defined(IS_QT_4) || defined(QT_GUI_LIB)
 void ErrMessageO(QWidget *parent, QString errStr, bool isBank = true);
 
 void ErrMessageS(QWidget *parent, QString errStr, bool isBank = true);
+#endif //QT_WIDGETS_LIB
 
 #endif // COMMON_H

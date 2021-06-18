@@ -1,4 +1,7 @@
 /*
+ * OPL Bank Editor by Wohlstand, a free tool for music bank editing
+ * Copyright (c) 2016-2021 Vitaly Novichkov <admin@wohlnet.ru>
+ *
  * OPN2 Bank Editor by Wohlstand, a free tool for music bank editing
  * Copyright (c) 2017-2021 Vitaly Novichkov <admin@wohlnet.ru>
  *
@@ -50,9 +53,9 @@ public:
     static bool isImportOnly(BankFormats format);
     static bool hasCaps(BankFormats format, int capsQuery);
     static QString formatName(BankFormats format);
-    static FfmtErrCode OpenBankFile(QString filePath, FmBank &bank, BankFormats *recent=0);
-    static FfmtErrCode ImportBankFile(QString filePath, FmBank &bank, BankFormats *recent=0);
     static FfmtErrCode SaveBankFile(QString filePath, FmBank &bank, BankFormats dest);
+    static FfmtErrCode OpenBankFile(QString filePath, FmBank &bank, BankFormats *recent = nullptr);
+    static FfmtErrCode ImportBankFile(QString filePath, FmBank &bank, BankFormats *recent = nullptr);
     static FfmtErrCode OpenInstrumentFile(QString filePath, FmBank::Instrument &ins, InstFormats *recent=0, bool *isDrum = 0, bool import = false);
     static FfmtErrCode SaveInstrumentFile(QString filePath, FmBank::Instrument &ins, InstFormats format, bool isDrum);
 };

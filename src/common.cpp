@@ -1,4 +1,7 @@
 /*
+ * OPL Bank Editor by Wohlstand, a free tool for music bank editing
+ * Copyright (c) 2016-2021 Vitaly Novichkov <admin@wohlnet.ru>
+ *
  * OPN2 Bank Editor by Wohlstand, a free tool for music bank editing
  * Copyright (c) 2017-2021 Vitaly Novichkov <admin@wohlnet.ru>
  *
@@ -18,7 +21,9 @@
 
 #include "common.h"
 
+#if defined(IS_QT_4) || defined(QT_GUI_LIB)
 #include <QMessageBox>
+#endif
 
 qint64 readLE(QFile &file, uint16_t &out)
 {
@@ -117,6 +122,14 @@ uint32_t toUint32LE(const uint8_t *arr)
     return num;
 }
 
+uint32_t toUint32BE(const uint8_t *arr)
+{
+    uint32_t num = arr[3];
+    num |= (static_cast<uint32_t>(arr[2] << 8)  & 0x0000FF00);
+    num |= (static_cast<uint32_t>(arr[1] << 16) & 0x00FF0000);
+    num |= (static_cast<uint32_t>(arr[0] << 24) & 0xFF000000);
+    return num;
+}
 
 void fromSint16LE(int16_t in, uint8_t *arr)
 {
