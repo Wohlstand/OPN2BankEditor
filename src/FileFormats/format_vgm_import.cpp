@@ -24,6 +24,7 @@
 #include <QSet>
 #include <QByteArray>
 #include <QBuffer>
+#include <QDebug>
 #include <zlib.h>
 #include <algorithm>
 #include <cstring>
@@ -138,57 +139,64 @@ FfmtErrCode VGM_Importer::load(QIODevice &file, FmBank &bank)
 
     uint32_t pcm_offset = 0;
     bool end = false;
+
     while(!end && !file.atEnd())
     {
         uint8_t cmd = 0x00;
         uint8_t reg = 0x00;
         uint8_t val = 0x00;
+
+        qint64 cmdOffset = file.pos();
         file.read(char_p(&cmd), 1);
+
         switch(cmd)
         {
-        default: {
+        default:
+        {
+            qWarning() << "VGM Import:" << "Unrecognized command: " << QString::number(cmd, 16) << "offset" << cmdOffset;
+
             uint8_t toSkip = vgm_sizetable[cmd];
             if(toSkip != 0xFF)
                 file.seek(file.pos() + toSkip);
             else
             {
-                //Unrecognized command
+                // Unrecognized command
                 end = true;
             }
             break;
         }
 
-        case 0x52://Write YM2612 port 0
+        case 0x52: // Write YM2612 port 0
             file.read(char_p(&reg), 1);
             file.read(char_p(&val), 1);
             pseudoChip.passReg(0, reg, val);
             break;
-        case 0x53://Write YM2612 port 1
+        case 0x53: // Write YM2612 port 1
             file.read(char_p(&reg), 1);
             file.read(char_p(&val), 1);
             pseudoChip.passReg(1, reg, val);
             break;
 
-        case 0x54://Write YM2151 port
+        case 0x54: // Write YM2151 port
             file.read(char_p(&reg), 1);
             file.read(char_p(&val), 1);
             pseudoChip2151.passReg(reg, val);
             break;
 
-        case 0x56://Write YM2608 port 0
+        case 0x56: // Write YM2608 port 0
             file.read(char_p(&reg), 1);
             file.read(char_p(&val), 1);
             pseudoChip2608.passReg(0, reg, val);
             break;
-        case 0x57://Write YM2608 port 1
+        case 0x57: // Write YM2608 port 1
             file.read(char_p(&reg), 1);
             file.read(char_p(&val), 1);
             pseudoChip2608.passReg(1, reg, val);
             break;
 
-        case 0x61://Wait samples
-        case 0x62://Wait samples
-        case 0x63://Wait samples
+        case 0x61: // Wait samples
+        case 0x62: // Wait samples
+        case 0x63: // Wait samples
         case 0x70:
         case 0x71:
         case 0x72:
@@ -212,11 +220,11 @@ FfmtErrCode VGM_Importer::load(QIODevice &file, FmBank &bank)
             pseudoChip2151.doAnalyzeState();
             break;
 
-        case 0x66://End of sound data
+        case 0x66: // End of sound data
             end = 1;
             break;
 
-        case 0x67://Data block to skip
+        case 0x67: // Data block to skip
             file.seek(file.pos() + 2);
             file.read(char_p(numb), 4);
             pcm_offset = toUint32LE(numb);
@@ -227,24 +235,34 @@ FfmtErrCode VGM_Importer::load(QIODevice &file, FmBank &bank)
             file.seek(file.pos() + pcm_offset);
             break;
 
-        case 0x50:
+        case 0x50: // PSG (SN76489/SN76496) write value, skip
             file.seek(file.pos() + 1);
-            //printf("PSG (SN76489/SN76496) write value, skip\n");
             break;
 
-        case 0xE0:
+        case 0xE0: // PCM offset, skip
             file.seek(file.pos() + 4);
-            //printf("PCM offset, skip\n");
             break;
 
-        case 0x80:
-            file.seek(file.pos() + 1);
-            //printf("PCM sample\n");
+        case 0x80: // Wait for N samples
+        case 0x81:
+        case 0x82:
+        case 0x83:
+        case 0x84:
+        case 0x85:
+        case 0x86:
+        case 0x87:
+        case 0x88:
+        case 0x89:
+        case 0x8A:
+        case 0x8B:
+        case 0x8C:
+        case 0x8D:
+        case 0x8E:
+        case 0x8F:
             break;
 
         case 0x4F:
-            file.seek(file.pos() + 1);
-            //printf("PCM sample\n");
+            file.seek(file.pos() + 1); // Game Gear PSG stereo
             break;
         }
     }
