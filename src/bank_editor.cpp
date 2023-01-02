@@ -1,6 +1,6 @@
 /*
  * OPN2 Bank Editor by Wohlstand, a free tool for music bank editing
- * Copyright (c) 2017-2021 Vitaly Novichkov <admin@wohlnet.ru>
+ * Copyright (c) 2017-2022 Vitaly Novichkov <admin@wohlnet.ru>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -39,6 +39,7 @@
 #include "delay_analysis.h"
 #endif
 #include "register_editor.h"
+#include "inst_list_model.h"
 
 #include "FileFormats/ffmt_factory.h"
 #include "FileFormats/text_format.h"
@@ -48,9 +49,9 @@
 #include "common.h"
 #include "version.h"
 
-#define INS_INDEX   (Qt::UserRole)
-#define INS_BANK_ID (Qt::UserRole + 1)
-#define INS_INS_ID  (Qt::UserRole + 2)
+//#define INS_INDEX   (Qt::UserRole)
+//#define INS_BANK_ID (Qt::UserRole + 1)
+//#define INS_INS_ID  (Qt::UserRole + 2)
 
 static void setInstrumentMetaInfo(QListWidgetItem *item, int index)
 {
@@ -87,6 +88,9 @@ BankEditor::BankEditor(QWidget *parent) :
     m_recentMelodicNote = ui->noteToTest->value();
     m_bank.Ins_Melodic_box.fill(FmBank::blankInst());
     m_bank.Ins_Percussion_box.fill(FmBank::blankInst(true));
+
+    m_instrumentsModel = new InstrumentsListModel(&m_bank, ui->instrumentsWIP);
+    ui->instrumentsWIP->setModel(m_instrumentsModel);
 
     QActionGroup *actionGroupStandard = new QActionGroup(this);
     m_actionGroupStandard = actionGroupStandard;
@@ -473,6 +477,10 @@ void BankEditor::initFileData(QString &filePath)
     reloadInstrumentNames();
     reloadBanks();
     setCurrentInstrument(m_recentNum, m_recentPerc);
+
+    m_instrumentsModel->updateList();
+    m_instrumentsModel->setPersecutionMode(ui->percussion->isChecked());
+    m_instrumentsModel->switchBank(ui->bank_no->currentIndex());
 }
 
 void BankEditor::reInitFileDataAfterSave(QString &filePath)
@@ -1387,6 +1395,7 @@ void BankEditor::on_bank_no_currentIndexChanged(int index)
     ui->bank_no->setHidden(ui->actionAdLibBnkMode->isChecked());
     ui->bank_lsbmsb->setHidden(ui->actionAdLibBnkMode->isChecked() || (index < 0));
     ui->bank_lsbmsb->setDisabled(index <= 0);
+
     if(index >= 0)
     {
         this->m_lock = true;
@@ -1400,13 +1409,18 @@ void BankEditor::on_bank_no_currentIndexChanged(int index)
         }
         this->m_lock = false;
     }
+
     QList<QListWidgetItem *> items = ui->instruments->findItems("*", Qt::MatchWildcard);
     for(QListWidgetItem *it : items)
         it->setHidden(!ui->actionAdLibBnkMode->isChecked() && (it->data(INS_BANK_ID) != index));
+
     QList<QListWidgetItem *> selected = ui->instruments->selectedItems();
     if(!selected.isEmpty())
         ui->instruments->scrollToItem(selected.front());
+
     QMetaObject::invokeMethod(this, "reloadInstrumentNames", Qt::QueuedConnection);
+
+    m_instrumentsModel->switchBank(ui->bank_no->currentIndex());
 }
 
 void BankEditor::on_bank_msb_valueChanged(int value)

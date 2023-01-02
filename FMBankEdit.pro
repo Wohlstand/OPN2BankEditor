@@ -1,6 +1,6 @@
 #----------------------------------------------------------------------------
 # OPN2 Bank Editor by Wohlstand, a free tool for music bank editing
-# Copyright (c) 2021 Vitaly Novichkov <admin@wohlnet.ru>
+# Copyright (c) 2022 Vitaly Novichkov <admin@wohlnet.ru>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -100,6 +100,7 @@ SOURCES += \
     src/audio.cpp \
     src/bank.cpp \
     src/bank_editor.cpp \
+    src/inst_list_model.cpp \
     src/operator_editor.cpp \
     src/bank_comparison.cpp \
     src/common.cpp \
@@ -142,6 +143,7 @@ SOURCES += \
 
 HEADERS += \
     src/bank_editor.h \
+    src/inst_list_model.h \
     src/operator_editor.h \
     src/bank_comparison.h \
     src/bank.h \

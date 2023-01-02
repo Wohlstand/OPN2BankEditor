@@ -1,6 +1,6 @@
 /*
  * OPN2 Bank Editor by Wohlstand, a free tool for music bank editing
- * Copyright (c) 2017-2021 Vitaly Novichkov <admin@wohlnet.ru>
+ * Copyright (c) 2017-2022 Vitaly Novichkov <admin@wohlnet.ru>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -45,7 +45,9 @@ namespace Ui
 
 class Importer;
 class TextFormat;
+class InstrumentsListModel;
 class QActionGroup;
+
 
 /**
  * @brief Main application window
@@ -99,6 +101,9 @@ private:
     FmBank::Instrument *m_curInst;
     //! Currently selected instrument
     FmBank::Instrument *m_curInstBackup;
+
+    //! Model view of instruments list
+    InstrumentsListModel *m_instrumentsModel = nullptr;
 
     //! Recent index of instrument
     int m_recentNum;

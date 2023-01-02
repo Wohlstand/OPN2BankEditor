@@ -294,6 +294,9 @@
                </property>
               </widget>
              </item>
+             <item>
+              <widget class="QListView" name="instrumentsWIP"/>
+             </item>
             </layout>
            </widget>
           </item>
@@ -1352,7 +1355,7 @@
                 <item>
                  <widget class="QLabel" name="label_43">
                   <property name="pixmap">
-                   <pixmap resource="../../OPL3BankEditor/src/resources/resources.qrc">:/aportpti.png</pixmap>
+                   <pixmap resource="resources/resources.qrc">:/aportpti.png</pixmap>
                   </property>
                  </widget>
                 </item>
@@ -2099,7 +2102,6 @@ Available from 0 to 127</string>
  </customwidgets>
  <resources>
   <include location="resources/resources.qrc"/>
-  <include location="../../OPL3BankEditor/src/resources/resources.qrc"/>
  </resources>
  <connections>
   <connection>

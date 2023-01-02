@@ -109,6 +109,7 @@ set(SOURCES
   "src/bank_editor.cpp"
   "src/operator_editor.cpp"
   "src/bank_comparison.cpp"
+  "src/inst_list_model.cpp"
   "src/controlls.cpp"
   "src/proxystyle.cpp"
   "src/formats_sup.cpp"
