@@ -224,6 +224,9 @@
           <layout class="QVBoxLayout" name="verticalLayout_5">
            <item>
             <widget class="QCheckBox" name="vgmVolumeMax">
+             <property name="toolTip">
+              <string>This option allows you to reduce the number of duplicates in the list by setting their volume to the maximum level.</string>
+             </property>
              <property name="text">
               <string>Maximise volume</string>
              </property>
@@ -231,6 +234,9 @@
            </item>
            <item>
             <widget class="QCheckBox" name="vgmIgnoreLfoFreq">
+             <property name="toolTip">
+              <string>This option allows you to reduce the number of duplicates in the list by ignoring any LFO frequency change events, just setting a zero value.</string>
+             </property>
              <property name="text">
               <string>Ignore LFO frequency changes</string>
              </property>
@@ -238,6 +244,9 @@
            </item>
            <item>
             <widget class="QCheckBox" name="vgmIgnoreLfoAmpl">
+             <property name="toolTip">
+              <string>This option allows you to reduce the number of duplicates in the list by ignoring any LFO amplitude change events, just setting a zero value.</string>
+             </property>
              <property name="text">
               <string>Ignore LFO amplitude changes</string>
              </property>
