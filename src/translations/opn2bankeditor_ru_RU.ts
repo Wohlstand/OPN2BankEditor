@@ -11,12 +11,12 @@
     <message>
         <location filename="../audio_config.ui" line="20"/>
         <source>Driver</source>
-        <translation type="unfinished"></translation>
+        <translation>Драйвер</translation>
     </message>
     <message>
         <location filename="../audio_config.ui" line="28"/>
         <source>Select the sound driver:</source>
-        <translation type="unfinished"></translation>
+        <translation>Выберите звуковой драйвер:</translation>
     </message>
     <message>
         <location filename="../audio_config.ui" line="80"/>
@@ -63,7 +63,7 @@
         <location filename="../audio_config.cpp" line="31"/>
         <location filename="../audio_config.cpp" line="121"/>
         <source>Default driver</source>
-        <translation type="unfinished"></translation>
+        <translation>Драйвер по-умолчанию</translation>
     </message>
 </context>
 <context>
@@ -381,7 +381,7 @@
     <message>
         <location filename="../bank_editor.ui" line="692"/>
         <source>Fixed note tone</source>
-        <translation type="unfinished"></translation>
+        <translation>Фиксированный тон</translation>
     </message>
     <message>
         <location filename="../bank_editor.ui" line="720"/>
@@ -517,17 +517,17 @@
     <message>
         <location filename="../bank_editor.ui" line="1275"/>
         <source>Bank volume model</source>
-        <translation type="unfinished"></translation>
+        <translation>Модель громкости</translation>
     </message>
     <message>
         <location filename="../bank_editor.ui" line="1309"/>
         <source>Generic</source>
-        <translation type="unfinished"></translation>
+        <translation>Общая</translation>
     </message>
     <message>
         <location filename="../bank_editor.ui" line="1314"/>
         <source>OPN Native</source>
-        <translation type="unfinished"></translation>
+        <translation>Родная OPN</translation>
     </message>
     <message>
         <location filename="../bank_editor.ui" line="1381"/>
@@ -902,26 +902,30 @@ Available from 0 to 127</source>
     <message>
         <location filename="../bank_editor.cpp" line="536"/>
         <source>Save melodic-only bank file</source>
-        <translation type="unfinished"></translation>
+        <translation>Сохранить только мелодический банк</translation>
     </message>
     <message>
         <location filename="../bank_editor.cpp" line="537"/>
         <source>Saving into &apos;%1&apos; format allows to save one melodic only bank. All other banks include percussion will be ignored while saving into the file.
 
 Do you want to continue file saving?</source>
-        <translation type="unfinished"></translation>
+        <translation>Сохранение в формат &quot;%1&quot; позволит сохранить лишь один мелодический банк. Все другие банки, включая ударные, будут проигнорированы при сохранении файла.
+
+Продолжить сохранение файла?</translation>
     </message>
     <message>
         <location filename="../bank_editor.cpp" line="550"/>
         <source>Save percussion-only bank file</source>
-        <translation type="unfinished"></translation>
+        <translation>Сохранить только ударный банк</translation>
     </message>
     <message>
         <location filename="../bank_editor.cpp" line="551"/>
         <source>Saving into &apos;%1&apos; format allows to save one percussion only bank. All other banks include melodic will be ignored while saving into the file.
 
 Do you want to continue file saving?</source>
-        <translation type="unfinished"></translation>
+        <translation>Сохранение в формат &quot;%1&quot; позволит сохранить лишь один ударный банк. Все другие банки, включая  мелодические, будут проигнорированы при сохранении файла.
+
+Продолжить сохранение файла?</translation>
     </message>
     <message>
         <location filename="../bank_editor.cpp" line="566"/>
@@ -1393,22 +1397,22 @@ Amplitude at breaking point: %3</source>
     <message>
         <location filename="../importer.ui" line="222"/>
         <source>VGM options</source>
-        <translation type="unfinished"></translation>
+        <translation>Настройки VGM</translation>
     </message>
     <message>
         <location filename="../importer.ui" line="228"/>
         <source>Maximise volume</source>
-        <translation type="unfinished"></translation>
+        <translation>Выровнять громкость до максимума</translation>
     </message>
     <message>
         <location filename="../importer.ui" line="235"/>
         <source>Ignore LFO frequency changes</source>
-        <translation type="unfinished"></translation>
+        <translation>Пропустить частоту НЧГ</translation>
     </message>
     <message>
         <location filename="../importer.ui" line="242"/>
         <source>Ignore LFO amplitude changes</source>
-        <translation type="unfinished"></translation>
+        <translation>Пропустить амплитуду НЧГ</translation>
     </message>
     <message>
         <location filename="../importer.ui" line="265"/>
