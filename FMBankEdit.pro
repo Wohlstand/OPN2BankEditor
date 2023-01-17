@@ -125,6 +125,7 @@ SOURCES += \
     src/FileFormats/format_vgi.cpp \
     src/FileFormats/format_bamboo_bti.cpp \
     src/FileFormats/format_wohlstand_opn2.cpp \
+    src/FileFormats/vgm_import_options.cpp \
     src/FileFormats/ym2612_to_wopi.cpp \
     src/FileFormats/ym2151_to_wopi.cpp \
     src/FileFormats/text_format.cpp \
@@ -168,6 +169,7 @@ HEADERS += \
     src/FileFormats/format_vgi.h \
     src/FileFormats/format_bamboo_bti.h \
     src/FileFormats/format_wohlstand_opn2.h \
+    src/FileFormats/vgm_import_options.h \
     src/FileFormats/ym2612_to_wopi.h \
     src/FileFormats/ym2151_to_wopi.h \
     src/FileFormats/text_format.h \

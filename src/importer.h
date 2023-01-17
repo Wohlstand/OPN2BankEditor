@@ -63,6 +63,10 @@ private slots:
     void on_importReplace_clicked();
     void on_doImport_clicked();
 
+    void on_vgmVolumeMax_clicked(bool checked);
+    void on_vgmIgnoreLfoFreq_clicked(bool checked);
+    void on_vgmIgnoreLfoAmpl_clicked(bool checked);
+
 protected:
     void dragEnterEvent(QDragEnterEvent *e);
     void dropEvent(QDropEvent *e);
@@ -76,6 +80,11 @@ private:
      */
     void onLanguageChanged();
 
+    /**
+     * @brief Reload currently opened file to apply import options changes
+     */
+    void reloadFile();
+
 private:
     //! Currently selected instrument
     FmBank::Instrument* m_curInst;
@@ -84,6 +93,8 @@ private:
     FmBank  m_bank;
     Ui::Importer *ui;
     QString m_recentPath;
+    QString m_recentFile;
+    bool    m_recentIsBank = false;
 };
 
 #endif // IMPORTER_H

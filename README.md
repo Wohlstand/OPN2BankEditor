@@ -13,10 +13,10 @@ Linux | Windows (32-bit) | macOS
 ## Download
 * **Stable builds:** https://github.com/Wohlstand/OPN2BankEditor/releases
 * **Fresh dev builds:**
-  * [Download for Windows x86_64](http://wohlsoft.ru/docs/_laboratory/_Builds/win32/opn2-bank-editor/opn2-bank-editor-dev-win64.zip) (built by [AppVeyor](https://ci.appveyor.com/project/Wohlstand/opn2bankeditor))
-  * [Download for Windows x86](http://wohlsoft.ru/docs/_laboratory/_Builds/win32/opn2-bank-editor/opn2-bank-editor-dev-win32.zip) (built by [AppVeyor](https://ci.appveyor.com/project/Wohlstand/opn2bankeditor))
-  * [Download for macOS x64 (DMG)](http://wohlsoft.ru/docs/_laboratory/_Builds/macosx/opn2-bank-editor/opn2_bank_editor-macos.dmg) (built by [Travis-CI](https://travis-ci.org/Wohlstand/OPN2BankEditor))
-  * [Download for macOS x64 (ZIP)](http://wohlsoft.ru/docs/_laboratory/_Builds/macosx/opn2-bank-editor/opn2_bank_editor-macos.zip) (built by [Travis-CI](https://travis-ci.org/Wohlstand/OPN2BankEditor))
+  * [Download for Windows x86_64](https://wohlsoft.ru/docs/_laboratory/_Builds/win32/opn2-bank-editor/opn2-bank-editor-dev-win64.zip) (built by [AppVeyor](https://ci.appveyor.com/project/Wohlstand/opn2bankeditor))
+  * [Download for Windows x86](https://wohlsoft.ru/docs/_laboratory/_Builds/win32/opn2-bank-editor/opn2-bank-editor-dev-win32.zip) (built by [AppVeyor](https://ci.appveyor.com/project/Wohlstand/opn2bankeditor))
+  * [Download for macOS x64 (DMG)](https://wohlsoft.ru/docs/_laboratory/_Builds/macosx/opn2-bank-editor/opn2_bank_editor-macos.dmg) (built by [Travis-CI](https://travis-ci.org/Wohlstand/OPN2BankEditor))
+  * [Download for macOS x64 (ZIP)](https://wohlsoft.ru/docs/_laboratory/_Builds/macosx/opn2-bank-editor/opn2_bank_editor-macos.zip) (built by [Travis-CI](https://travis-ci.org/Wohlstand/OPN2BankEditor))
   * CIs for other operating systems are coming soon... (However, it's easy to build it by yourself :wink:)
 
 # How to build
@@ -93,4 +93,3 @@ As of version 1.3.1, this tool supports following languages:
 * ***cmake*** - CMake-related scripts
 * ***src*** - source code of this tool
 * ***_Misc*** - Various stuff (test scripts, dummy banks, documents, etc.) which was been used in development of this tool
-

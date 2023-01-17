@@ -17,6 +17,7 @@
  */
 
 #include "ym2612_to_wopi.h"
+#include "vgm_import_options.h"
 #include <cstring>
 
 RawYm2612ToWopi::RawYm2612ToWopi()
@@ -52,6 +53,7 @@ void RawYm2612ToWopi::passReg(uint8_t port, uint8_t reg, uint8_t val)
         if( ((reg >= 0x30) && (reg <= 0x9F)) ||
             ((reg >= 0xB0) && (reg <= 0xB6)) )
             m_ymram[port][reg] = val;
+
         if(reg == 0x28)
         {
             switch(val&0x0F)
@@ -64,19 +66,20 @@ void RawYm2612ToWopi::passReg(uint8_t port, uint8_t reg, uint8_t val)
                 break;
             }
         }
+
         if(reg == 0x22)
             m_lfoVal = val;
+
         if(reg == 0x2B)
             m_dacOn = (val != 0);
     }
-    else
-        if(port == 1)
-        {
-            //Get useful-only registers
-            if( ((reg >= 0x30) && (reg <= 0x9F)) ||
-                ((reg >= 0xB0) && (reg <= 0xB6)) )
-                m_ymram[1][reg] = val;
-        }
+    else if(port == 1)
+    {
+        //Get useful-only registers
+        if( ((reg >= 0x30) && (reg <= 0x9F)) ||
+            ((reg >= 0xB0) && (reg <= 0xB6)) )
+            m_ymram[1][reg] = val;
+    }
 }
 
 void RawYm2612ToWopi::doAnalyzeState()
@@ -88,10 +91,11 @@ void RawYm2612ToWopi::doAnalyzeState()
     {
         for(uint8_t ch = 0; ch < 3; ch++)
         {
-            if(!m_keys[ch + 3*i])
-                continue;//Skip if key is not pressed
-            if(m_dacOn && (ch+ 3*i == 5))
-                continue;//Skip DAC channel
+            if(!m_keys[ch + (3 * i)])
+                continue; // Skip if key is not pressed
+            if(m_dacOn && (ch + (3 * i) == 5))
+                continue; // Skip DAC channel
+
             QByteArray insRaw;//Raw instrument
             FmBank::Instrument ins = FmBank::emptyInst();
             for(uint8_t op = 0; op < 4; op++)
@@ -115,11 +119,19 @@ void RawYm2612ToWopi::doAnalyzeState()
             ins.setRegLfoSens(m_ymram[i][0xB4 + ch]);
             ins.setRegFbAlg(m_ymram[i][0xB0 + ch]);
 
+            if(g_vgmImportOptions.ignoreLfoAmplitudeChanges)
+                ins.am = 0;
+
+            if(g_vgmImportOptions.ignoreLfoFrequencyChanges)
+                ins.fm = 0;
+
             insRaw.push_back((char)ins.getRegLfoSens());
             insRaw.push_back((char)ins.getRegFbAlg());
 
-            /* Maximize key volume */
-            uint8_t olevels[4] =
+            if(g_vgmImportOptions.maximiseVolume)
+            {
+                /* Maximize key volume */
+                uint8_t olevels[4] =
                 {
                     ins.OP[OPERATOR1].level,
                     ins.OP[OPERATOR2].level,
@@ -127,43 +139,44 @@ void RawYm2612ToWopi::doAnalyzeState()
                     ins.OP[OPERATOR4].level
                 };
 
-            uint8_t dec = 0;
-            switch(ins.algorithm)
-            {
-            case 0:case 1: case 2: case 3:
-                ins.OP[OPERATOR4].level = 0;
-                break;
-            case 4:
-                dec = std::min({olevels[OPERATOR3], olevels[OPERATOR4]});
-                ins.OP[OPERATOR3].level = olevels[OPERATOR3] - dec;
-                ins.OP[OPERATOR4].level = olevels[OPERATOR4] - dec;
-                break;
-            case 5:
-                dec = std::min({olevels[OPERATOR2], olevels[OPERATOR3], olevels[OPERATOR4]});
-                ins.OP[OPERATOR2].level = olevels[OPERATOR2] - dec;
-                ins.OP[OPERATOR3].level = olevels[OPERATOR3] - dec;
-                ins.OP[OPERATOR4].level = olevels[OPERATOR4] - dec;
-                break;
-            case 6:
-                dec = std::min({olevels[OPERATOR2], olevels[OPERATOR3], olevels[OPERATOR4]});
-                ins.OP[OPERATOR2].level = olevels[OPERATOR2] - dec;
-                ins.OP[OPERATOR3].level = olevels[OPERATOR3] - dec;
-                ins.OP[OPERATOR4].level = olevels[OPERATOR4] - dec;
-                break;
-            case 7:
-                dec = std::min({olevels[OPERATOR1], olevels[OPERATOR2], olevels[OPERATOR3], olevels[OPERATOR4]});
-                ins.OP[OPERATOR1].level = olevels[OPERATOR1] - dec;
-                ins.OP[OPERATOR2].level = olevels[OPERATOR2] - dec;
-                ins.OP[OPERATOR3].level = olevels[OPERATOR3] - dec;
-                ins.OP[OPERATOR4].level = olevels[OPERATOR4] - dec;
-                break;
-            }
+                uint8_t dec = 0;
+                switch(ins.algorithm)
+                {
+                case 0:case 1: case 2: case 3:
+                    ins.OP[OPERATOR4].level = 0;
+                    break;
+                case 4:
+                    dec = std::min({olevels[OPERATOR3], olevels[OPERATOR4]});
+                    ins.OP[OPERATOR3].level = olevels[OPERATOR3] - dec;
+                    ins.OP[OPERATOR4].level = olevels[OPERATOR4] - dec;
+                    break;
+                case 5:
+                    dec = std::min({olevels[OPERATOR2], olevels[OPERATOR3], olevels[OPERATOR4]});
+                    ins.OP[OPERATOR2].level = olevels[OPERATOR2] - dec;
+                    ins.OP[OPERATOR3].level = olevels[OPERATOR3] - dec;
+                    ins.OP[OPERATOR4].level = olevels[OPERATOR4] - dec;
+                    break;
+                case 6:
+                    dec = std::min({olevels[OPERATOR2], olevels[OPERATOR3], olevels[OPERATOR4]});
+                    ins.OP[OPERATOR2].level = olevels[OPERATOR2] - dec;
+                    ins.OP[OPERATOR3].level = olevels[OPERATOR3] - dec;
+                    ins.OP[OPERATOR4].level = olevels[OPERATOR4] - dec;
+                    break;
+                case 7:
+                    dec = std::min({olevels[OPERATOR1], olevels[OPERATOR2], olevels[OPERATOR3], olevels[OPERATOR4]});
+                    ins.OP[OPERATOR1].level = olevels[OPERATOR1] - dec;
+                    ins.OP[OPERATOR2].level = olevels[OPERATOR2] - dec;
+                    ins.OP[OPERATOR3].level = olevels[OPERATOR3] - dec;
+                    ins.OP[OPERATOR4].level = olevels[OPERATOR4] - dec;
+                    break;
+                }
 
-            //Encode volume bytes back
-            insRaw[1 + OPERATOR1*7] = (char)ins.getRegLevel(OPERATOR1);
-            insRaw[1 + OPERATOR2*7] = (char)ins.getRegLevel(OPERATOR2);
-            insRaw[1 + OPERATOR3*7] = (char)ins.getRegLevel(OPERATOR3);
-            insRaw[1 + OPERATOR4*7] = (char)ins.getRegLevel(OPERATOR4);
+                //Encode volume bytes back
+                insRaw[1 + (OPERATOR1 * 7)] = (char)ins.getRegLevel(OPERATOR1);
+                insRaw[1 + (OPERATOR2 * 7)] = (char)ins.getRegLevel(OPERATOR2);
+                insRaw[1 + (OPERATOR3 * 7)] = (char)ins.getRegLevel(OPERATOR3);
+                insRaw[1 + (OPERATOR4 * 7)] = (char)ins.getRegLevel(OPERATOR4);
+            }
 
             if(!insdata.cache.contains(insRaw))
             {

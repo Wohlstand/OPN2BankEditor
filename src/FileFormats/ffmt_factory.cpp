@@ -281,6 +281,44 @@ bool FmBankFormatFactory::hasCaps(BankFormats format, int capsQuery)
     return false;
 }
 
+bool FmBankFormatFactory::fileIsInstrument(const QString &filePath, bool import)
+{
+    char magic[32];
+    FormatCaps dst = import ?
+                FormatCaps::FORMAT_CAPS_IMPORT :
+                FormatCaps::FORMAT_CAPS_OPEN;
+
+    getMagic(filePath, magic, 32);
+
+    for(FmBankFormatBase_uptr &p : g_formatsInstr)
+    {
+        Q_ASSERT(p.get());//It must be non-null!
+        if((p->formatInstCaps() & (int)dst) && p->detectInst(filePath, magic))
+            return true;
+    }
+
+    return false;
+}
+
+bool FmBankFormatFactory::fileIsBank(const QString &filePath, bool import)
+{
+    char magic[32];
+    FormatCaps dst = import ?
+                FormatCaps::FORMAT_CAPS_IMPORT :
+                FormatCaps::FORMAT_CAPS_OPEN;
+
+    getMagic(filePath, magic, 32);
+
+    for(FmBankFormatBase_uptr &p : g_formats)
+    {
+        Q_ASSERT(p.get());//It must be non-null!
+        if((p->formatCaps() & (int)dst) && p->detect(filePath, magic))
+            return true;
+    }
+
+    return false;
+}
+
 QString FmBankFormatFactory::formatName(BankFormats format)
 {
     for(FmBankFormatBase_uptr &p : g_formats)

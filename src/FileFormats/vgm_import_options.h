@@ -16,23 +16,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef VERSION_H
-#define VERSION_H
+#ifndef VGM_IMPORT_OPTIONS_H
+#define VGM_IMPORT_OPTIONS_H
 
-#define COMPANY "WohlSoft"
+extern struct VGM_ImporterOptions
+{
+    bool maximiseVolume = true;
+    bool ignoreLfoFrequencyChanges = false;
+    bool ignoreLfoAmplitudeChanges = false;
+} g_vgmImportOptions;
 
-#define PGE_URL "wohlsoft.ru"
-
-#define PROGRAM_NAME "OPN2 Bank Editor"
-
-#define VERSION "1.3.2"
-
-#ifdef IS_QT_4
-#define COPYRIGHT_SIGN "(C)"
-#else
-#define COPYRIGHT_SIGN "©"
-#endif
-
-#define COPYRIGHT COPYRIGHT_SIGN " 2017-2023, Vitaly Novichkov \"Wohlstand\""
-
-#endif // VERSION_H
+#endif // VGM_IMPORT_OPTIONS_H

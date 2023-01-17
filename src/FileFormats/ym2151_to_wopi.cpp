@@ -17,6 +17,7 @@
  */
 
 #include "ym2151_to_wopi.h"
+#include "vgm_import_options.h"
 #include <cstring>
 
 RawYm2151ToWopi::RawYm2151ToWopi()
@@ -76,11 +77,20 @@ void RawYm2151ToWopi::doAnalyzeState()
         ins.fm = (m_ymram[0x38] >> 4) & 7;
         ins.algorithm = m_ymram[0x20] & 7;
         ins.feedback = (m_ymram[0x20] >> 3) & 7;
+
+        if(g_vgmImportOptions.ignoreLfoAmplitudeChanges)
+            ins.am = 0;
+
+        if(g_vgmImportOptions.ignoreLfoFrequencyChanges)
+            ins.fm = 0;
+
         insRaw.push_back((char)ins.getRegLfoSens());
         insRaw.push_back((char)ins.getRegFbAlg());
 
-        /* Maximize key volume */
-        uint8_t olevels[4] =
+        if(g_vgmImportOptions.maximiseVolume)
+        {
+            /* Maximize key volume */
+            uint8_t olevels[4] =
             {
                 ins.OP[OPERATOR1].level,
                 ins.OP[OPERATOR2].level,
@@ -88,43 +98,44 @@ void RawYm2151ToWopi::doAnalyzeState()
                 ins.OP[OPERATOR4].level
             };
 
-        uint8_t dec = 0;
-        switch(ins.algorithm)
-        {
-        case 0:case 1: case 2: case 3:
-            ins.OP[OPERATOR4].level = 0;
-            break;
-        case 4:
-            dec = std::min({olevels[OPERATOR3], olevels[OPERATOR4]});
-            ins.OP[OPERATOR3].level = olevels[OPERATOR3] - dec;
-            ins.OP[OPERATOR4].level = olevels[OPERATOR4] - dec;
-            break;
-        case 5:
-            dec = std::min({olevels[OPERATOR2], olevels[OPERATOR3], olevels[OPERATOR4]});
-            ins.OP[OPERATOR2].level = olevels[OPERATOR2] - dec;
-            ins.OP[OPERATOR3].level = olevels[OPERATOR3] - dec;
-            ins.OP[OPERATOR4].level = olevels[OPERATOR4] - dec;
-            break;
-        case 6:
-            dec = std::min({olevels[OPERATOR2], olevels[OPERATOR3], olevels[OPERATOR4]});
-            ins.OP[OPERATOR2].level = olevels[OPERATOR2] - dec;
-            ins.OP[OPERATOR3].level = olevels[OPERATOR3] - dec;
-            ins.OP[OPERATOR4].level = olevels[OPERATOR4] - dec;
-            break;
-        case 7:
-            dec = std::min({olevels[OPERATOR1], olevels[OPERATOR2], olevels[OPERATOR3], olevels[OPERATOR4]});
-            ins.OP[OPERATOR1].level = olevels[OPERATOR1] - dec;
-            ins.OP[OPERATOR2].level = olevels[OPERATOR2] - dec;
-            ins.OP[OPERATOR3].level = olevels[OPERATOR3] - dec;
-            ins.OP[OPERATOR4].level = olevels[OPERATOR4] - dec;
-            break;
-        }
+            uint8_t dec = 0;
+            switch(ins.algorithm)
+            {
+            case 0:case 1: case 2: case 3:
+                ins.OP[OPERATOR4].level = 0;
+                break;
+            case 4:
+                dec = std::min({olevels[OPERATOR3], olevels[OPERATOR4]});
+                ins.OP[OPERATOR3].level = olevels[OPERATOR3] - dec;
+                ins.OP[OPERATOR4].level = olevels[OPERATOR4] - dec;
+                break;
+            case 5:
+                dec = std::min({olevels[OPERATOR2], olevels[OPERATOR3], olevels[OPERATOR4]});
+                ins.OP[OPERATOR2].level = olevels[OPERATOR2] - dec;
+                ins.OP[OPERATOR3].level = olevels[OPERATOR3] - dec;
+                ins.OP[OPERATOR4].level = olevels[OPERATOR4] - dec;
+                break;
+            case 6:
+                dec = std::min({olevels[OPERATOR2], olevels[OPERATOR3], olevels[OPERATOR4]});
+                ins.OP[OPERATOR2].level = olevels[OPERATOR2] - dec;
+                ins.OP[OPERATOR3].level = olevels[OPERATOR3] - dec;
+                ins.OP[OPERATOR4].level = olevels[OPERATOR4] - dec;
+                break;
+            case 7:
+                dec = std::min({olevels[OPERATOR1], olevels[OPERATOR2], olevels[OPERATOR3], olevels[OPERATOR4]});
+                ins.OP[OPERATOR1].level = olevels[OPERATOR1] - dec;
+                ins.OP[OPERATOR2].level = olevels[OPERATOR2] - dec;
+                ins.OP[OPERATOR3].level = olevels[OPERATOR3] - dec;
+                ins.OP[OPERATOR4].level = olevels[OPERATOR4] - dec;
+                break;
+            }
 
-        //Encode volume bytes back
-        insRaw[1 + OPERATOR1*7] = (char)ins.getRegLevel(OPERATOR1);
-        insRaw[1 + OPERATOR2*7] = (char)ins.getRegLevel(OPERATOR2);
-        insRaw[1 + OPERATOR3*7] = (char)ins.getRegLevel(OPERATOR3);
-        insRaw[1 + OPERATOR4*7] = (char)ins.getRegLevel(OPERATOR4);
+            //Encode volume bytes back
+            insRaw[1 + (OPERATOR1 * 7)] = (char)ins.getRegLevel(OPERATOR1);
+            insRaw[1 + (OPERATOR2 * 7)] = (char)ins.getRegLevel(OPERATOR2);
+            insRaw[1 + (OPERATOR3 * 7)] = (char)ins.getRegLevel(OPERATOR3);
+            insRaw[1 + (OPERATOR4 * 7)] = (char)ins.getRegLevel(OPERATOR4);
+        }
 
         if(!insdata.cache.contains(insRaw))
         {
