@@ -17,6 +17,7 @@
  */
 
 #include "format_vgm_import.h"
+#include "vgm_import_options.h"
 #include "ym2612_to_wopi.h"
 #include "ym2151_to_wopi.h"
 #include "../common.h"
@@ -301,6 +302,36 @@ QString VGM_Importer::formatExtensionMask() const
 BankFormats VGM_Importer::formatId() const
 {
     return BankFormats::FORMAT_VGM_IMPORTER;
+}
+
+void VGM_Importer::setVolumeMaximise(bool en)
+{
+    g_vgmImportOptions.maximiseVolume = en;
+}
+
+bool VGM_Importer::getVolumeMaximise()
+{
+    return g_vgmImportOptions.maximiseVolume;
+}
+
+void VGM_Importer::setIgnoreLfoFreqChanges(bool en)
+{
+    g_vgmImportOptions.ignoreLfoFrequencyChanges = en;
+}
+
+bool VGM_Importer::getIgnoreLfoFreqChanges()
+{
+    return g_vgmImportOptions.ignoreLfoFrequencyChanges;
+}
+
+void VGM_Importer::setIgnoreLfoAmplChanges(bool en)
+{
+    g_vgmImportOptions.ignoreLfoAmplitudeChanges = en;
+}
+
+bool VGM_Importer::getIgnoreLfoAmplChanges()
+{
+    return g_vgmImportOptions.ignoreLfoAmplitudeChanges;
 }
 
 static void make_size_table(uint8_t *table, unsigned version)

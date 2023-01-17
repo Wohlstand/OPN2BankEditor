@@ -37,6 +37,13 @@ public:
     QString     formatExtensionMask() const override;
     BankFormats formatId() const override;
 
+    static void setVolumeMaximise(bool en);
+    static bool getVolumeMaximise();
+    static void setIgnoreLfoFreqChanges(bool en);
+    static bool getIgnoreLfoFreqChanges();
+    static void setIgnoreLfoAmplChanges(bool en);
+    static bool getIgnoreLfoAmplChanges();
+
 private:
     FfmtErrCode load(QIODevice &file, FmBank &bank);
 };

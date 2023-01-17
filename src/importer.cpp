@@ -34,6 +34,7 @@
 #include "ins_names.h"
 
 #include "FileFormats/ffmt_factory.h"
+#include "FileFormats/format_vgm_import.h"
 
 #include "common.h"
 
@@ -44,15 +45,20 @@ Importer::Importer(QWidget *parent) :
 {
     ui->setupUi(this);
     setMelodic();
-    connect(ui->melodic,    SIGNAL(clicked(bool)),  this,   SLOT(setMelodic()));
-    connect(ui->percussion, SIGNAL(clicked(bool)),  this,   SLOT(setDrums()));
-    connect(ui->clear, SIGNAL(clicked()), ui->instruments, SLOT(clearSelection()));
-    connect(ui->selectAll, SIGNAL(clicked()), ui->instruments, SLOT(selectAll()));
+    QObject::connect(ui->melodic,    SIGNAL(clicked(bool)),  this,   SLOT(setMelodic()));
+    QObject::connect(ui->percussion, SIGNAL(clicked(bool)),  this,   SLOT(setDrums()));
+    QObject::connect(ui->clear, SIGNAL(clicked()), ui->instruments, SLOT(clearSelection()));
+    QObject::connect(ui->selectAll, SIGNAL(clicked()), ui->instruments, SLOT(selectAll()));
     ui->doImport->setEnabled(false);
     ui->instruments->setSelectionMode(QAbstractItemView::MultiSelection);
     ui->stackedWidget->setCurrentWidget(ui->pageAssoc);
     this->setWindowFlags(windowFlags() & ~Qt::WindowContextHelpButtonHint);
     //this->setFixedSize(this->window()->width(), this->window()->height());
+
+    ui->vgmOptions->setVisible(false);
+    setWidgetCheckedB(ui->vgmVolumeMax, VGM_Importer::getVolumeMaximise());
+    setWidgetCheckedB(ui->vgmIgnoreLfoAmpl, VGM_Importer::getIgnoreLfoAmplChanges());
+    setWidgetCheckedB(ui->vgmIgnoreLfoFreq, VGM_Importer::getIgnoreLfoFreqChanges());
 }
 
 Importer::~Importer()
@@ -118,11 +124,17 @@ bool Importer::openFile(QString filePath, bool isBank, FfmtErrCode *errp)
             *errp = err;
         return false;
     }
+
     if(FmBankFormatFactory::isImportOnly(format))
     {
         ui->importReplace->click();
         ui->importAssoc->setEnabled(false);
     }
+
+    ui->vgmOptions->setVisible(format == BankFormats::FORMAT_VGM_IMPORTER);
+
+    m_recentIsBank = isBank;
+    m_recentFile = filePath;
     initFileData(filePath);
     return true;
 }
@@ -161,7 +173,8 @@ void Importer::setDrums()
 
 void Importer::initFileData(QString &filePath)
 {
-    m_recentPath = QFileInfo(filePath).absoluteDir().absolutePath();
+    QFileInfo fileFnfo(filePath);
+    m_recentPath = fileFnfo.absoluteDir().absolutePath();
     ui->doImport->setEnabled(true);
 
     if(ui->melodic->isChecked())
@@ -180,7 +193,8 @@ void Importer::initFileData(QString &filePath)
     else
         on_instruments_currentItemChanged(NULL, NULL);
 
-    ui->openedBank->setText(filePath);
+    ui->openedBank->setText(fileFnfo.fileName());
+    ui->openedBank->setToolTip(filePath);
     reloadInstrumentNames();
 }
 
@@ -606,15 +620,39 @@ void Importer::onLanguageChanged()
     ui->retranslateUi(this);
 
     const QString &filePath = m_recentPath;
-    if (!filePath.isEmpty())
+    if(!filePath.isEmpty())
         ui->openedBank->setText(filePath);
     else
         ui->openedBank->setText(tr("<No opened files>"));
 }
 
+void Importer::reloadFile()
+{
+    if(!m_recentFile.isEmpty())
+        openFile(m_recentFile, m_recentIsBank);
+}
+
 void Importer::changeEvent(QEvent *event)
 {
-    if (event->type() == QEvent::LanguageChange)
+    if(event->type() == QEvent::LanguageChange)
         onLanguageChanged();
     QDialog::changeEvent(event);
+}
+
+void Importer::on_vgmVolumeMax_clicked(bool checked)
+{
+    VGM_Importer::setVolumeMaximise(checked);
+    reloadFile();
+}
+
+void Importer::on_vgmIgnoreLfoFreq_clicked(bool checked)
+{
+    VGM_Importer::setIgnoreLfoFreqChanges(checked);
+    reloadFile();
+}
+
+void Importer::on_vgmIgnoreLfoAmpl_clicked(bool checked)
+{
+    VGM_Importer::setIgnoreLfoAmplChanges(checked);
+    reloadFile();
 }

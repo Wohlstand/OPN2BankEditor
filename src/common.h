@@ -174,4 +174,28 @@ void ErrMessageO(QWidget *parent, QString errStr, bool isBank = true);
 void ErrMessageS(QWidget *parent, QString errStr, bool isBank = true);
 #endif //QT_WIDGETS_LIB
 
+template<class T, class V>
+void setWidgetValueB(T* widget, V value)
+{
+    widget->blockSignals(true);
+    widget->setValue(value);
+    widget->blockSignals(false);
+}
+
+template<class T, class V>
+void setWidgetCheckedB(T* widget, V value)
+{
+    widget->blockSignals(true);
+    widget->setChecked(value);
+    widget->blockSignals(false);
+}
+
+template<class T, class V>
+void setWidgetTextB(T* widget, V value)
+{
+    widget->blockSignals(true);
+    widget->setText(value);
+    widget->blockSignals(false);
+}
+
 #endif // COMMON_H

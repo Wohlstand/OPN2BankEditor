@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>725</width>
-    <height>529</height>
+    <width>714</width>
+    <height>613</height>
    </rect>
   </property>
   <property name="acceptDrops">
@@ -154,7 +154,6 @@
          <widget class="QPushButton" name="doImport">
           <property name="font">
            <font>
-            <weight>75</weight>
             <bold>true</bold>
            </font>
           </property>
@@ -215,6 +214,36 @@
            </layout>
           </widget>
           <widget class="QWidget" name="pageReplace"/>
+         </widget>
+        </item>
+        <item>
+         <widget class="QGroupBox" name="vgmOptions">
+          <property name="title">
+           <string>VGM options</string>
+          </property>
+          <layout class="QVBoxLayout" name="verticalLayout_5">
+           <item>
+            <widget class="QCheckBox" name="vgmVolumeMax">
+             <property name="text">
+              <string>Maximise volume</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QCheckBox" name="vgmIgnoreLfoFreq">
+             <property name="text">
+              <string>Ignore LFO frequency changes</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QCheckBox" name="vgmIgnoreLfoAmpl">
+             <property name="text">
+              <string>Ignore LFO amplitude changes</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
          </widget>
         </item>
         <item>
