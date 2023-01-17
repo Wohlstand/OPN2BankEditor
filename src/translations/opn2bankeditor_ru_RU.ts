@@ -1402,7 +1402,7 @@ Amplitude at breaking point: %3</source>
     <message>
         <location filename="../importer.ui" line="242"/>
         <source>This option allows you to reduce the number of duplicates in the list by setting their volume to the maximum level.</source>
-        <translation type="unfinished"></translation>
+        <translation>Данная опция позволяет уменьшить число дубликатов в списке через приведения громкости инструментов в максимум.</translation>
     </message>
     <message>
         <location filename="../importer.ui" line="245"/>
@@ -1412,7 +1412,8 @@ Amplitude at breaking point: %3</source>
     <message>
         <location filename="../importer.ui" line="252"/>
         <source>This option allows you to reduce the number of duplicates in the list by ignoring any LFO frequency change events, just setting a zero value.</source>
-        <translation type="unfinished"></translation>
+        <translatorcomment>This option allows you to reduce the number of duplicates in the list by ignoring any LFO frequency change events, just setting a zero value.</translatorcomment>
+        <translation>Данная опция позволяет уменьшить число дубликатов в списке путём игнорирования любых событий изменения частоы НЧГ, просто выставляя ноль.</translation>
     </message>
     <message>
         <location filename="../importer.ui" line="255"/>
@@ -1422,7 +1423,7 @@ Amplitude at breaking point: %3</source>
     <message>
         <location filename="../importer.ui" line="262"/>
         <source>This option allows you to reduce the number of duplicates in the list by ignoring any LFO amplitude change events, just setting a zero value.</source>
-        <translation type="unfinished"></translation>
+        <translation>Данная опция позволяет уменьшить число дубликатов в списке путём игнорирования любых событий изменения амплитуды НЧГ, просто выставляя ноль.</translation>
     </message>
     <message>
         <location filename="../importer.ui" line="265"/>
