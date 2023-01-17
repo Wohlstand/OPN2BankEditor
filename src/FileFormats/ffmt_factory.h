@@ -52,6 +52,8 @@ public:
      */
     static bool isImportOnly(BankFormats format);
     static bool hasCaps(BankFormats format, int capsQuery);
+    static bool fileIsInstrument(const QString &filePath, bool import);
+    static bool fileIsBank(const QString &filePath, bool import);
     static QString formatName(BankFormats format);
     static FfmtErrCode OpenBankFile(QString filePath, FmBank &bank, BankFormats *recent = nullptr);
     static FfmtErrCode ImportBankFile(QString filePath, FmBank &bank, BankFormats *recent = nullptr);
