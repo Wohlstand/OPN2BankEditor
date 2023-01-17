@@ -1357,47 +1357,62 @@ Amplitude au point de coupure : %3</translation>
         <translation>Remplacement de la sélection</translation>
     </message>
     <message>
-        <location filename="../importer.ui" line="184"/>
+        <location filename="../importer.ui" line="187"/>
         <source>Import into</source>
         <translation>Importer vers</translation>
     </message>
     <message>
-        <location filename="../importer.ui" line="190"/>
+        <location filename="../importer.ui" line="193"/>
         <source>Same as source</source>
         <translation>Pareil que la source</translation>
     </message>
     <message>
-        <location filename="../importer.ui" line="200"/>
+        <location filename="../importer.ui" line="203"/>
         <source>Melodic banks</source>
         <translation>Banques mélodiques</translation>
     </message>
     <message>
-        <location filename="../importer.ui" line="207"/>
+        <location filename="../importer.ui" line="210"/>
         <source>Percussion banks</source>
         <translation>Banques percussives</translation>
     </message>
     <message>
-        <location filename="../importer.ui" line="222"/>
+        <location filename="../importer.ui" line="236"/>
         <source>VGM options</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../importer.ui" line="228"/>
+        <location filename="../importer.ui" line="242"/>
+        <source>This option allows you to reduce the number of duplicates in the list by setting their volume to the maximum level.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../importer.ui" line="245"/>
         <source>Maximise volume</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../importer.ui" line="235"/>
+        <location filename="../importer.ui" line="252"/>
+        <source>This option allows you to reduce the number of duplicates in the list by ignoring any LFO frequency change events, just setting a zero value.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../importer.ui" line="255"/>
         <source>Ignore LFO frequency changes</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../importer.ui" line="242"/>
-        <source>Ignore LFO amplitude changes</source>
+        <location filename="../importer.ui" line="262"/>
+        <source>This option allows you to reduce the number of duplicates in the list by ignoring any LFO amplitude change events, just setting a zero value.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../importer.ui" line="265"/>
+        <source>Ignore LFO amplitude changes</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../importer.ui" line="293"/>
         <source>Test Note</source>
         <translation>Jouer la Note</translation>
     </message>
@@ -1408,7 +1423,7 @@ Amplitude au point de coupure : %3</translation>
     </message>
     <message>
         <location filename="../importer.ui" line="39"/>
-        <location filename="../importer.cpp" line="626"/>
+        <location filename="../importer.cpp" line="635"/>
         <source>&lt;No opened files&gt;</source>
         <translation>&lt;Aucun fichier ouvert&gt;</translation>
     </message>
@@ -1423,44 +1438,44 @@ Amplitude au point de coupure : %3</translation>
         <translation>Charger instrument seul</translation>
     </message>
     <message>
-        <location filename="../importer.cpp" line="585"/>
+        <location filename="../importer.cpp" line="594"/>
         <source>%1 instruments have been imported!</source>
         <translation>%1 instruments ont été importés !</translation>
     </message>
     <message>
-        <location filename="../importer.cpp" line="549"/>
+        <location filename="../importer.cpp" line="558"/>
         <source>Nothing to import</source>
         <translation>Rien à importer</translation>
     </message>
     <message>
-        <location filename="../importer.cpp" line="549"/>
+        <location filename="../importer.cpp" line="558"/>
         <source>You have no selected instruments to import!
 Please select something first!</source>
         <translation>Vous n&apos;avez sélectionné aucun instrument à importer !
 Veuillez d&apos;abord sélectionner quelque chose !</translation>
     </message>
     <message>
-        <location filename="../importer.cpp" line="489"/>
+        <location filename="../importer.cpp" line="498"/>
         <source>&lt;Unknown&gt;</source>
         <translation>&lt;Inconnu&gt;</translation>
     </message>
     <message>
-        <location filename="../importer.cpp" line="499"/>
+        <location filename="../importer.cpp" line="508"/>
         <source>&lt;Reserved %1&gt;</source>
         <translation>&lt;Réservé %1&gt;</translation>
     </message>
     <message>
-        <location filename="../importer.cpp" line="601"/>
+        <location filename="../importer.cpp" line="610"/>
         <source>Instrument #%1 has been imported!</source>
         <translation>L&apos;instrument #%1 a été importé !</translation>
     </message>
     <message>
-        <location filename="../importer.cpp" line="605"/>
+        <location filename="../importer.cpp" line="614"/>
         <source>No target</source>
         <translation>Aucune cible</translation>
     </message>
     <message>
-        <location filename="../importer.cpp" line="605"/>
+        <location filename="../importer.cpp" line="614"/>
         <source>No target instrument selected.
 Please select target instrument in the main window and retry again!</source>
         <translation>Aucun instrument cible n&apos;est sélectionné. Veuillez sélectionner un instrument cible dans la fenêtre principale et essayer à nouveau !</translation>
