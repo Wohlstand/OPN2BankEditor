@@ -63,6 +63,7 @@ public:
     {
         CHIP_BEGIN = 0,
         CHIP_Nuked = 0,
+        CHIP_NukedYM2612,
         CHIP_GENS,
         CHIP_MAME,
         CHIP_GX,

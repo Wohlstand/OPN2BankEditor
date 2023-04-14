@@ -10,7 +10,7 @@
     <x>0</x>
     <y>0</y>
     <width>960</width>
-    <height>752</height>
+    <height>786</height>
    </rect>
   </property>
   <property name="focusPolicy">
@@ -1792,6 +1792,7 @@ Available from 0 to 127</string>
       <string>Choose chip emulator</string>
      </property>
      <addaction name="actionEmulatorNuked"/>
+     <addaction name="actionEmulatorNukedYM2612"/>
      <addaction name="actionEmulatorMame"/>
      <addaction name="actionEmulatorGX"/>
      <addaction name="actionEmulatorGens"/>
@@ -1954,7 +1955,13 @@ Available from 0 to 127</string>
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>Nuked OPN2 (very accurate)</string>
+    <string>Nuked OPN2 YM3438 (very accurate)</string>
+   </property>
+   <property name="iconText">
+    <string>Nuked OPN2 YM3438 (very accurate)</string>
+   </property>
+   <property name="toolTip">
+    <string>Nuked OPN2 YM3438 (very accurate)</string>
    </property>
   </action>
   <action name="actionEmulatorMame">
@@ -2109,6 +2116,14 @@ Available from 0 to 127</string>
    </property>
    <property name="toolTip">
     <string notr="true">YMFM OPNA</string>
+   </property>
+  </action>
+  <action name="actionEmulatorNukedYM2612">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Nuked OPN2 YM2612 (vert accurate)</string>
    </property>
   </action>
  </widget>

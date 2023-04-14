@@ -688,7 +688,7 @@ static void MeasureDurationsBenchmarkRunner(FmBank::Instrument *in_p, QVector<Me
     OPNFamily family = OPNChip_OPN2;
     std::vector<std::shared_ptr<OPNChipBase > > emuls =
     {
-        std::shared_ptr<OPNChipBase>(new NukedOPN2(family)),
+        std::shared_ptr<OPNChipBase>(new NukedOPN2(family, true)),
         std::shared_ptr<OPNChipBase>(new MameOPN2(family)),
         std::shared_ptr<OPNChipBase>(new GXOPN2(family)),
         std::shared_ptr<OPNChipBase>(new GensOPN2(family)),

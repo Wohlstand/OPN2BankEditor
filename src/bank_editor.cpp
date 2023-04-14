@@ -120,6 +120,7 @@ BankEditor::BankEditor(QWidget *parent) :
     m_measurer = new Measurer(this);
     connect(ui->actionImport, SIGNAL(triggered()), m_importer, SLOT(show()));
     connect(ui->actionEmulatorNuked, SIGNAL(triggered()), this, SLOT(toggleEmulator()));
+    connect(ui->actionEmulatorNukedYM2612, SIGNAL(triggered()), this, SLOT(toggleEmulator()));
     connect(ui->actionEmulatorMame, SIGNAL(triggered()), this, SLOT(toggleEmulator()));
     connect(ui->actionEmulatorGX, SIGNAL(triggered()), this, SLOT(toggleEmulator()));
     connect(ui->actionEmulatorGens, SIGNAL(triggered()), this, SLOT(toggleEmulator()));
@@ -248,6 +249,7 @@ void BankEditor::loadSettings()
         m_audioLatency = audioMaximumLatency;
 
     ui->actionEmulatorNuked->setChecked(false);
+    ui->actionEmulatorNukedYM2612->setChecked(false);
     ui->actionEmulatorMame->setChecked(false);
     ui->actionEmulatorGens->setChecked(false);
     ui->actionEmulatorGX->setChecked(false);
@@ -264,6 +266,9 @@ void BankEditor::loadSettings()
     default:
     case Generator::CHIP_Nuked:
         ui->actionEmulatorNuked->setChecked(true);
+        break;
+    case Generator::CHIP_NukedYM2612:
+        ui->actionEmulatorNukedYM2612->setChecked(true);
         break;
     case Generator::CHIP_GENS:
         ui->actionEmulatorGens->setChecked(true);
@@ -1095,6 +1100,7 @@ void BankEditor::toggleEmulator()
 {
     QObject *menuItem = sender();
     ui->actionEmulatorNuked->setChecked(false);
+    ui->actionEmulatorNukedYM2612->setChecked(false);
     ui->actionEmulatorMame->setChecked(false);
     ui->actionEmulatorGens->setChecked(false);
     ui->actionEmulatorGX->setChecked(false);
@@ -1108,6 +1114,13 @@ void BankEditor::toggleEmulator()
     {
         ui->actionEmulatorNuked->setChecked(true);
         m_currentChip = Generator::CHIP_Nuked;
+        m_generator->ctl_switchChip(m_currentChip, static_cast<int>(m_currentChipFamily));
+    }
+    else
+    if(menuItem == ui->actionEmulatorNukedYM2612)
+    {
+        ui->actionEmulatorNukedYM2612->setChecked(true);
+        m_currentChip = Generator::CHIP_NukedYM2612;
         m_generator->ctl_switchChip(m_currentChip, static_cast<int>(m_currentChipFamily));
     }
     else

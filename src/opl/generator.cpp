@@ -194,7 +194,10 @@ void Generator::switchChip(Generator::OPN_Chips chipId, int family)
         break;
     default:
     case CHIP_Nuked:
-        chip.reset(new NukedOPN2(m_chipFamily));
+        chip.reset(new NukedOPN2(m_chipFamily, true));
+        break;
+    case CHIP_NukedYM2612:
+        chip.reset(new NukedOPN2(m_chipFamily, false));
         break;
     case CHIP_MAME:
         chip.reset(new MameOPN2(m_chipFamily));
