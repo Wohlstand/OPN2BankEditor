@@ -71,6 +71,8 @@ public slots:
     virtual void ctl_changeVolumeModel(int model) = 0;
     virtual void ctl_changeVolume(unsigned vol) = 0;
 
+    virtual void ctl_setChanAllocMode(int mode) = 0;
+
 signals:
     void debugInfo(QString);
 
@@ -131,6 +133,7 @@ public:
     void ctl_changeLFOfreq(int freq) override;
     void ctl_changeVolumeModel(int model) override;
     void ctl_changeVolume(unsigned vol) override;
+    void ctl_setChanAllocMode(int mode) override;
     /* MIDI */
     void midi_event(const uint8_t *msg, unsigned msglen) override;
     /* Realtime */

@@ -36,6 +36,7 @@ enum MessageTag
     MSG_CtlLFOFreq,
     MSG_CtlVolumeModel,
     MSG_CtlVolume,
+    MSG_CtlChanAlloc,
 };
 
 struct MessageHeader
@@ -239,6 +240,15 @@ void RealtimeGenerator::ctl_changeVolume(unsigned vol)
     rb.put(vol);
 }
 
+void RealtimeGenerator::ctl_setChanAllocMode(int mode)
+{
+    Ring_Buffer &rb = *m_rb_ctl;
+    MessageHeader hdr = {MSG_CtlChanAlloc, sizeof(int)};
+    wait_for_fifo_write_space(rb, hdr.size);
+    rb.put(hdr);
+    rb.put(mode);
+}
+
 
 /* MIDI */
 void RealtimeGenerator::midi_event(const uint8_t *msg, unsigned msglen)
@@ -360,6 +370,9 @@ void RealtimeGenerator::rt_message_process(int tag, const uint8_t *data, unsigne
             m_midichan[i].volume = vol;
         break;
     }
+    case MSG_CtlChanAlloc:
+        gen.setChanAllocMode(*(int *)data);
+        break;
     }
 }
 

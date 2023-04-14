@@ -86,6 +86,7 @@ void BankEditor::initAudio()
     //TODO: Add OPNx chip frequency toggling
 #endif
     connect(ui->volumeModel,  SIGNAL(currentIndexChanged(int)), m_generator,  SLOT(ctl_changeVolumeModel(int)));
+    connect(ui->chanAlloc,  SIGNAL(currentIndexChanged(int)), m_generator,  SLOT(ctl_setChanAllocMode(int)));
 
     //Generator's debug info
     connect(m_generator, SIGNAL(debugInfo(QString)), ui->debugBox, SLOT(setText(QString)));
