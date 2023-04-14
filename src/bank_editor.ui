@@ -1352,7 +1352,7 @@
                 <item>
                  <widget class="QLabel" name="label_43">
                   <property name="pixmap">
-                   <pixmap resource="../../OPL3BankEditor/src/resources/resources.qrc">:/aportpti.png</pixmap>
+                   <pixmap resource="resources/resources.qrc">:/aportpti.png</pixmap>
                   </property>
                  </widget>
                 </item>
@@ -1798,6 +1798,8 @@ Available from 0 to 127</string>
      <addaction name="actionEmulatorNP2"/>
      <addaction name="actionEmulatorMameOPNA"/>
      <addaction name="actionEmulatorPMDWinOPNA"/>
+     <addaction name="actionEmulatorYmFmOPN2"/>
+     <addaction name="actionEmulatorYmFmOPNA"/>
     </widget>
     <addaction name="menuChoose_chip_emulator"/>
     <addaction name="actionAudioConfig"/>
@@ -2081,6 +2083,34 @@ Available from 0 to 127</string>
     <string>Compare with other bank...</string>
    </property>
   </action>
+  <action name="actionEmulatorYmFmOPN2">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string notr="true">YMFM OPN2</string>
+   </property>
+   <property name="iconText">
+    <string notr="true">YMFM OPN2</string>
+   </property>
+   <property name="toolTip">
+    <string notr="true">YMFM OPN2</string>
+   </property>
+  </action>
+  <action name="actionEmulatorYmFmOPNA">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string notr="true">YMFM OPNA</string>
+   </property>
+   <property name="iconText">
+    <string notr="true">YMFM OPNA</string>
+   </property>
+   <property name="toolTip">
+    <string notr="true">YMFM OPNA</string>
+   </property>
+  </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <customwidgets>
@@ -2099,7 +2129,6 @@ Available from 0 to 127</string>
  </customwidgets>
  <resources>
   <include location="resources/resources.qrc"/>
-  <include location="../../OPL3BankEditor/src/resources/resources.qrc"/>
  </resources>
  <connections>
   <connection>

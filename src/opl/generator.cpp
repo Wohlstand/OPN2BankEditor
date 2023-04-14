@@ -28,6 +28,12 @@
 #include "chips/mame_opna.h"
 #include "chips/pmdwin_opna.h"
 
+#ifdef ENABLE_YMFM_EMULATOR
+#include "chips/ymfm_opn2.h"
+#include "chips/ymfm_opna.h"
+#endif
+
+
 #define USED_CHANNELS_4OP       6
 
 /***************************************************************
@@ -205,6 +211,14 @@ void Generator::switchChip(Generator::OPN_Chips chipId, int family)
     case CHIP_PMDWIN:
         chip.reset(new PMDWinOPNA(m_chipFamily));
         break;
+#ifdef ENABLE_YMFM_EMULATOR
+    case CHIP_YMFM_OPN2:
+        chip.reset(new YmFmOPN2(m_chipFamily));
+        break;
+    case CHIP_YMFM_OPNA:
+        chip.reset(new YmFmOPNA(m_chipFamily));
+        break;
+#endif
     }
     initChip();
 }

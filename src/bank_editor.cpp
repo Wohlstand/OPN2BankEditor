@@ -126,6 +126,13 @@ BankEditor::BankEditor(QWidget *parent) :
     connect(ui->actionEmulatorNP2, SIGNAL(triggered()), this, SLOT(toggleEmulator()));
     connect(ui->actionEmulatorMameOPNA, SIGNAL(triggered()), this, SLOT(toggleEmulator()));
     connect(ui->actionEmulatorPMDWinOPNA, SIGNAL(triggered()), this, SLOT(toggleEmulator()));
+    connect(ui->actionEmulatorYmFmOPN2, SIGNAL(triggered()), this, SLOT(toggleEmulator()));
+    connect(ui->actionEmulatorYmFmOPNA, SIGNAL(triggered()), this, SLOT(toggleEmulator()));
+
+#ifndef ENABLE_YMFM_EMULATOR
+    ui->actionEmulatorYmFmOPN2->setVisible(false);
+    ui->actionEmulatorYmFmOPNA->setVisible(false);
+#endif
 
     OperatorEditor *op_editors[4] = {ui->op1edit, ui->op2edit, ui->op3edit, ui->op4edit};
 
@@ -247,6 +254,8 @@ void BankEditor::loadSettings()
     ui->actionEmulatorNP2->setChecked(false);
     ui->actionEmulatorMameOPNA->setChecked(false);
     ui->actionEmulatorPMDWinOPNA->setChecked(false);
+    ui->actionEmulatorYmFmOPN2->setChecked(false);
+    ui->actionEmulatorYmFmOPNA->setChecked(false);
 
     preferredMidiStandard = setup.value("preferred-midi-standard", 3).toInt();
 
@@ -273,6 +282,12 @@ void BankEditor::loadSettings()
         break;
     case Generator::CHIP_PMDWIN:
         ui->actionEmulatorPMDWinOPNA->setChecked(true);
+        break;
+    case Generator::CHIP_YMFM_OPN2:
+        ui->actionEmulatorYmFmOPN2->setChecked(true);
+        break;
+    case Generator::CHIP_YMFM_OPNA:
+        ui->actionEmulatorYmFmOPNA->setChecked(true);
         break;
     }
 
@@ -1086,6 +1101,9 @@ void BankEditor::toggleEmulator()
     ui->actionEmulatorNP2->setChecked(false);
     ui->actionEmulatorMameOPNA->setChecked(false);
     ui->actionEmulatorPMDWinOPNA->setChecked(false);
+    ui->actionEmulatorYmFmOPN2->setChecked(false);
+    ui->actionEmulatorYmFmOPNA->setChecked(false);
+
     if(menuItem == ui->actionEmulatorNuked)
     {
         ui->actionEmulatorNuked->setChecked(true);
@@ -1132,6 +1150,20 @@ void BankEditor::toggleEmulator()
     {
         ui->actionEmulatorPMDWinOPNA->setChecked(true);
         m_currentChip = Generator::CHIP_PMDWIN;
+        m_generator->ctl_switchChip(m_currentChip, static_cast<int>(m_currentChipFamily));
+    }
+    else
+    if(menuItem == ui->actionEmulatorYmFmOPN2)
+    {
+        ui->actionEmulatorYmFmOPN2->setChecked(true);
+        m_currentChip = Generator::CHIP_YMFM_OPN2;
+        m_generator->ctl_switchChip(m_currentChip, static_cast<int>(m_currentChipFamily));
+    }
+    else
+    if(menuItem == ui->actionEmulatorYmFmOPNA)
+    {
+        ui->actionEmulatorYmFmOPNA->setChecked(true);
+        m_currentChip = Generator::CHIP_YMFM_OPNA;
         m_generator->ctl_switchChip(m_currentChip, static_cast<int>(m_currentChipFamily));
     }
 }

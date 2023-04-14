@@ -1,11 +1,31 @@
 cmake_minimum_required(VERSION 3.2)
 project(OPN2BankEditor LANGUAGES C CXX)
 
+include(CheckCXXCompilerFlag)
+
 list(APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake")
 
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 set(CMAKE_AUTOMOC ON)
+
+if(MSVC)
+    check_cxx_compiler_flag("/std:c++14" COMPILER_SUPPORTS_CXX14)
+    if(COMPILER_SUPPORTS_CXX14)
+        set(FLAG_CPP14 "/std:c++14")
+    endif()
+else()
+    check_cxx_compiler_flag("-std=c++14" COMPILER_SUPPORTS_CXX14)
+    if(COMPILER_SUPPORTS_CXX14)
+        set(FLAG_CPP14 "-std=c++14")
+    endif()
+endif()
+
+if(COMPILER_SUPPORTS_CXX14)
+    message("== Your C++ compiler supports C++14, YMFM emulator will be ENABLED")
+else()
+    message("== Your C++ compiler does NOT supports C++14, YMFM emulator will be DISABLED")
+endif()
 
 if(CMAKE_C_COMPILER_ID MATCHES "^(GNU|Clang)$")
   set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall")
@@ -95,6 +115,9 @@ target_link_libraries(FileFormats PUBLIC Common PRIVATE ${ZLIB_LIBRARIES})
 include(src/opl/chips/chipset.cmake)
 add_library(Chips STATIC ${CHIPS_SOURCES})
 target_include_directories(Chips PUBLIC "src")
+if(COMPILER_SUPPORTS_CXX14)
+  target_compile_definitions(Chips PUBLIC "-DENABLE_YMFM_EMULATOR")
+endif()
 
 set(MEASURER_SOURCES
   "src/opl/measurer.cpp")

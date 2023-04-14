@@ -43,6 +43,11 @@
 #include "chips/np2_opna.h"
 #include "chips/mame_opna.h"
 #include "chips/pmdwin_opna.h"
+#ifdef ENABLE_YMFM_EMULATOR
+#include "chips/ymfm_opn2.h"
+#include "chips/ymfm_opna.h"
+#endif
+
 
 //typedef NukedOPN2 DefaultOPN2;
 typedef MameOPN2 DefaultOPN2;
@@ -690,6 +695,10 @@ static void MeasureDurationsBenchmarkRunner(FmBank::Instrument *in_p, QVector<Me
         std::shared_ptr<OPNChipBase>(new NP2OPNA<>(family)),
         std::shared_ptr<OPNChipBase>(new MameOPNA(family)),
         std::shared_ptr<OPNChipBase>(new PMDWinOPNA(family))
+#ifdef ENABLE_YMFM_EMULATOR
+        , std::shared_ptr<OPNChipBase>(new YmFmOPN2(family))
+        , std::shared_ptr<OPNChipBase>(new YmFmOPNA(family))
+#endif
     };
     for(std::shared_ptr<OPNChipBase> &p : emuls)
         MeasureDurationsBenchmark(in_p, p.get(), result);
