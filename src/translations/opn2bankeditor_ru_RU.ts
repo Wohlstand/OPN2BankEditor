@@ -532,7 +532,23 @@
     <message>
         <location filename="../bank_editor.ui" line="1378"/>
         <source>Channels allocation mode</source>
-        <translation type="unfinished"></translation>
+        <translation>Режим выбора каналов</translation>
+    </message>
+    <message>
+        <source>Choose the channel selection algorithm.
+
+- Cycling - the next channel will be selected by the iteration thgouh all channels in the list. 
+  If selected channel is busy, the oldest will be replaced.
+- First released - the next channel will be selected by finding any released (no playing note),
+  causing recently released note to re-use the same channel, which makes the the legato-like
+  effect. If all channels are busy, the oldest will be replaced.</source>
+        <translation type="obsolete">Выберите алгоритм выбра каналов.
+
+- Цикл - следующий канал будет выбран с помощью итерации через все каналы в списке.
+  Если выбранный канал занят, то будет заменён один из старейших.
+- Первый свободный - следующий канал будет выбран через поиск любого свободного (на котором
+  не играются ноты). В связи с чем, канал отпущенной ноты сразу же переиспользуется новой нотой,
+  что создаёт эффект, похожий на легато. Если все каналы заняты, то будет заменён один из стареших.</translation>
     </message>
     <message>
         <location filename="../bank_editor.ui" line="1385"/>
@@ -541,21 +557,27 @@
 - Cycling - the next channel will be selected by the iteration thgouh all channels in the list. 
   If selected channel is busy, the oldest will be replaced.
 - First released - the next channel will be selected by finding any released (no playing note),
-  causing recently released note to re-use the same channel, which makes the the legato-like
-  effect. If all channels are busy, the oldest will be replaced.</source>
-        <translation type="unfinished"></translation>
+  causing the channel of recently released note to be re-used by a new note, which makes
+  the the legato-like effect. If all channels are busy, the oldest will be replaced.</source>
+        <translation>Выберите алгоритм выбра каналов.
+
+- Цикл - следующий канал будет выбран с помощью итерации через все каналы в списке.
+  Если выбранный канал занят, то будет заменён один из старейших.
+- Первый свободный - следующий канал будет выбран через поиск любого свободного (на котором
+  не играются ноты). В связи с чем, канал отпущенной ноты сразу же переиспользуется новой нотой,
+  что создаёт эффект, похожий на легато. Если все каналы заняты, то будет заменён один из старейших.</translation>
     </message>
     <message>
         <location filename="../bank_editor.ui" line="1395"/>
         <source>Cycling</source>
         <comment>Channels allocation mode name</comment>
-        <translation type="unfinished"></translation>
+        <translation>Цикл</translation>
     </message>
     <message>
         <location filename="../bank_editor.ui" line="1400"/>
         <source>First released</source>
         <comment>Channels allocation mode name</comment>
-        <translation type="unfinished"></translation>
+        <translation>Первый свободный</translation>
     </message>
     <message>
         <location filename="../bank_editor.ui" line="1411"/>
@@ -839,12 +861,12 @@ Available from 0 to 127</source>
         <location filename="../bank_editor.ui" line="1991"/>
         <location filename="../bank_editor.ui" line="1994"/>
         <source>Nuked OPN2 YM3438 (very accurate)</source>
-        <translation type="unfinished"></translation>
+        <translation>Nuked OPN2 YM3438 (Высокоточный)</translation>
     </message>
     <message>
         <location filename="../bank_editor.ui" line="2156"/>
         <source>Nuked OPN2 YM2612 (vert accurate)</source>
-        <translation type="unfinished"></translation>
+        <translation>Nuked OPN2 YM2612 (Высокоточный)</translation>
     </message>
     <message>
         <source>Nuked OPN2 (very accurate)</source>

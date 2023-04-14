@@ -323,17 +323,6 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../bank_editor.ui" line="1385"/>
-        <source>Choose the channel selection algorithm.
-
-- Cycling - the next channel will be selected by the iteration thgouh all channels in the list. 
-  If selected channel is busy, the oldest will be replaced.
-- First released - the next channel will be selected by finding any released (no playing note),
-  causing recently released note to re-use the same channel, which makes the the legato-like
-  effect. If all channels are busy, the oldest will be replaced.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <location filename="../bank_editor.ui" line="1395"/>
         <source>Cycling</source>
         <comment>Channels allocation mode name</comment>
@@ -820,6 +809,17 @@ Valeurs entre 0 et 127</translation>
         <location filename="../bank_editor.ui" line="1252"/>
         <source>72.2 Hz</source>
         <translation></translation>
+    </message>
+    <message>
+        <location filename="../bank_editor.ui" line="1385"/>
+        <source>Choose the channel selection algorithm.
+
+- Cycling - the next channel will be selected by the iteration thgouh all channels in the list. 
+  If selected channel is busy, the oldest will be replaced.
+- First released - the next channel will be selected by finding any released (no playing note),
+  causing the channel of recently released note to be re-used by a new note, which makes
+  the the legato-like effect. If all channels are busy, the oldest will be replaced.</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../bank_editor.ui" line="1784"/>

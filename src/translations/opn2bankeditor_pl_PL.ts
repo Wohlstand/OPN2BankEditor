@@ -445,8 +445,8 @@
 - Cycling - the next channel will be selected by the iteration thgouh all channels in the list. 
   If selected channel is busy, the oldest will be replaced.
 - First released - the next channel will be selected by finding any released (no playing note),
-  causing recently released note to re-use the same channel, which makes the the legato-like
-  effect. If all channels are busy, the oldest will be replaced.</source>
+  causing the channel of recently released note to be re-used by a new note, which makes
+  the the legato-like effect. If all channels are busy, the oldest will be replaced.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
