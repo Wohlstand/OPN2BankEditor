@@ -26,7 +26,15 @@ QT += core gui
 greaterThan(QT_MAJOR_VERSION, 4):{
     QT += widgets concurrent
     DEFINES += ENABLE_AUDIO_TESTING
-    CONFIG += c++11
+    load(configure)
+    if(qtCompileTest(cpp14)) {
+        CONFIG += c++14
+        CONFIG += enable_ymfm
+        message("TEST: С++14 support presented, YMFM will be ENABLED!")
+    } else {
+        CONFIG += c++11
+        message("TEST: С++14 was not found, YMFM will be DISABLED!")
+    }
 } else {
     QMAKE_CXXFLAGS += -std=c++11
     DEFINES += IS_QT_4

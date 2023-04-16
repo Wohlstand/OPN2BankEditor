@@ -63,3 +63,29 @@ HEADERS+= \
     $$PWD/opn_chip_base.h \
     $$PWD/opn_chip_base.tcc \
     $$PWD/opn_chip_family.h
+
+# Available when C++14 is supported
+enable_ymfm: {
+DEFINES += ENABLE_YMFM_EMULATOR
+
+SOURCES+= \
+    $$PWD/ymfm_opn2.cpp \
+    $$PWD/ymfm_opna.cpp \
+    $$PWD/ymfm/ymfm_adpcm.cpp \
+    $$PWD/ymfm/ymfm_misc.cpp \
+    $$PWD/ymfm/ymfm_opn.cpp \
+    $$PWD/ymfm/ymfm_pcm.cpp \
+    $$PWD/ymfm/ymfm_ssg.cpp
+
+HEADERS+= \
+    $$PWD/ymfm_opn2.h \
+    $$PWD/ymfm_opna.h \
+    $$PWD/ymfm/ymfm.h \
+    $$PWD/ymfm/ymfm_adpcm.h \
+    $$PWD/ymfm/ymfm_fm.h \
+    $$PWD/ymfm/ymfm_fm.ipp \
+    $$PWD/ymfm/ymfm_misc.h \
+    $$PWD/ymfm/ymfm_opn.h \
+    $$PWD/ymfm/ymfm_pcm.h \
+    $$PWD/ymfm/ymfm_ssg.h
+}
