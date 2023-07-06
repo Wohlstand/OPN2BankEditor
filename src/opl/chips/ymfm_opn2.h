@@ -37,9 +37,9 @@ class YmFmOPN2 final : public OPNChipBaseT<YmFmOPN2>
     };
 
     Reg m_queue[c_queueSize];
-    size_t m_headPos = 0;
-    size_t m_tailPos = 0;
-    long m_queueCount = 0;
+    size_t m_headPos;
+    size_t m_tailPos;
+    long m_queueCount;
 
 public:
     explicit YmFmOPN2(OPNFamily f);

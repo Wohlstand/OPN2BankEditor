@@ -22,8 +22,23 @@
 #include "ymfm/ymfm_opn.h"
 #include <cstring>
 
+struct YmFmOPNA_Private
+{
+    YmFmOPNA::Reg m_queue[YmFmOPNA::c_queueSize];
+    size_t m_headPos = 0;
+    size_t m_tailPos = 0;
+    long m_queueCount = 0;
+    unsigned long long m_step = 0;
+    unsigned long long m_pos = 0;
+    unsigned long long m_out_step = 0;
+
+    void writeReg(uint32_t port, uint16_t addr, uint8_t data);
+    void nativeGenerate(int16_t *frame, void *m_chip, void *m_output);
+};
+
 YmFmOPNA::YmFmOPNA(OPNFamily f) :
-    OPNChipBaseT(f)
+    OPNChipBaseT(f),
+    p(new YmFmOPNA_Private)
 {
     ymfm::ymfm_interface* intf = new ymfm::ymfm_interface;
     m_intf = intf;
@@ -37,6 +52,7 @@ YmFmOPNA::YmFmOPNA(OPNFamily f) :
 
 YmFmOPNA::~YmFmOPNA()
 {
+    delete p;
     ymfm::ym2608 *chip_r = reinterpret_cast<ymfm::ym2608*>(m_chip);
     ymfm::ymfm_interface *intf_r = reinterpret_cast<ymfm::ymfm_interface*>(m_intf);
     ymfm::ym2608::output_data *output_r = reinterpret_cast<ymfm::ym2608::output_data*>(m_output);
@@ -50,9 +66,9 @@ void YmFmOPNA::setRate(uint32_t rate, uint32_t clock)
     OPNChipBaseT::setRate(rate, clock);
     ymfm::ym2608 *chip_r = reinterpret_cast<ymfm::ym2608*>(m_chip);
     chip_r->reset();
-    m_out_step = 0x100000000ull / nativeRate();
-    m_step = 0x100000000ull / chip_r->sample_rate(m_clock);
-    m_pos = 0;
+    p->m_out_step = 0x100000000ull / nativeRate();
+    p->m_step = 0x100000000ull / chip_r->sample_rate(m_clock);
+    p->m_pos = 0;
     writeReg(0, 0x29, 0x9f);  // enable channels 4-6
 }
 
@@ -61,19 +77,24 @@ void YmFmOPNA::reset()
     OPNChipBaseT::reset();
     ymfm::ym2608 *chip_r = reinterpret_cast<ymfm::ym2608*>(m_chip);
     chip_r->reset();
-    m_out_step = 0x100000000ull / nativeRate();
-    m_step = 0x100000000ull / chip_r->sample_rate(m_clock);
-    m_pos = 0;
+    p->m_out_step = 0x100000000ull / nativeRate();
+    p->m_step = 0x100000000ull / chip_r->sample_rate(m_clock);
+    p->m_pos = 0;
     writeReg(0, 0x29, 0x9f);  // enable channels 4-6
 }
 
 void YmFmOPNA::writeReg(uint32_t port, uint16_t addr, uint8_t data)
 {
-    Reg &back = m_queue[m_headPos++];
+    p->writeReg(port, addr, data);
+}
+
+void YmFmOPNA_Private::writeReg(uint32_t port, uint16_t addr, uint8_t data)
+{
+    YmFmOPNA::Reg &back = m_queue[m_headPos++];
     back.addr = port > 0 ? addr | 0x100 : addr;
     back.data = data;
 
-    if(m_headPos >= c_queueSize)
+    if(m_headPos >= YmFmOPNA::c_queueSize)
         m_headPos = 0;
 
     ++m_queueCount;
@@ -87,6 +108,11 @@ void YmFmOPNA::writePan(uint16_t /*addr*/, uint8_t /*data*/)
 
 void YmFmOPNA::nativeGenerate(int16_t *frame)
 {
+    p->nativeGenerate(frame, m_chip, m_output);
+}
+
+void YmFmOPNA_Private::nativeGenerate(int16_t *frame, void *m_chip, void *m_output)
+{
     ymfm::ym2608 *chip_r = reinterpret_cast<ymfm::ym2608*>(m_chip);
     ymfm::ym2608::output_data *output_r = reinterpret_cast<ymfm::ym2608::output_data*>(m_output);
 
@@ -98,9 +124,9 @@ void YmFmOPNA::nativeGenerate(int16_t *frame)
         // see if there is data to be written; if so, extract it and dequeue
         if(m_queueCount > 0)
         {
-            const Reg &front = m_queue[m_tailPos++];
+            const YmFmOPNA::Reg &front = m_queue[m_tailPos++];
 
-            if(m_tailPos >= c_queueSize)
+            if(m_tailPos >= YmFmOPNA::c_queueSize)
                 m_tailPos = 0;
             --m_queueCount;
 

@@ -23,7 +23,10 @@
 #include <cstring>
 
 YmFmOPN2::YmFmOPN2(OPNFamily f) :
-    OPNChipBaseT(f)
+    OPNChipBaseT(f),
+    m_headPos(0),
+    m_tailPos(0),
+    m_queueCount(0)
 {
     ymfm::ymfm_interface* intf = new ymfm::ymfm_interface;
     m_intf = intf;

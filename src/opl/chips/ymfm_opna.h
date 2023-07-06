@@ -23,8 +23,11 @@
 
 #include "opn_chip_base.h"
 
+struct YmFmOPNA_Private;
+
 class YmFmOPNA final : public OPNChipBaseT<YmFmOPNA>
 {
+    friend struct YmFmOPNA_Private;
     void *m_chip;
     void *m_intf;
     void *m_output;
@@ -37,13 +40,7 @@ class YmFmOPNA final : public OPNChipBaseT<YmFmOPNA>
         uint8_t data;
     };
 
-    Reg m_queue[c_queueSize];
-    size_t m_headPos = 0;
-    size_t m_tailPos = 0;
-    long m_queueCount = 0;
-    unsigned long long m_step = 0;
-    unsigned long long m_pos = 0;
-    unsigned long long m_out_step = 0;
+    YmFmOPNA_Private *p;
 
 public:
     explicit YmFmOPNA(OPNFamily f);
