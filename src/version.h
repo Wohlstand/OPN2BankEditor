@@ -33,6 +33,6 @@
 #define COPYRIGHT_SIGN "©"
 #endif
 
-#define COPYRIGHT COPYRIGHT_SIGN " 2017-2024, Vitaly Novichkov \"Wohlstand\""
+#define COPYRIGHT COPYRIGHT_SIGN " 2017-2025, Vitaly Novichkov \"Wohlstand\""
 
 #endif // VERSION_H
