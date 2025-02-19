@@ -2,17 +2,17 @@
               MIDI playing bank for Yamaha OPN2 (YM2612) chip
                  file format specification (WOPN and OPNI)
 ===============================================================================
-                         Created in April, 30, 2017
+                         Created in 30'th of April, 2017
 ===============================================================================
 Author:             Vitaliy Novichkov "Wohlstand"
 Contacts emails:    admin@wohlnet.ru, nvd339@yandex.ru
 ===============================================================================
 
 Versions:
-- Version 1: (April, 30, 2017): First release
-- Version 2: (November, 24, 2017): Added bank meta-data
+- Version 1: (30'th of April,, 2017): First release
+- Version 2: (24'th of November, 2017): Added bank meta-data
               and measured sounding delays per each instrument
-             (November, 18, 2018): Added OPN2/OPNA global chip flag
+             (18'th of November, 2018): Added OPN2/OPNA global chip flag
 - Version 3: (DRAFT)
              Added pitch envelope options and sample instrument support
              Added per-instrument flags
