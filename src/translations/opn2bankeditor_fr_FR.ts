@@ -1290,18 +1290,18 @@ Amplitude au point de coupure : %3</translation>
 <context>
     <name>DelayAnalysisDialog</name>
     <message>
-        <location filename="../delay_analysis.cpp" line="167"/>
+        <location filename="../delay_analysis.cpp" line="170"/>
         <source>Key-On Amplitude</source>
         <translation>Amplitude de Note Jouée</translation>
     </message>
     <message>
-        <location filename="../delay_analysis.cpp" line="169"/>
+        <location filename="../delay_analysis.cpp" line="172"/>
         <source>Key-Off Amplitude</source>
         <translation>Amplitude de Note Relâchée</translation>
     </message>
     <message>
-        <location filename="../delay_analysis.cpp" line="183"/>
-        <location filename="../delay_analysis.cpp" line="189"/>
+        <location filename="../delay_analysis.cpp" line="186"/>
+        <location filename="../delay_analysis.cpp" line="192"/>
         <source>Delay: %1 ms
 Peak amplitude: %2
 Amplitude at breaking point: %3</source>
