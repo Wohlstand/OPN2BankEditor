@@ -568,7 +568,14 @@
 &lt;p&gt;&lt;b&gt;Apogee&lt;/b&gt; - Tuned logarithmic volume. Imitation of Apogee Sound System for OPL3 chips.&lt;/p&gt;
 &lt;p&gt;&lt;b&gt;Win9x OPL3&lt;/b&gt; - A short non-smooth indexed table, shorter in two times than possible OPL3 volume levels.&lt;/p&gt;
 </source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;p&gt;Определяет формулу преобразования громкости, которая установит физический уровень громкости из MIDI-громкости.&lt;/p&gt;
+&lt;p&gt;&lt;br/&gt;&lt;/p&gt;
+&lt;p&gt;&lt;b&gt;Общий&lt;/b&gt; - Линеализация логарифмической громкости чипа.&lt;/p&gt;
+&lt;p&gt;&lt;b&gt;Родная OPN2&lt;/b&gt; - Логарифмическая шкала громкости, реалезуемая самим чипом OPN2 напрямую.&lt;/p&gt;
+&lt;p&gt;&lt;b&gt;DMX&lt;/b&gt; - Имитация модели громкости драйвера DMX для чипов OPL2/3. Это индексированная таблица, которая устанавливает громкость OPL из MIDI-громкости.&lt;/p&gt;
+&lt;p&gt;&lt;b&gt;Apogee&lt;/b&gt; - Подкорректированная логарифмическая шкала. Имитация поведения Apogee Sound System дл ячипов OPL3.&lt;/p&gt;
+&lt;p&gt;&lt;b&gt;Win9x OPL3&lt;/b&gt; - Сокращённая неровная индексная таблица, короче в два раза чем позволяет диапазон чипа OPL3.&lt;/p&gt;
+</translation>
     </message>
     <message>
         <location filename="../bank_editor.ui" line="1383"/>
