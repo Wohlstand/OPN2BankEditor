@@ -23,35 +23,53 @@
 #include "ao_rtaudio.h"
 #include "../opl/generator_realtime.h"
 
-AudioOutRt::AudioOutRt(double latency, const std::string &device_name, const std::string &driver_name, QObject *parent)
+AudioOutRt::AudioOutRt(double latency, const std::string& device_name, const std::string& driver_name, QObject* parent)
     : QObject(parent)
 {
-    RtAudio *audioOut = nullptr;
+    RtAudio* audioOut = nullptr;
 
-    try {
+#if !defined(RTAUDIO_VERSION_6)
+    try
+#endif
+    {
         RtAudio::Api api = RtAudio::UNSPECIFIED;
-        if (!driver_name.empty()) {
+
+        if(!driver_name.empty())
+        {
             api = RtAudio::getCompiledApiByName(driver_name);
-            if (api == RtAudio::UNSPECIFIED)
+
+            if(api == RtAudio::UNSPECIFIED)
                 fprintf(stderr, "Unknown RtAudio driver from settings: %s\n", device_name.c_str());
         }
-        if (api != RtAudio::UNSPECIFIED) {
+
+        if(api != RtAudio::UNSPECIFIED)
+        {
             fprintf(stderr, "Trying RtAudio driver from settings: %s\n", device_name.c_str());
+#if defined(RTAUDIO_VERSION_6)
+            audioOut = new RtAudio(api, &AudioOutRt::errorCallback);
+#else
             audioOut = new RtAudio(api);
+#endif
         }
     }
-    catch (RtAudioError &error) {
+#if !defined(RTAUDIO_VERSION_6)
+    catch(RtAudioError& error)
+    {
         fprintf(stderr, "Failed to use RtAudio driver from settings, using default\n");
     }
+#endif
 
-    if (!audioOut)
+    if(!audioOut)
         audioOut = new RtAudio(RtAudio::Api::UNSPECIFIED);
+
     m_audioOut.reset(audioOut);
 
     fprintf(stderr, "Using RtAudio driver: %s\n", RtAudio::getApiName(audioOut->getCurrentApi()).c_str());
 
     unsigned num_audio_devices = audioOut->getDeviceCount();
-    if (num_audio_devices == 0) {
+
+    if(num_audio_devices == 0)
+    {
         QMessageBox::warning(
             nullptr, tr("Error"), tr("No audio devices are present for output."));
         qApp->exit(1);
@@ -63,13 +81,15 @@ AudioOutRt::AudioOutRt(double latency, const std::string &device_name, const std
 
     if(!device_name.empty())
     {
-        for (unsigned i = 0; i < num_audio_devices; ++i)
+        for(unsigned i = 0; i < num_audio_devices; ++i)
         {
             deviceInfo = audioOut->getDeviceInfo(i);
-            if (deviceInfo.name == device_name && isCompatibleDevice(deviceInfo))
+
+            if(deviceInfo.name == device_name && isCompatibleDevice(deviceInfo))
                 outputDeviceId = i;
         }
     }
+
     if(outputDeviceId == ~0u)
     {
         outputDeviceId = audioOut->getDefaultOutputDevice();
@@ -77,6 +97,7 @@ AudioOutRt::AudioOutRt(double latency, const std::string &device_name, const std
     }
 
     unsigned sampleRate = deviceInfo.preferredSampleRate;
+
     if(sampleRate == 0)
     {
         qWarning() << "Returned zero sample rate. Using 44100...";
@@ -95,9 +116,18 @@ AudioOutRt::AudioOutRt(double latency, const std::string &device_name, const std
     qDebug() << "Desired latency" << latency;
     qDebug() << "Buffer size" << bufferSize;
 
+#if defined(RTAUDIO_VERSION_6)
+    RtAudioErrorType err = audioOut->openStream(
+        &streamParam, nullptr, RTAUDIO_SINT16, sampleRate, &bufferSize,
+        &process, this, &streamOpts);
+
+    if(err != RTAUDIO_WARNING && err != RTAUDIO_NO_ERROR)
+        qWarning() << "RtAudio: Failed to open stream: " << err;
+#else
     audioOut->openStream(
         &streamParam, nullptr, RTAUDIO_SINT16, sampleRate, &bufferSize,
         &process, this, &streamOpts, &errorCallback);
+#endif
 }
 
 unsigned AudioOutRt::sampleRate() const
@@ -105,7 +135,7 @@ unsigned AudioOutRt::sampleRate() const
     return m_audioOut->getStreamSampleRate();
 }
 
-void AudioOutRt::start(IRealtimeProcess &rt)
+void AudioOutRt::start(IRealtimeProcess& rt)
 {
     qDebug() << "Trying to start stream...";
     m_rt = &rt;
@@ -123,13 +153,14 @@ std::vector<std::string> AudioOutRt::listCompatibleDevices()
 {
     std::vector<std::string> list;
 
-    RtAudio *audioOut = m_audioOut.get();
+    RtAudio* audioOut = m_audioOut.get();
     unsigned num_audio_devices = audioOut->getDeviceCount();
 
-    for (unsigned i = 0; i < num_audio_devices; ++i)
+    for(unsigned i = 0; i < num_audio_devices; ++i)
     {
         RtAudio::DeviceInfo info = audioOut->getDeviceInfo(i);
-        if (isCompatibleDevice(info))
+
+        if(isCompatibleDevice(info))
             list.push_back(info.name);
     }
 
@@ -144,29 +175,40 @@ std::vector<std::string> AudioOutRt::listDrivers()
     std::vector<std::string> drivers;
     drivers.reserve(apis.size());
 
-    for (RtAudio::Api api : apis)
+    for(RtAudio::Api api : apis)
         drivers.push_back(RtAudio::getApiName(api));
 
     return drivers;
 }
 
-int AudioOutRt::process(void *outputbuffer, void *, unsigned nframes, double, RtAudioStreamStatus, void *userdata)
+int AudioOutRt::process(void* outputbuffer, void*, unsigned nframes, double, RtAudioStreamStatus, void* userdata)
 {
-    AudioOutRt *self = (AudioOutRt *)userdata;
-    IRealtimeProcess &rt = *self->m_rt;
-    rt.rt_generate((int16_t *)outputbuffer, nframes);
+    AudioOutRt* self = (AudioOutRt*)userdata;
+    IRealtimeProcess& rt = *self->m_rt;
+    rt.rt_generate((int16_t*)outputbuffer, nframes);
     return 0;
 }
 
-void AudioOutRt::errorCallback(RtAudioError::Type type, const std::string &errorText)
+#if defined(RTAUDIO_VERSION_6)
+void AudioOutRt::errorCallback(RtAudioErrorType type, const std::string& errorText)
 {
     qWarning() << "Audio error: " << errorText.c_str();
+
+    if(type != RTAUDIO_WARNING && type != RTAUDIO_NO_ERROR)
+        qWarning() << "RtAudio: Error has occured:" << QString::fromStdString(errorText);
+}
+#else
+void AudioOutRt::errorCallback(RtAudioError::Type type, const std::string& errorText)
+{
+    qWarning() << "Audio error: " << errorText.c_str();
+
     //fprintf(stderr, "Audio error: %s\n", errorText.c_str());
-    if (type != RtAudioError::WARNING && type != RtAudioError::DEBUG_WARNING)
+    if(type != RtAudioError::WARNING && type != RtAudioError::DEBUG_WARNING)
         throw RtAudioError(errorText, type);
 }
+#endif
 
-bool AudioOutRt::isCompatibleDevice(const RtAudio::DeviceInfo &info)
+bool AudioOutRt::isCompatibleDevice(const RtAudio::DeviceInfo& info)
 {
     // need at minimum 2 channels for output
     return info.outputChannels >= 2;
