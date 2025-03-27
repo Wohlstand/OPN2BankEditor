@@ -27,6 +27,9 @@
 #include <qwt_plot_marker.h>
 #include <qwt_point_data.h>
 #include <qwt_spline.h>
+#if QWT_VERSION < 0x060200
+#   include <qwt_spline.h>
+#endif
 
 DelayAnalysisDialog::DelayAnalysisDialog(QWidget *parent)
     : QDialog(parent),
@@ -225,6 +228,17 @@ double DelayAnalysisDialog::PlotData::x(uint index) const
 
 double DelayAnalysisDialog::PlotData::y(double x) const
 {
+#if QWT_VERSION >= 0x060200
+    // FIXME: Find the true solution how to do this interpolation with Qwt 6.2+
+    if(x < 0.0)
+        return 0.0;
+
+    size_t cell = static_cast<size_t>(x / m_step);
+    if(cell >= static_cast<size_t>(m_data.size()))
+        cell = static_cast<size_t>(m_data.size()) - 1;
+
+    double interpolatedY = m_data[cell];
+#else
     QPolygonF poly;
     const int maxpoints = 8;
     poly.reserve(maxpoints);
@@ -252,5 +266,7 @@ double DelayAnalysisDialog::PlotData::y(double x) const
 
     // evaluate
     double interpolatedY = spline.value(x);
+#endif
+
     return interpolatedY;
 }
