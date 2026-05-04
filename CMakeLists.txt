@@ -40,7 +40,11 @@ endif()
 
 if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
     add_definitions("-D_USE_MATH_DEFINES")
+    # Enforce the Windows XP compatibility
+    add_definitions(-DWINVER=0x0501 -D_WIN32_WINNT=0x0501)
 endif()
+
+
 
 option(USE_RTMIDI "Use RtMidi" ON)
 option(USE_VENDORED_RTMIDI "Use vendored RtMidi instead of system-installed one" OFF)
@@ -63,12 +67,10 @@ if(WIN32)
 endif()
 
 include(FindPkgConfig)
+include(CheckCXXCompilerFlag)
 
 include(cmake/library_qt.cmake)
 
-find_package(Qt5Widgets REQUIRED)
-find_package(Qt5Concurrent REQUIRED)
-find_package(Qt5LinguistTools REQUIRED)
 find_package(Qwt)
 find_package(ZLIB REQUIRED)
 find_package(Threads REQUIRED)
@@ -102,7 +104,7 @@ message("!!   RtAudio: ${USE_RTAUDIO}")
 message("!!   - Forced vendored version: ${USE_VENDORED_RTAUDIO}")
 
 if(ENABLE_PLOTS)
-  message("!!   Qwt: ${QWT_LIBRARY}")
+    message("!!   Qwt: ${QWT_LIBRARY}")
 endif()
 
 message("!!   Plots: ${ENABLE_PLOTS}")
@@ -110,14 +112,22 @@ message("!!   Plots: ${ENABLE_PLOTS}")
 include_directories("src")
 
 set(COMMON_SOURCES
-    "src/common.cpp"
-    "src/common.h"
     "src/bank.cpp"
     "src/bank.h"
+    "src/common.cpp"
+    "src/common.h"
 )
+
 add_library(Common STATIC ${COMMON_SOURCES})
 target_include_directories(Common PUBLIC "src")
-target_link_libraries(Common PUBLIC Qt5::Widgets)
+if(BUILD_MAJOR_QT GREATER_EQUAL 5)
+    target_link_libraries(Common PUBLIC ${QT_Widgets_TARGET})
+endif()
+
+if(ENABLE_ADDRESS_SANITIZER)
+    target_compile_options(Common PUBLIC -fsanitize=address)
+    target_link_options(Common PUBLIC -fsanitize=address)
+endif()
 
 set(FILEFORMATS_SOURCES
     "src/FileFormats/ffmt_base.cpp"
@@ -188,9 +198,10 @@ if(ENABLE_ADDRESS_SANITIZER)
 endif()
 
 set(MEASURER_SOURCES "src/opl/measurer.cpp" "src/opl/measurer.h")
+
 add_library(Measurer STATIC ${MEASURER_SOURCES})
 target_include_directories(Measurer PUBLIC "src")
-target_link_libraries(Measurer PUBLIC Chips Common Qt5::Concurrent)
+target_link_libraries(Measurer PUBLIC Common ${QT_Concurrent_TARGET})
 
 if(NOT MSVC AND NOT APPLE)
     target_compile_options(Measurer PRIVATE "-fopenmp")
@@ -253,11 +264,11 @@ if(ENABLE_PLOTS)
     list(APPEND UIS "src/delay_analysis.ui")
 endif()
 
-qt5_wrap_ui(FORMS ${UIS})
+pge_qt_wrap_ui(FORMS ${UIS})
 
-qt5_add_resources(RESOURCES "src/resources/resources.qrc")
+pge_qt_add_resources(RESOURCES "src/resources/resources.qrc")
 
-qt5_add_translation(TRANSLATIONS
+pge_qt_add_translation(TRANSLATIONS
     "src/translations/opn2bankeditor_fr_FR.ts"
     "src/translations/opn2bankeditor_ru_RU.ts"
     "src/translations/opn2bankeditor_pl_PL.ts"
@@ -424,11 +435,13 @@ if(USE_RTAUDIO)
         if(NOT RTAUDIO_FOUND)
             find_library(RTAUDIO_MANUAL_LIBRARY rtaudio)
             message("!! RtAudio library: ${RTAUDIO_MANUAL_LIBRARY}")
+
             find_path(RTAUDIO_MANUAL_INCLUDE_DIRS NAMES "RtAudio.h" PATH_SUFFIXES "include/rtaudio")
             message("!! RtAudio header directory: ${RTAUDIO_MANUAL_INCLUDE_DIRS}")
 
             set(CMAKE_REQUIRED_INCLUDES ${RTAUDIO_MANUAL_INCLUDE_DIRS})
             set(CMAKE_REQUIRED_LIBRARIES ${RTAUDIO_MANUAL_LIBRARY})
+
             check_cxx_symbol_exists(RtAudio::getCompiledApiName "RtAudio.h" RTAUDIO_MANUAL_SUFFICIENT)
 
             if(RTAUDIO_MANUAL_LIBRARY AND RTAUDIO_MANUAL_INCLUDE_DIRS AND RTAUDIO_MANUAL_SUFFICIENT)
@@ -448,6 +461,7 @@ if(USE_RTAUDIO)
         if(USE_VENDORED_RTAUDIO_JACK AND (CMAKE_SYSTEM_NAME STREQUAL "Linux" OR CMAKE_SYSTEM_NAME STREQUAL "Darwin"))
             if(PKG_CONFIG_FOUND)
                 pkg_check_modules(JACK jack)
+
                 if(JACK_FOUND)
                     message("!! Using system-installed JACK found by pkg-config")
                 endif()
@@ -456,6 +470,7 @@ if(USE_RTAUDIO)
             if(NOT JACK_FOUND)
                 find_library(JACK_LIBRARY jack)
                 message("!! JACK library: ${JACK_LIBRARY}")
+
                 find_path(JACK_INCLUDE_DIRS NAMES "jack.h" PATH_SUFFIXES "include/jack")
                 message("!! JACK header directory: ${JACK_INCLUDE_DIRS}")
 
@@ -488,8 +503,10 @@ if(USE_RTAUDIO)
 
             if(NOT PULSEAUDIO_FOUND)
                 find_library(PULSEAUDIO_SIMPLE pulse-simple)
+
                 find_library(PULSEAUDIO_COMMON pulse)
                 message("!! PulseAudio libraries: ${PULSEAUDIO_SIMPLE} ${PULSEAUDIO_COMMON}")
+
                 find_path(PULSEAUDIO_INCLUDE_DIRS NAMES "simple.h" PATH_SUFFIXES "include/pulse")
                 message("!! PulseAudio header directory: ${PULSEAUDIO_INCLUDE_DIRS}")
 
@@ -526,8 +543,10 @@ if(USE_RTAUDIO)
             #   "src/audio/external/rtaudio/include/iasiothiscallresolver.cpp")
         elseif(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
             target_compile_definitions(RtAudio PUBLIC "__MACOSX_CORE__")
+
             find_library(COREAUDIO_LIBRARY "CoreAudio")
             target_link_libraries(RtAudio PUBLIC "${COREAUDIO_LIBRARY}")
+
             find_library(COREFOUNDATION_LIBRARY "CoreFoundation")
             target_link_libraries(RtAudio PUBLIC "${COREFOUNDATION_LIBRARY}")
         endif()
@@ -539,9 +558,9 @@ if(USE_RTAUDIO)
     target_compile_definitions(OPN2BankEditor PRIVATE "ENABLE_AUDIO_TESTING")
 endif()
 
-add_executable(measurer_tool "utils/measurer/measurer.cpp")
+add_executable(measurer_tool "utils/measurer/measurer-tool.cpp")
 set_target_properties(measurer_tool PROPERTIES OUTPUT_NAME "measurer")
-target_link_libraries(measurer_tool PRIVATE FileFormats Measurer)
+target_link_libraries(measurer_tool PRIVATE FileFormats Measurer Chips ${QT_EXTRA_LIBS_PRE})
 if(FORCE_EXEC_NO_PIE)
     pge_set_nopie(measurer_tool)
 endif()
