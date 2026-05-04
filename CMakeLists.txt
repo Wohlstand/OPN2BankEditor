@@ -301,7 +301,7 @@ if(DEBUG_WRITE_AMPLITUDE_PLOT)
     target_compile_definitions(OPN2BankEditor PRIVATE "-DDEBUG_WRITE_AMPLITUDE_PLOT")
 endif()
 
-target_link_libraries(OPN2BankEditor PRIVATE FileFormats Chips Measurer)
+target_link_libraries(OPN2BankEditor PRIVATE ${QT_EXTRA_LIBS_PRE} FileFormats Measurer Chips)
 
 if(BUILD_MAJOR_QT GREATER_EQUAL 5)
     target_link_libraries(OPN2BankEditor PRIVATE ${QT_Widgets_TARGET} ${QT_EXTRA_LIBS} ${CMAKE_THREAD_LIBS_INIT})
@@ -560,7 +560,7 @@ endif()
 
 add_executable(measurer_tool "utils/measurer/measurer-tool.cpp")
 set_target_properties(measurer_tool PROPERTIES OUTPUT_NAME "measurer")
-target_link_libraries(measurer_tool PRIVATE FileFormats Measurer Chips ${QT_EXTRA_LIBS_PRE})
+target_link_libraries(measurer_tool PRIVATE ${QT_EXTRA_LIBS} FileFormats Measurer Chips ${QT_EXTRA_LIBS_PRE})
 if(FORCE_EXEC_NO_PIE)
     pge_set_nopie(measurer_tool)
 endif()
