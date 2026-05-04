@@ -402,7 +402,7 @@ jobs:
             -DCPACK_DEBIAN_PACKAGE_RELEASE=${GITHUB_RUN_NUMBER} \
             -DCPACK_DEBIAN_PACKAGE_ARCHITECTURE=amd64 \
             -DCPACK_DEBIAN_PACKAGE_DEPENDS="${{ matrix.config.deb_deps }}" \
-            -DCPACK_DEBIAN_PACKAGE_DESCRIPTION="OPL3 Bank Editor - A tone bank editor for OPL2/OPL3 chips" \
+            -DCPACK_DEBIAN_PACKAGE_DESCRIPTION="OPN2 Bank Editor - A tone bank editor for OPN2/OPNA chips" \
         .
 
     - name: Build
