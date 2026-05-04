@@ -1,0 +1,444 @@
+name: Ubuntu CI
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    name: "${{ matrix.config.name }} | ${{ matrix.config.build_type }}"
+    runs-on: ${{ matrix.config.os }}
+    container: ${{ matrix.config.container }}
+    strategy:
+      fail-fast: true
+      matrix:
+        config:
+        - {
+            name: "Ubuntu 14.04 x86_64",
+            os: ubuntu-latest,
+            container: "ubuntu:14.04",
+            generator: "Ninja",
+            build_type: "Release",
+            upload_directory: "www/ubuntu-14-04/",
+            package_name_suffix: "ubuntu-14-04-amd64",
+            lftp_gz_download: "https://wohlsoft.ru/docs/Software/lftp-4.9.3-ubuntu14.04.tar.gz",
+            gcc_cc: "gcc-8",
+            gcc_cxx: "g++-8",
+            lrelease_exec: "/usr/lib/x86_64-linux-gnu/qt5/bin/lrelease",
+            extra_options: "-DFORCE_EXEC_NO_PIE=OFF",
+
+            deb_deps: "libqt5core5a (>= 5.2.1), libqt5gui5 (>= 5.2.1), libqt5widgets5 (>= 5.2.1), libqt5concurrent5 (>= 5.2.1), libqt5serialport5 (>= 5.2.1), libasound2 (>= 1.0.27), libpulse0, libfreetype6 (>= 2.5.2)",
+
+            deps_cmdline: "echo 'Ubuntu 14' \
+            && apt-get update --fix-missing -qq \
+            && apt-get install -y software-properties-common \
+            && add-apt-repository -y \"ppa:git-core/ppa\" \
+            && add-apt-repository -y \"ppa:ubuntu-toolchain-r/test\" \
+            && apt-get update --fix-missing -qq \
+            && apt-get install -f -qq \
+            && apt-get install -qq \
+            sudo git p7zip-full ninja-build wget lftp dpkg-dev \
+            qt5-default qtbase5-dev qt5-qmake qttools5-dev qttools5-dev-tools libqt5concurrent5 \
+            qt5-image-formats-plugins libqt5serialport5-dev \
+            libasound2-dev libpulse-dev libudev-dev \
+            gcc-8 g++-8 libc6 libstdc++6 \
+            libexpat1 readline-common libreadline6 libgnutls28 libtinfo5 zlib1g \
+            && wget https://github.com/Kitware/CMake/releases/download/v3.27.1/cmake-3.27.1-linux-x86_64.tar.gz -O cmake.tar.gz \
+            && tar -xf cmake.tar.gz \
+            && cp -a cmake-3.27.1-linux-x86_64/bin/* /usr/local/bin \
+            && cp -a cmake-3.27.1-linux-x86_64/share/* /usr/local/share \
+            && rm -vrf cmake.tar.gz cmake-3.27.1-linux-x86_64 \
+            && git config --global --add safe.directory '*'"
+          }
+        - {
+            name: "Ubuntu 16.04 x86_64",
+            os: ubuntu-latest,
+            container: "ubuntu:16.04",
+            generator: "Ninja",
+            build_type: "Release",
+            upload_directory: "www/ubuntu-16-04/",
+            package_name_suffix: "ubuntu-16-04-amd64",
+            readline6_download: "https://wohlsoft.ru/docs/Software/libreadline6_6.3-8_amd64-ubuntu1804.deb",
+            lftp_download: "https://wohlsoft.ru/docs/Software/lftp_4.9.1-1_amd64-ubuntu1604.deb",
+            gcc_cc: "gcc-8",
+            gcc_cxx: "g++-8",
+            lrelease_exec: "/usr/bin/lrelease",
+
+            deb_deps: "libqt5core5a (>= 5.5.0), libqt5gui5 (>= 5.5.0), libqt5widgets5 (>= 5.5.0), libqt5concurrent5 (>= 5.5.0), libqt5serialport5 (>= 5.5.0), libqwt-qt5-6 (>= 6.1.2), libasound2 (>= 1.1.0), libpulse0, libfreetype6 (>= 2.6.1)",
+
+            deps_cmdline: "echo 'Ubuntu 16' \
+            && apt-get update --fix-missing -qq \
+            && apt-get install -y software-properties-common \
+            && add-apt-repository -y \"ppa:git-core/ppa\" \
+            && add-apt-repository -y \"ppa:ubuntu-toolchain-r/test\" \
+            && apt-get update --fix-missing -qq \
+            && apt-get install -f -qq \
+            && apt-get install -qq \
+            sudo git p7zip-full ninja-build wget lftp dpkg-dev \
+            qt5-default qtbase5-dev qt5-qmake qttools5-dev qttools5-dev-tools libqt5concurrent5 \
+            qt5-image-formats-plugins libqt5serialport5-dev \
+            libasound2-dev libpulse-dev libudev-dev \
+            gcc-8 g++-8 libc6 libstdc++6 libqwt-qt5-dev \
+            libexpat1 readline-common libgnutls30 libtinfo5 zlib1g \
+            && wget https://github.com/Kitware/CMake/releases/download/v3.27.1/cmake-3.27.1-linux-x86_64.tar.gz -O cmake.tar.gz \
+            && tar -xf cmake.tar.gz \
+            && cp -a cmake-3.27.1-linux-x86_64/bin/* /usr/local/bin \
+            && cp -a cmake-3.27.1-linux-x86_64/share/* /usr/local/share \
+            && rm -vrf cmake.tar.gz cmake-3.27.1-linux-x86_64 \
+            && git config --global --add safe.directory '*'"
+          }
+        - {
+            name: "Ubuntu 18.04 x86_64",
+            os: ubuntu-latest,
+            container: "ubuntu:18.04",
+            generator: "Ninja",
+            build_type: "Release",
+            upload_directory: "www/ubuntu-18-04/",
+            package_name_suffix: "ubuntu-18-04-amd64",
+            readline6_download: "https://wohlsoft.ru/docs/Software/libreadline6_6.3-8_amd64-ubuntu1804.deb",
+            lftp_download: "https://wohlsoft.ru/docs/Software/lftp_4.9.1-1_amd64-ubuntu1604.deb",
+            gcc_cc: "gcc-8",
+            gcc_cxx: "g++-8",
+            lrelease_exec: "/usr/lib/qt5/bin/lrelease",
+
+            deb_deps: "libqt5core5a (>= 5.9.0), libqt5gui5 (>= 5.9.0), libqt5widgets5 (>= 5.9.0), libqt5concurrent5 (>= 5.9.0), libqt5serialport5 (>= 5.9.0), libqwt-qt5-6 (>= 6.1.3), libasound2 (>= 1.1.3), libpulse0, libfreetype6 (>= 2.8.0)",
+
+            deps_cmdline: "echo 'Ubuntu 18' \
+            && apt-get update --fix-missing -qq \
+            && apt-get install -y software-properties-common \
+            && add-apt-repository -y \"ppa:git-core/ppa\" \
+            && add-apt-repository -y \"ppa:ubuntu-toolchain-r/test\" \
+            && apt-get update --fix-missing -qq \
+            && apt-get install -f -qq \
+            && apt-get install -qq \
+            sudo git p7zip-full ninja-build wget lftp dpkg-dev \
+            qt5-default qtbase5-dev qt5-qmake qttools5-dev qttools5-dev-tools libqt5concurrent5 \
+            qt5-image-formats-plugins libqt5serialport5-dev \
+            libasound2-dev libpulse-dev libudev-dev \
+            gcc-8 g++-8 libc6 libstdc++6 libqwt-qt5-dev \
+            libexpat1 readline-common libgnutls30 libtinfo5 zlib1g \
+            && wget https://github.com/Kitware/CMake/releases/download/v3.27.1/cmake-3.27.1-linux-x86_64.tar.gz -O cmake.tar.gz \
+            && tar -xf cmake.tar.gz \
+            && cp -a cmake-3.27.1-linux-x86_64/bin/* /usr/local/bin \
+            && cp -a cmake-3.27.1-linux-x86_64/share/* /usr/local/share \
+            && rm -vrf cmake.tar.gz cmake-3.27.1-linux-x86_64 \
+            && git config --global --add safe.directory '*'"
+          }
+        - {
+            name: "Ubuntu 20.04 x86_64",
+            os: ubuntu-latest,
+            container: "ubuntu:20.04",
+            generator: "Ninja",
+            build_type: "Release",
+            upload_directory: "www/ubuntu-20-04/",
+            package_name_suffix: "ubuntu-20-04-amd64",
+            gcc_cc: "gcc",
+            gcc_cxx: "g++",
+            lrelease_exec: "/usr/lib/qt5/bin/lrelease",
+
+            deb_deps: "libqt5core5a (>= 5.12.0), libqt5gui5 (>= 5.12.0), libqt5widgets5 (>= 5.12.0), libqt5concurrent5 (>= 5.12.0), libqt5serialport5 (>= 5.12.0), libqwt-qt5-6 (>= 6.1.4), libasound2 (>= 1.2.2), libpulse0, libfreetype6 (>= 2.10.0)",
+
+            deps_cmdline: "echo 'Ubuntu 20' \
+            && apt-get update --fix-missing -qq \
+            && apt-get install -y software-properties-common \
+            && add-apt-repository -y \"ppa:git-core/ppa\" \
+            && apt-get update --fix-missing -qq \
+            && apt-get install -f -qq \
+            && apt-get install -qq \
+            sudo git p7zip-full ninja-build cmake wget lftp dpkg-dev \
+            qtbase5-dev qt5-qmake qttools5-dev qttools5-dev-tools libqt5concurrent5 \
+            qt5-image-formats-plugins libqt5serialport5-dev \
+            libasound2-dev libpulse-dev libudev-dev \
+            build-essential gcc g++ libc6 libstdc++6 libqwt-qt5-dev \
+            && git config --global --add safe.directory '*'"
+          }
+        - {
+            name: "Ubuntu 22.04 x86_64",
+            os: ubuntu-latest,
+            container: "ubuntu:22.04",
+            generator: "Ninja",
+            build_type: "Release",
+            upload_directory: "www/ubuntu-22-04/",
+            package_name_suffix: "ubuntu-22-04-amd64",
+            gcc_cc: "gcc",
+            gcc_cxx: "g++",
+            lrelease_exec: "/usr/lib/qt5/bin/lrelease",
+
+            deb_deps: "libqt5core5a (>= 5.15.0), libqt5gui5 (>= 5.15.0), libqt5widgets5 (>= 5.15.0), libqt5concurrent5 (>= 5.15.0), libqt5serialport5 (>= 5.15.0), libqwt-qt5-6 (>= 6.1.4), libasound2 (>= 1.2.6), libpulse0, libfreetype6 (>= 2.11.0)",
+
+            deps_cmdline: "echo 'Ubuntu 22' \
+            && apt-get update --fix-missing -qq \
+            && apt-get install -y software-properties-common \
+            && apt-get update --fix-missing -qq \
+            && apt-get install -f -qq \
+            && apt-get install -qq \
+            sudo git p7zip-full ninja-build cmake wget lftp dpkg-dev \
+            qtbase5-dev qt5-qmake qttools5-dev qttools5-dev-tools libqt5concurrent5 \
+            qt5-image-formats-plugins libqt5serialport5-dev \
+            libasound2-dev libpulse-dev libudev-dev \
+            build-essential gcc g++ libc6 libstdc++6 libqwt-qt5-dev \
+            && git config --global --add safe.directory '*'"
+          }
+        - {
+            name: "Ubuntu 24.04 (Qt5) x86_64",
+            os: ubuntu-latest,
+            container: "ubuntu:24.04",
+            generator: "Ninja",
+            build_type: "Release",
+            upload_directory: "www/ubuntu-24-04/",
+            package_name_suffix: "qt5-ubuntu-24-04-amd64",
+            gcc_cc: "gcc",
+            gcc_cxx: "g++",
+            lrelease_exec: "/usr/lib/qt5/bin/lrelease",
+
+            deb_deps: "libqt5core5a (>= 5.15.12), libqt5gui5 (>= 5.15.12), libqt5widgets5 (>= 5.15.12), libqt5concurrent5 (>= 5.15.12), libqt5serialport5 (>= 5.15.12), libqwt-qt5-6 (>= 6.1.4), libasound2 (>= 1.2.10), libpulse0, libfreetype6 (>= 2.13.2)",
+
+            deps_cmdline: "echo 'Ubuntu 24' \
+            && apt-get update --fix-missing -qq \
+            && apt-get install -y software-properties-common \
+            && apt-get update --fix-missing -qq \
+            && apt-get install -f -qq \
+            && apt-get install -qq \
+            sudo git p7zip-full ninja-build cmake wget lftp dpkg-dev \
+            qtbase5-dev qt5-qmake qttools5-dev qttools5-dev-tools libqt5concurrent5 \
+            qt5-image-formats-plugins libqt5serialport5-dev \
+            libasound2-dev libpulse-dev libudev-dev \
+            build-essential gcc g++ libc6 libstdc++6 libqwt-qt5-dev \
+            && git config --global --add safe.directory '*'"
+          }
+        - {
+            name: "Ubuntu 24.04 (Qt6) x86_64",
+            os: ubuntu-latest,
+            container: "ubuntu:24.04",
+            generator: "Ninja",
+            build_type: "Release",
+            upload_directory: "www/ubuntu-24-04/",
+            package_name_suffix: "qt6-ubuntu-24-04-amd64",
+            gcc_cc: "gcc",
+            gcc_cxx: "g++",
+            lrelease_exec: "/usr/lib/qt6/bin/lrelease",
+            extra_options: "-DBUILD_MAJOR_QT=6",
+
+            deb_deps: "libqt6core6 (>= 6.4.2), libqt6gui6 (>= 6.4.2), libqt6widgets6 (>= 6.4.2), libqt6concurrent6 (>= 6.4.2), libqt6serialport6 (>= 6.4.2), libasound2 (>= 1.2.10), libpulse0, libfreetype6 (>= 2.13.2)",
+
+            deps_cmdline: "echo 'Ubuntu 24' \
+            && apt-get update --fix-missing -qq \
+            && apt-get install -y software-properties-common \
+            && apt-get update --fix-missing -qq \
+            && apt-get install -f -qq \
+            && apt-get install -qq \
+            sudo git p7zip-full ninja-build cmake wget lftp dpkg-dev \
+            qt6-base-dev qt6-5compat-dev qt6-serialport-dev \
+            qt6-tools-dev qt6-tools-dev-tools qt6-gtk-platformtheme \
+            qt6-xdgdesktopportal-platformtheme libqt6nfc6 qt6-scxml-dev \
+            qt6-image-formats-plugins qt6-l10n-tools \
+            libasound2-dev libpulse-dev libudev-dev \
+            build-essential gcc g++ libc6 libstdc++6 \
+            && git config --global --add safe.directory '*'"
+          }
+
+    steps:
+    - name: Check for the upload support
+      id: upload-check
+      shell: bash
+      run: |
+        if [[ "${{ secrets.builds_login }}" != '' && \
+              "${{ secrets.builds_password }}" != '' && \
+              "${{ secrets.builds_host }}" != '' ]]; then
+          echo "available=true" >> $GITHUB_OUTPUT;
+        else
+          echo "available=false" >> $GITHUB_OUTPUT;
+        fi
+
+    - name: Install Dependencies
+      shell: bash
+      run: |
+        apt-get update --fix-missing -qq
+        apt-get install -qq debconf-utils
+
+        echo "keyboard-configuration	keyboard-configuration/toggle	select	Control+Shift" > selects.conf
+        debconf-set-selections < selects.conf
+        rm -f selects.conf
+
+        echo "XKBMODEL=\"pc105\"" > /etc/default/keyboard
+        echo "XKBLAYOUT=\"pl,ru\"" >> /etc/default/keyboard
+        echo "XKBVARIANT=\",\"" >> /etc/default/keyboard
+        echo "XKBOPTIONS=\"grp:ctrl_shift_toggle,grp_led:scroll\"" >> /etc/default/keyboard
+        echo "BACKSPACE=\"guess\"" >> /etc/default/keyboard
+        ln -snf /etc/default/keyboard /etc/vconsole.conf
+
+        echo "Europe/Moscow" > /etc/timezone
+        ln -snf /usr/share/zoneinfo/Europe/Moscow /etc/localtime
+
+        if [[ ! -z "${{ matrix.config.deps_cmdline }}" ]]; then
+          eval ${{ matrix.config.deps_cmdline }}
+        fi
+
+        ${{ matrix.config.gcc_cxx }} --version
+        cmake --version
+
+    - uses: WohlSoft/checkout@v0.1
+
+    - uses: WohlSoft/branch-name@v0.1
+
+    - name: Pull submodules
+      shell: bash
+      run: |
+        git submodule init
+        git submodule update
+
+    - name: Check if a pull request
+      id: event-check
+      shell: bash
+      run: |
+        if [[ "${BRANCH_NAME}" == *"merge"* ]]; then
+          echo "--- This build is a pull-request ---"
+          echo "is_pull_request=true" >> $GITHUB_OUTPUT;
+        else
+          echo "--- This build is a normal branch build ---"
+          echo "is_pull_request=false" >> $GITHUB_OUTPUT;
+        fi
+
+    - name: Download libtinfo5
+      if: matrix.config.libtinfo5_download
+      shell: bash
+      run: wget -d -nv -t 5 -O libtinfo5.deb "${{ matrix.config.libtinfo5_download }}"
+
+    - name: Install libtinfo5
+      if: matrix.config.libtinfo5_download
+      shell: bash
+      run: |
+        sudo dpkg -i ./libtinfo5.deb
+        rm -f libtinfo5.deb
+
+    - name: Download libreadline6
+      if: matrix.config.readline6_download
+      shell: bash
+      run: wget -d -nv -t 5 -O libreadline6.deb "${{ matrix.config.readline6_download }}"
+
+    - name: Install libreadline6
+      if: matrix.config.readline6_download
+      shell: bash
+      run: |
+        sudo dpkg -i ./libreadline6.deb
+        rm -f libreadline6.deb
+
+    - name: Download libgnutls30
+      if: matrix.config.libgnutls30_download
+      shell: bash
+      run: wget -d -nv -t 5 -O libgnutls30.deb "${{ matrix.config.libgnutls30_download }}"
+
+    - name: Install libgnutls30
+      if: matrix.config.libgnutls30_download
+      shell: bash
+      run: |
+        apt-get remove libhogweed2 libnettle4 -y
+        sudo dpkg -i ./libgnutls30.deb
+        rm -f libgnutls30.deb
+
+    - name: Download LFTP (DEB)
+      if: matrix.config.lftp_download
+      shell: bash
+      run: wget -d -nv -t 5 -O lftp.deb "${{ matrix.config.lftp_download }}"
+
+    - name: Install LFTP (DEB)
+      if: matrix.config.lftp_download
+      shell: bash
+      run: |
+        sudo dpkg -i ./lftp.deb
+        rm -f lftp.deb
+
+    - name: Download LFTP (TAR-GZ)
+      if: matrix.config.lftp_gz_download
+      shell: bash
+      run: wget -d -nv -t 5 -O lftp.tar.gz "${{ matrix.config.lftp_gz_download }}"
+
+    - name: Install LFTP (TAR-GZ)
+      if: matrix.config.lftp_gz_download
+      shell: bash
+      run: |
+        sudo tar -xvf lftp.tar.gz -C /
+        rm -f lftp.tar.gz
+
+    - name: Build translations
+      shell: bash
+      run: |
+        ${{ matrix.config.lrelease_exec }} src/translations/*.ts
+
+    - name: Configure
+      shell: bash
+      run: |
+        if [[ "${BRANCH_NAME}" == *"merge"* ]]; then
+            BRANCH_NAME_RES="pull-request"
+            echo "-- Pull-request detected!"
+        else
+            BRANCH_NAME_RES=${BRANCH_NAME}
+        fi
+
+        export CC=${{ matrix.config.gcc_cc }}
+        export CXX=${{ matrix.config.gcc_cxx }}
+
+        echo "====================================="
+        ${{ matrix.config.gcc_cc }} --version
+        echo "====================================="
+        git --version
+        echo "====================================="
+        cmake --version
+        echo "====================================="
+
+        cmake -B build -G Ninja -DCMAKE_BUILD_TYPE=${{ matrix.config.build_type }} -DCMAKE_INSTALL_PREFIX=/usr ${{ matrix.config.extra_options }} \
+            -DCPACK_GENERATOR=DEB \
+            -DCPACK_PACKAGE_FILE_NAME="opn2-bank-editor-${{ matrix.config.package_name_suffix }}-${BRANCH_NAME_RES}"\
+            -DCPACK_DEBIAN_PACKAGE_HOMEPAGE="https://wohlsoft.ru" \
+            -DCPACK_DEBIAN_PACKAGE_RELEASE=${GITHUB_RUN_NUMBER} \
+            -DCPACK_DEBIAN_PACKAGE_ARCHITECTURE=amd64 \
+            -DCPACK_DEBIAN_PACKAGE_DEPENDS="${{ matrix.config.deb_deps }}" \
+            -DCPACK_DEBIAN_PACKAGE_DESCRIPTION="OPL3 Bank Editor - A tone bank editor for OPL2/OPL3 chips" \
+        .
+
+    - name: Build
+      shell: bash
+      run: |
+        cmake --build build --target all --config ${{ matrix.config.build_type }} --parallel 3
+
+    - name: Create DEB packages
+      shell: bash
+      id: create_package
+      if: success()
+      run: |
+        if [[ ! -z "${{ matrix.config.extra_path }}" ]]; then
+          export PATH=${{ matrix.config.extra_path }}:${PATH}
+        fi
+        cd build
+        cpack .
+        cd ..
+
+    - name: Deploy to builds.wohlsoft.ru
+      if: success() && github.event_name != 'pull_request' && steps.event-check.outputs.is_pull_request == 'false' && steps.upload-check.outputs.available == 'true'
+      shell: bash
+      run: |
+        UPLOAD_LIST="set ssl:verify-certificate no;"
+        for q in ./build/*.deb; do
+            UPLOAD_LIST="${UPLOAD_LIST} put -O ${{ matrix.config.upload_directory }} $q;"
+        done
+
+        lftp -e "${UPLOAD_LIST} exit" -u ${{ secrets.builds_login }},${{ secrets.builds_password }} ${{ secrets.builds_host }}
+
+    - name: List Build Directory
+      if: always()
+      shell: bash
+      run: |
+        git status
+
+        if [[ -d build ]]; then
+            ls -lR build
+        fi

@@ -4,20 +4,31 @@
 A small cross-platform editor for the OPN family of FM synthesis soundchips (which were widely used in Sega Genesis (aka Mega Drive) game console), Fujitsu FM Towns home computer and NEC PC-88 and PC-98 home computer series).
 
 # CI Build status
-Linux | Windows (32-bit) | macOS
+Linux | Windows | macOS
 ------------ | ------------- | -------------
-[![Build Status](https://travis-ci.org/Wohlstand/OPL3BankEditor.svg?branch=master)](https://travis-ci.org/Wohlstand/OPN2BankEditor) | [![Build status](https://ci.appveyor.com/api/projects/status/mtl3v7gemh10p30g?svg=true)](https://ci.appveyor.com/project/Wohlstand/opn2bankeditor) | [![Build Status](https://travis-ci.org/Wohlstand/OPN2BankEditor.svg?branch=master)](https://travis-ci.org/Wohlstand/OPN2BankEditor)
+[![Build Status](https://github.com/Wohlstand/OPN2BankEditor/actions/workflows/ubuntu-ci.yml/badge.svg)](https://github.com/Wohlstand/OPN2BankEditor/actions/workflows/ubuntu-ci.yml) | [![Build status](https://github.com/Wohlstand/OPN2BankEditor/actions/workflows/windows-ci.yml/badge.svg)](https://github.com/Wohlstand/OPN2BankEditor/actions/workflows/windows-ci.yml) | [![Build Status](https://github.com/Wohlstand/OPN2BankEditor/actions/workflows/macos-ci.yml/badge.svg)](https://github.com/Wohlstand/OPN2BankEditor/actions/workflows/macos-ci.yml)
 
 **BETA. Please report me any bugs and imperfections you have found**
 
 ## Download
 * **Stable builds:** https://github.com/Wohlstand/OPN2BankEditor/releases
-* **Fresh dev builds:**
-  * [Download for Windows x86_64](https://wohlsoft.ru/docs/_laboratory/_Builds/win32/opn2-bank-editor/opn2-bank-editor-dev-win64.zip) (built by [AppVeyor](https://ci.appveyor.com/project/Wohlstand/opn2bankeditor))
-  * [Download for Windows x86](https://wohlsoft.ru/docs/_laboratory/_Builds/win32/opn2-bank-editor/opn2-bank-editor-dev-win32.zip) (built by [AppVeyor](https://ci.appveyor.com/project/Wohlstand/opn2bankeditor))
-  * [Download for macOS x64 (DMG)](https://wohlsoft.ru/docs/_laboratory/_Builds/macosx/opn2-bank-editor/opn2_bank_editor-macos.dmg) (built by [Travis-CI](https://travis-ci.org/Wohlstand/OPN2BankEditor))
-  * [Download for macOS x64 (ZIP)](https://wohlsoft.ru/docs/_laboratory/_Builds/macosx/opn2-bank-editor/opn2_bank_editor-macos.zip) (built by [Travis-CI](https://travis-ci.org/Wohlstand/OPN2BankEditor))
-  * CIs for other operating systems are coming soon... (However, it's easy to build it by yourself :wink:)
+* **Fresh dev auto-builds:**
+  * **Windows**:
+    * [Download for Windows x86_64 (7/8/8.1/10 with OPN2/OPNA emulators)](https://wohlsoft.ru/docs/_laboratory/_Builds/win32/opn2-bank-editor/opn2-bank-editor-dev-win64.zip) (built by [GitHub Actions](https://github.com/Wohlstand/OPN2BankEditor/actions/workflows/windows-ci.yml))
+    * [Download for Windows x86 (XP/Vista/7/8/8.1/10 with OPN2/OPNA emulators)](https://wohlsoft.ru/docs/_laboratory/_Builds/win32/opn2-bank-editor/opn2-bank-editor-dev-win32.zip) (built by [GitHub Actions](https://github.com/Wohlstand/OPN2BankEditor/actions/workflows/windows-ci.yml))
+  * **macOS**:
+    * [Download for macOS x64 (DMG)](https://wohlsoft.ru/docs/_laboratory/_Builds/macosx/opn2-bank-editor/opn2-bank-editor-x86_64-master.dmg) (built by [GitHub Actions](https://github.com/Wohlstand/OPN2BankEditor/actions/workflows/macos-ci.yml))
+    * [Download for macOS x64 (ZIP)](https://wohlsoft.ru/docs/_laboratory/_Builds/macosx/opn2-bank-editor/opn2-bank-editor-x86_64-master.zip) (built by [GitHub Actions](https://github.com/Wohlstand/OPN2BankEditor/actions/workflows/macos-ci.yml))
+    * [Download for macOS ARM64 (DMG)](https://wohlsoft.ru/docs/_laboratory/_Builds/macosx/opn2-bank-editor/opn2-bank-editor-arm64-master.dmg) (built by [GitHub Actions](https://github.com/Wohlstand/OPN2BankEditor/actions/workflows/macos-ci.yml))
+    * [Download for macOS ARM64 (ZIP)](https://wohlsoft.ru/docs/_laboratory/_Builds/macosx/opn2-bank-editor/opn2-bank-editor-arm64-master.zip) (built by [GitHub Actions](https://github.com/Wohlstand/OPN2BankEditor/actions/workflows/macos-ci.yml))
+  * **Ubuntu**:
+    * [Download for Ubuntu 24.04 for Qt5 x64 (DEB)](https://builds.wohlsoft.ru/ubuntu-24-04/opn2-bank-editor-qt5-ubuntu-24-04-amd64-master.deb) (built by [GitHub Actions](https://github.com/Wohlstand/OPN2BankEditor/actions/workflows/ubuntu-ci.yml))
+    * [Download for Ubuntu 24.04 for Qt6 x64 (DEB) (Plots unsupported)](https://builds.wohlsoft.ru/ubuntu-24-04/opn2-bank-editor-qt6-ubuntu-24-04-amd64-master.deb) (built by [GitHub Actions](https://github.com/Wohlstand/OPN2BankEditor/actions/workflows/ubuntu-ci.yml))
+    * [Download for Ubuntu 22.04 x64 (DEB)](https://builds.wohlsoft.ru/ubuntu-22-04/opn2-bank-editor-ubuntu-22-04-amd64-master.deb) (built by [GitHub Actions](https://github.com/Wohlstand/OPN2BankEditor/actions/workflows/ubuntu-ci.yml))
+    * [Download for Ubuntu 20.04 x64 (DEB)](https://builds.wohlsoft.ru/ubuntu-20-04/opn2-bank-editor-ubuntu-20-04-amd64-master.deb) (built by [GitHub Actions](https://github.com/Wohlstand/OPN2BankEditor/actions/workflows/ubuntu-ci.yml))
+    * [Download for Ubuntu 18.04 x64 (DEB)](https://builds.wohlsoft.ru/ubuntu-18-04/opn2-bank-editor-ubuntu-18-04-amd64-master.deb) (built by [GitHub Actions](https://github.com/Wohlstand/OPN2BankEditor/actions/workflows/ubuntu-ci.yml))
+    * [Download for Ubuntu 16.04 x64 (DEB)](https://builds.wohlsoft.ru/ubuntu-16-04/opn2-bank-editor-ubuntu-16-04-amd64-master.deb) (built by [GitHub Actions](https://github.com/Wohlstand/OPN2BankEditor/actions/workflows/ubuntu-ci.yml))
+    * [Download for Ubuntu 14.04 x64 (DEB) (Plots unsupported)](https://builds.wohlsoft.ru/ubuntu-14-04/opn2-bank-editor-ubuntu-14-04-amd64-master.deb) (built by [GitHub Actions](https://github.com/Wohlstand/OPN2BankEditor/actions/workflows/ubuntu-ci.yml))
 
 # How to build
 **Prerequisites**
