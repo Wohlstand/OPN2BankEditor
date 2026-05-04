@@ -280,7 +280,8 @@ if(NOT APPLE)
 endif()
 
 if(NOT CMAKE_SYSTEM_NAME STREQUAL "Windows" AND NOT CMAKE_SYSTEM_NAME STREQUAL "Darwin")
-    install(FILES "src/resources/opn2_bank_editor.desktop" DESTINATION "share/applications")
+    install(FILES "src/resources/opn2_bank_editor.desktop"
+            DESTINATION "share/applications")
 
     foreach(size 16;32;48)
         install(FILES "src/resources/opn2_${size}.png"
@@ -289,7 +290,9 @@ if(NOT CMAKE_SYSTEM_NAME STREQUAL "Windows" AND NOT CMAKE_SYSTEM_NAME STREQUAL "
     endforeach()
 endif()
 
-add_executable(OPN2BankEditor WIN32 MACOSX_BUNDLE ${SOURCES} ${FORMS} ${RESOURCES})
+add_executable(OPN2BankEditor WIN32 MACOSX_BUNDLE
+    ${SOURCES} ${FORMS} ${RESOURCES}
+)
 
 set_target_properties(OPN2BankEditor PROPERTIES OUTPUT_NAME "opn2_bank_editor")
 
@@ -368,6 +371,7 @@ if(USE_RTMIDI)
     if(NOT USE_VENDORED_RTMIDI)
         if(PKG_CONFIG_FOUND)
             pkg_check_modules(RTMIDI rtmidi)
+
             if(RTMIDI_FOUND)
                 message("!! Using system-installed RtMidi found by pkg-config")
                 target_compile_options(OPN2BankEditor PUBLIC ${RTMIDI_CFLAGS})
@@ -379,6 +383,7 @@ if(USE_RTMIDI)
         if(NOT RTMIDI_FOUND)
             find_library(RTMIDI_LIBRARY rtmidi)
             message("!! RtMidi library: ${RTMIDI_LIBRARY}")
+
             find_path(RTMIDI_INCLUDE_DIRS NAMES "RtMidi.h" PATH_SUFFIXES "include/rtmidi")
             message("!! RtMidi header directory: ${RTMIDI_INCLUDE_DIRS}")
 
