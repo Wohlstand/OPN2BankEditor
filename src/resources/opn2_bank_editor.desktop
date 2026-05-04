@@ -10,3 +10,4 @@ Icon=opn2_bank_editor
 Exec=opn2_bank_editor
 Categories=AudioVideo;Audio
 Type=Application
+MimeType=application/x-opn2-wopn;application/x-opn2-opni

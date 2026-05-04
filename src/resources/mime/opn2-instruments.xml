@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mime-info xmlns="http://www.freedesktop.org/standards/shared-mime-info">
+
+  <mime-type type="application/x-opn2-opni">
+    <sub-class-of type="application/octet-stream"/>
+    <icon name="x-application-opni-instrument"/>
+    <comment>Wohlstand's OPN2/OPNA instrument (OPNI)</comment>
+    <comment xml:lang="ru_RU">Инструмент для OPN2/OPNA от Wohlstand-а (WOPN)</comment>
+    <magic priority="50">
+        <match type="string" offset="0" value="WOPN2-INST\\0"/>
+        <match type="string" offset="0" value="WOPN2-IN2T\\0"/>
+    </magic>
+    <glob pattern="*.opni"/>
+  </mime-type>
+</mime-info>

@@ -12,7 +12,7 @@
 				<string>wopn</string>
 			</array>
 			<key>CFBundleTypeIconFile</key>
-			<string>file_wopl.icns</string>
+			<string>file_wopn.icns</string>
 			<key>CFBundleTypeName</key>
 			<string>Wohlstand's OPN2/OPNA tone bank (WOPN)</string>
 			<key>CFBundleTypeRole</key>
@@ -28,7 +28,7 @@
 				<string>opni</string>
 			</array>
 			<key>CFBundleTypeIconFile</key>
-			<string>file_opli.icns</string>
+			<string>file_opni.icns</string>
 			<key>CFBundleTypeName</key>
 			<string>Wohlstand's OPL2/OPL3 instrument (OPLI)</string>
 			<key>CFBundleTypeRole</key>

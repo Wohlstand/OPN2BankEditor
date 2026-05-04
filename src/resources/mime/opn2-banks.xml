@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mime-info xmlns="http://www.freedesktop.org/standards/shared-mime-info">
+
+  <mime-type type="application/x-opn2-wopn">
+    <sub-class-of type="application/octet-stream"/>
+    <icon name="x-application-wopn-bank"/>
+    <comment>Wohlstand's OPN2/OPNA tone bank (WOPN)</comment>
+    <comment xml:lang="ru_RU">Тоновый банк для OPN2/OPNA от Wohlstand-а (WOPN)</comment>
+    <magic priority="50">
+        <match type="string" offset="0" value="WOPN2-BANK"/>
+        <match type="string" offset="0" value="WOPN2-B2NK"/>
+    </magic>
+  </mime-type>
+</mime-info>

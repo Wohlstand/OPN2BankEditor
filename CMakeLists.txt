@@ -283,10 +283,27 @@ if(NOT CMAKE_SYSTEM_NAME STREQUAL "Windows" AND NOT CMAKE_SYSTEM_NAME STREQUAL "
     install(FILES "src/resources/opn2_bank_editor.desktop"
             DESTINATION "share/applications")
 
+    foreach(format banks instruments)
+        install(FILES "src/resources/mime/opl3-${format}.xml"
+                DESTINATION "share/mime/packages")
+    endforeach()
+
     foreach(size 16;32;48)
         install(FILES "src/resources/opn2_${size}.png"
                 DESTINATION "share/icons/hicolor/${size}x${size}/apps"
                 RENAME "opn2_bank_editor.png")
+    endforeach()
+
+    foreach(size 16;32;48;128;256)
+        install(FILES "src/resources/file_wopn/file_wopn_${size}x${size}.png"
+                DESTINATION "share/icons/hicolor/${size}x${size}/mimetypes"
+                RENAME "x-application-wopn-bank.png")
+    endforeach()
+
+    foreach(size 16;32;48;128;256)
+        install(FILES "src/resources/file_opni/file_opni_${size}x${size}.png"
+                DESTINATION "share/icons/hicolor/${size}x${size}/mimetypes"
+                RENAME "x-application-opni-instrument.png")
     endforeach()
 endif()
 
