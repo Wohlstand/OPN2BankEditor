@@ -240,7 +240,7 @@ jobs:
         #fi
 
         DEPLOY_FILES="$DEPLOY_FILES Bank_Examples"
-        DEPLOY_FILES="$DEPLOY_FILES ./formats_info.htm ./license.txt ./changelog.txt"
+        DEPLOY_FILES="$DEPLOY_FILES ./license.txt ./changelog.txt"
 
         7z a -tzip "_packed/$DEST_ARCHIVE" $DEPLOY_FILES
 
