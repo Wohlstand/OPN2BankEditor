@@ -231,13 +231,13 @@ jobs:
 
         DEST_ARCHIVE=opn2-bank-editor-dev-${{ matrix.config.WINXX_ARCH }}.zip
         DEPLOY_FILES="./bin-release/*"
-        if [[ "${{ matrix.config.WINXX_ARCH }}" == "win9x" ]]; then
-            DEPLOY_FILES="$DEPLOY_FILES ./opl_proxy/win9x/liboplproxy.dll"
-        elif [[ "${{ matrix.config.WINXX_ARCH }}" == "win64" ]]; then
-            DEPLOY_FILES="$DEPLOY_FILES ./opl_proxy/modern/liboplproxy64.dll ./opl_proxy/modern/inpoutx64.dll"
-        else
-            DEPLOY_FILES="$DEPLOY_FILES ./opl_proxy/modern/liboplproxy.dll ./opl_proxy/modern/inpout32.dll"
-        fi
+#        if [[ "${{ matrix.config.WINXX_ARCH }}" == "win9x" ]]; then
+#            DEPLOY_FILES="$DEPLOY_FILES ./opl_proxy/win9x/liboplproxy.dll"
+#        elif [[ "${{ matrix.config.WINXX_ARCH }}" == "win64" ]]; then
+#            DEPLOY_FILES="$DEPLOY_FILES ./opl_proxy/modern/liboplproxy64.dll ./opl_proxy/modern/inpoutx64.dll"
+#        else
+#            DEPLOY_FILES="$DEPLOY_FILES ./opl_proxy/modern/liboplproxy.dll ./opl_proxy/modern/inpout32.dll"
+#        fi
 
         DEPLOY_FILES="$DEPLOY_FILES Bank_Examples"
         DEPLOY_FILES="$DEPLOY_FILES ./formats_info.htm ./license.txt ./changelog.txt"
