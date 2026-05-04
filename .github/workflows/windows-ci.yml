@@ -182,7 +182,7 @@ jobs:
         cmake --version
         echo "====================================="
         qmake FMBankEdit.pro CONFIG+=release CONFIG-=debug
-#        cmake -B build -G Ninja -DCMAKE_BUILD_TYPE=${{ matrix.config.build_type }} -DCMAKE_INSTALL_PREFIX="`pwd`/bin-cmake-release" -DPGE_INSTALL_DIRECTORY="PGE_Project" ${{ matrix.config.extra_options }} .
+        # cmake -B build -G Ninja -DCMAKE_BUILD_TYPE=${{ matrix.config.build_type }} -DCMAKE_INSTALL_PREFIX="`pwd`/bin-cmake-release" -DPGE_INSTALL_DIRECTORY="PGE_Project" ${{ matrix.config.extra_options }} .
 
     - name: Build
       shell: bash
@@ -194,7 +194,7 @@ jobs:
         fi
         export MAKEFLAGS=--keep-going
         mingw32-make -j 3
-#        cmake --build build --target all --config ${{ matrix.config.build_type }} --parallel 3
+        # cmake --build build --target all --config ${{ matrix.config.build_type }} --parallel 3
 
     - name: Install
       shell: bash
@@ -205,7 +205,7 @@ jobs:
           export QtDir="${{ matrix.config.qt_dir }}"
         fi
         export MAKEFLAGS=--keep-going
-#        cmake --build build --target install --config ${{ matrix.config.build_type }}
+        # cmake --build build --target install --config ${{ matrix.config.build_type }}
 
     - name: Deploy
       shell: bash
@@ -231,13 +231,13 @@ jobs:
 
         DEST_ARCHIVE=opn2-bank-editor-dev-${{ matrix.config.WINXX_ARCH }}.zip
         DEPLOY_FILES="./bin-release/*"
-#        if [[ "${{ matrix.config.WINXX_ARCH }}" == "win9x" ]]; then
-#            DEPLOY_FILES="$DEPLOY_FILES ./opl_proxy/win9x/liboplproxy.dll"
-#        elif [[ "${{ matrix.config.WINXX_ARCH }}" == "win64" ]]; then
-#            DEPLOY_FILES="$DEPLOY_FILES ./opl_proxy/modern/liboplproxy64.dll ./opl_proxy/modern/inpoutx64.dll"
-#        else
-#            DEPLOY_FILES="$DEPLOY_FILES ./opl_proxy/modern/liboplproxy.dll ./opl_proxy/modern/inpout32.dll"
-#        fi
+        #if [[ "${{ matrix.config.WINXX_ARCH }}" == "win9x" ]]; then
+        #    DEPLOY_FILES="$DEPLOY_FILES ./opl_proxy/win9x/liboplproxy.dll"
+        #elif [[ "${{ matrix.config.WINXX_ARCH }}" == "win64" ]]; then
+        #    DEPLOY_FILES="$DEPLOY_FILES ./opl_proxy/modern/liboplproxy64.dll ./opl_proxy/modern/inpoutx64.dll"
+        #else
+        #    DEPLOY_FILES="$DEPLOY_FILES ./opl_proxy/modern/liboplproxy.dll ./opl_proxy/modern/inpout32.dll"
+        #fi
 
         DEPLOY_FILES="$DEPLOY_FILES Bank_Examples"
         DEPLOY_FILES="$DEPLOY_FILES ./formats_info.htm ./license.txt ./changelog.txt"
