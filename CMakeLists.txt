@@ -346,7 +346,7 @@ if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
     target_sources(OPN2BankEditor PRIVATE "${ICON}")
 elseif(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
     set(MACOSX_BUNDLE_ICON_FILE "opn2.icns")
-    set(ICON "${CMAKE_SOURCE_DIR}/src/resources/opl3.icns")
+    set(ICON "${CMAKE_SOURCE_DIR}/src/resources/opn2.icns")
     set_source_files_properties("${ICON}" PROPERTIES MACOSX_PACKAGE_LOCATION "Resources")
     target_sources(OPN2BankEditor PRIVATE "${ICON}")
     set_target_properties(OPN2BankEditor PROPERTIES

@@ -18,7 +18,7 @@
 
 #include "register_editor.h"
 #include "ui_register_editor.h"
-#include <QRegExpValidator>
+#include <QValidator>
 #include <QDebug>
 #include <algorithm>
 

@@ -20,7 +20,7 @@
 #include "../common.h"
 #include "../version.h"
 
-#include <QRegExp>
+#include <QMap>
 #include <QTextStream>
 
 bool OPM::detect(const QString &filePath, char* magic)
@@ -45,7 +45,8 @@ FfmtErrCode OPM::loadFile(QString filePath, FmBank &bank)
     FmBank::Instrument *curInst = nullptr;
     InstMap mapInsts;
 
-    while(!file.atEnd()) {
+    while(!file.atEnd())
+    {
         QString line = QString::fromUtf8(file.readLine());
 
         unsigned commentPos = line.indexOf("//");
