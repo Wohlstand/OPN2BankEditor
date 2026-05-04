@@ -21,6 +21,10 @@
 
 #include "ffmt_base.h"
 
+#ifndef QStringLiteral
+#   define QStringLiteral(x) QString(x) // Fallback for Qt4
+#endif
+
 FmBankFormatBase::FmBankFormatBase() {}
 
 FmBankFormatBase::~FmBankFormatBase()
@@ -85,6 +89,7 @@ QString FmBankFormatBase::formatInstDefaultExtension() const
 {
     return QString();
 }
+
 QString FmBankFormatBase::formatName() const
 {
     return "Unknown format";
@@ -115,3 +120,24 @@ InstFormats FmBankFormatBase::formatInstId() const
     return InstFormats::FORMAT_INST_UNKNOWN;
 }
 
+QString FmBankFormatBase::formatExtensionMaskCase() const
+{
+    QString in = formatExtensionMask();
+    return in + QStringLiteral(" ") + in.toUpper();
+}
+
+QString FmBankFormatBase::formatInstExtensionMaskCase() const
+{
+    QString in = formatInstExtensionMask();
+    return in + QStringLiteral(" ") + in.toUpper();
+}
+
+void FmBankFormatBase::setLoadAsDrums(bool drums)
+{
+    m_loadAsDrum = drums;
+}
+
+void FmBankFormatBase::setIbkSkipNonRhythm(bool skipNonRhythm)
+{
+    m_ibkSkipNonRhythm = skipNonRhythm;
+}

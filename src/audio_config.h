@@ -40,6 +40,7 @@ public:
 
     QString driverName() const;
     void setDriverName(const QString &driverName);
+
 private:
     AudioOutRt *m_audioOut = nullptr;
     std::unique_ptr<Ui::AudioConfigDialog> m_ui;

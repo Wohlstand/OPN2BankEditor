@@ -29,7 +29,15 @@
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include "ymfm_opn.h"
-#include "ymfm_fm.ipp"
+#include "ymfm_fm.hpp"
+
+#ifndef PRIu32
+#   define PRIu32 "u"
+#endif
+
+#ifndef PRIX32
+#   define PRIX32 "X"
+#endif
 
 namespace ymfm
 {
@@ -412,7 +420,7 @@ std::string opn_registers_base<IsOpnA>::log_keyon(uint32_t choffs, uint32_t opof
 	char buffer[256];
 	char *end = &buffer[0];
 
-	end += sprintf(end, "%u.%02u freq=%04X dt=%u fb=%u alg=%X mul=%X tl=%02X ksr=%u adsr=%02X/%02X/%02X/%X sl=%X",
+	end += sprintf(end, "%" PRIu32 ".%02" PRIu32 " freq=%04" PRIX32 " dt=%" PRIu32 " fb=%" PRIu32 " alg=%" PRIX32 " mul=%" PRIX32 "tl=%02" PRIX32 " ksr=%" PRIu32 " adsr=%02" PRIX32 "/%02" PRIX32 "/%02" PRIX32 "/%" PRIX32 " sl=%" PRIX32 "",
 		chnum, opnum,
 		block_freq,
 		op_detune(opoffs),
@@ -432,15 +440,15 @@ std::string opn_registers_base<IsOpnA>::log_keyon(uint32_t choffs, uint32_t opof
 			ch_output_0(choffs) ? 'L' : '-',
 			ch_output_1(choffs) ? 'R' : '-');
 	if (op_ssg_eg_enable(opoffs))
-		end += sprintf(end, " ssg=%X", op_ssg_eg_mode(opoffs));
+		end += sprintf(end, " ssg=%" PRIX32 "", op_ssg_eg_mode(opoffs));
 	bool am = (op_lfo_am_enable(opoffs) && ch_lfo_am_sens(choffs) != 0);
 	if (am)
-		end += sprintf(end, " am=%u", ch_lfo_am_sens(choffs));
+		end += sprintf(end, " am=%" PRIu32 "", ch_lfo_am_sens(choffs));
 	bool pm = (ch_lfo_pm_sens(choffs) != 0);
 	if (pm)
-		end += sprintf(end, " pm=%u", ch_lfo_pm_sens(choffs));
+		end += sprintf(end, " pm=%" PRIu32 "", ch_lfo_pm_sens(choffs));
 	if (am || pm)
-		end += sprintf(end, " lfo=%02X", lfo_rate());
+		end += sprintf(end, " lfo=%02" PRIX32 "", lfo_rate());
 	if (multi_freq() && choffs == 2)
 		end += sprintf(end, " multi=1");
 
@@ -1285,6 +1293,11 @@ void ym2608::write(uint32_t offset, uint8_t data)
 			write_data_hi(data);
 			break;
 	}
+}
+
+void ym2608::write_pan(uint16_t chan, uint8_t data)
+{
+	m_fm.write_pan(chan, data);
 }
 
 
@@ -2377,6 +2390,11 @@ void ym2612::write(uint32_t offset, uint8_t data)
 	}
 }
 
+void ym2612::write_pan(uint16_t chan, uint8_t data)
+{
+	m_fm.write_pan(chan, data);
+}
+
 
 //-------------------------------------------------
 //  generate - generate one sample of sound
@@ -2398,8 +2416,8 @@ void ym2612::generate(output_data *output, uint32_t numsamples)
 		for (int chan = 0; chan < last_fm_channel; chan++)
 		{
 			m_fm.output(temp.clear(), 5, 256, 1 << chan);
-			output->data[0] += dac_discontinuity(temp.data[0]);
-			output->data[1] += dac_discontinuity(temp.data[1]);
+			output->data[0] += (dac_discontinuity(temp.data[0]) * m_fm.get_pan_l(chan) / 65535);
+			output->data[1] += (dac_discontinuity(temp.data[1]) * m_fm.get_pan_r(chan) / 65535);
 		}
 
 		// add in DAC

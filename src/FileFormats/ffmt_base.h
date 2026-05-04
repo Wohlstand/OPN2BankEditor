@@ -31,6 +31,12 @@
  */
 class FmBankFormatBase
 {
+protected:
+    //! When bank format has separate parts of melodic and drumkit, false is load as melodic, true is load as drums.
+    bool m_loadAsDrum = false;
+    //! When loading percussion banks of IBK family, skip any non-rhythm instruments
+    bool m_ibkSkipNonRhythm = false;
+
 public:
     FmBankFormatBase();
     virtual ~FmBankFormatBase();
@@ -57,6 +63,12 @@ public:
     virtual QString     formatInstExtensionMask() const;
     virtual QString     formatInstDefaultExtension() const;
     virtual InstFormats formatInstId() const;
+
+    QString             formatExtensionMaskCase() const;
+    QString             formatInstExtensionMaskCase() const;
+
+    void setLoadAsDrums(bool drums);
+    void setIbkSkipNonRhythm(bool skipNonRhythm);
 };
 
 #endif // FMBANKFORMATBASE_H

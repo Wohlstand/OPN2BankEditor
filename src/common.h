@@ -22,6 +22,7 @@
 #ifndef COMMON_H
 #define COMMON_H
 
+#include <stdint.h>
 #include <QFile>
 
 //! Typedef to signed character pointer
@@ -109,6 +110,7 @@ int16_t toSint16BE(const uint8_t *arr);
  * \return Resulted number
  */
 uint32_t toUint32LE(const uint8_t *arr);
+
 /*!
  * \brief Convers array of big endian bytes into int
  * \param arr Source array of bytes
@@ -167,6 +169,15 @@ void getMagic(QString filePath, char* bytes, int count);
  * \return true if extension has been detected
  */
 bool hasExt(const QString &file, const char*ext);
+
+/*!
+ * \brief Clips the input value to minimum and maximum
+ * \param i Input value
+ * \param min Minimum value
+ * \param max Maximum value
+ * \return Final result
+ */
+uint8_t clip_u8(int i, int min, int max);
 
 #if defined(IS_QT_4) || defined(QT_GUI_LIB)
 void ErrMessageO(QWidget *parent, QString errStr, bool isBank = true);

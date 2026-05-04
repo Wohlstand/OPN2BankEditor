@@ -27,6 +27,7 @@
 #include <QtDebug>
 
 #include "importer.h"
+#include "bank_type_dlg.h"
 #include "formats_sup.h"
 #include "bank_editor.h"
 #include "ui_bank_editor.h"
@@ -87,6 +88,11 @@ BankEditor::BankEditor(QWidget *parent) :
     m_recentMelodicNote = ui->noteToTest->value();
     m_bank.Ins_Melodic_box.fill(FmBank::blankInst());
     m_bank.Ins_Percussion_box.fill(FmBank::blankInst(true));
+
+#ifdef __APPLE__
+    ui->actionAbout->setMenuRole(QAction::AboutRole);
+    ui->actionExit->setMenuRole(QAction::QuitRole);
+#endif
 
     QActionGroup *actionGroupStandard = new QActionGroup(this);
     m_actionGroupStandard = actionGroupStandard;
@@ -185,8 +191,7 @@ BankEditor::BankEditor(QWidget *parent) :
 
     initAudio();
 #ifdef ENABLE_MIDI
-    QAction *midiInAction = m_midiInAction = new QAction(
-        ui->midiIn->icon(), ui->midiIn->text(), this);
+    QAction *midiInAction = m_midiInAction = new QAction(ui->midiIn->icon(), ui->midiIn->text(), this);
     ui->midiIn->setDefaultAction(midiInAction);
     QMenu *midiInMenu = new QMenu(this);
     midiInAction->setMenu(midiInMenu);
@@ -199,8 +204,16 @@ BankEditor::BankEditor(QWidget *parent) :
 #endif
 
     createLanguageChoices();
-
     Application::instance()->translate(m_language);
+
+    initAudio();
+
+    if(m_audioOut && !m_audioOut->isValid())
+    {
+        QMessageBox::warning(nullptr,
+                             tr("Error"),
+                             m_audioOut->errorString());
+    }
 }
 
 BankEditor::~BankEditor()
@@ -209,6 +222,7 @@ BankEditor::~BankEditor()
         m_audioOut->stop();
     delete m_audioOut;
     m_audioOut = nullptr;
+
 #ifdef ENABLE_MIDI
     delete m_midiIn;
     m_midiIn = nullptr;
@@ -504,19 +518,36 @@ void BankEditor::reInitFileDataAfterSave(QString &filePath)
     m_bankBackup = m_bank;
 }
 
+int BankEditor::askMelodicOrDrums(void *self_p, FmBankFormatBase *fmt, const QString &filePath)
+{
+    QWidget *self = reinterpret_cast<QWidget*>(self_p);
+    BankType f(filePath, fmt, self);
+
+    f.exec();
+
+    return f.getAnswer();
+}
+
 bool BankEditor::openFile(QString filePath, FfmtErrCode *errp)
 {
     BankFormats format;
-    FfmtErrCode err = FmBankFormatFactory::OpenBankFile(filePath, m_bank, &format);
+    FfmtErrCode err = FmBankFormatFactory::OpenBankFile(filePath, m_bank, &format, &askMelodicOrDrums, static_cast<QWidget*>(this));
+
     m_recentFormat = format;
+
     if(err != FfmtErrCode::ERR_OK)
     {
-        if (!errp) {
+        if(err == FfmtErrCode::ERR_CANCELLED)
+            return false;
+
+        if(!errp)
+        {
             QString errText = FileFormats::getErrorText(err);
             ErrMessageO(this, errText);
         }
         else
             *errp = err;
+
         return false;
     }
     else
@@ -531,7 +562,11 @@ bool BankEditor::openFile(QString filePath, FfmtErrCode *errp)
 bool BankEditor::openOrImportFile(QString filePath)
 {
     FfmtErrCode openErr;
-    if (openFile(filePath, &openErr))
+
+    if(filePath.isEmpty())
+        return false;
+
+    if(openFile(filePath, &openErr))
         return true;
 
     Importer &importer = *m_importer;
@@ -548,7 +583,7 @@ bool BankEditor::openOrImportFile(QString filePath)
     return true;
 }
 
-bool BankEditor::saveBankFile(QString filePath, BankFormats format)
+bool BankEditor::saveBankFile(QString filePath, BankFormats format, bool copy)
 {
     if(FmBankFormatFactory::hasCaps(format, (int)FormatCaps::FORMAT_CAPS_MELODIC_ONLY))
     {
@@ -622,6 +657,7 @@ bool BankEditor::saveBankFile(QString filePath, BankFormats format)
         case FfmtErrCode::ERR_UNKNOWN:
             errText = tr("unknown error occurred");
             break;
+        case FfmtErrCode::ERR_CANCELLED:
         case FfmtErrCode::ERR_OK:
             break;
         }
@@ -631,8 +667,12 @@ bool BankEditor::saveBankFile(QString filePath, BankFormats format)
     else
     {
         //Override 'recently-saved' format
-        m_recentFormat = format;
-        reInitFileDataAfterSave(filePath);
+        if(!copy)
+        {
+            m_recentFormat = format;
+            reInitFileDataAfterSave(filePath);
+        }
+
         statusBar()->showMessage(tr("Bank file '%1' has been saved!").arg(filePath), 5000);
         return true;
     }
@@ -662,6 +702,7 @@ bool BankEditor::saveInstrumentFile(QString filePath, InstFormats format)
         case FfmtErrCode::ERR_UNKNOWN:
             errText = tr("unknown error occurred");
             break;
+        case FfmtErrCode::ERR_CANCELLED:
         case FfmtErrCode::ERR_OK:
             break;
         }
@@ -675,7 +716,7 @@ bool BankEditor::saveInstrumentFile(QString filePath, InstFormats format)
     }
 }
 
-bool BankEditor::saveFileAs(const QString &optionalFilePath)
+bool BankEditor::saveFileAs(const QString &optionalFilePath, bool copy)
 {
     QString fileToSave;
     bool canSaveDirectly = false;
@@ -702,12 +743,16 @@ bool BankEditor::saveFileAs(const QString &optionalFilePath)
                                                        FILE_OPEN_DIALOG_OPTIONS);
         saveFormat = FmBankFormatFactory::getFormatFromFilter(selectedFilter);
     }
+
     if(fileToSave.isEmpty())
         return false;
 
-    if(!saveBankFile(fileToSave, saveFormat))
+    if(!saveBankFile(fileToSave, saveFormat, copy))
        return false;
-    m_currentFileFormat = saveFormat;
+
+    if(!copy)
+        m_currentFileFormat = saveFormat;
+
     return true;
 }
 
@@ -838,6 +883,8 @@ void BankEditor::on_actionNew_triggered()
     m_currentFileFormat = BankFormats::FORMAT_UNKNOWN;
     ui->instruments->clearSelection();
     m_bank.reset();
+    m_bank.Ins_Melodic_box.fill(FmBank::blankInst());
+    m_bank.Ins_Percussion_box.fill(FmBank::blankInst(true));
     m_bankBackup.reset();
     on_instruments_currentItemChanged(NULL, NULL);
     reloadInstrumentNames();
@@ -848,13 +895,15 @@ void BankEditor::on_actionOpen_triggered()
 {
     if(!askForSaving())
         return;
+
     QString filters = FmBankFormatFactory::getOpenFiltersList();
     QString fileToOpen;
-    fileToOpen = QFileDialog::getOpenFileName(this, "Open bank file",
+    fileToOpen = QFileDialog::getOpenFileName(this, tr("Open bank file"),
                                               m_recentPath, filters, nullptr,
                                               FILE_OPEN_DIALOG_OPTIONS);
     if(fileToOpen.isEmpty())
         return;
+
     openFile(fileToOpen);
 }
 
@@ -866,6 +915,11 @@ void BankEditor::on_actionSave_triggered()
 void BankEditor::on_actionSaveAs_triggered()
 {
     saveFileAs();
+}
+
+void BankEditor::on_actionSaveAsCopy_triggered()
+{
+    saveFileAs(QString(), true);
 }
 
 void BankEditor::on_actionSaveInstrument_triggered()
@@ -970,7 +1024,7 @@ void BankEditor::on_actionChipsBenchmark_triggered()
         m_measurer->runBenchmark(*m_curInst, res);
         QString resStr;
         for(Measurer::BenchmarkResult &r : res)
-            resStr += QString("%1 passed in %2 milliseconds.\n").arg(r.name).arg(r.elapsed);
+            resStr += tr("%1 passed in %2 milliseconds.\n").arg(r.name).arg(r.elapsed);
         QMessageBox::information(this,
                                  tr("Benchmark result"),
                                  tr("Result of emulators benchmark based on '%1' instrument:\n\n%2")
@@ -1445,12 +1499,16 @@ void BankEditor::on_bank_no_currentIndexChanged(int index)
         }
         this->m_lock = false;
     }
+
     QList<QListWidgetItem *> items = ui->instruments->findItems("*", Qt::MatchWildcard);
-    for(QListWidgetItem *it : items)
-        it->setHidden(!ui->actionAdLibBnkMode->isChecked() && (it->data(INS_BANK_ID) != index));
+
+    for(QList<QListWidgetItem *>::iterator it = items.begin(); it != items.end(); ++it)
+        (*it)->setHidden(!ui->actionAdLibBnkMode->isChecked() && ((*it)->data(INS_BANK_ID) != index));
+
     QList<QListWidgetItem *> selected = ui->instruments->selectedItems();
     if(!selected.isEmpty())
         ui->instruments->scrollToItem(selected.front());
+
     QMetaObject::invokeMethod(this, "reloadInstrumentNames", Qt::QueuedConnection);
 }
 
@@ -1573,13 +1631,22 @@ void BankEditor::reloadBankNames()
 {
     int countOfBanks;
     bool isDrum = isDrumsMode();
+
     if(isDrum)
         countOfBanks = ((m_bank.countDrums() - 1) / 128) + 1;
     else
         countOfBanks = ((m_bank.countMelodic() - 1) / 128) + 1;
+
     for(int i = 0; i < countOfBanks; i++)
         refreshBankName(i);
 }
+
+#ifdef __APPLE__
+void BankEditor::openFileSlot(QString file)
+{
+    openOrImportFile(file);
+}
+#endif
 
 void BankEditor::on_actionAddInst_triggered()
 {
@@ -1678,8 +1745,10 @@ void BankEditor::on_actionDelInst_triggered()
         // Recount indeces
         QList<QListWidgetItem *> leftItems = ui->instruments->findItems("*", Qt::MatchWildcard);
         int counter = 0;
-        for(QListWidgetItem *it : leftItems)
-            setInstrumentMetaInfo(it, counter++);
+
+        for(QList<QListWidgetItem *>::iterator it = leftItems.begin(); it != leftItems.end(); ++it)
+            setInstrumentMetaInfo(*it, counter++);
+
         reloadInstrumentNames();
         int oldBank = ui->bank_no->currentIndex();
         reloadBanks();

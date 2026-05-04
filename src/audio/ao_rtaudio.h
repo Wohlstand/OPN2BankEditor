@@ -29,23 +29,35 @@ class IRealtimeProcess;
 class AudioOutRt : public QObject
 {
 public:
-    explicit AudioOutRt(double latency,
-                        const std::string &device_name = std::string(),
-                        const std::string &driver_name = std::string(),
-                        QObject *parent = nullptr);
+    explicit AudioOutRt(QObject *parent = nullptr);
     unsigned sampleRate() const;
+
+    QString errorString() const;
+
+    bool init(double latency,
+              const std::string &device_name = std::string(),
+              const std::string &driver_name = std::string());
+
     void start(IRealtimeProcess &rt);
     void stop();
+
     std::vector<std::string> listCompatibleDevices();
     static std::vector<std::string> listDrivers();
+
+    bool isValid() const;
+
 private:
     static int process(void *outputbuffer, void *, unsigned nframes, double, RtAudioStreamStatus, void *userdata);
+    static int process_float(void *outputbuffer, void *, unsigned nframes, double, RtAudioStreamStatus, void *userdata);
 #if defined(RTAUDIO_VERSION_6)
     static void errorCallback(RtAudioErrorType type, const std::string &errorText);
 #else
     static void errorCallback(RtAudioError::Type type, const std::string &errorText);
 #endif
     static bool isCompatibleDevice(const RtAudio::DeviceInfo &info);
+
+    QString m_errorString;
+    bool m_isValid = false;
     IRealtimeProcess *m_rt = nullptr;
     std::unique_ptr<RtAudio> m_audioOut;
 };

@@ -131,6 +131,7 @@ uint32_t toUint32BE(const uint8_t *arr)
     return num;
 }
 
+
 void fromSint16LE(int16_t in, uint8_t *arr)
 {
     arr[0] =  in & 0x00FF;
@@ -181,6 +182,15 @@ bool hasExt(const QString &file, const char *ext)
     return file.endsWith(ext, Qt::CaseInsensitive);
 }
 
+uint8_t clip_u8(int i, int min, int max)
+{
+    if(i < min)
+        return min;
+    else if(i > max)
+        return max;
+    else
+        return static_cast<uint8_t>(i);
+}
 
 #if defined(IS_QT_4) || defined(QT_GUI_LIB)
 void ErrMessageO(QWidget *parent, QString errStr, bool isBank)
@@ -201,3 +211,4 @@ void ErrMessageS(QWidget *parent, QString errStr, bool isBank)
                          QMessageBox::Ok);
 }
 #endif
+

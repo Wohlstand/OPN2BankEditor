@@ -30,14 +30,20 @@
 void BankEditor::initAudio()
 {
     qDebug() << "Init audioOut...";
-    m_audioOut = new AudioOutDefault(m_audioLatency * 1e-3, m_audioDevice.toStdString(), m_audioDriver.toStdString(), this);
+    m_audioOut = new AudioOutDefault(this);
+    m_audioOut->init(m_audioLatency * 1e-3, m_audioDevice.toStdString(), m_audioDriver.toStdString());
+
     qDebug() << "Init Generator...";
-    std::shared_ptr<Generator> generator(
-        new Generator(uint32_t(m_audioOut->sampleRate()), m_currentChip));
+    std::shared_ptr<Generator> generator(new Generator(uint32_t(m_audioOut->sampleRate()), m_currentChip));
+
     qDebug() << "Init Rt-Generator...";
     RealtimeGenerator *rtgenerator = new RealtimeGenerator(generator, this);
+
     qDebug() << "Seting pointer of RT Generator...";
     m_generator = rtgenerator;
+
+    // Mark if audio works
+    rtgenerator->setAudioWorks(m_audioOut->isValid());
 
     qDebug() << "Init signals and slots of keys...";
     //Test note
@@ -107,6 +113,10 @@ void BankEditor::initAudio()
     //Test note button on the importer dialog box
     m_importer->connect(m_importer->ui->testNote,  SIGNAL(pressed()),  m_generator,  SLOT(ctl_playNote()));
     m_importer->connect(m_importer->ui->testNote,  SIGNAL(released()), m_generator,  SLOT(ctl_stopNote()));
+
+    //Apply load-time settings
+    m_generator->ctl_changeLFO(ui->lfoEnable->isChecked());
+    m_generator->ctl_changeLFOfreq(ui->lfoFrequency->currentIndex());
 
     qDebug() << "Trying to start audio... (with dereferencing of RtGenerator!)";
     //Start generator!

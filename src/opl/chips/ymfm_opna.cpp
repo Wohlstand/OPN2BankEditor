@@ -21,6 +21,7 @@
 #include "ymfm_opna.h"
 #include "ymfm/ymfm_opn.h"
 #include <cstring>
+#include <assert.h>
 
 struct YmFmOPNA_Private
 {
@@ -46,7 +47,7 @@ YmFmOPNA::YmFmOPNA(OPNFamily f) :
     ymfm::ym2608::output_data* output = new ymfm::ym2608::output_data;
     output->clear();
     m_output = output;
-    setRate(m_rate, m_clock);
+    YmFmOPNA::setRate(m_rate, m_clock);
     writeReg(0, 0x29, 0x9f);  // enable channels 4-6
 }
 
@@ -98,6 +99,7 @@ void YmFmOPNA_Private::writeReg(uint32_t port, uint16_t addr, uint8_t data)
         m_headPos = 0;
 
     ++m_queueCount;
+    assert(m_queueCount < (long)YmFmOPNA::c_queueSize);
 }
 
 void YmFmOPNA::writePan(uint16_t /*addr*/, uint8_t /*data*/)
@@ -150,8 +152,8 @@ void YmFmOPNA_Private::nativeGenerate(int16_t *frame, void *m_chip, void *m_outp
     int32_t o1 = output_r->data[1 % ymfm::ym2608::OUTPUTS];
     int32_t o2 = output_r->data[2 % ymfm::ym2608::OUTPUTS];
 
-    frame[0] = static_cast<int16_t>(ymfm::clamp((o0 + o2) / 2, -32768, 32767));
-    frame[1] = static_cast<int16_t>(ymfm::clamp((o1 + o2) / 2, -32768, 32767));
+    frame[0] = static_cast<int16_t>(ymfm::clamp(static_cast<int32_t>((o0 + o2) * 0.8f), -32768, 32767));
+    frame[1] = static_cast<int16_t>(ymfm::clamp(static_cast<int32_t>((o1 + o2) * 0.8f), -32768, 32767));
 
     m_pos = (m_pos % m_out_step);
 }
@@ -159,4 +161,9 @@ void YmFmOPNA_Private::nativeGenerate(int16_t *frame, void *m_chip, void *m_outp
 const char *YmFmOPNA::emulatorName()
 {
     return "YMFM OPNA";
+}
+
+bool YmFmOPNA::hasFullPanning()
+{
+    return false;
 }

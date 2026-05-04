@@ -81,6 +81,10 @@ public:
     void switchChip(OPN_Chips chipId, int family = static_cast<int>(OPNChip_OPN2));
 
     void generate(int16_t *frames, unsigned nframes);
+    void generate(float *frames, unsigned nframes);
+
+    void setGain(float gain);
+    float getGain() const;
 
     void NoteOn(uint32_t c, double hertz);
     void NoteOff(uint32_t c);
@@ -205,6 +209,9 @@ private:
     OPN_PatchSetup m_patch;
 
     uint32_t    m_rate = 44100;
+
+    //! Adjust the volume of the output to not be too quite
+    float       m_gain = 2.0f;
 
     std::unique_ptr<OPNChipBase> chip;
 

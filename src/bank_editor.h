@@ -174,6 +174,13 @@ private:
      */
     void reInitFileDataAfterSave(QString &filePath);
 
+    /**
+     * @brief The callback to choice melodic or drum bank should be loaded
+     * @param self Pointer to self
+     * @param fileName Requesting filename
+     * @return 0 - cancel, 1 - melodic, 2 - drum
+     */
+    static int askMelodicOrDrums(void *self, FmBankFormatBase *fmt, const QString &filePath);
 public:
     /*!
      * \brief Open file
@@ -196,7 +203,7 @@ public:
      * \param format Target format to save a file
      * \return true if file successfully saved, false if failed
      */
-    bool saveBankFile(QString filePath, BankFormats format);
+    bool saveBankFile(QString filePath, BankFormats format, bool copy = false);
     /*!
      * \brief Save current instrument file
      * \param filePath absolute path where to save a file
@@ -207,9 +214,10 @@ public:
     /*!
      * \brief Saves current bank file, asking for file path if necessary
      * \param optionalFilePath absolute path where to save a file, or empty string
+     * \param copy Don't replace the current bank's path and don't mark as saved if not marked
      * \return true if file successfuly saved, false on rejecting or on fail
      */
-    bool saveFileAs(const QString &optionalFilePath = QString());
+    bool saveFileAs(const QString &optionalFilePath = QString(), bool copy = false);
     /*!
      * \brief Open Save-As dialog box for single instrument
      * \return true if file successfuly saved, false on rejecting or on fail
@@ -316,6 +324,10 @@ public slots:
      */
     void reloadBankNames();
 
+#ifdef __APPLE__
+    void openFileSlot(QString file);
+#endif
+
 private slots:
     /* ***************** Common slots ***************** */
     /**
@@ -346,6 +358,10 @@ private slots:
      * @brief Save current bank state into a selected file
      */
     void on_actionSaveAs_triggered();
+    /**
+     * @brief Save current bank state into a selected file
+     */
+    void on_actionSaveAsCopy_triggered();
     /**
      * @brief Save current instrument into the file
      */

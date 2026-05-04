@@ -105,6 +105,7 @@ class IRealtimeProcess
 public:
     virtual ~IRealtimeProcess() {}
     virtual void rt_generate(int16_t *frames, unsigned nframes) = 0;
+    virtual void rt_generate(float *frames, unsigned nframes) = 0;
 };
 
 class RealtimeGenerator :
@@ -138,6 +139,9 @@ public:
     void midi_event(const uint8_t *msg, unsigned msglen) override;
     /* Realtime */
     void rt_generate(int16_t *frames, unsigned nframes) override;
+    void rt_generate(float *frames, unsigned nframes) override;
+
+    void setAudioWorks(bool works);
 
 private:
     void rt_message_process(int tag, const uint8_t *data, unsigned len);
@@ -152,6 +156,8 @@ private:
     std::unique_ptr<Ring_Buffer> m_rb_midi;
     std::unique_ptr<uint8_t[]> m_body;
 
+    bool m_audioWorks = false;
+
     struct MidiChannelInfo
     {
         unsigned lastmrpn = 0;
@@ -162,23 +168,30 @@ private:
         unsigned volume = 100;
         unsigned expression = 127;
     };
+
     MidiChannelInfo m_midichan[16];
 
 #if !defined(_WIN32)
     std::mutex m_generator_mutex;
     typedef std::mutex mutex_type;
 #else
-    class QStdMutex
+    class WindowsMutex
     {
     public:
-        void lock() { m.lock(); }
-        void unlock() { m.unlock(); }
-        bool try_lock() { return m.tryLock(); }
+        WindowsMutex()
+        {
+            if (!(hMutex = CreateMutex(nullptr, false, nullptr)))
+                throw std::system_error(GetLastError(), std::system_category());
+        }
+        ~WindowsMutex() { CloseHandle(hMutex); }
+        void lock() { WaitForSingleObject(hMutex, INFINITE); }
+        void unlock() { ReleaseMutex(hMutex); }
+        bool try_lock() { return WaitForSingleObject(hMutex, 0) == WAIT_OBJECT_0; }
     private:
-        QMutex m;
+        HANDLE hMutex;
     };
-    QStdMutex m_generator_mutex;
-    typedef QStdMutex mutex_type;
+    WindowsMutex m_generator_mutex;
+    typedef WindowsMutex mutex_type;
 #endif
 };
 

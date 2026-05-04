@@ -139,7 +139,7 @@ public:
 	void save_restore(ymfm_saved_state &state);
 
 	// map channel number to register offset
-	static constexpr uint32_t channel_offset(uint32_t chnum)
+	static inline uint32_t channel_offset(uint32_t chnum)
 	{
 		assert(chnum < CHANNELS);
 		if (!IsOpnA)
@@ -149,7 +149,7 @@ public:
 	}
 
 	// map operator number to register offset
-	static constexpr uint32_t operator_offset(uint32_t opnum)
+	static inline uint32_t operator_offset(uint32_t opnum)
 	{
 		assert(opnum < OPERATORS);
 		if (!IsOpnA)
@@ -543,6 +543,8 @@ public:
 	void write_data_hi(uint8_t data);
 	void write(uint32_t offset, uint8_t data);
 
+	void write_pan(uint16_t chan, uint8_t data);
+
 	// generate one sample of sound
 	void generate(output_data *output, uint32_t numsamples = 1);
 
@@ -758,12 +760,15 @@ public:
 	void write_data_hi(uint8_t data);
 	void write(uint32_t offset, uint8_t data);
 
+	void write_pan(uint16_t chan, uint8_t data);
+
 	// generate one sample of sound
 	void generate(output_data *output, uint32_t numsamples = 1);
 
 protected:
 	// simulate the DAC discontinuity
-	constexpr int32_t dac_discontinuity(int32_t value) const { return (value < 0) ? (value - 3) : (value + 4); }
+	static inline int32_t dac_discontinuity(int32_t value) { return (value < 0) ? (value - 3) : (value + 4); }
+	// constexpr int32_t dac_discontinuity(int32_t value) const { return (value < 0) ? (value - 3) : (value + 4); }
 
 	// internal state
 	uint16_t m_address;              // address register

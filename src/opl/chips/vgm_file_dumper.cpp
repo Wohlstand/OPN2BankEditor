@@ -19,10 +19,19 @@
  */
 
 #include "vgm_file_dumper.h"
+#include <inttypes.h>
 #include <cstring>
 #include <cassert>
 
 #include <opnmidi_private.hpp>
+
+#ifndef PRIu32
+#   define PRIu32 "u"
+#endif
+
+#ifndef PRIX32
+#   define PRIX32 "X"
+#endif
 
 //! FIXME: Replace this ugly crap with proper public call
 static const char *g_vgm_path = "kek.vgm";
@@ -273,7 +282,7 @@ void VGMFileDumper::writeLoopStart()
     flushWait();
     m_vgm_head.offset_loop = VGM_LOOP_START_BASE + m_bytes_written;
     m_samples_loop = 0;
-    std::printf(" - MIDI2VGM: Loop start at 0x%04X\n", m_vgm_head.offset_loop);
+    std::printf(" - MIDI2VGM: Loop start at 0x%04" PRIX32 "\n", m_vgm_head.offset_loop);
     std::fflush(stdout);
 }
 
@@ -283,7 +292,7 @@ void VGMFileDumper::writeLoopEnd()
         return;
     m_end_caught = true;
     flushWait();
-    std::printf(" - MIDI2VGM: Loop end with total wait in %u samples\n", m_samples_loop);
+    std::printf(" - MIDI2VGM: Loop end with total wait in %" PRIu32 " samples\n", m_samples_loop);
     std::fflush(stdout);
 }
 
@@ -299,4 +308,9 @@ void VGMFileDumper::loopEndHook(void *self)
     VGMFileDumper *s = reinterpret_cast<VGMFileDumper*>(self);
     if(s)
         s->writeLoopEnd();
+}
+
+bool VGMFileDumper::hasFullPanning()
+{
+    return false;
 }

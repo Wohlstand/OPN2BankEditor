@@ -26,7 +26,6 @@
 #include <qwt_plot_grid.h>
 #include <qwt_plot_marker.h>
 #include <qwt_point_data.h>
-#include <qwt_spline.h>
 #if QWT_VERSION < 0x060200
 #   include <qwt_spline.h>
 #endif
@@ -213,8 +212,7 @@ void DelayAnalysisDialog::changeEvent(QEvent *event)
 DelayAnalysisDialog::PlotData::PlotData(double xstep, const std::vector<double> &data)
     : QwtSyntheticPointData(data.size()),
       m_step(xstep), m_data(data)
-{
-}
+{}
 
 size_t DelayAnalysisDialog::PlotData::size() const
 {

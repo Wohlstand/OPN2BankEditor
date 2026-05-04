@@ -35,7 +35,7 @@ GensOPN2::GensOPN2(OPNFamily f)
     : OPNChipBaseBufferedT(f),
       chip(new LibGens::Ym2612())
 {
-    setRate(m_rate, m_clock);
+    GensOPN2::setRate(m_rate, m_clock);
 }
 
 GensOPN2::~GensOPN2()
@@ -95,7 +95,8 @@ void GensOPN2::nativeGenerateN(int16_t *output, size_t frames)
     //TODO
     // chip->updateDacAndTimers(bufL, bufR, frames);
 
-    for (size_t i = 0; i < 2 * frames; ++i) {
+    for (size_t i = 0; i < 2 * frames; ++i)
+    {
         int32_t sample = ((i & 1) ? bufR : bufL)[i / 2];
         sample /= 4; // has too high volume, attenuation needed
         sample = (sample < INT16_MIN) ? INT16_MIN : sample;
@@ -107,4 +108,9 @@ void GensOPN2::nativeGenerateN(int16_t *output, size_t frames)
 const char *GensOPN2::emulatorName()
 {
     return "GENS/GS II OPN2";
+}
+
+bool GensOPN2::hasFullPanning()
+{
+    return true;
 }

@@ -75,6 +75,7 @@ public:
     virtual void nativePreGenerate() = 0;
     virtual void nativePostGenerate() = 0;
     virtual void nativeGenerate(int16_t *frame) = 0;
+    virtual void resampledGenerate(int32_t *frame) = 0;
 
     virtual void generate(int16_t *output, size_t frames) = 0;
     virtual void generateAndMix(int16_t *output, size_t frames) = 0;
@@ -82,6 +83,11 @@ public:
     virtual void generateAndMix32(int32_t *output, size_t frames) = 0;
 
     virtual const char* emulatorName() = 0;
+    /**
+     * @brief Does emulator has the per-channel full-panning extension?
+     * @return true if emulator has this extension, false if emulator has only original behaviour
+     */
+    virtual bool hasFullPanning() = 0;
 private:
     OPNChipBase(const OPNChipBase &c);
     OPNChipBase &operator=(const OPNChipBase &c);
@@ -121,7 +127,7 @@ private:
     void nativeTick(int16_t *frame);
     void setupResampler(uint32_t rate);
     void resetResampler();
-    void resampledGenerate(int32_t *output);
+    void resampledGenerate(int32_t *output) override;
 #if defined(OPNMIDI_ENABLE_HQ_RESAMPLER)
     VResampler *m_resampler;
 #else

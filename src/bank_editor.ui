@@ -1753,6 +1753,7 @@ Available from 0 to 127</string>
     <addaction name="actionOpen"/>
     <addaction name="actionSave"/>
     <addaction name="actionSaveAs"/>
+    <addaction name="actionSaveAsCopy"/>
     <addaction name="actionSaveInstrument"/>
     <addaction name="separator"/>
     <addaction name="actionExit"/>
@@ -2144,6 +2145,11 @@ Available from 0 to 127</string>
    </property>
    <property name="toolTip">
     <string notr="true">YMFM OPNA</string>
+   </property>
+  </action>
+  <action name="actionSaveAsCopy">
+   <property name="text">
+    <string>Sava a copy of bank as...</string>
    </property>
   </action>
   <action name="actionEmulatorNukedYM2612">

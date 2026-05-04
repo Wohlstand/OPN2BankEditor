@@ -21,6 +21,7 @@
 #include "ymfm_opn2.h"
 #include "ymfm/ymfm_opn.h"
 #include <cstring>
+#include <assert.h>
 
 YmFmOPN2::YmFmOPN2(OPNFamily f) :
     OPNChipBaseT(f),
@@ -31,7 +32,7 @@ YmFmOPN2::YmFmOPN2(OPNFamily f) :
     ymfm::ymfm_interface* intf = new ymfm::ymfm_interface;
     m_intf = intf;
     m_chip = new ymfm::ym2612(*intf);
-    setRate(m_rate, m_clock);
+    YmFmOPN2::setRate(m_rate, m_clock);
 }
 
 YmFmOPN2::~YmFmOPN2()
@@ -66,12 +67,13 @@ void YmFmOPN2::writeReg(uint32_t port, uint16_t addr, uint8_t data)
         m_headPos = 0;
 
     ++m_queueCount;
+    assert(m_queueCount < (long)c_queueSize);
 }
 
-void YmFmOPN2::writePan(uint16_t /*addr*/, uint8_t /*data*/)
+void YmFmOPN2::writePan(uint16_t addr, uint8_t data)
 {
-    // ymfm::ym2612 *chip_r = reinterpret_cast<ymfm::ym2612*>(m_chip);
-    // OPL3_WritePan(chip_r, addr, data);
+    ymfm::ym2612 *chip_r = reinterpret_cast<ymfm::ym2612*>(m_chip);
+    chip_r->write_pan(addr, data);
 }
 
 void YmFmOPN2::nativeGenerate(int16_t *frame)
@@ -105,11 +107,16 @@ void YmFmOPN2::nativeGenerate(int16_t *frame)
     }
 
     chip_r->generate(&frames_i);
-    frame[0] = static_cast<int16_t>(ymfm::clamp(frames_i.data[0] / 2, -32768, 32767));
-    frame[1] = static_cast<int16_t>(ymfm::clamp(frames_i.data[1] / 2, -32768, 32767));
+    frame[0] = static_cast<int16_t>(ymfm::clamp(static_cast<int32_t>(frames_i.data[0] * 0.8f), -32768, 32767));
+    frame[1] = static_cast<int16_t>(ymfm::clamp(static_cast<int32_t>(frames_i.data[1] * 0.8f), -32768, 32767));
 }
 
 const char *YmFmOPN2::emulatorName()
 {
     return "YMFM OPN2";
+}
+
+bool YmFmOPN2::hasFullPanning()
+{
+    return true;
 }
