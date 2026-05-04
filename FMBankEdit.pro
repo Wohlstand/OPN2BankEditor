@@ -45,9 +45,22 @@ greaterThan(QT_MAJOR_VERSION, 4):{
         DEFINES += NO_NATIVE_OPEN_DIALOGS
         INCLUDEPATH += $$PWD/src/audio/for-mingw-9x
     }
+
+    unix: !macx {
+        CONFIG+=linux
+    }
 }
+
 win32 {
     DEFINES += _USE_MATH_DEFINES
+
+    greaterThan(QT_MAJOR_VERSION, 4):{
+        # Enforce the Windows XP compatibility
+        DEFINES += WINVER=0x0501 _WIN32_WINNT=0x0501
+    } else {
+        # Enforce the Windows 98 compatibility
+        DEFINES += WINVER=0x0500 _WIN32_WINNT=0x0500
+    }
 }
 
 CONFIG += rtmidi

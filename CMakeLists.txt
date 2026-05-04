@@ -2,8 +2,11 @@ cmake_minimum_required(VERSION 3.2...4.0)
 project(OPN2BankEditor LANGUAGES C CXX)
 
 include(CheckCXXCompilerFlag)
+include(GNUInstallDirs)
 
 list(APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake")
+
+set(OPN2_BANK_EDITOR_VERSION_STRING "1.3.2")
 
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
@@ -36,26 +39,55 @@ if(CMAKE_CXX_COMPILER_ID MATCHES "^(GNU|Clang)$")
 endif()
 
 if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
-  add_definitions("-D_USE_MATH_DEFINES")
+    add_definitions("-D_USE_MATH_DEFINES")
 endif()
 
 option(USE_RTMIDI "Use RtMidi" ON)
 option(USE_VENDORED_RTMIDI "Use vendored RtMidi instead of system-installed one" OFF)
 option(USE_RTAUDIO "Use RtAudio" ON)
 option(USE_VENDORED_RTAUDIO "Use vendored RtAudio instead of system-installed one" OFF)
+
+option(FORCE_EXEC_NO_PIE "Disable Position-Independent code on executables (default ON)" ON)
+
+option(USE_STATIC_QT "Enable linking of extra libraries required to link the static Qt" OFF)
+
 if(CMAKE_SYSTEM_NAME STREQUAL "Linux" OR CMAKE_SYSTEM_NAME STREQUAL "Darwin")
     option(USE_VENDORED_RTAUDIO_JACK "Enable JACK suport at RtAudio if possible" ON)
 endif()
 
+OPTION(DEBUG_WRITE_AMPLITUDE_PLOT "Write the captured result of sounding measurer into the apmplitudes plot" OFF)
+option(ENABLE_ADDRESS_SANITIZER "Enable the Address Sanitizer GCC feature" OFF)
+
+if(WIN32)
+    OPTION(USE_RTAUDIO_WASAPI "Enable WASAPI support on RtAudio (breaks Windows XP compatibility)" ON)
+endif()
+
 include(FindPkgConfig)
+
+include(cmake/library_qt.cmake)
 
 find_package(Qt5Widgets REQUIRED)
 find_package(Qt5Concurrent REQUIRED)
 find_package(Qt5LinguistTools REQUIRED)
-set(QWT_NAMES qwt-qt5 qwt) # find versions for Qt5 only
 find_package(Qwt)
 find_package(ZLIB REQUIRED)
 find_package(Threads REQUIRED)
+
+include(cmake/static_qt.cmake)
+
+if(NOT WIN32 AND (CMAKE_COMPILER_IS_GNUCC OR CMAKE_COMPILER_IS_GNUCXX))
+    check_cxx_compiler_flag("-no-pie" HAS_NO_PIE)
+endif()
+
+function(pge_set_nopie _target)
+    set_target_properties(${_target} PROPERTIES
+        POSITION_INDEPENDENT_CODE False
+    )
+
+    if(HAS_NO_PIE AND (CMAKE_COMPILER_IS_GNUCC OR CMAKE_COMPILER_IS_GNUCXX))
+        set_property(TARGET ${_target} APPEND_STRING PROPERTY LINK_FLAGS " -no-pie")
+    endif()
+endfunction()
 
 if(QWT_FOUND)
     set(ENABLE_PLOTS ON)
@@ -78,38 +110,66 @@ message("!!   Plots: ${ENABLE_PLOTS}")
 include_directories("src")
 
 set(COMMON_SOURCES
-  "src/common.cpp"
-  "src/bank.cpp")
+    "src/common.cpp"
+    "src/common.h"
+    "src/bank.cpp"
+    "src/bank.h"
+)
 add_library(Common STATIC ${COMMON_SOURCES})
 target_include_directories(Common PUBLIC "src")
 target_link_libraries(Common PUBLIC Qt5::Widgets)
 
 set(FILEFORMATS_SOURCES
     "src/FileFormats/ffmt_base.cpp"
+    "src/FileFormats/ffmt_base.h"
     "src/FileFormats/ffmt_enums.cpp"
+    "src/FileFormats/ffmt_enums.h"
     "src/FileFormats/ffmt_factory.cpp"
+    "src/FileFormats/ffmt_factory.h"
     "src/FileFormats/format_deflemask_dmp.cpp"
+    "src/FileFormats/format_deflemask_dmp.h"
     "src/FileFormats/format_tfi.cpp"
+    "src/FileFormats/format_tfi.h"
     "src/FileFormats/format_gems_pat.cpp"
+    "src/FileFormats/format_gems_pat.h"
     "src/FileFormats/format_m2v_gyb.cpp"
+    "src/FileFormats/format_m2v_gyb.h"
     "src/FileFormats/format_tomsoft_gin.cpp"
+    "src/FileFormats/format_tomsoft_gin.h"
     "src/FileFormats/format_saxman_ymx.cpp"
+    "src/FileFormats/format_saxman_ymx.h"
     "src/FileFormats/format_vgm_import.cpp"
+    "src/FileFormats/format_vgm_import.h"
     "src/FileFormats/format_gym_import.cpp"
+    "src/FileFormats/format_gym_import.h"
     "src/FileFormats/format_s98_import.cpp"
+    "src/FileFormats/format_s98_import.h"
     "src/FileFormats/format_tx81z_import.cpp"
+    "src/FileFormats/format_tx81z_import.h"
     "src/FileFormats/format_gens_y12.cpp"
+    "src/FileFormats/format_gens_y12.h"
     "src/FileFormats/format_opm.cpp"
+    "src/FileFormats/format_opm.h"
     "src/FileFormats/format_mucom88_dat.cpp"
+    "src/FileFormats/format_mucom88_dat.h"
     "src/FileFormats/format_vgi.cpp"
+    "src/FileFormats/format_vgi.h"
     "src/FileFormats/format_bamboo_bti.cpp"
+    "src/FileFormats/format_bamboo_bti.h"
     "src/FileFormats/format_wohlstand_opn2.cpp"
+    "src/FileFormats/format_wohlstand_opn2.h"
     "src/FileFormats/vgm_import_options.cpp"
+    "src/FileFormats/vgm_import_options.h"
     "src/FileFormats/ym2612_to_wopi.cpp"
+    "src/FileFormats/ym2612_to_wopi.h"
     "src/FileFormats/ym2151_to_wopi.cpp"
+    "src/FileFormats/ym2151_to_wopi.h"
     "src/FileFormats/text_format.cpp"
+    "src/FileFormats/text_format.h"
     "src/FileFormats/text_format_tokens.cpp"
+    "src/FileFormats/text_format_tokens.h"
 )
+
 add_library(FileFormats STATIC ${FILEFORMATS_SOURCES})
 target_include_directories(FileFormats PUBLIC "src" PRIVATE ${ZLIB_INCLUDE_DIRS})
 target_link_libraries(FileFormats PUBLIC Common PRIVATE ${ZLIB_LIBRARIES})
@@ -117,11 +177,17 @@ target_link_libraries(FileFormats PUBLIC Common PRIVATE ${ZLIB_LIBRARIES})
 include(src/opl/chips/chipset.cmake)
 add_library(Chips STATIC ${CHIPS_SOURCES})
 target_include_directories(Chips PUBLIC "src")
+
 if(COMPILER_SUPPORTS_CXX14)
     target_compile_definitions(Chips PUBLIC "-DENABLE_YMFM_EMULATOR")
 endif()
 
-set(MEASURER_SOURCES "src/opl/measurer.cpp")
+if(ENABLE_ADDRESS_SANITIZER)
+    target_compile_options(Chips PUBLIC -fsanitize=address)
+    target_link_options(Chips PUBLIC -fsanitize=address)
+endif()
+
+set(MEASURER_SOURCES "src/opl/measurer.cpp" "src/opl/measurer.h")
 add_library(Measurer STATIC ${MEASURER_SOURCES})
 target_include_directories(Measurer PUBLIC "src")
 target_link_libraries(Measurer PUBLIC Chips Common Qt5::Concurrent)
@@ -137,24 +203,38 @@ endif()
 set(SOURCES
     "src/audio.cpp"
     "src/bank_editor.cpp"
+    "src/bank_editor.h"
     "src/operator_editor.cpp"
+    "src/operator_editor.h"
     "src/bank_comparison.cpp"
+    "src/bank_comparison.h"
     "src/controlls.cpp"
     "src/proxystyle.cpp"
+    "src/proxystyle.h"
     "src/formats_sup.cpp"
+    "src/formats_sup.h"
     "src/importer.cpp"
+    "src/importer.h"
     "src/audio_config.cpp"
+    "src/audio_config.h"
     "src/register_editor.cpp"
+    "src/register_editor.h"
     "src/ins_names.cpp"
+    "src/ins_names.h"
     "src/main.cpp"
     "src/opl/generator.cpp"
+    "src/opl/generator.h"
     "src/opl/generator_realtime.cpp"
+    "src/opl/generator_realtime.h"
     "src/opl/realtime/ring_buffer.cpp"
+    "src/opl/realtime/ring_buffer.h"
+    "src/opl/realtime/ring_buffer.tcc"
     "src/piano.cpp"
+    "src/piano.h"
 )
 
 if(ENABLE_PLOTS)
-    list(APPEND SOURCES "src/delay_analysis.cpp")
+    list(APPEND SOURCES "src/delay_analysis.cpp" "src/delay_analysis.h")
 endif()
 
 set(UIS
@@ -182,10 +262,13 @@ qt5_add_translation(TRANSLATIONS
 )
 
 add_custom_target(OPN3BankEditor_translations ALL DEPENDS ${TRANSLATIONS})
-install(FILES ${TRANSLATIONS} DESTINATION "share/opn2_bank_editor/translations")
+if(NOT APPLE)
+    install(FILES ${TRANSLATIONS} DESTINATION "share/opn2_bank_editor/translations")
+endif()
 
 if(NOT CMAKE_SYSTEM_NAME STREQUAL "Windows" AND NOT CMAKE_SYSTEM_NAME STREQUAL "Darwin")
     install(FILES "src/resources/opn2_bank_editor.desktop" DESTINATION "share/applications")
+
     foreach(size 16;32;48)
         install(FILES "src/resources/opn2_${size}.png"
                 DESTINATION "share/icons/hicolor/${size}x${size}/apps"
@@ -194,21 +277,55 @@ if(NOT CMAKE_SYSTEM_NAME STREQUAL "Windows" AND NOT CMAKE_SYSTEM_NAME STREQUAL "
 endif()
 
 add_executable(OPN2BankEditor WIN32 MACOSX_BUNDLE ${SOURCES} ${FORMS} ${RESOURCES})
+
 set_target_properties(OPN2BankEditor PROPERTIES OUTPUT_NAME "opn2_bank_editor")
 
 if(ENABLE_PLOTS)
     target_include_directories(OPN2BankEditor PRIVATE ${QWT_INCLUDE_DIRS})
 endif()
 
+if(DEBUG_WRITE_AMPLITUDE_PLOT)
+    target_compile_definitions(OPN2BankEditor PRIVATE "-DDEBUG_WRITE_AMPLITUDE_PLOT")
+endif()
+
 target_link_libraries(OPN2BankEditor PRIVATE FileFormats Chips Measurer)
 
-target_link_libraries(OPN2BankEditor PRIVATE Qt5::Widgets Qt5::Concurrent ${CMAKE_THREAD_LIBS_INIT})
+if(BUILD_MAJOR_QT GREATER_EQUAL 5)
+    target_link_libraries(OPN2BankEditor PRIVATE ${QT_Widgets_TARGET} ${QT_EXTRA_LIBS} ${CMAKE_THREAD_LIBS_INIT})
+else()
+    target_link_libraries(OPN2BankEditor PRIVATE ${CMAKE_THREAD_LIBS_INIT})
+endif()
+
 if(ENABLE_PLOTS)
     target_link_libraries(OPN2BankEditor PRIVATE ${QWT_LIBRARIES})
 endif()
 
-if(NOT APPLE)
+if(FORCE_EXEC_NO_PIE)
+    pge_set_nopie(OPN2BankEditor)
+endif()
+
+include(cmake/deploy.cmake)
+
+if(APPLE)
+    install(TARGETS OPN2BankEditor DESTINATION .)
+    install(FILES changelog.txt DESTINATION .)
+    install(FILES README.md DESTINATION . RENAME ReadMe.txt)
+    install(FILES license.txt DESTINATION . RENAME License.txt)
+    install(DIRECTORY Bank_Examples DESTINATION .)
+
+    set_source_files_properties(${TRANSLATIONS} PROPERTIES GENERATED TRUE) # WORKAROUND
+    target_sources(OPN2BankEditor PRIVATE ${TRANSLATIONS})
+    set_source_files_properties(${TRANSLATIONS} PROPERTIES MACOSX_PACKAGE_LOCATION "Resources/translations")
+
+    file(GLOB BANKEDIT_FILE_ICONS "${CMAKE_CURRENT_SOURCE_DIR}/src/resources/file_*.icns")
+    target_sources(OPN2BankEditor PRIVATE ${BANKEDIT_FILE_ICONS})
+    set_source_files_properties(${BANKEDIT_FILE_ICONS} PROPERTIES MACOSX_PACKAGE_LOCATION "Resources")
+else()
     install(TARGETS OPN2BankEditor DESTINATION "bin" RENAME "opn2_bank_editor")
+    install(FILES changelog.txt DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/doc/opn2_bank_editor)
+    install(DIRECTORY Bank_Examples DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/doc/opn2_bank_editor)
+    install(FILES README.md DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/doc/opn2_bank_editor RENAME ReadMe.txt)
+    install(FILES license.txt DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/doc/opn2_bank_editor RENAME License.OPN2-Bank-Editor.txt)
 endif()
 
 if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
@@ -216,10 +333,22 @@ if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
     target_sources(OPN2BankEditor PRIVATE "${ICON}")
 elseif(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
     set(MACOSX_BUNDLE_ICON_FILE "opn2.icns")
-    set(ICON "${CMAKE_SOURCE_DIR}/src/resources/opn2.icns")
+    set(ICON "${CMAKE_SOURCE_DIR}/src/resources/opl3.icns")
     set_source_files_properties("${ICON}" PROPERTIES MACOSX_PACKAGE_LOCATION "Resources")
     target_sources(OPN2BankEditor PRIVATE "${ICON}")
-    set_target_properties(OPN2BankEditor PROPERTIES OUTPUT_NAME "OPN2 Bank Editor")
+    set_target_properties(OPN2BankEditor PROPERTIES
+        OUTPUT_NAME "OPN2 Bank Editor"
+        MACOSX_BUNDLE TRUE
+        MACOSX_BUNDLE_INFO_PLIST "${CMAKE_CURRENT_SOURCE_DIR}/src/resources/info.plist.in"
+        MACOSX_BUNDLE_EXECUTABLE_NAME "opn2_bank_editor"
+        MACOSX_BUNDLE_BUNDLE_NAME "OPN2 Bank Editor"
+        MACOSX_BUNDLE_GUI_IDENTIFIER "ru.wohlsoft.opn2-bank-editor"
+        MACOSX_BUNDLE_SHORT_VERSION_STRING "${OPL3_BANK_EDITOR_VERSION_STRING}"
+        MACOSX_BUNDLE_LONG_VERSION_STRING "${OPL3_BANK_EDITOR_VERSION_STRING}"
+        MACOSX_BUNDLE_ICON_FILE "opn2.icns"
+        CPACK_BUNDLE_NAME "OPN2 Bank Editor"
+        MACOSX_BUNDLE_INFO_STRING "Editor for OPN2/OPNA tone banks and instruments"
+    )
 endif()
 
 if(USE_RTMIDI)
@@ -411,3 +540,6 @@ endif()
 add_executable(measurer_tool "utils/measurer/measurer.cpp")
 set_target_properties(measurer_tool PROPERTIES OUTPUT_NAME "measurer")
 target_link_libraries(measurer_tool PRIVATE FileFormats Measurer)
+if(FORCE_EXEC_NO_PIE)
+    pge_set_nopie(measurer_tool)
+endif()
