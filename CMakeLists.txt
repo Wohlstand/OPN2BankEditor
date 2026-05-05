@@ -250,6 +250,9 @@ if(ENABLE_PLOTS)
     list(APPEND SOURCES "src/delay_analysis.cpp" "src/delay_analysis.h")
 endif()
 
+include(src/opl/models/opn_models.cmake)
+    list(APPEND SOURCES ${OPN_MODELS_SOURCES})
+
 set(UIS
     "src/bank_editor.ui"
     "src/operator_editor.ui"

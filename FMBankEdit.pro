@@ -160,6 +160,12 @@ SOURCES += \
     src/opl/generator.cpp \
     src/opl/generator_realtime.cpp \
     src/opl/realtime/ring_buffer.cpp \
+    src/opl/models/model_w9x.c \
+    src/opl/models/model_generic.c \
+    src/opl/models/model_freq_opna.c \
+    src/opl/models/model_freq_opn2.c \
+    src/opl/models/model_dmx.c \
+    src/opl/models/model_apogee.c \
     src/opl/measurer.cpp \
     src/piano.cpp
 
@@ -207,6 +213,7 @@ HEADERS += \
     src/opl/measurer.h \
     src/opl/realtime/ring_buffer.h \
     src/opl/realtime/ring_buffer.tcc \
+    src/opl/models/opn_models.h \
     src/piano.h \
     src/version.h
 

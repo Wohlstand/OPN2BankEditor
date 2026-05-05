@@ -221,6 +221,11 @@ private:
     uint8_t     m_pit[NUM_OF_CHANNELS];
     //! LFO and panning value cached
     uint8_t     m_pan_lfo[NUM_OF_CHANNELS];
+
+    //! Frequency computation function
+    uint16_t (*m_getFreq)(double tone, uint32_t *mul_offset);
+    //! OPL Volume computation function
+    void (*m_getVolume)(struct OPNVolume_t *v);
 };
 
 #endif // GENERATOR_H
