@@ -287,7 +287,7 @@ if(NOT CMAKE_SYSTEM_NAME STREQUAL "Windows" AND NOT CMAKE_SYSTEM_NAME STREQUAL "
             DESTINATION "share/applications")
 
     foreach(format banks instruments)
-        install(FILES "src/resources/mime/opl3-${format}.xml"
+        install(FILES "src/resources/mime/opn2-${format}.xml"
                 DESTINATION "share/mime/packages")
     endforeach()
 
