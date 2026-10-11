@@ -26,10 +26,17 @@ Contents:
                         1. Single-instrument entry
 ===============================================================================
 
-    Each instrument file contains a set of data for single
-channel of YM2612 chip to setup the timbre
+    Each instrument file contains a set of data for single channel of
+the YM2612 chip to setup the timbre.
 
-Lenght of each instrument entry is 65 bytes
+Lenght of each instrument entry is 65 bytes. When an entry is a part of WOPN
+bank, the size of instrument entry is 69 bytes when WOPN version is 2 or newer.
+
+Operators are sorted in hardware order (i.e. how they are stored at chip's
+registers): 1 -> 3 -> 2 -> 4.
+
+All operator data stored in hardware format that is possible to send a data
+to the chip unmodified.
 
 Bytes-Lenght  | Description
 -------------------------------------------
@@ -51,11 +58,12 @@ Bytes-Lenght  | Description
     1         | Systain and Release register data
     1         | SSG-EG register data
 -------------------------------------------
---VERSION >= 2---WOPL-Bank-only, OPNI must don't have those fields---
+--VERSION >= 2---WOPN-Bank-only, OPNI must don't have those fields---
     2         | Big-Endian 16-bit signed integer, Millisecond delay of sound
-              | while key is on
+              | while key is on. Must not be 0 to avoid instrument treated
+              | being blank.
     2         | Big-Endian 16-bit signed integer, Millisecond delay of sound
-              | after key off
+              | after key off.
 -------------------------------------------
 
 
@@ -88,14 +96,21 @@ Bytes-Lenght |  Description
                       3. MIDI playing bank file (WOPN)
 ===============================================================================
 
-    Bank format designed to store instrument bank for playing MIDI
-in multiple standards like GM, GS and XG. Format allows to save
-multiple sets with 128-instruments which is needed to store
-GS and XG instrument sets which are have more than standard 128
-instruments with a single bank.
+    Bank format designed to store instrument bank for playing MIDI in multiple
+standards like GM, GS and XG. Format allows to save multiple sets with
+128-instruments which is needed to store GS and XG instrument sets which are
+have more than standard 128 instruments with a single bank.
 
 Total data lenght is sum of (version 1): 17 + (65*128*MBanks) + (65*128*PBanks) bytes
-Total data lenght is sum of (version 2): 19 + (65*128*MBanks) + (65*128*PBanks) bytes
+Total data lenght is sum of (version 2): 19 + (69*128*MBanks) + (69*128*PBanks) bytes
+
+Each bank entry must contain all the 128 entries and no data cuts are allowed.
+If any unused instruments, they must be marked as blank (Both Key-On and Key-Off
+Durations must be 0).
+
+Each WOPN bank file is required to have at least one melodic and at least one
+percussion bank. If the half of the bank is supposed to be unused, it must be
+filled by blank instruments (Both Key-On and Key-Off Durations must be 0).
 
 Bytes-Lenght |      Description
 ---------------Header--------------------
