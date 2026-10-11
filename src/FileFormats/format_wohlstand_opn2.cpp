@@ -45,6 +45,7 @@ bool WohlstandOPN2::detectInst(const QString &, char *magic)
 static bool readInstrument(QFile &file, FmBank::Instrument &ins, uint16_t &version, bool hasSoundKoefficients = true)
 {
     uint8_t idata[WOPL_INST_SIZE_V2];
+
     if(version >= 2)
     {
         qint64 got = file.read(char_p(idata), WOPL_INST_SIZE_V2);
@@ -58,6 +59,7 @@ static bool readInstrument(QFile &file, FmBank::Instrument &ins, uint16_t &versi
         if(file.read(char_p(idata), WOPL_INST_SIZE_V1) != WOPL_INST_SIZE_V1)
             return false;
     }
+
     strncpy(ins.name, char_p(idata), 32);
     ins.note_offset1 = toSint16BE(idata + 32);
     ins.percNoteNum  = idata[34];
@@ -76,12 +78,14 @@ static bool readInstrument(QFile &file, FmBank::Instrument &ins, uint16_t &versi
         ins.setRegSysRel(op,idata[off + 5]);
         ins.setRegSsgEg(op, idata[off + 6]);
     }
+
     if(version >= 2 && hasSoundKoefficients)
     {
         ins.ms_sound_kon  = toUint16BE(idata + 65);
         ins.ms_sound_koff = toUint16BE(idata + 67);
         ins.is_blank = (ins.ms_sound_kon == 0) && (ins.ms_sound_koff == 0);
     }
+
     return true;
 }
 
@@ -94,6 +98,7 @@ static bool writeInstrument(QFile &file, FmBank::Instrument &ins, bool isDrum, b
     odata[34] = (ins.is_fixed_note || isDrum) ? ins.percNoteNum : 0;
     odata[35] = ins.getRegFbAlg();
     odata[36] = ins.getRegLfoSens();
+
     for(int op = 0; op < 4; op++)
     {
         int off = 37 + op * 7;
@@ -118,8 +123,10 @@ static bool writeInstrument(QFile &file, FmBank::Instrument &ins, bool isDrum, b
             fromUint16BE(ins.ms_sound_kon,  odata + 65);
             fromUint16BE(ins.ms_sound_koff, odata + 67);
         }
+
         return (file.write(char_p(odata), WOPL_INST_SIZE_V2) == WOPL_INST_SIZE_V2);
-    } else
+    }
+    else
         return (file.write(char_p(odata), WOPL_INST_SIZE_V1) == WOPL_INST_SIZE_V1);
 }
 
@@ -142,8 +149,10 @@ FfmtErrCode WohlstandOPN2::loadFile(QString filePath, FmBank &bank)
 
     bool is1 = strncmp(magic, wopn2_magic1, 11) == 0;
     bool is2 = strncmp(magic, wopn2_magic2, 11) == 0;
+
     if(!is1 && !is2)
         return FfmtErrCode::ERR_BADFORMAT;
+
     if(is2)
     {
         uint8_t ver[2];
@@ -156,6 +165,7 @@ FfmtErrCode WohlstandOPN2::loadFile(QString filePath, FmBank &bank)
 
     uint8_t head[5];
     memset(head, 0, 5);
+
     if(file.read(char_p(head), 5) != 5)
         return FfmtErrCode::ERR_BADFORMAT;
 
@@ -214,6 +224,7 @@ tryAgain:
         readPercussion = true;
         goto tryAgain;
     }
+
     file.close();
 
     return FfmtErrCode::ERR_OK;
@@ -228,6 +239,7 @@ static void bankFillBack(FmBank &bank, int alignMelodic, int alignDrums)
             bank.Ins_Melodic_box.push_back(FmBank::emptyInst());
         bank.Ins_Melodic = bank.Ins_Melodic_box.data();
     }
+
     if(alignDrums != 128)
     {
         bank.Ins_Percussion_box.reserve(alignDrums);
@@ -245,6 +257,7 @@ static void bankStripBack(FmBank &bank, int alignMelodic, int alignDrums)
                                    bank.Ins_Melodic_box.end());
         bank.Ins_Melodic = bank.Ins_Melodic_box.data();
     }
+
     if(alignDrums != 128)
     {
         bank.Ins_Percussion_box.erase(bank.Ins_Percussion_box.end() - alignMelodic,
@@ -384,12 +397,16 @@ FfmtErrCode WohlstandOPN2::loadFileInst(QString filePath, FmBank::Instrument &in
 
     if(!file.open(QIODevice::ReadOnly))
         return FfmtErrCode::ERR_NOFILE;
+
     if(file.read(magic, 11) != 11)
         return FfmtErrCode::ERR_BADFORMAT;
+
     bool is1 = (strncmp(magic, wopni_magic1, 11) == 0);
     bool is2 = (strncmp(magic, wopni_magic2, 11) == 0);
+
     if(!is1 && !is2)
         return FfmtErrCode::ERR_BADFORMAT;
+
     if(is2)
     {
         uint8_t ver[2];
@@ -399,12 +416,16 @@ FfmtErrCode WohlstandOPN2::loadFileInst(QString filePath, FmBank::Instrument &in
         if(version < 2 || version > latest_version)
             return FfmtErrCode::ERR_UNSUPPORTED_FORMAT;
     }
+
     if(file.read(char_p(&isDrumFlag), 1) != 1)
         return FfmtErrCode::ERR_BADFORMAT;
+
     if(isDrum)
         *isDrum = bool(isDrumFlag);
+
     if(!readInstrument(file, inst, version, false))
         return FfmtErrCode::ERR_BADFORMAT;
+
     file.close();
 
     return FfmtErrCode::ERR_OK;
@@ -417,14 +438,19 @@ FfmtErrCode WohlstandOPN2::saveFileInst(QString filePath, FmBank::Instrument &in
 
     if(!file.open(QIODevice::WriteOnly))
         return FfmtErrCode::ERR_NOFILE;
+
     if(file.write(char_p(wopni_magic2), 11) != 11)
         return FfmtErrCode::ERR_BADFORMAT;
+
     if(writeLE(file, latest_version) != 2)
         return FfmtErrCode::ERR_BADFORMAT;
+
     if(file.write(char_p(&isDrumFlag), 1) != 1)
         return FfmtErrCode::ERR_BADFORMAT;
+
     if(!writeInstrument(file, inst, false))
         return FfmtErrCode::ERR_BADFORMAT;
+
     file.close();
 
     return FfmtErrCode::ERR_OK;
