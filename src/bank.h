@@ -206,6 +206,10 @@ public:
         //! Amplitude modulation sensitivity (0...3)
         uint8_t am;
 
+        //! Pan left / right (Preserve for some formats)
+        uint8_t pan_l;
+        uint8_t pan_r;
+
         bool operator==(const Instrument &fb);
         bool operator!=(const Instrument &fb);
 
@@ -236,6 +240,9 @@ public:
 
         uint8_t getRegLfoSens() const;
         void    setRegLfoSens(uint8_t reg_lfosens);
+
+        uint8_t getRegPanLfoSens() const;
+        void    setRegPanLfoSens(uint8_t reg_lfosens);
     };
 
     struct MidiBank
