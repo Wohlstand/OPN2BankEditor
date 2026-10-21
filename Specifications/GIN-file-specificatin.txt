@@ -1,7 +1,7 @@
 ===============================================================================
        Sega Megadrive instrument file (GIM) by TommieXie (Xie Rong Chun)
 ===============================================================================
-                         Created in June, 7, 2021
+                         Created in 7'th of June, 2021
 ===============================================================================
 Author of specification:    Vitaliy Novichkov "Wohlstand"
 Contacts emails:            admin@wohlnet.ru, nvd339@yandex.ru
