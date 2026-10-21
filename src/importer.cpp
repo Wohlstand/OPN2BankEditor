@@ -591,11 +591,13 @@ void Importer::on_doImport_clicked()
 
             dstIns[id % 128] = srcIns[id];
         }
+
         m_main->statusBar()->showMessage(tr("%1 instruments have been imported!").arg(selected.size()), 5000);
     }
     else
     {
         int dstId = m_main->m_recentNum;
+
         if(dstId >= 0)
         {
             int srcId = selected[0]->data(Qt::UserRole).toInt();

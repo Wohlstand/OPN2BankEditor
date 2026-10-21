@@ -294,6 +294,7 @@ bool FmBank::createBank(uint8_t msb, uint8_t lsb, bool percussive,
 
     if(pBank)
         *pBank = &midiBank;
+
     if(pIns)
         *pIns = &Ins[128 * index];
 
