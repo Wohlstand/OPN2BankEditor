@@ -1,0 +1,138 @@
+===============================================================================
+                      FM Towns YM2612 Timbre bank format
+===============================================================================
+                       Created in 21'st of October, 2026
+===============================================================================
+Author of specification:    Vitaliy Novichkov "Wohlstand"
+Contacts emails:            admin@wohlnet.ru, nvd339@yandex.ru
+===============================================================================
+
+This is an YM2612 melodic instruments bank format developed in Fujitsu for use
+with the TownOS system with the TownsSound utility.
+
+This file contains only melodic subset of General MIDI. The percussion is used
+via separated file with the different chip.
+
+- FMB files are totally 6152 bytes.
+- Every FMB file contains the magic word and 128 melodic instruments inside.
+- Known FMB files starts with the 8-character name of bank, when shorter 8,
+  is NULL-terminated.
+
+All register data stored in YM2612 hardware register format and operators are
+sorted in 4-byte arrays by hardware order: 1 -> 3 -> 2 -> 4.
+
+===============================================================================
+   Header
+===============================================================================
+    Offset  |  Length    | Description
+-------------------------------------------------------------------------------
+   0x00     | 8 bytes    | The name of the bank
+-------------------------------------------------------------------------------
+   0x08     | 6144 bytes | Array of [Instrument entry], 128 entries
+-------------------------------------------------------------------------------
+
+
+Note: There are 4-byte arrays: every byte is the registry data of same type but
+for different operators.
+
+===============================================================================
+   Instrument entry
+===============================================================================
+    Offset  |  Length    | Description
+-------------------------------------------------------------------------------
+    0x00    |  8 bytes   | Instrument's name. When shorter than 8 is a
+            |            | NULL-terminated string, otherwise, fill by NULL.
+-------------------------------------------------------------------------------
+    0x08    |  4 bytes   | Per-operator Detune and Frequency Multiply factors.
+            |            |
+            |            | Bitwise [x DDD FFFF]
+            |            | D - 3 bits, Detune factor.
+            |            | F - 4 bits, Frequency multiplication factor.
+-------------------------------------------------------------------------------
+    0x0C    |  4 bytes   | Per-operator Total Level value (whole byte).
+-------------------------------------------------------------------------------
+    0x10    |  4 bytes   | Per-operator Rate Scale and Attack Rate values.
+            |            |
+            |            | Bitwise [RR x AAAAA]
+            |            | R - 2 bits, Rate Scale factor.
+            |            | A - 5 bits, Release Rate value.
+-------------------------------------------------------------------------------
+    0x14    |  4 bytes   | Per-operator AM Enable and Decay1 values.
+            |            |
+            |            | Bitwise [A xx DDDDD]
+            |            | A - 1 bit, Enable Amplitude Modulation.
+            |            | D - 5 bits, Decay1 value.
+-------------------------------------------------------------------------------
+    0x18    |  4 bytes   | Per-operator Decay2 values.
+            |            |
+            |            | Bitwise [xxx DDDDD]
+            |            | D - 5 bits, Decay2 value.
+-------------------------------------------------------------------------------
+    0x1C    |  4 bytes   | Per-operator Systain Rate and Release Rate values.
+            |            |
+            |            | Bitwise [SSSS RRRR]
+            |            | S - 4 bits, Sustain Rate value.
+            |            | R - 4 bits, Release Rate value.
+-------------------------------------------------------------------------------
+    0x20    |  1 byte    | Instrument's Feedback and Algorithm values.
+            |            |
+            |            | Bitwise [xx FFF AAA]
+            |            | F - 3 bits, Feedback value.
+            |            | A - 3 bits, Algorithm type value.
+-------------------------------------------------------------------------------
+    0x21    |  1 byte    | Instrument's LFO sens. (AM and FM) with a panpot.
+            |            |
+            |            | Bitwise [LR AA x FFF]
+            |            | L - 1 bit, Stereo Left Output is ON (Usually unused)
+            |            | R - 1 bit, Stereo Right Output is ON (Usually unused)
+            |            | A - 2 bits, Amplitude modulation sensitivity
+            |            | F - 3 bits, Frequency modulation sensitivity
+-------------------------------------------------------------------------------
+    0x22    |  14 bytes  | Padding/Reserved bytes (Possibly filled by
+            |            | TownsSound by extra meta-data). Usually always 0.
+-------------------------------------------------------------------------------
+
+
+
+===============================================================================
+   Compatible C structure
+===============================================================================
+
+This is the C programming language structure that declares the data layout of
+the FMB file and can be used to read the whole file and parse the data easily.
+-------------------------------------------------------------------------------
+
+#pragma pack(push, 1)
+typedef struct fmb_inst_t
+{
+    // Instrument name
+    char    name[8];
+
+    // Registers per operator
+
+    unsigned char reg_dt_mul[4];
+    unsigned char reg_tl[4];
+    unsigned char reg_ks_ar[4];
+    unsigned char reg_am_d1r[4];
+    unsigned char reg_d2r[4];
+    unsigned char reg_sl_rr[4];
+    unsigned char reg_fb_alg;
+    unsigned char reg_lfo_sens;
+
+    // Reserved data (fill by zeroes)
+    unsigned char reserved[14];
+} fmb_inst;
+
+
+typedef struct fmb_bank_t
+{
+    // The name of bank
+    char bank_name[8];
+
+    // Instruments data
+    fmb_inst inst[128];
+
+} fmb_bank;
+#pragma pack(pop)
+
+-------------------------------------------------------------------------------

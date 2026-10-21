@@ -39,6 +39,7 @@ enum BankFormats
     FORMAT_TX81Z_IMPORTER  = 11,
     FORMAT_OPM             = 12,
     FORMAT_MUCOM88_DAT     = 13,
+    FORMAT_FMTOWNS_FMB     = 14,
 
     FORMATS_END,
     FORMATS_BEGIN = FORMAT_WOHLSTAND_OPN2,

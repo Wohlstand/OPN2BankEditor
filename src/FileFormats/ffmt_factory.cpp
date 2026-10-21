@@ -34,6 +34,7 @@
 #include "format_deflemask_dmp.h"
 #include "format_gems_pat.h"
 #include "format_m2v_gyb.h"
+#include "format_fmtowns_fmb.h"
 #include "format_tomsoft_gin.h"
 #include "format_saxman_ymx.h"
 #include "format_tx81z_import.h"
@@ -80,12 +81,12 @@ void FmBankFormatFactory::registerAllFormats()
     registerBankFormat(new WohlstandOPN2());
     registerInstFormat(new WohlstandOPN2());
 
-	//Importers from music files
+    //Importers from music files
     registerBankFormat(new VGM_Importer());
     registerBankFormat(new GYM_Importer());
     registerBankFormat(new S98_Importer());
 
-	//Other formats
+    //Other formats
     registerInstFormat(new TFI_MM());
     registerInstFormat(new DefleMask());
     registerBankFormat(new GEMS_PAT());
@@ -94,6 +95,7 @@ void FmBankFormatFactory::registerAllFormats()
     registerBankFormat(new M2V_GYB_WRITEv3());
     registerBankFormat(new M2V_GYB_WRITEv2());
     registerBankFormat(new M2V_GYB_WRITEv1());
+    registerBankFormat(new FMTowns_FMB());
     registerBankFormat(new Tomsoft_GIN());
     registerBankFormat(new Saxman_YMX());
     registerBankFormat(new TX81Z_Importer());

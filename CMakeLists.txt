@@ -140,6 +140,8 @@ set(FILEFORMATS_SOURCES
     "src/FileFormats/format_deflemask_dmp.h"
     "src/FileFormats/format_tfi.cpp"
     "src/FileFormats/format_tfi.h"
+    "src/FileFormats/format_fmtowns_fmb.cpp"
+    "src/FileFormats/format_fmtowns_fmb.h"
     "src/FileFormats/format_gems_pat.cpp"
     "src/FileFormats/format_gems_pat.h"
     "src/FileFormats/format_m2v_gyb.cpp"
